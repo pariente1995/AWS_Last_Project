@@ -1,5 +1,5 @@
 /* Container */
-#container {
+#main-container {
   width:1200px; margin:0 auto;
 }
 
@@ -7,12 +7,13 @@
   Map-Wrapper 
   wrapper: 가장 바깥 테둘리  
 */
+
 #map-wrapper { text-align:center;}
 
 #map-frame { position:relative; }
 
 /* 행정구역 하나하나의 style통칭 */
-.map { 
+.map {
   position:absolute;  cursor:pointer;
   width:5%; margin-left:-1%;
 }
@@ -20,7 +21,7 @@
 .map-a { text-decoration: none; color: black;  font-size:1rem; }
 
 .map-span {
-  display:none; 
+  display:none;
   font-size:0.7rem;
 }
 
@@ -44,19 +45,19 @@
 #map-jeju { top:450px; left:40%;}
 
 #map-img{
-  width:30%; 
+  width:30%;
 }
 
 /*
  Ranking
- ranking의 최종 background 
+ ranking의 최종 background
 */
 #ranking-wrapper {
   width:100%; display:flex; justify-content: center;
 }
 
-#ranking-frame { 
- margin-left:3.2%;
+#ranking-frame {
+  margin-left:3.2%;
 }
 
 /* 이미지 화면 확대 */
