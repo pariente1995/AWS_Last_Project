@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http:///www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout-admin}">
+
+<!-- head 영역 시작 -->
+<!-- 개별적으로 사용할 css, js 링크 걸기 위해서 남겨둠 -->
+<head>
+  <th:block layout:fragment="css">
+    <link rel="stylesheet" th:href="@{/css/updateDatecourse.css}"/>
+  </th:block>
+  <th:block layout:fragment="script">
+    <script th:inline="javascript">
+      // 추가된 파일들을 담아줄 배열. File 객체로 하나씩 담음
+      let uploadFiles = [];
+
+      // 기존 첨부된 파일 개수
+      let fileCount = 0;
+
+      // 파일 첨부 최대 개수
+      const totFileCount = 10;
+
+      $(function() {
+        /************************************************
+         이미지 업로드 관련
+         *************************************************/
+        // input type=flie이 변경되면 미리보기 동작
+        $("#realUploadFiles").on("change", function(e) {
+          // input type=file에 추가된 파일들을 변수로 받아옴
+          const files = e.target.files;
+
+          // 변수로 받아온 파일들을 배열 형태로 변환
+          const fileArr = Array.prototype.slice.call(files);
+
+          // 첨부된 파일 개수
+          let uploadFileCount = fileArr.length;
+
+          // 배열에 있는 파일들을 하나씩 꺼내서 처리
+          // 이미지 확장자가 아닌 경우, 미리보기 X & input type=file value 비워주기
+          for(let f of fileArr) {
+            // 파일 확장자
+            const fileType = f.type;
+
+            // (기존 첨부된 파일 개수 + 업로드될 파일 개수)가 10개 이상일 때는 확장자 판별이 무의미
+            if(fileCount + uploadFileCount <= totFileCount) {
+              if(!fileType.includes('image')) {
+                alert("이미지 확장자의 경우에만 업로드가 가능합니다.");
+                $("#realUploadFiles").val("");
+                uploadFileCount--; // 첨부된 파일 개수를 줄임
+              } else if(fileCount < totFileCount) {
+                imageLoader(f);
+              }
+            }
+          }
+
+          if(fileCount + uploadFileCount > totFileCount) {
+            alert("이미지 파일의 경우 최대 10개까지만 첨부가 가능합니다.");
+            $("#realUploadFiles").val("");
+            return;
+          } else {
+            fileCount += uploadFileCount;
+          }
+          for(let u of uploadFiles) {
+            console.log("uplodaFiles :" + u.name)
+          }
+        });
+
+        // 유효성 검사
+        $("#btnUpdate").on("click", function() {
+          let menuFlag = true;
+
+          if(!$("#datecourseNm").val()) {
+            alert("데이트 코스명을 입력해주세요.");
+            $("#datecourseNm").focus();
+            return;
+          }
+
+          if(!$("#datecourseSummary").val()) {
+            alert("데이트 코스 요약을 입력해주세요.");
+            $("#datecourseSummary").focus();
+            return;
+          }
+
+          if(!$("#datecourseDesc").val()) {
+            alert("데이트 코스 설명을 입력해주세요.");
+            $("#datecourseDesc").focus();
+            return;
+          }
+
+          if(!$("#datecourseTel").val()) {
+            alert("전화번호를 입력해주세요.");
+            $("#datecourseTel").focus();
+            return;
+          }
+
+          if(!$("input[id='datecourseParkingYn']").is(":checked")) {
+            alert("주차여부를 체크해주세요.");
+            $("#datecourseParkingYn").focus();
+            return;
+          }
+
+          $("input[name='datecourseMenuNm']").each(function() {
+            if(!$(this).val()) {
+              alert("메뉴명을 입력해주세요.");
+              $(this).focus();
+              menuFlag = false;
+              return;
+            }
+          });
+
+          if(!menuFlag) {
+            return;
+          }
+
+          $("input[name='datecourseMenuPrice']").each(function() {
+            if(!$(this).val()) {
+              alert("가격을 입력해주세요.");
+              $(this).focus();
+              menuFlag = false;
+              return;
+            }
+          });
+
+          /***************************************************************
+           이미지 업로드 관련
+           ****************************************************************/
+                  // 마지막으로 realUploadFiles에 uploadFiles(배열)에 있는 파일들을 담아준다.
+          let dt = new DataTransfer();
+
+          for(let f in uploadFiles) {
+            const file = uploadFiles[f];
+            dt.items.add(file);
+          }
+
+          $("#realUploadFiles")[0].files = dt.files;
+        });
+
+        // 화면 오픈 시, 데이트 코스 분류가 '놀거리'이기에 음식종류, 반려동물 동반 가능여부 항목은 hide 처리
+        $("#datecourseFoodType-wrapper").css("display", "none"); // 음식종류 항목
+        $("#datecoursePetYn-wrapper").css("display", "none"); // 반려동물 동반 가능여부 항목
+
+        // 데이트 코스 분류가 '놀거리'일 때만 실내/외 여부 항목 표시
+        $("#datecourseCategory").on("change", function() {
+          if($("#datecourseCategory option:selected").text() == "놀거리") {
+            $("#datecourseInoutYn-wrapper").css("display", "flex");
+          } else {
+            $("#datecourseInoutYn-wrapper").css("display", "none");
+          }
+        });
+
+        // 데이트 코스 분류가 '맛집'일 때만 음식종류 항목 표시
+        $("#datecourseCategory").on("change", function() {
+          if($("#datecourseCategory option:selected").text() == "맛집") {
+            $("#datecourseFoodType-wrapper").css("display", "flex");
+          } else {
+            $("#datecourseFoodType-wrapper").css("display", "none");
+          }
+        });
+
+        // 데이트 코스 분류가 '카페'일 때만 반려동물 동반 가능여부 항목 표시
+        $("#datecourseCategory").on("change", function() {
+          if($("#datecourseCategory option:selected").text() == "카페") {
+            $("#datecoursePetYn-wrapper").css("display", "flex");
+          } else {
+            $("#datecoursePetYn-wrapper").css("display", "none");
+          }
+        });
+
+        // 영업시간 영역 부분 '+'이미지 클릭 시, 입력칸 추가
+        let hoursPlusCnt = 0;
+
+        $("#datecourseHours-plusImg").on("click", function() {
+          // 최대 3개까지만 입력가능하도록
+          if(hoursPlusCnt < 2) {
+            // 새로 삽입할 input 태그
+            let htmlStr = "<div class='addHoursTag'><br><input type='text' name='datecourseHours' class='common-margin datecourseHours' placeholder='영업시간을 입력하세요.'></div>";
+
+            // input 태그 추가
+            $("#datecourseHours-field").append(htmlStr);
+
+            hoursPlusCnt++;
+          } else {
+            alert("최대 3개까지만 입력이 가능합니다.");
+            return;
+          }
+        });
+
+        // 영업시간 영역 부분 '-'이미지 클릭 시, 입력칸 삭제
+        $("#datecourseHours-minusImg").on("click", function() {
+          if(hoursPlusCnt > 0) {
+            $("#datecourseHours-field .addHoursTag:last").remove();
+
+            hoursPlusCnt--;
+          } else {
+            return;
+          }
+        });
+
+        // 메뉴 영역 부분 '+'이미지 클릭 시, 입력칸 추가
+        let menuPlusCnt = 0;
+
+        $("#datecourseMenu-plusImg").on("click", function() {
+          // 최대 10개까지만 입력가능하도록
+          if(menuPlusCnt < 9) {
+            // 새로 삽입할 input 태그
+            let htmlStr = "";
+
+            htmlStr += "<div class='addMenuTag'><br>메뉴명<input type='text' name='datecourseMenuNm' class='datecourseMenuNm' placeholder='메뉴명을 입력하세요.'>";
+            htmlStr += " 가격<input type='text' name='datecourseMenuPrice' class='datecourseMenuPrice' placeholder='가격을 입력하세요.'><br><div>";
+
+            // input 태그 추가
+            $("#datecourseMenu-field").append(htmlStr);
+
+            menuPlusCnt++;
+          } else {
+            alert("최대 10개까지만 입력이 가능합니다.");
+            return;
+          }
+        });
+
+        // 메뉴 영역 부분 '-'이미지 클릭 시, 입력칸 삭제
+        $("#datecourseMenu-minusImg").on("click", function() {
+          if(menuPlusCnt > 0) {
+            $("#datecourseMenu-field .addMenuTag:last").remove();
+
+            menuPlusCnt--;
+          } else {
+            return;
+          }
+        });
+      });
+
+      // 미리보기 영역에 들어갈 img태그 생성 및 선택된 파일을 Base64 인코딩된 문자열 형태로 변환하여
+      // 미리보기가 가능하게 해줌
+      function imageLoader(file) {
+        uploadFiles.push(file);
+
+        const reader = new FileReader();
+
+        reader.onload = function(e) {
+          // 이미지를 표출해줄 img태그 선언
+          let img = document.createElement("img");
+          img.setAttribute("style", "width: 100%; height: 100%; z-index: none;");
+
+          // 이미지 파일인지 아닌지 체크
+          if(file.name.toLowerCase().match(/(.*?)\.(jpg|jpeg|png|gif|svg|bmp)$/)) {
+            // 이미지 파일 미리보기 처리
+            img.src = e.target.result;
+          } else {
+            // 일반 파일 미리보기 처리
+            //img.src = "/images/defaultFileImg.png";
+          }
+
+          // 미리보기 영역에 추가
+          // 미리보기 이미지 태그와 삭제 버튼 그리고 파일명을 표출하는 p태그를 묶어주는 div 만들어서
+          // 미리보기 영역에 추가
+          $("#image-preview").append(makeDiv(img, file));
+        };
+
+        // 파일을 Base64 인코딩된 문자열로 변경
+        reader.readAsDataURL(file);
+      }
+
+      // 미리보기 영역에 들어갈 div(img+button+p)를 생성하고 리턴
+      function makeDiv(img, file) {
+        // div 생성
+        let div = document.createElement("div");
+
+        div.setAttribute("style", "display: inline-block; position: relative;"
+                + " width: 150px; height: 120px; margin: 5px; border: 1px solid #ee2d7a; border-radius: 3px; z-index: 1;");
+
+        // button 생성
+        let btn = document.createElement("input");
+
+        btn.setAttribute("type", "button");
+        btn.setAttribute("value", "x");
+        btn.setAttribute("delFile", file.name);
+        btn.setAttribute("style", "width: 30px; height: 30px; position: absolute;"
+                + " right: 0px; bottom: 0px; z-index: 999; background-color: rgba(255, 255, 255, 0.1);"
+                + " color: #f00;");
+
+        /*
+          버튼 클릭 이벤트
+          버튼 클릭 시, 해당 파일이 삭제되도록 설정
+        */
+        btn.onclick = function(e) {
+          // 클릭된 버튼
+          const ele = e.srcElement;
+          // delFile(파일이름) 속성 꺼내오기: 삭제될 파일명
+          const delFile = ele.getAttribute("delFile");
+
+          for(let i=0; i<uploadFiles.length; i++) {
+            // 배열에 담아놓은 파일들 중에 해당 파일 삭제
+            if(delFile == uploadFiles[i].name) {
+              // 배열에서 i번째 한개만 제거
+              uploadFiles.splice(i, 1);
+              // 기존 첨부된 파일 개수 -1
+              fileCount--;
+            }
+          }
+
+          /*
+            버튼 클릭 시 realUploadFiles에 첨부된 파일도 삭제
+            input type=file은 첨부된 파일들을 fileList 형태로 관리
+            fileList에 일반적인 File객체를 넣을 수 없고
+            DataTransfer라는 클래스를 이용하여 완전한 fileList 형태로 만들어서
+            input.files에 넣어줘야 된다.
+          */
+          let dt = new DataTransfer();
+
+          for(let f in uploadFiles) {
+            const file = uploadFiles[f];
+            dt.items.add(file);
+          }
+          console.log($("#realUploadFiles"));
+          $("#realUploadFiles")[0].files = dt.files;
+
+          // 해당 img를 담고있는 부모태그인 div 삭제
+          const parentDiv = ele.parentNode;
+          $(parentDiv).remove();
+        }
+
+        // 파일명 표출할 p태그 생성
+        const fName = document.createElement("p");
+        fName.setAttribute("style", "display: inline-block; font-size: 8px;");
+        fName.textContent = file.name;
+
+        // div에 하나씩 추가
+        div.appendChild(img);
+        div.appendChild(btn);
+        div.appendChild(fName);
+
+        // 완성된 div를 리턴
+        return div;
+      }
+    </script>
+  </th:block>
+</head>
+<!-- head 영역 끝 -->
+
+<body>
+  <div layout:fragment="content">
+    <div id="datecourse-container">
+      <h1>데이트 코스 수정</h1>
+      <hr>
+      <div id="datecourse-form-wrapper">
+        <form action="#" id="datecourseUpdateForm" method="" enctype="multipart/form-data">
+          <div id="datecourseRgstDate-wrapper" class="common common-display">
+            <div class="common-text">
+              <label for="datecourseRgstDate">등록일자</label>
+            </div>
+            <input type="text" name="datecourseRgstDate" id="datecourseRgstDate" class="common-margin" readonly>
+          </div>
+          <div id="datecourseNo-wrapper" class="common common-display">
+            <div class="common-text">
+              <label for="datecourseNo">데이트 코스 번호</label>
+            </div>
+            <input type="text" name="datecourseNo" id="datecourseNo" class="common-margin" readonly>
+          </div>
+          <div id="datecourseNm-wrapper" class="common common-display">
+            <div class="common-text">
+              <label for="datecourseNm">데이트 코스명</label>
+            </div>
+            <input type="text" name="datecourseNm" id="datecourseNm" class="common-margin" placeholder="데이트 코스명을 입력하세요.">
+          </div>
+          <div id="datecourseArea-wrapper" class="common common-display">
+            <div class="common-text">
+              <label for="datecourseArea">지역</label>
+            </div>
+            <select name="datecourseArea" id="datecourseArea" class="common-margin">
+              <option value="A0001" selected>서울</option>
+              <option value="A0002">경기도</option>
+              <option value="A0003">인천</option>
+              <option value="A0004">강원도</option>
+              <option value="A0005">충청남도</option>
+              <option value="A0006">충청북도</option>
+              <option value="A0007">세종</option>
+              <option value="A0008">대전</option>
+              <option value="A0009">경상북도</option>
+              <option value="A0010">경상남도</option>
+              <option value="A0011">전라북도</option>
+              <option value="A0012">전라남도</option>
+              <option value="A0013">대구</option>
+              <option value="A0014">울산</option>
+              <option value="A0015">광주</option>
+              <option value="A0016">부산</option>
+              <option value="A0017">제주도</option>
+            </select>
+          </div>
+          <div id="datecourseCategory-wrapper" class="common common-display">
+            <div class="common-text">
+              <label for="datecourseCategory">데이트 코스 분류</label>
+            </div>
+            <select name="datecourseCategory" id="datecourseCategory" class="common-margin">
+              <option value="B0001" selected>놀거리</option>
+              <option value="B0002">맛집</option>
+              <option value="B0003">카페</option>
+            </select>
+          </div>
+          <div id="datecourseSummary-wrapper" class="common common-display">
+            <div class="common-text">
+              <label for="datecourseSummary">데이트 코스 요약</label>
+            </div>
+            <input type="text" name="datecourseSummary" id="datecourseSummary" class="common-margin" placeholder="데이트 코스 요약을 입력하세요.">
+          </div>
+          <div id="datecourseDesc-wrapper" class="common common-display">
+            <div class="common-text">데이트 코스 설명</div>
+            <textarea name="datecourseDesc" id="datecourseDesc" class="common-margin" cols="60" rows="10" placeholder="데이트 코스에 대한 설명을 작성하세요."></textarea>
+          </div>
+          <div id="datecourseInoutYn-wrapper" class="common common-display">
+            <div class="common-text">실내/외 여부</div>
+            <input type="radio" name="datecourseInoutYn" id="datecourseInoutYn-in" class="common-margin" value="Y" checked><label for="datecourseInoutYn-in">실내</label>
+            <input type="radio" name="datecourseInoutYn" id="datecourseInoutYn-out" class="common-margin" value="N"><label for="datecourseInoutYn-out">실외</label>
+          </div>
+          <div id="datecourseFoodType-wrapper" class="common common-display">
+            <div class="common-text">
+              <label for="datecourseFoodType">음식종류</label>
+            </div>
+            <select name="datecourseFoodType" id="datecourseFoodType" class="common-margin">
+              <option value="C0001">한식</option>
+              <option value="C0002">양식</option>
+              <option value="C0003">중식</option>
+              <option value="C0004">일식</option>
+              <option value="C0005">분식</option>
+              <option value="C0006">기타</option>
+            </select>
+          </div>
+          <div id="datecourseHours-wrapper" class="common common-display">
+            <div class="common-text">
+              영업시간
+            </div>
+            <div id="datecourseHours-field">
+              <input type="text" name="datecourseHours" class="common-margin datecourseHours" placeholder="영업시간을 입력하세요."><br>
+            </div>
+            <img th:src="@{/images/plus.png}" id="datecourseHours-plusImg" class="plusImg" width="25px" height="25px">
+            <img th:src="@{/images/minus.png}" id="datecourseHours-minusImg" class="minusImg" width="25px" height="25px">
+          </div>
+          <div id="datecourseTel-wrapper" class="common common-display">
+            <div class="common-text">
+              <label for="datecourseTel">전화번호</label>
+            </div>
+            <input type="text" name="datecourseTel" id="datecourseTel" class="common-margin" placeholder="전화번호를 입력하세요.">
+          </div>
+          <div id="datecourseSite-wrapper" class="common common-display">
+            <div class="common-text">
+              <label for="datecourseOfficialSite">웹 사이트</label>
+            </div>
+            <input type="text" name="datecourseOfficialSite" id="datecourseOfficialSite" class="common-margin" placeholder="웹 사이트를 입력하세요.">
+          </div>
+          <div id="datecourseParkingYn-wrapper" class="common common-display">
+            <div class="common-text">
+              <label for="datecourseParkingYn">주차여부</label>
+            </div>
+            <input type="checkbox" name="datecourseParkingYn" id="datecourseParkingYn" class="common-margin">
+          </div>
+          <div id="datecoursePetYn-wrapper" class="common common-display">
+            <div id="datecoursePetYn-text" class="common-text">
+              <label for="datecoursePetYn">반려동물 <br>동반 가능여부</label>
+            </div>
+            <input type="checkbox" name="datecoursePetYn" id="datecoursePetYn" class="common-margin">
+          </div>
+          <div id="datecourseMenu-wrapper" class="common common-display">
+            <div class="common-text">메뉴</div>
+            <div id="datecourseMenu-field">
+            메뉴명<input type="text" name="datecourseMenuNm" class="datecourseMenuNm" placeholder="메뉴명을 입력하세요.">
+            가격<input type="text" name="datecourseMenuPrice" class="datecourseMenuPrice" placeholder="가격을 입력하세요."><br>
+            </div>
+            <img th:src="@{/images/plus.png}" id="datecourseMenu-plusImg" class="plusImg" width="25px" height="25px">
+            <img th:src="@{/images/minus.png}" id="datecourseMenu-minusImg" class="minusImg" width="25px" height="25px">
+          </div>
+          <div id="datecourseImageFile-wrapper" class="common-display">
+            <div id="datecourseImageFile-text" class="common-text">데이트코스 <br>이미지 등록</div>
+            <div id="btnUploadFiles" class="common-margin">
+              <label for="realUploadFiles" id="realUploadFiles-label">이미지 업로드</label>
+              <input type="file" name="realUploadFiles" id="realUploadFiles" multiple="multiple" accept="image/*">
+            </div>
+            <p id="file-info">※ 이미지 파일의 경우, 최대 10개까지만 첨부가 가능합니다.</p>
+          </div>
+          <div id="image-preview" class="common"></div>
+          <div id="btn-wrapper">
+            <button type="button" id="btnUpdate">수정하기</button>
+            <button type="button" id="btnDelete">삭제하기</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
