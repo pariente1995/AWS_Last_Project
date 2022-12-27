@@ -1,10 +1,8 @@
-#container { width:1200px; margin:20px auto;}
-
 /* 왼쪽 side 대표 */
 #side {
   width:20%; height:600px; background-color: rgb(238, 45, 122); ; 
   border-radius: 5px; font-weight: bold; 
-  font-size:1.2rem; float:left;
+  font-size:1.2rem;
   }
 
 
