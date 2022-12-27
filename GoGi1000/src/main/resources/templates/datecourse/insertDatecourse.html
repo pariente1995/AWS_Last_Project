@@ -344,138 +344,138 @@
 <!-- head 영역 끝 -->
 
 <body>
-<div layout:fragment="content">
-    <div id="datecourse-container">
-        <h1>데이트 코스 등록</h1>
-        <hr>
-        <div id="datecourse-form-wrapper">
-            <form action="#" id="datecourseRegForm" method="" enctype="multipart/form-data">
-                <div id="datecourseNm-wrapper" class="common common-display">
-                    <div class="common-text">
-                        <label for="datecourseNm">데이트 코스명</label>
+    <div layout:fragment="content">
+        <div id="datecourse-container">
+            <h1>데이트 코스 등록</h1>
+            <hr>
+            <div id="datecourse-form-wrapper">
+                <form action="#" id="datecourseRegForm" method="" enctype="multipart/form-data">
+                    <div id="datecourseNm-wrapper" class="common common-display">
+                        <div class="common-text">
+                            <label for="datecourseNm">데이트 코스명</label>
+                        </div>
+                        <input type="text" name="datecourseNm" id="datecourseNm" class="common-margin" placeholder="데이트 코스명을 입력하세요.">
                     </div>
-                    <input type="text" name="datecourseNm" id="datecourseNm" class="common-margin" placeholder="데이트 코스명을 입력하세요.">
-                </div>
-                <div id="datecourseArea-wrapper" class="common common-display">
-                    <div class="common-text">
-                        <label for="datecourseArea">지역</label>
+                    <div id="datecourseArea-wrapper" class="common common-display">
+                        <div class="common-text">
+                            <label for="datecourseArea">지역</label>
+                        </div>
+                        <select name="datecourseArea" id="datecourseArea" class="common-margin">
+                            <option value="A0001" selected>서울</option>
+                            <option value="A0002">경기도</option>
+                            <option value="A0003">인천</option>
+                            <option value="A0004">강원도</option>
+                            <option value="A0005">충청남도</option>
+                            <option value="A0006">충청북도</option>
+                            <option value="A0007">세종</option>
+                            <option value="A0008">대전</option>
+                            <option value="A0009">경상북도</option>
+                            <option value="A0010">경상남도</option>
+                            <option value="A0011">전라북도</option>
+                            <option value="A0012">전라남도</option>
+                            <option value="A0013">대구</option>
+                            <option value="A0014">울산</option>
+                            <option value="A0015">광주</option>
+                            <option value="A0016">부산</option>
+                            <option value="A0017">제주도</option>
+                        </select>
                     </div>
-                    <select name="datecourseArea" id="datecourseArea" class="common-margin">
-                        <option value="A0001" selected>서울</option>
-                        <option value="A0002">경기도</option>
-                        <option value="A0003">인천</option>
-                        <option value="A0004">강원도</option>
-                        <option value="A0005">충청남도</option>
-                        <option value="A0006">충청북도</option>
-                        <option value="A0007">세종</option>
-                        <option value="A0008">대전</option>
-                        <option value="A0009">경상북도</option>
-                        <option value="A0010">경상남도</option>
-                        <option value="A0011">전라북도</option>
-                        <option value="A0012">전라남도</option>
-                        <option value="A0013">대구</option>
-                        <option value="A0014">울산</option>
-                        <option value="A0015">광주</option>
-                        <option value="A0016">부산</option>
-                        <option value="A0017">제주도</option>
-                    </select>
-                </div>
-                <div id="datecourseCategory-wrapper" class="common common-display">
-                    <div class="common-text">
-                        <label for="datecourseCategory">데이트 코스 분류</label>
+                    <div id="datecourseCategory-wrapper" class="common common-display">
+                        <div class="common-text">
+                            <label for="datecourseCategory">데이트 코스 분류</label>
+                        </div>
+                        <select name="datecourseCategory" id="datecourseCategory" class="common-margin">
+                            <option value="B0001" selected>놀거리</option>
+                            <option value="B0002">맛집</option>
+                            <option value="B0003">카페</option>
+                        </select>
                     </div>
-                    <select name="datecourseCategory" id="datecourseCategory" class="common-margin">
-                        <option value="B0001" selected>놀거리</option>
-                        <option value="B0002">맛집</option>
-                        <option value="B0003">카페</option>
-                    </select>
-                </div>
-                <div id="datecourseSummary-wrapper" class="common common-display">
-                    <div class="common-text">
-                        <label for="datecourseSummary">데이트 코스 요약</label>
+                    <div id="datecourseSummary-wrapper" class="common common-display">
+                        <div class="common-text">
+                            <label for="datecourseSummary">데이트 코스 요약</label>
+                        </div>
+                        <input type="text" name="datecourseSummary" id="datecourseSummary" class="common-margin" placeholder="데이트 코스 요약을 입력하세요.">
                     </div>
-                    <input type="text" name="datecourseSummary" id="datecourseSummary" class="common-margin" placeholder="데이트 코스 요약을 입력하세요.">
-                </div>
-                <div id="datecourseDesc-wrapper" class="common common-display">
-                    <div class="common-text">데이트 코스 설명</div>
-                    <textarea name="datecourseDesc" id="datecourseDesc" class="common-margin" cols="60" rows="10" placeholder="데이트 코스에 대한 설명을 작성하세요."></textarea>
-                </div>
-                <div id="datecourseInoutYn-wrapper" class="common common-display">
-                    <div class="common-text">실내/외 여부</div>
-                    <input type="radio" name="datecourseInoutYn" id="datecourseInoutYn-in" class="common-margin" value="Y" checked><label for="datecourseInoutYn-in">실내</label>
-                    <input type="radio" name="datecourseInoutYn" id="datecourseInoutYn-out" class="common-margin" value="N"><label for="datecourseInoutYn-out">실외</label>
-                </div>
-                <div id="datecourseFoodType-wrapper" class="common common-display">
-                    <div class="common-text">
-                        <label for="datecourseFoodType">음식종류</label>
+                    <div id="datecourseDesc-wrapper" class="common common-display">
+                        <div class="common-text">데이트 코스 설명</div>
+                        <textarea name="datecourseDesc" id="datecourseDesc" class="common-margin" cols="60" rows="10" placeholder="데이트 코스에 대한 설명을 작성하세요."></textarea>
                     </div>
-                    <select name="datecourseFoodType" id="datecourseFoodType" class="common-margin">
-                        <option value="C0001">한식</option>
-                        <option value="C0002">양식</option>
-                        <option value="C0003">중식</option>
-                        <option value="C0004">일식</option>
-                        <option value="C0005">분식</option>
-                        <option value="C0006">기타</option>
-                    </select>
-                </div>
-                <div id="datecourseHours-wrapper" class="common common-display">
-                    <div class="common-text">
-                        영업시간
+                    <div id="datecourseInoutYn-wrapper" class="common common-display">
+                        <div class="common-text">실내/외 여부</div>
+                        <input type="radio" name="datecourseInoutYn" id="datecourseInoutYn-in" class="common-margin" value="Y" checked><label for="datecourseInoutYn-in">실내</label>
+                        <input type="radio" name="datecourseInoutYn" id="datecourseInoutYn-out" class="common-margin" value="N"><label for="datecourseInoutYn-out">실외</label>
                     </div>
-                    <div id="datecourseHours-field">
-                        <input type="text" name="datecourseHours" class="common-margin datecourseHours" placeholder="영업시간을 입력하세요."><br>
+                    <div id="datecourseFoodType-wrapper" class="common common-display">
+                        <div class="common-text">
+                            <label for="datecourseFoodType">음식종류</label>
+                        </div>
+                        <select name="datecourseFoodType" id="datecourseFoodType" class="common-margin">
+                            <option value="C0001">한식</option>
+                            <option value="C0002">양식</option>
+                            <option value="C0003">중식</option>
+                            <option value="C0004">일식</option>
+                            <option value="C0005">분식</option>
+                            <option value="C0006">기타</option>
+                        </select>
                     </div>
-                    <img th:src="@{/images/plus.png}" id="datecourseHours-plusImg" class="plusImg" width="25px" height="25px">
-                    <img th:src="@{/images/minus.png}" id="datecourseHours-minusImg" class="minusImg" width="25px" height="25px">
-                </div>
-                <div id="datecourseTel-wrapper" class="common common-display">
-                    <div class="common-text">
-                        <label for="datecourseTel">전화번호</label>
+                    <div id="datecourseHours-wrapper" class="common common-display">
+                        <div class="common-text">
+                            영업시간
+                        </div>
+                        <div id="datecourseHours-field">
+                            <input type="text" name="datecourseHours" class="common-margin datecourseHours" placeholder="영업시간을 입력하세요."><br>
+                        </div>
+                        <img th:src="@{/images/plus.png}" id="datecourseHours-plusImg" class="plusImg" width="25px" height="25px">
+                        <img th:src="@{/images/minus.png}" id="datecourseHours-minusImg" class="minusImg" width="25px" height="25px">
                     </div>
-                    <input type="text" name="datecourseTel" id="datecourseTel" class="common-margin" placeholder="전화번호를 입력하세요.">
-                </div>
-                <div id="datecourseSite-wrapper" class="common common-display">
-                    <div class="common-text">
-                        <label for="datecourseOfficialSite">웹 사이트</label>
+                    <div id="datecourseTel-wrapper" class="common common-display">
+                        <div class="common-text">
+                            <label for="datecourseTel">전화번호</label>
+                        </div>
+                        <input type="text" name="datecourseTel" id="datecourseTel" class="common-margin" placeholder="전화번호를 입력하세요.">
                     </div>
-                    <input type="text" name="datecourseOfficialSite" id="datecourseOfficialSite" class="common-margin" placeholder="웹 사이트를 입력하세요.">
-                </div>
-                <div id="datecourseParkingYn-wrapper" class="common common-display">
-                    <div class="common-text">
-                        <label for="datecourseParkingYn">주차여부</label>
+                    <div id="datecourseSite-wrapper" class="common common-display">
+                        <div class="common-text">
+                            <label for="datecourseOfficialSite">웹 사이트</label>
+                        </div>
+                        <input type="text" name="datecourseOfficialSite" id="datecourseOfficialSite" class="common-margin" placeholder="웹 사이트를 입력하세요.">
                     </div>
-                    <input type="checkbox" name="datecourseParkingYn" id="datecourseParkingYn" class="common-margin">
-                </div>
-                <div id="datecoursePetYn-wrapper" class="common common-display">
-                    <div id="datecoursePetYn-text" class="common-text">
-                        <label for="datecoursePetYn">반려동물 <br>동반 가능여부</label>
+                    <div id="datecourseParkingYn-wrapper" class="common common-display">
+                        <div class="common-text">
+                            <label for="datecourseParkingYn">주차여부</label>
+                        </div>
+                        <input type="checkbox" name="datecourseParkingYn" id="datecourseParkingYn" class="common-margin">
                     </div>
-                    <input type="checkbox" name="datecoursePetYn" id="datecoursePetYn" class="common-margin">
-                </div>
-                <div id="datecourseMenu-wrapper" class="common common-display">
-                    <div class="common-text">메뉴</div>
-                    <div id="datecourseMenu-field">
-                        메뉴명<input type="text" name="datecourseMenuNm" class="datecourseMenuNm" placeholder="메뉴명을 입력하세요.">
-                        가격<input type="text" name="datecourseMenuPrice" class="datecourseMenuPrice" placeholder="가격을 입력하세요."><br>
+                    <div id="datecoursePetYn-wrapper" class="common common-display">
+                        <div id="datecoursePetYn-text" class="common-text">
+                            <label for="datecoursePetYn">반려동물 <br>동반 가능여부</label>
+                        </div>
+                        <input type="checkbox" name="datecoursePetYn" id="datecoursePetYn" class="common-margin">
                     </div>
-                    <img th:src="@{/images/plus.png}" id="datecourseMenu-plusImg" class="plusImg" width="25px" height="25px">
-                    <img th:src="@{/images/minus.png}" id="datecourseMenu-minusImg" class="minusImg" width="25px" height="25px">
-                </div>
-                <div id="datecourseImageFile-wrapper" class="common-display">
-                    <div id="datecourseImageFile-text" class="common-text">데이트코스 <br>이미지 등록</div>
-                    <div id="btnUploadFiles" class="common-margin">
-                        <label for="realUploadFiles" id="realUploadFiles-label">이미지 업로드</label>
-                        <input type="file" name="realUploadFiles" id="realUploadFiles" multiple="multiple" accept="image/*">
+                    <div id="datecourseMenu-wrapper" class="common common-display">
+                        <div class="common-text">메뉴</div>
+                        <div id="datecourseMenu-field">
+                            메뉴명<input type="text" name="datecourseMenuNm" class="datecourseMenuNm" placeholder="메뉴명을 입력하세요.">
+                            가격<input type="text" name="datecourseMenuPrice" class="datecourseMenuPrice" placeholder="가격을 입력하세요."><br>
+                        </div>
+                        <img th:src="@{/images/plus.png}" id="datecourseMenu-plusImg" class="plusImg" width="25px" height="25px">
+                        <img th:src="@{/images/minus.png}" id="datecourseMenu-minusImg" class="minusImg" width="25px" height="25px">
                     </div>
-                    <p id="file-info">※ 이미지 파일의 경우, 최대 10개까지만 첨부가 가능합니다.</p>
-                </div>
-                <div id="image-preview" class="common"></div>
-                <div id="btnReg-wrapper">
-                    <button type="submit" id="btnReg">등록하기</button>
-                </div>
-            </form>
+                    <div id="datecourseImageFile-wrapper" class="common-display">
+                        <div id="datecourseImageFile-text" class="common-text">데이트코스 <br>이미지 등록</div>
+                        <div id="btnUploadFiles" class="common-margin">
+                            <label for="realUploadFiles" id="realUploadFiles-label">이미지 업로드</label>
+                            <input type="file" name="realUploadFiles" id="realUploadFiles" multiple="multiple" accept="image/*">
+                        </div>
+                        <p id="file-info">※ 이미지 파일의 경우, 최대 10개까지만 첨부가 가능합니다.</p>
+                    </div>
+                    <div id="image-preview" class="common"></div>
+                    <div id="btnReg-wrapper">
+                        <button type="submit" id="btnReg">등록하기</button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
-</div>
 </body>
 </html>
