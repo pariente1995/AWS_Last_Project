@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http:///www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+       
+<body>
+	<footer th:fragment="footer">
+	  <div id="container">
+	    <div id="footer">
+	      <div id="footer-image-wrapper">
+	        <img id="footer-image" th:src="@{/images/footerstyle.png}">
+	      </div>
+	      <div id="footer-p-wrapper">
+	        <p>@2022 GGC
+	          상호:KOREA. DATE.SITE | 대표: SE HYEOK PARK  <br>
+	          주소: 서울특별시 서초구 서초대로 77길 54(서초더블유타워 13, 14층) <br>
+	          사업자정보확인 | 전화 : 02-342-6675<br>
+	            Copyright by EZEN. All rights reserved
+	        </p>
+	      </div>
+	      <div id="footer-logo-wrapper">
+	        <a href="#"><img id="footer-logo" th:src="@{/images/logo.png}"></a>
+	        <div id="footer-logo-frame"></div>
+	      </div>
+	    </div>
+	  </div>
+	</footer>	
+</body>
+</html>

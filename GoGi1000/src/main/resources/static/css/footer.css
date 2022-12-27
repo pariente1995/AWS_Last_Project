@@ -1,0 +1,52 @@
+#container { width:1200px; margin:0 auto;}
+    /* footer */
+    #footer { 
+      width:100%; position:relative;
+    }
+    #footer-image-wrapper {
+      width:100%;
+    }
+
+    /* footer 전체 이미지 */
+    #footer-image { 
+      width:100%; height:110px; 
+    }
+
+    #footer-p-wrapper {
+      position:absolute;
+      top:17%; left:2%;
+      font-size:0.7rem;
+      color:white;
+      /* transform: translate( -50%, -40%); */
+    }
+
+    /* footer-logo */
+    #footer-logo-wrapper {
+      width:60%;
+      position:absolute;
+      display:flex;
+      left:41%; top:-30%;
+      z-index:99999;
+    }
+
+    /* 흰색 배경 */
+    #footer-logo-frame {
+      width:18%;
+      height:70px;
+      left:4%;
+      top:15%;
+      position:absolute;
+      background-color: white;
+      border-radius: 50%;
+      z-index:1;
+    }
+
+    #footer-logo-wrapper a {
+      width: 50%; height:50%;
+      display:flex;
+    }
+
+    #footer-logo {
+      width:183px;
+      z-index: 2;
+    }

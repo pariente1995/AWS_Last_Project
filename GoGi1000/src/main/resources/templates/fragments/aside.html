@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http:///www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+
+<head>
+	<th:block layout:fragment="css">
+		<link rel="stylesheet" th:href="@{/css/aside.css}"/>
+	</th:block>
+</head>      
+<body>
+	<div layout:fragment="aside">
+		<div id="container">
+    	<!-- left -->
+	    <div id="side">
+	      <div class="sideList">
+	        <a href="#">데이트 코스 리스트</a>
+	      </div>
+	      <div class="sideList">
+	        <a href="#">데이트 코스 수정</a>
+	      </div>
+	      <div class="sideList">
+	        <a href="#">데이트 코스 등록</a>
+	      </div>
+	      <div id="sideImgWrapper">
+	        <img id="sideImg" src="images/img5.png">
+	      </div>
+	    </div>
+	</div>
+</body>
+</html>

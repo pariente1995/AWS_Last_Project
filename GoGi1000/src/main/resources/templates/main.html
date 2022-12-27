@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http:///www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout}">
+      
+<!-- head 영역 시작 -->
+<!-- 개별적으로 사용할 css, js 링크 걸기 위해서 남겨둠 -->
+<head>
+	<th:block layout:fragment="css">
+		<link rel="stylesheet" th:href="@{/css/main.css}"/>
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/bxslider/4.2.12/jquery.bxslider.css">
+	</th:block>
+    <th:block layout:fragment="script">
+        <script th:inline="javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+        <script th:inline="javascript" src="https://cdn.jsdelivr.net/bxslider/4.2.12/jquery.bxslider.min.js"></script>
+        
+        <script th:inline="javascript">
+		    $(document).ready(function() {
+		      // ================ Map 지도 위치 설정 ===================================
+		      // 서울
+		      $(".map-seoul").on("mouseover", function() {
+		        $(".map-seoul-span").css("display", "block");
+		
+		      })
+		      
+		      $(".map-seoul").on("mouseout", function() {
+		        $(".map-seoul-span").css("display", "none");
+		      })
+		
+		      // 부산
+		      $(".map-busan").on("mouseover", function() {
+		        $(".map-busan-span").css("display", "block");
+		      })
+		      
+		      $(".map-busan").on("mouseout", function() {
+		        $(".map-busan-span").css("display", "none");
+		      })
+		
+		      // 대구
+		      $(".map-daegu").on("mouseover", function() {
+		        $(".map-daegu-span").css("display", "block");
+		      })
+		      
+		      $(".map-daegu").on("mouseout", function() {
+		        $(".map-daegu-span").css("display", "none");
+		      })
+		
+		      // 인천
+		      $(".map-incheon").on("mouseover", function() {
+		        $(".map-incheon-span").css("display", "block");
+		      })
+		      
+		      $(".map-incheon").on("mouseout", function() {
+		        $(".map-incheon-span").css("display", "none");
+		      })
+		
+		      // 광주
+		      $(".map-gwangju").on("mouseover", function() {
+		        $(".map-gwangju-span").css("display", "block");
+		      })
+		      
+		      $(".map-gwangju").on("mouseout", function() {
+		        $(".map-gwangju-span").css("display", "none");
+		      })
+		
+		      // 대전
+		      $(".map-daejun").on("mouseover", function() {
+		        $(".map-daejun-span").css("display", "block");
+		      })
+		      
+		      $(".map-daejun").on("mouseout", function() {
+		        $(".map-daejun-span").css("display", "none");
+		      })
+		
+		      // 울산
+		      $(".map-ulsan").on("mouseover", function() {
+		        $(".map-ulsan-span").css("display", "block");
+		      })
+		      
+		      $(".map-ulsan").on("mouseout", function() {
+		        $(".map-ulsan-span").css("display", "none");
+		      })
+		
+		      // 세종
+		      $(".map-sejong").on("mouseover", function() {
+		        $(".map-sejong-span").css("display", "block");
+		      })
+		      
+		      $(".map-sejong").on("mouseout", function() {
+		        $(".map-sejong-span").css("display", "none");
+		      })
+		
+		      // 경기
+		      $(".map-gyunggi").on("mouseover", function() {
+		        $(".map-gyunggi-span").css("display", "block");
+		      })
+		      
+		      $(".map-gyunggi").on("mouseout", function() {
+		        $(".map-gyunggi-span").css("display", "none");
+		      })
+		
+		      // 강원
+		      $(".map-gangwon").on("mouseover", function() {
+		        $(".map-gangwon-span").css("display", "block");
+		      })
+		      
+		      $(".map-gangwon").on("mouseout", function() {
+		        $(".map-gangwon-span").css("display", "none");
+		      })
+		
+		      //충북
+		      $(".map-chungbuk").on("mouseover", function() {
+		        $(".map-chungbuk-span").css("display", "block");
+		      })
+		      
+		      $(".map-chungbuk").on("mouseout", function() {
+		        $(".map-chungbuk-span").css("display", "none");
+		      })
+		
+		      // 충남
+		      $(".map-chungnam").on("mouseover", function() {
+		        $(".map-chungnam-span").css("display", "block");
+		      })
+		      
+		      $(".map-chungnam").on("mouseout", function() {
+		        $(".map-chungnam-span").css("display", "none");
+		      })
+		
+		      // 전북
+		      $(".map-jeonbuk").on("mouseover", function() {
+		        $(".map-jeonbuk-span").css("display", "block");
+		      })
+		      
+		      $(".map-jeonbuk").on("mouseout", function() {
+		        $(".map-jeonbuk-span").css("display", "none");
+		      })
+		
+		      // 전남
+		      $(".map-jeonnam").on("mouseover", function() {
+		        $(".map-jeonnam-span").css("display", "block");
+		      })
+		      
+		      $(".map-jeonnam").on("mouseout", function() {
+		        $(".map-jeonnam-span").css("display", "none");
+		      })
+		
+		      // 경북
+		      $(".map-gyungbuk").on("mouseover", function() {
+		        $(".map-gyungbuk-span").css("display", "block");
+		      })
+		      
+		      $(".map-gyungbuk").on("mouseout", function() {
+		        $(".map-gyungbuk-span").css("display", "none");
+		      })
+		
+		      // 경남
+		      $(".map-gyungnam").on("mouseover", function() {
+		        $(".map-gyungnam-span").css("display", "block");
+		      })
+		      
+		      $(".map-gyungnam").on("mouseout", function() {
+		        $(".map-gyungnam-span").css("display", "none");
+		      })
+		
+		      // 제주
+		      $(".map-jeju").on("mouseover", function() {
+		        $(".map-jeju-span").css("display", "block");
+		      })
+		      
+		      $(".map-jeju").on("mouseout", function() {
+		        $(".map-jeju-span").css("display", "none");
+		      })
+		    })
+		
+		    
+		
+		    /* Ranking */
+		    /* Ranking-frame: ranking에 올라온 게시글 10개를 잡아주는 background */
+		    $(document).ready(function() {
+		      $("#ranking-frame").bxSlider({
+		        slideWidth: 200,        // 이미지의 너비
+		        // slideHeight: 500,    // 이미지의 높이
+		        maxSlides : 5,          // 이미지의 최대 노출 개수
+		        minSlides : 2,          // 이미지의 최소 노출 개수
+		        moveSlides : 2,         // 이미지의 이동 개수
+		        slideMargin: 105,        // 이미지 사이의 마진
+		        pause: 5000,            // 이미지의 노출 시간(전환 + 이동포함), 5000=5초
+		        speed: 1000,            // 이미지의 이동 시간, 2000=2초
+		        auto: true,             // 자동 화면전환 유무, 기본값: false
+		        autoHover: true,        // 마우스오버시에 멈춤, 기본값: false
+		        infiniteLoop: true,    // 반복유무, 기본값: true
+		        pager:false,            // 블릿의 유무, 기본값: true
+		        stopAutoOnClick: true,  // 블릿을 클릭한 후x 슬라이드 정지 유무, 기본값 false
+		        controls:  true,       // 화살표 버튼 유무, 기본값: false
+		        autoControls:false,     // 재생/정비 버튼 유무, 기본값: false
+		        // mode: 'vertical'       // 가로/세로 배치, 기본값의 기준: 가로
+		      })    
+		    })
+		
+		    
+		
+		    /* Hot deal */
+		    $(document).ready(function() {
+		      $("#hotdeal-frame").bxSlider({
+		        slideWidth: 400,        // 이미지의 너비
+		        // slideHeight: 500,    // 이미지의 높이
+		        maxSlides : 3,          // 이미지의 최대 노출 개수
+		        minSlides : 1,          // 이미지의 최소 노출 개수
+		        moveSlides : 3,         // 이미지의 이동 개수
+		        slideMargin: 5,        // 이미지 사이의 마진
+		        pause: 3000,            // 이미지의 노출 시간(전환 + 이동포함), 5000=5초
+		        speed: 1000,            // 이미지의 이동 시간, 2000=2초
+		        auto: false,             // 자동 화면전환 유무, 기본값: false
+		        autoHover: true,        // 마우스오버시에 멈춤, 기본값: false
+		        infiniteLoop: true,    // 반복유무, 기본값: true
+		        pager:false,            // 블릿의 유무, 기본값: true
+		        stopAutoOnClick: true,  // 블릿을 클릭한 후 슬라이드 정지 유무, 기본값 false
+		        controls:  true,       // 화살표 버튼 유무, 기본값: false
+		        autoControls:false,     // 재생/정비 버튼 유무, 기본값: false
+		        // mode: 'vertical'       // 가로/세로 배치, 기본값의 기준: 가로
+		      })    
+		    })        
+        </script>
+    </th:block>
+</head>
+<!-- head 영역 끝 -->
+
+<body>
+	<div layout:fragment="content">
+	  <div id="container">
+	    <div id="map-wrapper">
+	      <div id="map-frame" >
+	        <div class="map" id="map-seoul">
+	          <a class="map-a map-seoul" href="#">서울</a>
+	          <span class="map-span map-seoul-span">Seoul</span>
+	        </div>
+	        <div class="map" id="map-busan">
+	          <a class="map-a map-busan" href="#">부산</a>
+	          <span class="map-span map-busan-span">Busan</span>
+	        </div>
+	        <div class="map" id="map-daegu">
+	          <a class="map-a map-daegu" href="#">대구</a>
+	          <span class="map-span map-daegu-span">Daegu</span>
+	        </div>
+	        <div class="map" id="map-incheon">
+	          <a class="map-a map-incheon" href="#">인천</a>
+	          <span class="map-span map-incheon-span">Incheon</span>
+	        </div>
+	        <div class="map" id="map-gwangju">
+	          <a class="map-a map-gwangju" href="#">광주</a>
+	          <span class="map-span map-gwangju-span">Gwangju</span>
+	        </div>
+	        <div class="map" id="map-daejun">
+	          <a class="map-a map-daejun" href="#">대전</a>
+	          <span class="map-span map-daejun-span">Daejun</span>
+	        </div>
+	        <div class="map" id="map-ulsan">
+	          <a class="map-a map-ulsan" href="#">울산</a>
+	          <span class="map-span map-ulsan-span">Ulsan</span>
+	        </div>
+	        <div class="map" id="map-sejong">
+	          <a class="map-a map-sejong" href="#">세종</a> 
+	          <span class="map-span map-sejong-span">Sejong</span>
+	        </div>
+	        <div class="map" id="map-gyunggi">
+	          <a class="map-a map-gyunggi" href="#">경기</a>
+	          <span class="map-span map-gyunggi-span">Gyunggi</span>
+	        </div>
+	        <div class="map" id="map-gangwon">
+	          <a class="map-a map-gangwon" href="#">강원</a>
+	          <span class="map-span map-gangwon-span">Gangwon</span>
+	        </div>
+	        <div class="map" id="map-chungbuk">
+	          <a class="map-a map-chungbuk" href="#">충북</a>
+	          <span class="map-span map-chungbuk-span">Chungbuk</span>
+	        </div>
+	        <div class="map" id="map-chungnam">
+	          <a class="map-a map-chungnam" href="#">충남</a>  
+	          <span class="map-span map-chungnam-span">Chungnam</span>
+	        </div>
+	        <div class="map" id="map-jeonnam">
+	          <a class="map-a map-jeonnam" href="#">전남</a>
+	          <span class="map-span map-jeonnam-span">Jeonnam</span>
+	        </div>
+	        <div class="map" id="map-jeonbuk">
+	          <a class="map-a map-jeonbuk" href="#">전북</a>
+	          <span class="map-span map-jeonbuk-span">Jeonbuk</span>
+	        </div>
+	        <div class="map" id="map-gyungbuk">
+	          <a class="map-a map-gyungbuk" href="#">경북</a>
+	          <span class="map-span map-gyungbuk-span">Gyungbuk</span>
+	        </div>
+	        <div class="map" id="map-gyungnam">
+	          <a class="map-a map-gyungnam" href="#">경남</a>
+	          <span class="map-span map-gyungnam-span">Gyungnam</span>
+	        </div>
+	        <div class="map" id="map-jeju">
+	          <a class="map-a map-jeju" href="#">제주</a>
+	          <span class="map-span map-jeju-span">Jeju</span>
+	        </div>
+	      </div>
+	      <img id="map-img" th:src="@{/images/지도1.jpeg}" >
+	    </div>
+	
+	    <!-- 랭킹 -->
+	    <h2 id="ranking-h2">이번주 랭킹 TOP 10</h2>
+	    <div id="ranking-wrapper">
+	      <div id="ranking-frame">
+	        <div class="ranking ranking-1">
+	          <div class="ranking-div-img">
+	            <a class="ranking-1" href="#"><img class="ranking-image" th:src="@{/images/food1.jpeg}" width="200" height="200" ></a>
+	          </div>
+	          <p style="font-weight:bold; margin-bottom:-5px;"><a class="ranking-1" href="#">보쌈</a></p>
+	          <p style="font-size:11px;"><a class="ranking-1" href="#">부드러운 보쌈이 먹고 싶다면 이곳을 !</a></p>
+	        </div>
+	        <div class="ranking ranking-2">
+	          <div class="ranking-div-img">
+	            <a class="ranking-2" href="#"><img th:src="@{/images/food2.jpeg}" width="200" height="200"></a>
+	          </div>
+	          <p style="font-weight:bold; margin-bottom:-5px;"><a class="ranking-2" href="#">스테이크</a></p>
+	          <p style="font-size:11px;"><a class="ranking-2" href="#">스테이크 맛집</a></p>
+	        </div>
+	        <div class="ranking ranking-3">
+	          <div class="ranking-div-img">
+	            <a class="ranking-3" href="#"><img th:src="@{/images/food3.jpeg}" width="200" height="200"></a>
+	          </div>
+	          <p style="font-weight:bold; margin-bottom:-5px;"><a class="ranking-3" href="#">김밥</a></p>
+	          <p style="font-size:11px;"><a class="ranking-3" href="#">이색 김밥을 먹고싶다면 여기로 오세요!</a></p>
+	        </div>
+	        <div class="ranking ranking-4">
+	          <div class="ranking-div-img">
+	            <a class="ranking-4" href="#"><img th:src="@{/images/food4.jpeg}" width="200" height="200"></a>
+	          </div>
+	          <p style="font-weight:bold; margin-bottom:-5px;"><a class="ranking-4" href="#">짜장면</a></p>
+	          <p style="font-size:11px;"><a class="ranking-4" href="#">옛날 짜장면 맛이 그리우시다면 이곳을!</a></p>
+	        </div>
+	        <div class="ranking ranking-5">
+	          <div class="ranking-div-img">
+	            <a class="ranking-5" href="#"><img th:src="@{/images/food5.jpeg}" width="200" height="200"></a>
+	          </div>
+	          <p style="font-weight:bold; margin-bottom:-5px;"><a class="ranking-5" href="#">짬뽕</a></p>
+	          <p style="font-size:11px;"><a class="ranking-5" href="#">짬뽕 맛집을 소개해드립니다.</a></p>
+	        </div>
+	        <div class="ranking ranking-6">
+	          <div class="ranking-div-img">
+	            <a class="ranking-6" href="#"><img th:src="@{/images/food6.jpeg}" width="200" height="200"></a>
+	          </div>
+	          <p style="font-weight:bold; margin-bottom:-5px;"><a class="ranking-6" href="#">초밥</a></p>
+	          <p style="font-size:11px;"><a class="ranking-6" href="#">초밥 전문점입니다.</a></p>
+	        </div>
+	        <div class="ranking ranking-7">
+	          <div class="ranking-div-img">
+	            <a class="ranking-7" href="#"><img th:src="@{/images/food7.jpeg}" width="200" height="200"></a>
+	          </div>
+	          <p style="font-weight:bold; margin-bottom:-5px;"><a class="ranking-7" href="#">파스타</a></p>
+	          <p style="font-size:11px;"><a class="ranking-7" href="#">데이트하기 좋은 식당</a></p>
+	        </div>
+	        <div class="ranking ranking-8">
+	          <div class="ranking-div-img">
+	            <a class="ranking-8" href="#"><img th:src="@{/images/food8.jpeg}" width="200" height="200"></a>
+	          </div>
+	          <p style="font-weight:bold; margin-bottom:-5px;"><a class="ranking-8" href="#">양식</a></p>
+	          <p style="font-size:11px;"><a class="ranking-8" href="#">데이트할 장소로 추천 드리는 식당</a></p>
+	        </div>
+	        <div class="ranking ranking-9">
+	          <div class="ranking-div-img">
+	            <a class="ranking-9" href="#"><img th:src="@{/images/food9.jpeg}" width="200" height="200"></a>
+	          </div>
+	          <p style="font-weight:bold; margin-bottom:-5px;"><a class="ranking-9" href="#">파스타</a></p>
+	          <p style="font-size:11px;"><a class="ranking-9" href="#">파스타 맛집</a></p>
+	        </div>
+	        <div class="ranking ranking-10">
+	          <div class="ranking-div-img">
+	            <a class="ranking-10" href="#"><img th:src="@{/images/food10.jpeg}" width="200" height="200"></a>
+	          </div>
+	          <p style="font-weight:bold; margin-bottom:-5px;"><a class="ranking-10" href="#">오므라이스</a></p>
+	          <p style="font-size:11px;"><a class="ranking-10" href="#">추억에 오므라이스</a></p>    
+	        </div>
+	      </div>
+	    </div>
+	    <h2 id="hotdeal-h2">핫딜</h2>
+	    <div id="hotdeal-wrapper">
+	      <div id="hotdeal-frame">
+	        <div class="hotdeal">
+	          <div class="hotdeal-div-img">
+	           <a class="hotdeal-1" href="#"><img th:src="@{/images/hotdeal1.jpeg}" width="400" height="400"></a>
+	          </div>
+	          <p style="font-weight:bold; margin-bottom:-5px;"><a class="hotdeal-1" href="#">애견카페</a></p>
+	          <p style="font-size:11px;"><a class="hotdeal-1" href="#">애완동물들과 함께 즐기는 공간</a></p>
+	        </div>
+	        <div class="hotdeal">
+	          <div class="hotdeal-div-img">
+	           <a class="hotdeal-2" href="#"><img th:src="@{/images/hotdeal2.jpeg}" width="400" height="400"></a>
+	          </div>
+	          <p style="font-weight:bold; margin-bottom:-5px;"><a class="hotdeal-2" href="#">만화카페</a></p>
+	          <p style="font-size:11px;"><a class="hotdeal-2" href="#">책을 좋아하는 분들이라면 이곳을 추천!</a></p>
+	        </div>
+	        <div class="hotdeal">
+	          <div class="hotdeal-div-img">
+	           <a class="hotdeal-3" href="#"><img th:src="@{/images/hotdeal3.jpeg}" width="400" height="400"></a>
+	          </div>
+	          <p style="font-weight:bold; margin-bottom:-5px;"><a class="hotdeal-3" href="#">DVD방</a></p>
+	          <p style="font-size:11px;"><a class="hotdeal-3" href="#">애인과 가볍게 즐길 수 있는 DVD방</a></p>
+	        </div>
+	        <div class="hotdeal">
+	          <div class="hotdeal-div-img">
+	           <a class="hotdeal-4" href="#"><img th:src="@{/images/hotdeal4.jpeg}" width="400" height="400"></a>
+	          </div>
+	          <p style="font-weight:bold; margin-bottom:-5px;"><a class="hotdeal-4" href="#">PC방</a></p>
+	          <p style="font-size:11px;"><a class="hotdeal-4" href="#">화려한 조명이 나를 이끄네</a></p>
+	        </div>
+	        <div class="hotdeal">
+	          <div class="hotdeal-div-img">
+	            <a class="hotdeal-5" href="#"><img th:src="@{/images/hotdeal5.jpeg}" width="400" height="400"></a>
+	          </div>
+	          <p style="font-weight:bold; margin-bottom:-5px;"><a class="hotdeal-5" href="#">놀이공원</a></p>
+	          <p style="font-size:11px;"><a class="hotdeal-5" href="#">스트레스를 풀고 싶다면 이곳을 와라!</a></p>
+	        </div>
+	        <div class="hotdeal">
+	          <div class="hotdeal-div-img">
+	            <a class="hotdeal-6" href="#"><img th:src="@{/images/hotdeal6.jpeg}" width="400" height="400"></a>
+	          </div>
+	          <p style="font-weight:bold; margin-bottom:-5px;"><a class="hotdeal-6" href="#">카페</a></p>
+	          <p style="font-size:11px;"><a class="hotdeal-6" href="#">분위기 좋은 카페는 이곳에 있었다</a></p>
+	        </div>
+	        <div class="hotdeal">
+	          <div class="hotdeal-div-img">
+	            <a class="hotdeal-7" href="#"><img th:src="@{/images/hotdeal7.jpeg}" width="400" height="400"></a>
+	          </div>
+	          <p style="font-weight:bold; margin-bottom:-5px;"><a class="hotdeal-7" href="#">실내낚시터</a></p>
+	          <p style="font-size:11px;"><a class="hotdeal-7" href="#">이색 낚시를 즐기고 싶다면 이곳 실내 낚시터를 추천!</a></p>
+	        </div>
+	        <div class="hotdeal">
+	          <div class="hotdeal-div-img">
+	            <a class="hotdeal-8" href="#"><img th:src="@{/images/hotdeal8.jpeg}" width="400" height="400"></a>
+	          </div>
+	          <p style="font-weight:bold; margin-bottom:-5px;"><a class="hotdeal-8" href="#">클라이밍</a></p>
+	          <p style="font-size:11px;"><a class="hotdeal-8" href="#">클라이밍 재밌드라구요</a></p>
+	        </div>
+	        <div class="hotdeal">
+	          <div class="hotdeal-div-img">
+	            <a class="hotdeal-9" href="#"><img th:src="@{/images/hotdeal9.jpeg}" width="400" height="400"></a>
+	          </div>
+	          <p style="font-weight:bold; margin-bottom:-5px;"><a class="hotdeal-9" href="#">방탈출카페</a></p>
+	          <p style="font-size:11px;"><a class="hotdeal-9" href="#">영화같은 공포를 직접 체험하고 싶다면 이 카페를 와라!</a></p>
+	        </div>
+	        <div class="hotdeal">
+	          <div class="hotdeal-div-img">
+	           <a class="hotdeal-10" href="#"><img th:src="@{/images/hotdeal10.jpeg}" width="400" height="400"> </a>
+	          </div>
+	          <p style="font-weight:bold; margin-bottom:-5px;"><a class="hotdeal-10" href="#">돈까스집</a></p>
+	          <p style="font-size:11px;"><a class="hotdeal-10" href="#">바삭바삭하고, 맛있는 돈까스집을 찾고 있다면 이곳을 추천한다!</a></p>
+	        </div>
+	      </div>
+	    </div>
+	  </div>
+	</div>
+</body>
+</html>

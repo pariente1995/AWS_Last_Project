@@ -1,0 +1,102 @@
+/* Container */
+#container {
+  width:1200px; margin:0 auto;
+}
+
+/* 
+  Map-Wrapper 
+  wrapper: 가장 바깥 테둘리  
+*/
+#map-wrapper { text-align:center;}
+
+#map-frame { position:relative; }
+
+/* 행정구역 하나하나의 style통칭 */
+.map { 
+  position:absolute;  cursor:pointer;
+  width:5%; margin-left:-1%;
+}
+
+.map-a { text-decoration: none; color: black;  font-size:1rem; }
+
+.map-span {
+  display:none; 
+  font-size:0.7rem;
+}
+
+/* 지도위에 지역 표시 */
+#map-seoul { top:80px; left:44%;}
+#map-busan { top:325px; left:56%;}
+#map-daegu { top:250px; left:55%}
+#map-incheon { top:90px; left:40%;}
+#map-gwangju { top: 320px; left:43%;}
+#map-daejun { top:200px; left:47%;}
+#map-ulsan { top:290px; left:59%;}
+#map-sejong { top: 170px; left:46%;}
+#map-gyunggi { top:110px; left:46%;}
+#map-gangwon { top: 70px; left:54%;}
+#map-chungbuk { top: 150px; left:50%;}
+#map-chungnam { top:190px; left:42%;}
+#map-jeonnam { top:370px; left:40%;}
+#map-jeonbuk { top:270px; left:44%;}
+#map-gyungbuk { top:200px; left:56%;}
+#map-gyungnam { top: 300px; left:53%;}
+#map-jeju { top:450px; left:40%;}
+
+#map-img{
+  width:30%; 
+}
+
+/*
+ Ranking
+ ranking의 최종 background 
+*/
+#ranking-wrapper {
+  width:100%; display:flex; justify-content: center;
+}
+
+#ranking-frame { 
+ margin-left:3.2%;
+}
+
+/* 이미지 화면 확대 */
+.ranking a img {
+  transition: all 0.2s linear;
+}
+
+.ranking a, .hotdeal a { color:black; text-decoration:none;}
+
+.ranking-div-img {
+  overflow: hidden;
+}
+
+.ranking a:hover img {
+  transform: scale(1.2);
+}
+
+.ranking-image {
+  position:relative;
+}
+
+/* Hot deal */
+/* Hot-deal의 최종 background */
+#hotdeal-wrapper {
+  width:100%; display:flex; justify-content: center;
+}
+
+#hotdeal-h2, #ranking-h2{
+  width:100%; display:flex; justify-content: flex-start;
+}
+
+/* 이미지 화면 확대 */
+.hotdeal a img{
+  transition: all 0.2s linear;
+}
+
+.hotdeal-div-img {
+  overflow:hidden;
+}
+
+.hotdeal a:hover img {
+  transform: scale(1.2);
+}

@@ -1,0 +1,34 @@
+#container { width:1200px; margin:20px auto;}
+
+/* 왼쪽 side 대표 */
+#side {
+  width:20%; height:600px; background-color: rgb(238, 45, 122); ; 
+  border-radius: 5px; font-weight: bold; 
+  font-size:1.2rem; float:left;
+  }
+
+
+/* list 감싸는 div */
+.sideList { 
+  width:100%; height:10%; display:flex; justify-content: right; align-items: center;
+  margin-left:1%;
+
+}
+#sideImgWrapper {
+  width:100%; height:60%; display:flex; justify-content: center; align-items: flex-end;
+  
+}
+#sideImg {
+  width:100%; height:40%; 
+}
+
+.sideList a { 
+  width:95%; height:70%; display:flex; justify-content: center; align-items: center;
+  color:white; text-decoration: none;  border:none;
+}
+
+.sideList a:hover {
+  background-color: white; color: rgb(238, 45, 122); 
+  display:flex; justify-content: center; align-items: center; border:none;
+  border-top-left-radius: 40%; border-bottom-left-radius: 40%;
+}

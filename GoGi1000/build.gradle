@@ -1,0 +1,56 @@
+plugins {
+	id 'java'
+	id 'org.springframework.boot' version '2.7.6'
+	id 'io.spring.dependency-management' version '1.0.15.RELEASE'
+}
+
+group = 'com.gogi1000'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '11'
+
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+}
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	//implementation 'org.springframework.boot:spring-boot-starter-security'
+	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	//implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity5'
+	compileOnly 'org.projectlombok:lombok'
+	developmentOnly 'org.springframework.boot:spring-boot-devtools'
+	runtimeOnly 'com.mysql:mysql-connector-j'
+	annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+	annotationProcessor 'org.projectlombok:lombok'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	//testImplementation 'org.springframework.security:spring-security-test'
+	
+	// https://mvnrepository.com/artifact/com.zaxxer/HikariCP
+    implementation 'com.zaxxer:HikariCP:5.0.1'
+
+    // Thymeleaf 레이아웃을 잡아주는 라이브러리
+    implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect:3.1.0'
+
+    // https://mvnrepository.com/artifact/org.mybatis/mybatis
+    implementation 'org.mybatis:mybatis:3.5.11'
+
+    // https://mvnrepository.com/artifact/org.mybatis/mybatis-spring
+    implementation 'org.mybatis:mybatis-spring:3.0.0'
+
+    // https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-oauth2-client
+    // implementation 'org.springframework.boot:spring-boot-starter-oauth2-client:2.7.6'
+    // 스프링부트의 버전이 이미 설정이 되어 있어 뒷 부분의 버전은 생략해도 된다.
+    //implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}

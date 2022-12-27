@@ -1,0 +1,108 @@
+#container { width:1200px; margin:20px auto;}
+
+    #header {
+      width: 100%; display:flex;
+      background-color: white;
+    }
+
+    /* header-logo */
+    #header-logo { 
+      width:30%; cursor:pointer; 
+      margin-left:1%;
+    }
+    #header-logo:hover {
+      box-shadow:5px -7px 5px #E6E6E6;  
+    }
+
+    #header-h2 { margin-bottom:-80px;}
+
+    #header-balloon { 
+      transform:rotate(35deg); width:35px; 
+      margin:35px 0 -15px 120px;
+    }
+
+
+    /* header-search */
+    #header-search-wrapper {
+      width:45%; 
+      border-radius: 30px;
+      display:flex; justify-content:center;
+      align-items: center; border:none;
+    }
+
+    #header-search { 
+      width:400px; height:40px;
+      border-radius: 30px; border:1px solid lightgray;
+      display: flex; align-items: center;
+    }
+
+
+    #header-search-img { 
+      width:25px; padding:15px; 
+      display:flex; align-items:center;
+    }
+
+    #header-search-input {
+      width:300px; height:35px; font-size:0.9rem;   
+      border:none; outline:none; background:transparent;
+    }
+
+
+    #header-search-wrapper #header-search:hover {
+      background-color: #F2F2F2; box-shadow: 5px 5px 5px gray;
+      border:none;
+    }
+
+    /* header-login, join */
+    #header-login {  
+      width:25%; cursor:pointer; 
+      align-items: center; display:flex;
+      justify-content: flex-end;
+    }
+
+
+    #header-login-ul {
+      padding:15px; box-sizing: content-box; 
+      display: flex; align-items: center;
+    }
+
+    #header-login-ul:hover { 
+      background-color:#F2F2F2; border-radius: 30px;
+      box-shadow: 5px 5px 5px gray;
+    }
+
+    #header-login-ul li { 
+      text-decoration:none; display:inline-block; 
+    }
+
+    #header-login-ul-image {
+      width:15px;
+    }
+
+    /* nav */
+    #nav { display: flex;}
+
+    #nav-image { width:100%; height:90px; margin-bottom:30px;}
+
+    #nav-ul {
+      width:1400px; position:absolute; display:flex; margin-top:24px;
+    } 
+
+    #nav-ul-li {
+      width:300px; display:flex; justify-content: space-around;
+    }
+
+    #nav-ul li:hover { text-decoration: underline;}
+
+    #nav-div-li { 
+      width: 800px; display:flex; justify-content: right;
+    }
+
+    #nav ul li { 
+      list-style:none; cursor:pointer; font-weight:bold;
+      font-size:1.18rem; color:white; 
+    }
+
+    #nav ul li:hover { 
+      color:black;  
+    }
