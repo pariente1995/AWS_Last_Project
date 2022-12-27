@@ -9,7 +9,7 @@
 	</th:block>
 </head>      
 <body>
-	<div layout:fragment="aside">
+	<aside th:fragment="aside">
     	<!-- left -->
 	    <div id="side">
 	      <div class="sideList">
@@ -22,9 +22,9 @@
 	        <a href="#">데이트 코스 등록</a>
 	      </div>
 	      <div id="sideImgWrapper">
-	        <img id="sideImg" src="images/img5.png">
+	        <img id="sideImg" th:src="@{/images/img5.png}">
 	      </div>
 	    </div>
-	</div>
+	</aside>
 </body>
 </html>

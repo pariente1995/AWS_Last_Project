@@ -6,3 +6,9 @@ body {
   /* 구글 웹 폰트 사용 - Noto Sans Korean */
   font-family: 'Noto Sans KR', sans-serif;
 }
+
+main {
+  width: 1350px;
+  display: flex;
+  margin-bottom: 40px;
+}
