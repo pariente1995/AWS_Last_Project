@@ -1,0 +1,171 @@
+/* 타이틀 영역 */
+    .main-wrap{
+        width: 1200px;
+        margin: 10px auto;
+        position: relative;
+    }
+    .main-wrap img{
+        width: 100%;
+        height: 130px;
+        vertical-align: middle;
+    }
+    #main-logo{
+        position: absolute;
+        top: -10px;
+        left: 40px;
+        width: 50px;
+        height: 100px;
+        transform: translate( -50%, -50% );
+        text-align: left;
+        color: white;
+        font-size: 50px;
+    }
+
+     /* 비밀번호찾기 타이틀 */
+     #container-main-text{
+        white-space: nowrap;
+        line-height:  1em;
+        width: 600px;
+        margin: 0 auto;
+    }
+
+    #main-text{
+        float: right;
+        width: 370px;
+    }
+
+    #main-line{
+        display: inline;
+        line-height: -2em;
+        width: 200px;
+    }
+
+    /* 부제목 */
+    #container-sub-text{
+        font-size: 0.8em;
+        white-space: nowrap;
+        width: 600px;
+        margin: 0 auto;
+    }
+
+    #sub-text{
+        text-align: center;
+        margin-top: -0.5em;
+        margin-bottom: 3em;
+
+    }
+
+    .main-logo2{
+        position: absolute;
+        top: 55%;
+        left: 50%;
+        width: 20%;
+        transform: translate( -50%, -50% );
+        color: white;
+    }
+
+    /* 비밀번호 찾기 영역 */
+    .container{
+        width: 550px;
+        margin: auto;
+    }
+
+    /* input box 영역 */
+
+    .input_wrapper {
+        position: relative;
+        display: flex;
+        width: 400px;
+        align-items: center;
+    }
+    
+    .label_wrapper1 {
+		margin-top: 20px;
+		display: flex;
+		/* justify-content: space-between; */
+		align-items: center;
+	}
+
+    .label_wrapper2 {
+        margin-bottom: 30px;
+        font-size: 1.5em;
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+	}
+
+    .input_wrapper {
+        position: relative;
+        display: flex;
+        width: 400px;
+        align-items: center;
+        
+    }
+
+    .input input {
+        flex-grow: 1;
+        border: 0;
+        padding: 0;
+        padding-inline-start: 0.5rem;
+        padding-inline-end: 0.5rem;
+        font-size: 1rem;
+        line-height: 1.5;
+        height: 3rem;
+        overflow: hidden;
+        order: 3;
+        background: #fff;
+        outline: none;
+        border-radius: 1px solid #929292;
+ 
+    }
+    .input_border {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        display: block;
+        width: 400px;
+        border: 1px solid #929292;
+        border-radius: 4px;
+        pointer-events: none;
+    }
+
+    .input_border2 {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        display: block;
+        width: 200px;
+        border: 1px solid #929292;
+        border-radius: 4px;
+        pointer-events: none;
+    }
+
+    /* sub test */
+    .sub-text{
+        text-align: center;
+        margin-top: -2em;
+        margin-bottom: 3em;
+
+    }
+
+    /* 버튼 */
+    .btn2 {
+        width:150px;
+        margin-top: 40px;
+        min-height: 3rem;
+        border: none;
+        background: rgb(238, 45, 122);;
+        color: white;
+        font-size: 1em;
+        font-weight: 700;
+        display: block;  
+        cursor: pointer; 
+        border-radius: 5px;
+    }
+
+    .btn_inner {
+        border-radius: 64px;
+        justify-content: center;
+        text-align: center;
+        display: block;
+    }

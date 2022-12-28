@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http:///www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      
+<!-- head 영역 시작 -->
+<!-- 개별적으로 사용할 css, js 링크 걸기 위해서 남겨둠 -->
+<head>
+	<th:block layout:fragment="css">
+		<link rel="stylesheet" th:href="@{/css/newPwd.css}"/>
+	</th:block>
+    <th:block layout:fragment="script">
+        <script th:inline="javascript" src="${pageContext.request.contextPath }/js/jquery-3.6.1.min.js"></script>
+        
+        <script th:inline="javascript">
+			
+        </script>
+    </th:block>
+</head>
+<!-- head 영역 끝 -->
+
+<body>
+	<div layout:fragment="content">
+	  	<div class="form-wrapper">
+
+        <!-- ========== 최상단 영역 ========== -->
+        <div class="main-wrap">
+            <div class="main-image">
+                <img src="/images/KakaoTalk_20221216_095545610.png" alt="" />
+            </div>
+            <div>
+                <p id="main-logo" href="javascript:history.back();">←</p>
+            </div>
+            <div class="main-logo2" style="position: relative;">
+                <img style="margin-top: -60px;" src="/images/logo.png" alt="">
+                <div
+                    style="background-color: white; width: 140px; height: 70px; margin-top: -100px; margin-left: 50px;">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 비밀번호 설정 타이틀 -->
+    <div id="container-main-text" style="margin-top: 130px;">
+        <div id="main-text">
+            &ensp;
+            <hr>
+        </div>
+        <div id="main-line">
+            <h1><u>새 비밀번호 설정</u></h1>
+        </div>
+    </div>
+
+    <div id="container-sub-text">
+        <div id="sub-text" style="text-align: left;">
+            <p>새로운 비밀번호를 설정합니다.</p>
+        </div>
+    </div>
+
+    <div class="container">
+
+        <!-- 이름 -->
+        <div class="input  label_wrapper2" style="font-size: 1em; ">새 비밀번호
+            <div class="input_wrapper">
+                <input type="text" name="userId" id="userId" required placeholder="새로운 비밀번호를 입력하세요.">
+                <div class="input_border"></div>
+            </div>
+        </div>
+
+        <!-- 이메일 -->
+        <div class="input  label_wrapper2" style="font-size: 1em;">새 비밀번호 확인
+            <div class="input_wrapper">
+                <input type="text" name="userEmail" id="userEmail" required placeholder="새로운 비밀번호 확인">
+                <span class="input_border"></span>
+            </div>
+        </div>
+    </div>
+
+    <!-- 비밀번호 재설정 btn -->
+    <div style="display: flex; justify-content: center; margin-bottom: 5em;">
+        <button type="submit" class="btn2" id="btnRePwd">
+            <span class="btn_inner">변경하기</span>
+        </button>
+    </div>
+	</div>
+</body>
+</html>

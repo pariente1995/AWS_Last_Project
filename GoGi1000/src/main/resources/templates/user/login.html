@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http:///www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      
+<!-- head 영역 시작 -->
+<!-- 개별적으로 사용할 css, js 링크 걸기 위해서 남겨둠 -->
+<head>
+	<th:block layout:fragment="css">
+		<link rel="stylesheet" th:href="@{/css/login.css}"/>
+	</th:block>
+    <th:block layout:fragment="script">
+        <script th:inline="javascript" src="${pageContext.request.contextPath }/js/jquery-3.6.1.min.js"></script>
+    </th:block>
+</head>
+<!-- head 영역 끝 -->
+
+<body>
+	<div layout:fragment="content">
+	  <div class="form-wrapper">
+        <!-- ========== 최상단 영역 ========== -->
+        <div class="main-wrap">
+            <div class="main-image">
+                <img src="/images/KakaoTalk_20221216_095545610.png" alt="" />
+            </div>
+            <div>
+                <p id="main-logo" href="javascript:history.back();">←</p>
+            </div>
+            <div class="main-logo2" style="position: relative;">
+                <img style="margin-top: -60px;" src="/images/logo.png" alt="">
+                <div
+                    style="background-color: white; width: 140px; height: 70px; margin-top: -100px; margin-left: 50px;">
+                </div>
+            </div>
+        </div>
+        <div class="main-text" style="margin-top: 130px;">
+            <p>로그인</p>
+        </div>
+    </div>
+
+    <!-- 로그인 부분 -->
+
+    <div class="container" style="margin-bottom: 100px;">
+
+        <!-- 아이디 -->
+        <div class="label_wrapper1"><label for="userId">아이디</label></div>
+        <div class="input  label_wrapper2">
+            <div class="input_wrapper">
+                <input type="text" name="userId" id="userId" required placeholder="아이디를 입력하세요.">
+                <span class="input_border"></span>
+            </div>
+        </div>
+
+        <!-- 패스워드 입력란 -->
+        <div>
+            <div class="label_wrapper1"><label for="userPw">비밀번호</label></div>
+            <div class="input label_wrapper2">
+                <div class="input_wrapper">
+                    <input type="password" name="userPw" id="userPw" required placeholder="비밀번호를 입력하세요.">
+                    <span class="input_border"></span>
+                </div>
+            </div>
+            <div class="sub_area">
+                <a href="@{/user/findId}" style="color: black;">아이디 찾기</a> |
+                <a href="@{/user/findPwd}" style="color: black;">비밀번호 찾기</a> |
+                <a href="@{/user/join}" style="color: black;">회원가입</a>
+            </div>
+        </div>
+
+        <!-- 로그인 버튼 -->
+        <div style="display: flex; justify-content: center; margin-top: 50px;">
+            <button type="submit" class="btn2" id="btnLogin">
+                <span class="btn_inner">로그인</span>
+            </button>
+        </div>
+        <div style="display: flex; justify-content: center; margin-top: 15px;">
+            <button type="submit" class="btn3" id="kakaoLogin">
+                <img width="100%" src="/images/login_kakao.png">
+            </button>
+        </div>
+        <div style="display: flex; justify-content: center; margin-top: 15px;">
+            <button type="submit" class="btn4" id="naverLogin">
+                <img width="40px" height="38px" style="float: left;" src="/images/btnG_아이콘사각.png">네이버 로그인
+            </button>
+        </div>
+
+    </div>
+	</div>
+</body>
+</html>

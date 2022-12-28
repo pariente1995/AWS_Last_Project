@@ -1,5 +1,6 @@
 package com.gogi1000.datecourse.controller;
 
-public class UserController {
 
+public class UserController {
+	
 }

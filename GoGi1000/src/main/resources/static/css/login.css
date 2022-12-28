@@ -1,0 +1,159 @@
+/* 타이틀 영역 */
+    .main-wrap{
+        width: 1200px;
+        margin: 10px auto;
+        position: relative;
+    }
+    .main-wrap img{
+        width: 100%;
+        height: 130px;
+        vertical-align: middle;
+    }
+    #main-logo{
+        position: absolute;
+        top: -10px;
+        left: 40px;
+        width: 50px;
+        height: 100px;
+        transform: translate( -50%, -50% );
+        text-align: left;
+        color: white;
+        font-size: 50px;
+    }
+
+    .main-logo2{
+        position: absolute;
+        top: 55%;
+        left: 50%;
+        width: 20%;
+        transform: translate( -50%, -50% );
+        color: white;
+    }
+
+    .main-text{
+        text-align: center;
+        font-size: 2em;
+        margin-bottom: 20px;
+    }
+
+    /* 로그인 영역 */
+    .container{
+        width: 400px;
+        margin: auto;
+    }
+
+    /* input box 영역 */
+
+    .input_wrapper {
+        position: relative;
+        display: flex;
+        width: 400px;
+        align-items: center;
+    }
+    
+    .label_wrapper1 {
+		margin-top: 20px;
+		display: flex;
+		/* justify-content: space-between; */
+		align-items: center;
+	}
+
+    .label_wrapper2 {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+        margin-right: -15px;
+	}
+
+    .input_wrapper {
+        position: relative;
+        display: flex;
+        width: 400px;
+        align-items: center;
+        
+    }
+
+    .input input {
+        flex-grow: 1;
+        border: 0;
+        padding: 0;
+        padding-inline-start: 0.5rem;
+        padding-inline-end: 0.5rem;
+        font-size: 1rem;
+        line-height: 1.5;
+        height: 3rem;
+        overflow: hidden;
+        order: 3;
+        background: #fff;
+        outline: none;
+        border-radius: 1px solid #929292;
+ 
+    }
+    .input_border {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        display: block;
+        width: 400px;
+        border: 1px solid #929292;
+        border-radius: 4px;
+        pointer-events: none;
+    }
+
+    /* sub menu */
+    .sub_area{
+        font-size: 0.8em;
+        text-align: right;
+        white-space: nowrap;
+        margin-top: 5px;
+    }
+
+    /* 버튼 */
+    .btn2 {
+        width:62%;
+        height: 40px;
+        border: none;
+        background: rgb(238, 45, 122);;
+        color: white;
+        font-size: 0.8em;
+        font-weight: 700;
+        display: block;  
+        cursor: pointer;
+        border-radius: 5px;
+    }
+
+    .btn3{
+        width:65%;
+        height: 40px;
+        border: none;
+        background-color: white;
+        display: block;
+        cursor: pointer;
+    }
+
+    .btn4{
+        width:62%;
+        height: 40px;
+        border: none;
+        background-color: #03C75A;
+        color: white;
+        font-size: 0.8em;
+        font: bold;
+        padding-right: 30px;
+        line-height: 40px;
+        display: block;
+        cursor: pointer;
+        border-radius: 5px;
+    }
+
+    .login_img{
+        display: inline;
+        object-fit: contain;
+    }
+
+    .btn_inner {
+        border-radius: 64px;
+        justify-content: center;
+        text-align: center;
+        display: block;
+    }
