@@ -1,0 +1,167 @@
+#datecourse-container {
+  width: 1000px;
+}
+
+#datecourse-form-wrapper {
+  margin: 30px 0;
+}
+
+#datecourseNm-wrapper #datecourseNm {
+  width: 200px;
+}
+
+/* 데이트 코스명, 데이트 코스 요약, 영업시간, 전화번호, 웹 사이트, 메뉴, 가격 높이 설정 */
+#datecourseNm, #datecourseSummary, .datecourseHours, #datecourseTel, 
+#datecourseOfficialSite, .datecourseMenuNm, .datecourseMenuPrice {
+  height: 23px;
+}
+
+/* 지역, 데이트 코스 분류 크기 설정 */
+#datecourseArea, #datecourseCategory {
+  width: 80px;
+  height: 30px;
+}
+
+/* 데이트 코스 요약 크기 설정 */
+#datecourseSummary-wrapper #datecourseSummary {
+  width: 300px;
+}
+
+/* 음식종류 크기 설정 */
+#datecourseFoodType {
+  width: 60px;
+  height: 30px;
+}
+
+/* 주차여부, 반려동물 동반 가능 여부 크기 설정 */
+#datecourseParkingYn, #datecoursePetYn {
+  width:20px;
+  height: 20px;
+}
+
+/* 여러항목 margin 설정(등록항목들 간격) */
+.common {
+  margin-bottom: 23px;
+}
+
+/* 여러항목 display 동일 설정 */
+.common-display {
+  display: flex;
+}
+
+/* 여러항목 margin-left 동일 설정 */
+.common-margin {
+  margin-left: 35px;
+}
+
+/* 여러항목 동일 설정 */
+.common-text {
+  width: 125px;
+  line-height: 25px;
+  text-align: right;
+}
+
+/* placeholder 글씨 크기 설정 */
+#datecourseNm-wrapper #datecourseNm, #datecourseSummary, .datecourseHours, 
+#datecourseTel, #datecourseOfficialSite, .datecourseMenuNm, 
+.datecourseMenuPrice::placeholder {
+  font-size: 0.8rem;
+}
+
+/* 사용자 임의 사이즈 변경 불가 */
+#datecourseDesc-wrapper #datecourseDesc {
+  resize: none;
+}
+
+#datecourseDesc::placeholder {
+  padding: 3px;
+}
+
+/* 영업시간, 메뉴 영역 관련 plus 이미지 설정 */
+.plusImg {
+  margin-left: 15px;
+  cursor: pointer;
+}
+
+/* 영업시간, 메뉴 영역 관련 minus 이미지 설정 */
+.minusImg {
+  margin-left: 10px;
+  cursor: pointer;
+}
+
+#datecoursePetYn-wrapper {
+  align-items: center;
+}
+
+#datecourseMenu-field {
+  padding-left: 35px;
+}
+
+.datecourseMenuNm {
+  margin-right: 20px;
+}
+
+.datecourseMenuNm, .datecourseMenuPrice {
+  margin-left: 10px;
+}
+
+#datecourseImageFile-wrapper {
+  align-items: center;
+  text-align: center;
+}
+
+/* 이미지 업로드 버튼 */
+#datecourseImageFile-wrapper #btnUploadFiles {
+  width: 120px;
+  height: 35px;
+  line-height: 35px;
+  background-color: #ee2d7a;
+  color: white;
+  font-size: 0.9rem;
+  font-weight: bold;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+#datecourseImageFile-wrapper #realUploadFiles-label {
+  cursor: pointer;
+}
+
+/* 파일첨부 */
+#btnUploadFiles #realUploadFiles {
+  display: none;
+}
+
+#file-info {
+  margin-left: 5px;
+  font-size: 0.9rem;
+  font-weight: bold;
+  color: red;
+}
+
+/* 이미지 미리보기 영역 */
+#image-preview {
+  width: 648px;
+  min-height: 250px;
+  margin-left: 160px;
+  border: 1px solid black;
+  border-radius: 5px;
+}
+
+#btnReg-wrapper {
+  text-align: right;
+  margin-right: 190px;
+}
+
+/* 등록하기 버튼 */
+#btnReg-wrapper #btnReg {
+  width: 100px;
+  height: 35px;
+  background-color: #ee2d7a;
+  color: white;
+  font-size: 0.9rem;
+  font-weight: bold;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}

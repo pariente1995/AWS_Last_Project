@@ -1,0 +1,89 @@
+
+
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap');
+    body {
+      font-family: 'Noto Sans KR', sans-serif;
+    }
+
+    /* 페이지 전체 */
+    #main-container { width: 1000px; margin: auto; min-height: 700px;}
+
+
+     /* 메인 화면 */
+    #div-wrapper-main { text-align: center; width: 90%; margin-top: 10px;}
+    /* 메인 제목 */
+    #main-title { 
+      position: relative; justify-content: right;
+      width: 80%; margin: auto;
+    }
+    #main-title-img { 
+      position: absolute; top: -22px; right: 505px; 
+      width: 50px; transform:rotate(35deg); 
+    }
+    /* 폼 */
+    #searchForm { text-align: center; margin: auto; width: 80%; margin-top: 30px;}
+    #searchCondition { 
+      height: 30px; width: 30%; font-size: 0.9rem; 
+      border-radius: 5px; padding-left: 5px;}
+    #searchDiv { 
+      border: 1px solid black; border-radius: 5px; 
+      height: 30px;  padding: 0 0; width: 65%;
+    }
+    #searchInput { border: none;  padding: 0px; margin-top: 2px; width: 80%;}
+    #searchInput, select:focus  { outline: none;}
+    /* table 태그 */
+    .table-bordered { text-align: center; margin: auto; width: 80%;}    
+    table { 
+      border-bottom: 1px solid black;
+    }
+    th { 
+      background-color: #ee2d7a; font-size: 1.1rem; 
+      height: 50px; color: white;
+    }
+    td { height: 40px; font-size: 0.9rem;}
+    table tr:not(:first-of-type):hover { font-weight: bold; background-color: #F9FAFB; }
+    table tr:not(:first-of-type):hover a { text-decoration: underline }
+    .table-bordered { border-left: none; border-right: none;}
+    tr, th, td { border: none;}
+     /* a 태그 */
+    .linkMain { 
+      text-decoration-line : none; color : black
+    }
+    /* button 태그 */
+    button { 
+      border: none; border-radius: 5px; 
+      background-color: #ee2d7a; color: white;
+    }
+    #modelBtnDelete { width: 70px; height: 30px; font-weight: bold;}
+
+    /* pagination */
+    .page-item { margin: 50px 10px 0px; }
+    .page-link { 
+      width: 35px; height: 38px;
+      border: 1px solid lightgray; 
+      color: black; border-radius: 5px; font-weight: bold;
+    }
+    .page-link:hover { 
+      background-color: white; color: #ee2d7a;
+      border: 1px solid #ee2d7a; 
+    }
+    .page-link span { color: black; font-weight: bold}
+    .page-link:hover span { color: #ee2d7a;}
+
+    .snowflake {
+      width: 8px; height: 8px;
+      box-shadow: 1px;
+      border-radius: 50%; background-color: white;
+      position: absolute; top: -8px;
+      animation: fall 10s linear;
+    }
+
+    @keyframes fall {
+      from {
+
+      }
+      to {
+        transform: translateY(100vh);
+        opacity: 0;
+      }
+    }
