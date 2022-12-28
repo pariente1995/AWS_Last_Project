@@ -28,5 +28,4 @@ public class DatecourseController {
 
         return mv;
     }
-    
 }
