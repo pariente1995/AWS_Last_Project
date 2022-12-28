@@ -43,8 +43,8 @@ public class Datecourse {
     private String datecourseOfficialSite;
     private String datecourseParkingYn;
     private String datecoursePetYn;
-    private int datecourseCnt;
+    private int datecourseCnt = 0;
     private LocalDateTime datecourseRgstDate = LocalDateTime.now();
     private LocalDateTime datecourseModfDate = LocalDateTime.now();
-    private String datecourseUseYn;
+    private String datecourseUseYn = "Y";
 }
