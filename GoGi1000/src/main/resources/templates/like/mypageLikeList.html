@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http:///www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout-admin}">
+<head>
+	<th:block layout:fragment="css">
+		<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" 
+			  rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" 
+			  crossorigin="anonymous">
+		<link rel="stylesheet" th:href="@{/css/mypageLikeList.css}"/>	
+	</th:block>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>마이페이지-좋아요리스트</title>
+  <th:block layout:fragment="script">
+     <script th:inline="javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+     <script th:inline="javascript" src="https://cdn.jsdelivr.net/bxslider/4.2.12/jquery.bxslider.min.js"></script>
+     <script src="https://code.jquery.com/jquery-3.6.2.js"
+  					integrity="sha256-pkn2CUZmheSeyssYw3vMp1+xyub4m+e+QK4sQskvuo4="
+  					crossorigin="anonymous"></script>  
+    <script th:inline="javascript">
+    	 $(function() {
+	     	$(".btnLike").each(function() {
+	        	$(this).on('click', function() {
+	          		if($(this).children('img').attr('src') === "/images/yellowStar.png") {
+	            	alert("'좋아요' 취소하였습니다.");
+	            	$(this).find("img").attr("src", "/images/star.png");      
+	          		}
+		          	else {
+		            	alert("'좋아요' 하였습니다.");
+		            	$(this).find("img").attr("src", "/images/yellowStar.png");
+		          	}
+	        	});
+	      	});
+			
+	    });
+  	</script>
+  </th:block>
+</head>
+<body>
+	
+    	<div layout:fragment="content">
+    	<div id="likelist-container">
+			<!-- 메인 화면 -->
+        <div id="div-wrapper-main">
+          <!-- 메인 제목 -->
+          <div id="main-title">
+            <h1 style="margin: 0; float: left;">좋아요 리스트</h1>
+            <img id="main-title-img" th:src="@{/images/heart.png}" alt="">
+          </div>
+          <hr style="margin: auto; width: 80%;">
+          <!-- 메인 내용 -->
+            <!-- 좋아요 리스트 출력 --> 
+            <div style="text-align: center; min-height: 480px;">
+              <table>
+                <tr>
+                  <!-- 해당 게시글 이미지 출력 -->
+                  <td><img th:src="@{/images/food1.jpeg}" alt="" class="mainImg"></td>
+                  <td>
+                    <!-- 제목으로 해당 게시글 링크 -->
+                    <div class="row row-cols-auto">
+                      <div class="col"><a href="#" class="linkMain">음식점01</a></div>
+                    </div>
+                    <br>
+                    <div class="row row-cols-auto">
+                      <div class="col">조회수 : xxxx</div>
+                      <div class="col">찜 횟수 : xxx</div>
+                    </div>
+                  </td>                  
+                  <!-- 버튼으로 취소 구현 -->
+                  <td>
+                    <button type="button" class="btnLike" value="" name="">
+                      <img th:src="@{/images/yellowStar.png}" alt="" class="likeImg">
+                    </button>
+                  </td>                
+                </tr>
+               
+                
+              </table>
+              <div style="width: 80%; margin: auto;">
+            	<span style="font-size: small; float: right; margin-top: 10px">총 좋아요 갯수 : <span style="font-weight: bold; color: red;">xx</span>개</span>
+          	  </div> 
+            </div>
+          
+
+          <br>
+          <nav aria-label="Page navigation example" style="margin: auto; width: 80%;" >
+            <ul class="pagination justify-content-center" >
+              <li class="page-item">
+                <a class="page-link" href="#" aria-label="Previous">
+                  <span aria-hidden="true">&lt;</span>
+                </a>
+              </li>
+              <li class="page-item"><a class="page-link" href="#">1</a></li>
+              <li class="page-item"><a class="page-link" href="#">2</a></li>
+              <li class="page-item"><a class="page-link" href="#">3</a></li>
+              <li class="page-item"><a class="page-link" href="#">4</a></li>
+              <li class="page-item"><a class="page-link" href="#">5</a></li>
+              <li class="page-item">
+                <a class="page-link" href="#" aria-label="Next">
+                  <span aria-hidden="true">&gt;</span>
+                </a>
+              </li>
+            </ul>
+          </nav>
+        </div>
+          
+        </div>
+		</div>
+
+    
+
+        
+   
+</div>
+</body>

@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http:///www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout-admin}">
+<head>
+	<th:block layout:fragment="css">
+		<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" 
+			  rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" 
+			  crossorigin="anonymous">
+		<link rel="stylesheet" th:href="@{/css/adminpageComment.css}"/>	
+	</th:block>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>관리자페이지-댓글리스트조회</title>
+  <th:block layout:fragment="script">
+     <script th:inline="javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+     <script th:inline="javascript" src="https://cdn.jsdelivr.net/bxslider/4.2.12/jquery.bxslider.min.js"></script>
+     <script src="https://code.jquery.com/jquery-3.6.2.js"
+  					integrity="sha256-pkn2CUZmheSeyssYw3vMp1+xyub4m+e+QK4sQskvuo4="
+  					crossorigin="anonymous"></script>  
+  	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js" 
+  				integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3" 
+  				crossorigin="anonymous">
+  				
+  				const myModal = document.getElementById('myModal')
+			    const myInput = document.getElementById('myInput')
+			
+			    myModal.addEventListener('shown.bs.modal', () => {
+			      myInput.focus()
+			    });
+		  				
+  				</script> 
+  				
+    <script th:inline="javascript">
+
+	  	
+	  
+	    let isAllSelected = false;
+	
+	    function checkSelectAll()  {
+	    // 전체 체크박스
+	    const checkboxes 
+	      = document.querySelectorAll('input[name="number"]');
+	    // 선택된 체크박스
+	    const checked 
+	      = document.querySelectorAll('input[name="number"]:checked');
+	    // select all 체크박스
+	    const selectAll 
+	      = document.querySelector('button[name="selectall"]');
+	
+	    if(checkboxes.length === checked.length)  {
+	      isAllSelected = true;
+	      selectAll.textContent = "전체 해제";
+	    }else {
+	      isAllSelected = false;
+	    }
+	
+	    }
+	
+	    function selectAll(selectAll)  {
+	    const checkboxes 
+	      = document.getElementsByName('number');
+	    // 선택된 체크박스
+	    const checked 
+	      = document.querySelectorAll('input[name="number"]:checked');
+	
+	    const selectBtn 
+	      = document.querySelector('button[name="selectall"]');
+	    
+	    if(isAllSelected) {
+	      checkboxes.forEach(checkbox => {
+	        checkbox.checked = false;
+	        selectBtn.textContent = "전체 선택";
+	      });
+	      isAllSelected = false;
+	    } else {
+	      checkboxes.forEach(checkbox => {
+	        checkbox.checked = true;
+	      });
+	      isAllSelected = true;
+	      selectBtn.textContent = "전체 해제";
+	    }
+	  }
+	
+	    $(function() {
+	      $("#modelBtnDelete").on("click", function() {
+	        alert("댓글이 삭제되었습니다.")
+	      })
+	    })
+	
+	
+	    function makeSnowflaske() {
+	      const snowflake = document.createElement("div");
+	
+	      snowflake.classList.add("snowflake");
+	      snowflake.style.left = `${Math.random() * window.screen.width}px`;
+	    }
+    
+  	</script>
+  </th:block>
+</head>
+<body>
+	
+		<!-- 메인 화면 -->
+  		<div layout:fragment="content">
+  		<div id="main-container">		  
+          <div id="div-wrapper-main">
+            <!-- 페이지 제목 -->
+            <div id="main-title">
+              <h1 style="margin: 0; float: left;" >댓글 리스트</h1>
+              <img id="main-title-img" th:src="@{/images/heart.png}" alt="">
+                 
+            </div>
+            <hr style="margin: auto; width: 80%;">
+
+          <!-- 전체 선택 및 검색 기능 구현 -->
+          <form id="searchForm" action="">
+            <div class="row" style="margin: auto;" >
+              <div class="col" style="margin: 10px 10px 10px 0; padding-left: 0px;">
+                <div style="float: left; height: 30px;">              
+                  <button type="button" name='selectall' 
+                    value='selectall'
+                    onclick='selectAll(this)'>
+                      전체 선택
+                  </button>
+                  <button>삭제</button>
+                </div>
+              </div>
+              <div class="col" style="margin: 10px 5px 10px 15px;">
+                <div class="row" style="justify-content: right; padding: 0px; ">
+                  <select th:id="searchCondition" name="searchCondition" aria-labelledby="state" >
+                    <option value="ALL">전체</option>
+                    <option value="TITLE">게시글 제목</option>
+                    <option value="ID">아이디</option>
+                    <option value="CONTENT">내용</option>
+                    <option value="RGDDATE">작성일자</option>
+                  </select>&ensp;
+                  <div id="searchDiv">
+                    <input id="searchInput" type="text" name="searchKeyword" value="">&ensp;
+                    <img th:src="@{/images/search.png}" alt="" style="height: 25px; padding: 0px; margin-bottom: 3px; width: 11%;">
+                  </div>                  
+                </div>
+              </div>
+            </div>
+          </form>
+
+          <!-- 댓글 내용 출력 -->
+          <div style="min-height: 400px;">
+            <table class="table-bordered">
+              <tr style="width: 100%;">
+                <th scope="col" style="width: 6%;">선택<img src="" alt=""></th>
+                <th scope="col" style="width: 6%;">번호</th>
+                <th scope="col" style="width: 20%;">게시글 제목</th>
+                <th scope="col" style="width: 16%;">아이디</th>
+                <th scope="col" style="width: 40%;">내용</th>
+                <th scope="col" style="width: 12%;">작성일자</th>
+              </tr>
+              <tr>
+                <td>
+                  <label for="chk1" style="width: 25px;">
+                    <input type="checkbox" id="chk1" name='number' value='' onclick='checkSelectAll()'>
+                  </label>
+                </td>
+                <td>1</td>
+                <td>음식점01</td>
+                <td>test_user01</td>
+                <!-- 모달 출력하는 링크 -->
+                <td><a href="" class="linkMain" data-bs-toggle="modal" data-bs-target="#exampleModal">너무 맛있어요 뭐시기저시기...</a></td>
+                <td>xxxx.xx.xx</td>
+              </tr>
+              
+            </table>
+            <div style="width: 80%; margin: auto;">
+              <span style="font-size: small; float: right;">총 댓글 갯수 : <span style="font-weight: bold; color: red;">xx</span>개</span>
+            </div> 
+          </div>
+          <!-- 페이징 -->
+          <br>
+          <nav aria-label="Page navigation example" style="margin: auto; width: 80%;" >
+            <ul class="pagination justify-content-center" >
+              <li class="page-item">
+                <a class="page-link" href="#" aria-label="Previous">
+                  <span aria-hidden="true">&lt;</span>
+                </a>
+              </li>
+              <li class="page-item"><a class="page-link" href="#">1</a></li>
+              <li class="page-item"><a class="page-link" href="#">2</a></li>
+              <li class="page-item"><a class="page-link" href="#">3</a></li>
+              <li class="page-item"><a class="page-link" href="#">4</a></li>
+              <li class="page-item"><a class="page-link" href="#">5</a></li>
+              <li class="page-item">
+                <a class="page-link" href="#" aria-label="Next">
+                  <span aria-hidden="true">&gt;</span>
+                </a>
+              </li>
+            </ul>
+          </nav>
+        </div>
+    </div>
+  </div>
+  
+  <!-- 모달 -->
+  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+
+        <!-- 아이디 출력 -->
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalLabel">
+            <img src="images/user.png" alt="" style="height: 30px;">&ensp;test_user01님의 댓글</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          <br>
+        </div>
+
+        <!-- 댓글 내용 출력 -->
+        <div class="modal-body" style="text-align: center; width: 100%;">
+          <p style="float: right; margin: 0px 10px 0px 0px;">작성일자 : xxxx.xx.xx</p>
+          <textarea class="overflow-auto" readonly style="width: 750px; height: 300px; resize: none;">
+            모든 국민은 주거의 자유를 침해받지 아니한다. 
+            주거에 대한 압수나 수색을 할 때에는 검사의 신청에 의하여 법관이 발부한 영장을 제시하여야 한다. 
+            대통령은 전시·사변 또는 이에 준하는 국가비상사태에 있어서 병력으로써 군사상의 필요에 응하거나 공공의 안녕질서를 유지할 필요가 있을 때에는 법률이 정하는 바에 의하여 계엄을 선포할 수 있다.
+          </textarea>
+        </div>
+
+        <!-- 삭제 -->
+        <div class="modal-footer">        
+          <button id="modelBtnDelete" type="button" aria-label="Close" data-bs-dismiss="modal">삭제</button>
+        </div>
+      </div>
+    </div>
+  </div>
+		</div>
+    		
+	</div>
+</body>
