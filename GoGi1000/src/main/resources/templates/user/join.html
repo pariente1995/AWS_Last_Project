@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http:///www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      
+<!-- head 영역 시작 -->
+<!-- 개별적으로 사용할 css, js 링크 걸기 위해서 남겨둠 -->
+<head>
+	<th:block layout:fragment="css">
+		<link rel="stylesheet" th:href="@{/css/join.css}"/>
+
+	</th:block>
+    <th:block layout:fragment="script">
+        <script th:inline="javascript" src="${pageContext.request.contextPath }/js/jquery-3.6.1.min.js"></script>
+        <script th:inline="javascript" src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+        
+        <script th:inline="javascript">
+		$(function () {
+            //회원가입 실패 시 메시지 출력
+            //     if($("#joinMsg").val() != "" && $("#joinMsg").val() != null) {
+            //     alert($("#joinMsg").val());
+            //  }
+
+            //회원가입 성공 시 메시지 출력
+
+            var checkId = false;
+            var pwValidation = false;
+            var pwCheck = false;
+
+            $("#pwValidation").hide();
+            $("#pwCheckResult").hide();
+
+            /* ========== userId ========== */
+            //id 유효성검사
+
+            //id 중복체크
+            $("#btnIdCheck").on("click", function () {
+                $.ajax({
+                    url: "/user/idCheck",
+                    type: "post",
+                    data: $("#joinForm").serialize(),
+                    success: function (obj) {
+                        console.log(obj);
+
+                        if (obj == 'duplicatedId') {
+                            alert("중복된 아이디입니다.");
+                            $("#userId").focus();
+                        } else {
+                            if (confirm("사용가능한 아이디입니다. " + $("#userId").val() +
+                                "를(을) 사용하시겠습니까?")) {
+                                checkId = true;
+                                $("#btnIdCheck").attr("disabled", true);
+                            }
+                        }
+                    },
+                    error: function (e) {
+                        console.log(e);
+                    }
+                })
+            });
+
+            // 중복체크 후 id를 변경했을 때
+            $("#userId").on("change", function () {
+                checkId = false;
+                $("#btnIdCheck").attr("disabled", false);
+            });
+
+            /* ========== userPw1 ========== */
+            //비밀번호 유효성 검사
+            function validatePassword(character) {
+                return /^(?=.*[a-zA-Z])(?=.*[!@#$%^&*+=-])(?=.*[0-9]).{9,}$/.test(character);
+            }
+
+            //비밀번호 입력될때마다 유효성 검사
+            $("#userPw").on("change", function () {
+                //비밀번호 유효성 처리
+                if (!validatePassword($("#userPw").val())) {
+                    pwValidation = false;
+                    $("#pwValidation").show();
+                    $("#userPw").focus();
+                } else {
+                    pwValidation = true;
+                    $("#pwValidation").hide();
+                }
+
+                /* ========== userPw2 ========== */
+                //비밀번호 확인까지 입력한 후 다시 비밀번호 재설정
+                if ($("#userPw").val() == $("#userPw2").val()) {
+                    pwCheck = true;
+                    $("#pwCheckResult").css("color", "green");
+                    $("#pwCheckResult").text("비밀번호가 일치합니다.");
+                } else {
+                    pwCheck = false;
+                    $("#pwCheckResult").css("color", "red");
+                    $("#pwCheckResult").text("비밀번호가 일치하지 않습니다.");
+                }
+            });
+
+
+            /* ========== userPw2 ========== */
+            //비밀번호 확인란 입력할 때 일치여부 체크
+            $("#userPw2").on("change", function () {
+                $("#pwCheckResult").show();
+
+                if ($("#userPw").val() == $("#userPw2").val()) {
+                    pwCheck = true;
+                    $("#pwCheckResult").css("color", "green");
+                    $("#pwCheckResult").text("비밀번호가 일치합니다.");
+                } else {
+                    pwCheck = false;
+                    $("#pwCheckResult").css("color", "red");
+                    $("#pwCheckResult").text("비밀번호가 일치하지 않습니다.");
+                }
+            });
+
+
+            /* ========== join_submit ========== */
+            //회원가입 진행
+            $("#joinForm").on("submit", function (e) {
+                //아이디 중복체크가 안됐거나 중복된 아이디를 사용했을 때
+                if (!checkId) {
+                    alert("아이디 중복체크를 진행하세요.");
+                    $("#userId").focus();
+                    e.preventDefault();
+                    return;
+                }
+
+                //비밀번호 유효성 검사가 틀렸을 때
+                if (!pwValidation) {
+                    alert("비밀번호는 영문자, 숫자, 특수문자 조합의 9자리 이상으로 설정하세요.");
+                    $("#userPw").focus();
+                    e.preventDefault();
+                    return;
+                }
+
+                //비밀번호와 비밀번호 확인이 일치하지 않을 때
+                if (!pwCheck) {
+                    alert("비밀번호가 일치하지 않습니다.");
+                    $("#userPw2").focus();
+                    e.preventDefault();
+                    return;
+                }
+            });
+
+            // 회원가입 성공 후 alert창 
+            $("#joinForm").on("submit", function () {
+                if (!checkId || !pwValidation || !pwCheck) {
+
+                } else {
+                    alert("회원가입에 성공했습니다. 로그인해주세요.");
+                }
+            });
+
+            //  // 지역 선택 alert
+            $(function () {
+                $("#ua").submit(function () {
+                    if ($("#userArea").val() == 0) {
+                        alert('지역을 선택해주세요.')
+                        return false
+                    }
+
+                });
+
+            });
+
+        });
+
+
+
+        /* ========== 유저addr API 연동 ========== */
+        function daumPostcode() {
+            new daum.Postcode({
+                oncomplete: function (data) {
+                    // 팝업에서 검색결과 항목을 클릭했을때 실행할 코드를 작성하는 부분.
+
+                    // 도로명 주소의 노출 규칙에 따라 주소를 표시한다.
+                    // 내려오는 변수가 값이 없는 경우엔 공백('')값을 가지므로, 이를 참고하여 분기 한다.
+                    var roadAddr = data.roadAddress; // 도로명 주소 변수
+                    var extraRoadAddr = ''; // 참고 항목 변수
+
+                    // 법정동명이 있을 경우 추가한다. (법정리는 제외)
+                    // 법정동의 경우 마지막 문자가 "동/로/가"로 끝난다.
+                    if (data.bname !== '' && /[동|로|가]$/g.test(data.bname)) {
+                        extraRoadAddr += data.bname;
+                    }
+                    // 건물명이 있고, 공동주택일 경우 추가한다.
+                    if (data.buildingName !== '' && data.apartment === 'Y') {
+                        extraRoadAddr += (extraRoadAddr !== '' ? ', ' + data.buildingName : data.buildingName);
+                    }
+                    // 표시할 참고항목이 있을 경우, 괄호까지 추가한 최종 문자열을 만든다.
+                    if (extraRoadAddr !== '') {
+                        extraRoadAddr = ' (' + extraRoadAddr + ')';
+                    }
+
+                    // 우편번호와 주소 정보를 해당 필드에 넣는다.
+                    document.getElementById("userAddr1").value = roadAddr;
+                }
+            }).open();
+        }		
+        </script>
+    </th:block>
+</head>
+<!-- head 영역 끝 -->
+
+<body>
+	<div layout:fragment="content">
+	  	<div class="form-wrapper">
+        <!-- ========== 최상단 영역 ========== -->
+        <div class="main-wrap">
+            <div class="main-image">
+                <img src="/images/KakaoTalk_20221216_095545610.png" alt="" />
+            </div>
+            <div>
+                <p id="main-logo" href="javascript:history.back();">←</p>
+            </div>
+            <div class="main-logo2" style="position: relative;">
+                <img style="margin-top: -60px;" src="/images/logo.png" alt="">
+                <div
+                    style="background-color: white; width: 140px; height: 70px; margin-top: -100px; margin-left: 50px;">
+                </div>
+            </div>
+        </div>
+        <div class="main-text" style="margin-top: 130px;">
+            <p>회원가입</p>
+        </div>
+        </form>
+    </div>
+    <!-- 사용자 작성 부분 -->
+
+    <!-- ★action 수정하기 -->
+    <form id="joinForm" action="/user/join.do" method="post">
+        <input type="hidden" id="joinMsg" value="${joinMsg}">
+
+        <!-- 사용자 id -->
+        <div class="container">
+            <div class="label_wrapper1"><label for="userId">아이디</label></div>
+            <div class="input  label_wrapper2">
+                <div class="input_wrapper">
+                    <input type="text" name="userId" id="userId" required placeholder="아이디를 입력하세요.">
+                    <span class="input_border"></span>
+                </div>
+                <button type="button" class="btn1" id="btnIdCheck">
+                    <span class="btn_inner">중복체크</span>
+                </button>
+            </div>
+
+            <!-- 사용자 pw1 -->
+            <div>
+                <div class="label_wrapper1"><label for="userPw">비밀번호</label></div>
+                <div class="input  label_wrapper2">
+                    <div class="input_wrapper">
+                        <input type="password" name="userPw" id="userPw" required placeholder="비밀번호를 입력하세요.">
+                        <span class="input_border"></span>
+                    </div>
+                </div>
+            </div>
+            <p id="pwValidation" style="color: red; font-size: 0.8rem; margin-top: -0.2em;">
+                비밀번호는 영문자, 숫자, 특수문자 조합의 9자리 이상으로 설정해주세요.
+            </p>
+
+            <!-- 사용자 pw2 -->
+            <div>
+                <div class="label_wrapper1"><label for="userPw2">비밀번호 재확인</label></div>
+                <div class="input  label_wrapper2">
+                    <div class="input_wrapper">
+                        <input type="password" name="userPw2" id="userPw2" required placeholder="비밀번호를 한 번 더 입력하세요.">
+                        <span class="input_border"></span>
+                    </div>
+                </div>
+            </div>
+            <p id="pwCheckResult" style="font-size: 0.8rem;"></p>
+
+            <!-- 사용자 nm -->
+            <div>
+                <div class="label_wrapper1"><label for="userNm">이름</label></div>
+                <div class="input  label_wrapper2">
+                    <div class="input_wrapper">
+                        <input type="text" name="userNm" id="userNm" required placeholder="이름을 입력하세요.">
+                        <span class="input_border"></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 사용자 age -->
+            <div>
+                <div class="label_wrapper1"><label for="userAge">나이</label></div>
+                <div class="input  label_wrapper2">
+                    <div class="input_wrapper">
+                        <input type="text" name="userAge" id="userAge" required placeholder="나이를 입력하세요.">
+                        <span class="input_border"></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 사용자 area -->
+            <div>
+                <div class="label_wrapper1"><label for="userArea">지역</label></div>
+                <div class="input  label_wrapper2">
+                    <div>
+                        <form id="ua">
+                            <select name="userArea" class="dropdown">
+                                <option value="none" hidden>=== 선택 ===</option>
+                                <option value="A0001">서울</option>
+                                <option value="A0016">부산</option>
+                                <option value="A0013">대구</option>
+                                <option value="A0003">인천</option>
+                                <option value="A0015">광주</option>
+                                <option value="A0008">대전</option>
+                                <option value="A0014">울산</option>
+                                <option value="A0007">세종</option>
+                                <option value="A0002">경기도</option>
+                                <option value="A0004">강원도</option>
+                                <option value="A0006">충청북도</option>
+                                <option value="A0005">충청남도</option>
+                                <option value="A0011">전라북도</option>
+                                <option value="A0012">전라남도</option>
+                                <option value="A0009">경상북도</option>
+                                <option value="A0010">경상남도</option>
+                                <option value="A0017">제주도</option>
+                            </select>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- 사용자 add1 -->
+                <div>
+                    <div class="label_wrapper1"><label for="userAddr2">주소</label></div>
+                    <div class="input  label_wrapper2">
+                        <div class="input_wrapper">
+                            <input type="text" name="userAddr1" id="userAddr1" placeholder="도로명주소"
+                                style="position: relative; z-index: 1; background-color:transparent;" readonly>
+                            <span class="input_border" style="background-color: #cfcfcf;"></span>
+                        </div>&emsp;
+
+                        <div>
+                            <button type="button" class="btn1" id="btnAddrCheck" onclick="daumPostcode()"
+                                value="우편번호 찾기">
+                                <span class="btn_inner">주소찾기</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 사용자 add2 -->
+                <div>
+                    <div class="label_wrapper1"></div>
+                    <div class="input  label_wrapper2">
+                        <div class="input_wrapper">
+                            <input type="text" name="userAddr2" id="userAddr2" required placeholder=" 상세주소를 입력하세요.">
+                            <span class="input_border"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 사용자 tel -->
+                <div>
+                    <div class="label_wrapper1"><label for="userTel">휴대전화</label></div>
+                    <div class="input  label_wrapper2">
+                        <div class="input_wrapper">
+                            <input type="text" name="userTel" id="userTel" required placeholder="숫자만 입력하세요.">
+                            <span class="input_border"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 사용자 email -->
+                <div>
+                    <div class="label_wrapper1"><label for="userEmail">이메일</label></div>
+                    <div class="input_email">
+                        <input type="text" style="margin-right: 10px; width: 210px; height: 40px;" name="userEmail"
+                            id="userEmail" required placeholder="이메일을 입력하세요.">@
+                        <div>
+                            <form id="em">
+                                <select name="domain" class="dropdown" style="margin-left: 10px;">
+                                    <option value="none" hidden>=== 선택 ===</option>
+                                    <option value="naver.com">naver.com</option>
+                                    <option value="daum.net">daum.net</option>
+                                    <option value="kakao.com">kakao.com</option>
+                                    <option value="gmail.com">gmail.com</option>
+                                </select>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- 회원가입 btn -->
+                    <div style="display: flex; justify-content: center; margin-bottom: 5em;">
+                        <button type="submit" class="btn2" id="btnJoin">
+                            <span class="btn_inner">회원가입</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+	</div>
+</body>
+</html>

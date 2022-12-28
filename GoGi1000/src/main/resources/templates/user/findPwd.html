@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http:///www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      
+<!-- head 영역 시작 -->
+<!-- 개별적으로 사용할 css, js 링크 걸기 위해서 남겨둠 -->
+<head>
+	<th:block layout:fragment="css">
+		<link rel="stylesheet" th:href="@{/css/findPwd.css}"/>
+	</th:block>
+    <th:block layout:fragment="script">
+        <script th:inline="javascript" src="${pageContext.request.contextPath }/js/jquery-3.6.1.min.js"></script>
+        
+        <script th:inline="javascript">
+			
+        </script>
+    </th:block>
+</head>
+<!-- head 영역 끝 -->
+
+<body>
+	<div layout:fragment="content">
+	  	 <div class="form-wrapper">
+
+            <!-- ========== 최상단 영역 ========== -->
+            <div class="main-wrap">
+                <div class="main-image">
+                    <img src="/images/KakaoTalk_20221216_095545610.png" alt="" />
+                </div>
+                <div>
+                    <p id="main-logo" href="javascript:history.back();" >←</p>
+                </div>
+                <div class="main-logo2" style="position: relative;">
+                    <img style="margin-top: -60px;" src="/images/logo.png" alt="">
+                    <div style="background-color: white; width: 140px; height: 70px; margin-top: -100px; margin-left: 50px;">
+                    </div>
+                </div> 
+            </div>
+    </div>
+
+    <!-- 비밀번호 찾기 타이틀 -->
+    <div id="container-main-text" style="margin-top: 130px;">
+        <div id="main-text" >
+            &ensp;<hr>
+        </div>
+        <div id="main-line">
+            <h1><u>비밀번호 찾기</u></h1>
+        </div>
+    </div>
+            
+    <div id="container-sub-text">   
+        <div id="sub-text" style="text-align: left;">
+            <p>본인확인 이메일로 인증</p>
+        </div>
+    </div>
+   
+    <!-- 비밀번호 찾기 영역 -->
+
+    <div id="container-info">
+
+         <!-- 이름 -->
+        <div class="input  label_wrapper2" style="font-size: 1em; ">이름&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;
+            <div class="input_wrapper">
+                <input type="text" name="userId" id="userId" required placeholder="이름을 입력하세요.">
+                <div class="input_border" ></div>
+           </div>
+           <span class="square"></span>
+        </div>
+
+        <!-- 이메일 -->
+        <div class="input  label_wrapper2" style="font-size: 1em;">이메일 주소
+            <div class="input_wrapper">
+                <input type="text" name="userEmail" id="userEmail" required placeholder="이메일을 입력하세요.">
+                <span class="input_border" ></span>
+           </div>
+           <button type="button" class="btn1" id="btnCert">
+            <span class="btn_inner">인증번호 받기</span>
+            </button>
+        </div>
+    </div>
+
+    <div class="container2">
+        <!-- 인증번호 받기 -->
+        <div class="input  label_wrapper3">
+            <div class="input_wrapper4">
+                <input type="text" name="" id="" required placeholder="인증번호를 입력하세요.">
+                <span class="input_border2" ></span>
+           </div>
+        </div>
+
+        <!-- 비밀번호 찾기 btn -->
+      <div  style="display: flex; justify-content: center; margin-bottom: 5em;">
+        <button type="submit" class="btn2" id="btnPwd" >
+        <span class="btn_inner">다음</span>
+        </button>
+    </div> 
+	</div>
+</body>
+</html>
