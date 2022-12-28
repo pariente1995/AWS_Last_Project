@@ -17,7 +17,11 @@
       width: 80%; margin: auto;
     }
     #main-title-img { 
+<<<<<<< HEAD
       position: absolute; top: -22px; right: 490px; 
+=======
+      position: absolute; top: -22px; right: 505px; 
+>>>>>>> f0beed71f5ec66bde7e279666f49e564853fe599
       width: 50px; transform:rotate(35deg); 
     }
     /* 폼 */

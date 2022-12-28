@@ -4,6 +4,22 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
+<<<<<<< HEAD
+=======
+
+@RestController
+@RequestMapping("/like")
+public class LikeController {
+	
+	// 마이페이지 - 좋아요 리스트 화면으로 이동
+    @GetMapping("/mypageLikeList")
+    public ModelAndView mypageLikeListView() {
+        ModelAndView mv = new ModelAndView();
+        mv.setViewName("like/mypageLikeList.html");
+
+        return mv;
+    }
+>>>>>>> f0beed71f5ec66bde7e279666f49e564853fe599
 
 @RestController
 @RequestMapping("/like")

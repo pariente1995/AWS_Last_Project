@@ -3,6 +3,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR&display=swap');
 
 body {
+	margin: 8px;
   /* 구글 웹 폰트 사용 - Noto Sans Korean */
   font-family: 'Noto Sans KR', sans-serif;
 }
