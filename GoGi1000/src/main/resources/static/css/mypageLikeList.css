@@ -1,0 +1,60 @@
+/* 폰트 */
+
+
+/* 페이지 전체 */
+#likelist-container { width: 1000px; margin: auto; min-height: 800px;}
+
+
+/* 메인 화면 */
+#div-wrapper-main {width: 90%; text-align: center; margin-top: 10px;}
+/* 메인 제목 */
+#main-title { 
+  position: relative; justify-content: right;
+  width: 80%; margin: auto;
+}
+#main-title-img { 
+  position: absolute; top: -22px; right: 430px; 
+  width: 50px; transform:rotate(35deg); 
+}
+/* table 태그 */
+table {
+  width: 80%; margin: auto;
+  margin-top: 50px;
+  text-align: center; 
+  background-color: white; 
+}
+tr, td {text-align: center;}
+tr { border-bottom: 1px solid black; height: 120px;}
+table tr:hover { background-color: #F9FAFB; }
+/* table tr:hover .mainImg { width: 100px; height: 100px; } */
+table tr:hover a { text-decoration: underline }
+/* a 태그 */
+.linkMain { 
+  font-weight: bold; font-size: large;
+  text-decoration-line : none; color : black
+}
+/* button 태그 */
+.btnLike {
+  background-color: white;
+  border: none;
+ }
+ table tr:hover .btnLike{ background-color: #F9FAFB; }
+.page-item { margin: 50px 10px 0px;}
+.page-link { border: 1px solid #ee2d7a; color: black;}
+.page-link span { color: black;}
+ /* img 태그 */
+ .mainImg { width: 80px; height: 80px; margin: 10px 0px 10px 0px;}
+ .likeImg { height: 35px; width: 35px; }
+
+.page-link { 
+  width: 35px; height: 38px;
+  border: 1px solid lightgray; 
+  color: black; border-radius: 5px; font-weight: bold;
+}
+.page-link:hover { 
+  background-color: white; color: #ee2d7a;
+  border: 1px solid #ee2d7a; 
+}
+.page-link span { color: black; font-weight: bold}
+.page-link:hover span { color: #ee2d7a;}
+
