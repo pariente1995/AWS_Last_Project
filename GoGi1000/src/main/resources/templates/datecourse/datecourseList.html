@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http:///www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout-admin}">
+
+<head>
+	<th:block layout:fragment="css">
+		<link rel="stylesheet" th:href="@{/css/datecourseList.css}"/>
+	</th:block>
+	<th:block layout:fragment="script">
+		<script th:inline="javascript">
+			$(function() {
+		      // tr 총 개수
+		      $("#board-count").text($("#tbody tr").length);
+		
+		      // 삭제버튼: 전체 선택 
+					$("#selectAll").click(function() {
+						if ($("#selectAll").text() == "전체선택") { 
+		          $("input[name=chk]").prop("checked", true);
+		          $("#selectAll").text("선택해제")
+		        } else if ($("#selectAll").text() == "선택해제") {
+		          $("input[name=chk]").prop("checked", false);
+		          $("#selectAll").text("전체선택");
+		        }
+					});
+		
+					$("input[name=chk]").click(function() {
+		        $("#selectAll").val("선택해제")
+					});
+		
+		
+		      $("#delSelect").click(function() {
+		        if ($("input:checkbox[name='chk']:checked").length == 0) {
+		          alert("삭제할 항목을 선택해 주세요.");
+		          return;
+		        }
+		
+		        
+		        let answer = confirm("정말 삭제하시겠습니까?")
+		
+		        $("input:checkbox[name='chk']:checked").each(function(k, kVal) {
+		          console.log("kVal::", kVal.parentElement.parentElement)
+		          let a = kVal.parentElement.parentElement;
+		
+		          if (answer) {
+		            $(a).remove();
+		          } else {
+		            return;
+		          }
+		
+		          $("#board-count").text($("#tbody tr").length);  
+		
+		        })
+		       
+		        
+		      })
+		
+		      $(".table-td-update").click(function() {
+		          let result = confirm("게시글 수정하시겠습니까?");
+		          if (result) {
+		            location.replace="{/datecourse/updateDatecourse/{datecourseNo} (datecourseNo=${datecourse.datecourseNo})}";
+		            console.log("페이지 이동하였습니다.");
+		          } else {
+		            return;
+		          }
+		          
+		      })
+      
+      
+		});
+		</script>
+	</th:block>
+</head>
+
+
+<body>
+	<div layout:fragment="content">
+		<div id="dateCourseList-container">
+		    <!-- right -->
+		    <div id="side-right">
+		      <div id="side-right-h2">
+		        <h2>데이트 코스 리스트 조회</h2>
+		        <hr>
+		      </div>
+		      <!--  style="width:75%; display:flex; justify-content: left; margin-left:25%;" -->
+		      
+		      <div id="dateCourseList">
+		        <div id="select">
+		          <div id="select-section1">
+		            <button id="selectAll" class="input-button">전체선택</button>
+		            <button id="delSelect" class="input-button">삭제</button>
+		          </div>
+		          <div id="select-section2">
+		            <div id="select1">
+		              <select name="select1" class="select">
+		                <option value="전체" selected>지역</option>
+		                <option value="서울">서울</option>
+		                <option value="경기">경기</option>
+		                <option value="인천">인천</option>
+		                <option value="강원">강원</option>
+		                <option value="충청북도">충북</option>
+		                <option value="충청남도">충남</option>
+		                <option value="세종">세종</option>
+		                <option value="대전">대전</option>
+		                <option value="대구">대구</option>
+		                <option value="경상북도">경북</option>
+		                <option value="경상남도">경남</option>
+		                <option value="전라남도">전남</option>
+		                <option value="전라북도">전북</option>
+		                <option value="울산">울산</option>
+		                <option value="부산">부산</option>
+		                <option value="광주">광주</option>
+		                <option value="제주">제주</option>
+		              </select>
+		            </div>
+		            <div id="select2" >
+		              <select name="select2" class="select">
+		                <option value="전체" selected>데이트 코스 분류</option>
+		                <option value="놀거리">놀거리</option>
+		                <option value="카페">카페</option>
+		                <option value="맛집">맛집</option>
+		              </select>
+		            </div>
+		            <div id="input" class="select">
+		              <div id="input-div">
+		                <form id="input-form-search" action="#" method="post">
+		                  <input type="search" id="input-search">
+		                  <a id="input-img-a" href="#"><img id="input-img" src="images/search.png"\></a>
+		                </form>
+		              </div>
+		            </div>
+		          </div>
+		        </div>
+		        <table class="table-bordered">
+		          <thead>
+		          <tr class="tr">
+		            <th scope="col" style="width: 7%">선택</th>
+		            <th scope="col" style="width: 7%;">번호</th>  
+		            <th scope="col" style="width: 10%;">데이트 코스 번호</th>  
+		            <th scope="col" style="width: 17%;">데이트 코스명</th>
+		            <th scope="col" style="width: 25%;">내용</th> 
+		            <th scope="col" style="width: 15%;">수정일자</th> 
+		            <th scope="col" style="width: 11%;">데이트 코스 사용여부</th> 
+		            <th scope="col" style="width: 8%">수정</th> 
+		          </tr>
+		        </thead>
+		        <tbody id="tbody">
+		          <tr class="tr">
+		            <td><input type="checkbox" name='chk'></td>
+		            <td>1</td>
+		            <td>1</td>
+		            <td id="table-title"><a href="#">음식점01</a></td>
+		            <td>너무 맛있어요</td>
+		            <td>xxxx.xx.xx</td>
+		            <td id="useYN" value="Y">Y</td>
+		            <td><button type="button" class="table-td-update">수정</button></td>
+		          </tr>
+		          <tr class="tr">
+		            <td><input type="checkbox" name='chk'></td>
+		            <td>2</td>
+		            <td>2</td>
+		            <td id="table-title"><a href="#">음식점01</a></td>
+		            <td>너무 맛있어요</td>
+		            <td>xxxx.xx.xx</td>
+		            <td id="useYN" value="Y">Y</td>
+		            <td><button type="button" class="table-td-update">수정</button></td>
+		          </tr>
+		          <tr class="tr">
+		            <td><input type="checkbox" name='chk'></td>
+		            <td>3</td>
+		            <td>3</td>
+		            <td id="table-title"><a href="#">음식점01</a></td>
+		            <td>너무 맛있어요</td>
+		            <td>xxxx.xx.xx</td>
+		            <td id="useYN" value="Y">Y</td>
+		            <td><button type="button" class="table-td-update">수정</button></td>
+		          </tr>
+		        </tbody>
+		        </table>
+		        <div id="table-total-count">
+		          <div>전체:<span id="board-count"></span>개</div>
+		        </div>
+		        <nav id="nav-pagination" aria-label="Page navigation example">
+		          <ul class="pagination">
+		            <li class="page-item">
+		              <a class="page-link" href="#" aria-label="Previous">
+		                <span aria-hidden="true">&lt;</span>
+		              </a>
+		            </li>
+		            <li class="page-item"><a class="page-link" href="#">1</a></li>
+		            <li class="page-item"><a class="page-link" href="#">2</a></li>
+		            <li class="page-item"><a class="page-link" href="#">3</a></li>
+		            <li class="page-item"><a class="page-link" href="#">4</a></li>
+		            <li class="page-item"><a class="page-link" href="#">5</a></li>
+		            <li class="page-item"><a class="page-link" href="#">6</a></li>
+		            <li class="page-item">
+		              <a class="page-link" href="#" aria-label="Next">
+		                <span aria-hidden="true">&gt;</span>
+		              </a>
+		            </li>
+		          </ul>
+		        </nav>
+		      </div>
+		    </div>
+	  	</div>
+	</div>
+</body>
+</html>

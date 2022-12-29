@@ -8,7 +8,7 @@
 #header-top {
     width: 100%;
     display: flex;
-    padding: 10px 20px;
+    padding: 10px 0;
     align-items: center;
 }
 
@@ -56,7 +56,14 @@
 
 #header-search-wrapper #header-search:hover {
     background-color: #F2F2F2; box-shadow: 5px 5px 5px gray;
-    border:none;
+    border:none; 
+}
+
+#header-search-button {
+	width:60px;
+	background-color: white; 
+	border:none; cursor:pointer;
+	border-radius:30px;
 }
 
 /* header-login, join */
@@ -111,8 +118,9 @@
 #nav-ul li:hover { text-decoration: underline;}
 
 #nav-div-li {
-    width: 18%; display:flex;
+    width: 15%; display:flex;
     justify-content: center;
+    margin-left: 5px;
 }
 
 #nav ul li {
