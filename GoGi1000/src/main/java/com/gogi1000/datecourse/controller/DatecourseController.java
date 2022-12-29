@@ -43,8 +43,8 @@ public class DatecourseController {
     @PostMapping("/insertDatecourse")
     // realUploadFiles(매개변수)는 input의 name과 동일해야 한다.
     public void insertDatecourse(DatecourseDTO datecourseDTO,
-                                 @RequestParam("hoursInfo") String hoursInfo,
-                                 @RequestParam("menuInfo") String menuInfo,
+                                 @RequestParam("datecourseHoursInfo") String datecourseHoursInfo,
+                                 @RequestParam("datecourseMeunInfo") String datecourseMeunInfo,
                                  MultipartFile[] realUploadFiles,
                                  HttpServletResponse response, HttpServletRequest request) throws IOException {
 
@@ -67,7 +67,7 @@ public class DatecourseController {
 
         // 데이트 코스 영업시간
         // 화면에서 받아온 영업시간 데이터
-        List<String> datecourseHoursList = new ObjectMapper().readValue(hoursInfo, new TypeReference<List<String>>() {});
+        List<String> datecourseHoursList = new ObjectMapper().readValue(datecourseHoursInfo, new TypeReference<List<String>>() {});
 
         // DB에 입력될 영업시간 정보 리스트
         List<DatecourseHours> iDatecourseHoursList = new ArrayList<DatecourseHours>();
@@ -82,7 +82,7 @@ public class DatecourseController {
 
         // 데이트 코스 메뉴
         // 화면에서 받아온 메뉴 데이터
-        List<DatecourseMenuDTO> datecourseMenuDTOList = new ObjectMapper().readValue(menuInfo, new TypeReference<List<DatecourseMenuDTO>>() {});
+        List<DatecourseMenuDTO> datecourseMenuDTOList = new ObjectMapper().readValue(datecourseMeunInfo, new TypeReference<List<DatecourseMenuDTO>>() {});
 
         // DB에 입력될 메뉴 정보 리스트
         List<DatecourseMenu> iDatecourseMenuList = new ArrayList<DatecourseMenu>();

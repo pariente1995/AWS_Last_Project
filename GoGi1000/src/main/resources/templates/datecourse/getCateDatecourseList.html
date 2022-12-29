@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http:///www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout}">
+
+<!-- head 영역 시작 -->
+<!-- 개별적으로 사용할 css, js 링크 걸기 위해서 남겨둠 -->
+<head>
+  <th:block layout:fragment="css">
+      <link rel="stylesheet" th:href="@{/css/getCateDatecourseList.css}"/>
+  </th:block>
+  <th:block layout:fragment="script">
+    <script th:inline="javascript">
+      $(function() {
+        // 가격대 적용 여부 flag
+        let btnPriceFlag = false;
+
+        // 화면 오픈 시, 데이트 코스 분류 중 '전체'에 효과 넣기
+        $("#datecourse-cate-wrapper").children().children().first().attr('class','isSelect');
+        $("#datecourse-cate-wrapper").children().children().first().css("background-color", "#ee2d7a");
+        $("#datecourse-cate-wrapper").children().children().first().css("color", "white");
+
+        /* 데이트 코스 분류 hover 효과 및 클릭 효과, 데이트 코스 분류 선택에 따른 카테고리 항목 표시*/
+        $(".datecourse-cate a").on({
+          mouseover: function() {
+            $(this).css("background-color", "#ee2d7a");
+            $(this).css("color", "white");
+          },
+          mouseleave: function() {
+            if($(this).attr('class') !='isSelect') {
+              $(this).css("background-color", "white");
+              $(this).css("color", "black");
+            }
+          },
+          click: function() { 
+            // 전체 데이트 코스 분류 전체 설정
+            $(".datecourse-cate a").css("background-color", "white");
+            $(".datecourse-cate a").css("color", "black");
+            $(".datecourse-cate a").removeClass("isSelect");
+
+            // 선택된 데이트 코스 분류에 대해서만 설정
+            $(this).attr('class','isSelect');
+            $(this).css("background-color", "#ee2d7a");
+            $(this).css("color", "white");
+
+            // 적용된 모든 옵션 초기화
+            fnFilterClear();
+
+            // 데이트 코스 분류 선택에 따른 카테고리 항목 표출
+            // 데이트 코스 분류가 전체일 경우, 모든 카테고리 항목 표출
+            if($(this).text() == "전체") {
+              $("#datecourse-detail-cate-inoutYn-wrapper").css("display", "block");
+              $("#datecourse-detail-cate-foodType-wrapper").css("display", "block");
+              $("#datecourse-detail-cate-petYn-wrapper").css("display", "block");
+            } else {
+              // 데이트 코스 분류가 놀거리일 경우, 실내/외 카테고리 항목 표출
+              if($(this).text() == "놀거리") {
+                $("#datecourse-detail-cate-inoutYn-wrapper").css("display", "block");
+              } else {
+                $("#datecourse-detail-cate-inoutYn-wrapper").css("display", "none");
+              }
+              // 데이트 코스 분류가 맛집일 경우, 음식종류 카테고리 항목 표출
+              if($(this).text() == "맛집") {
+                $("#datecourse-detail-cate-foodType-wrapper").css("display", "block");
+              } else {
+                $("#datecourse-detail-cate-foodType-wrapper").css("display", "none");
+              }
+              // 데이트 코스 분류가 카페일 경우, 반려동물 동반 가능여부 카테고리 항목 표출
+              if($(this).text() == "카페") {
+                $("#datecourse-detail-cate-petYn-wrapper").css("display", "block");
+              } else {
+                $("#datecourse-detail-cate-petYn-wrapper").css("display", "none");
+              }
+            }
+          }
+        });
+
+
+        /* 가격대 입력 시, 천단위 콤마 추가하기 */
+        // 최소가격
+        $("#datecourseMinPriceView").on('keyup', function() {
+          let currentThis = $(this);
+
+          // 입력 범위 체크
+          if($(this).val().replace(/,/g, '') > 100000000) {
+            alert("입력 범위를 넘었습니다.");
+
+            // 입력값 초기화
+            $(this).val("");
+            $("#datecourseMinPrice").val("");
+            return;
+          }
+
+          $("#datecourseMinPrice").val($(this).val().replace(/,/g, ''));
+          numberFormat(currentThis);
+        })
+
+        // 최대가격
+        $("#datecourseMaxPriceView").on('keyup', function() {
+          let currentThis = $(this);
+
+          // 입력 범위 체크
+          if($(this).val().replace(/,/g, '') > 100000000) {
+            alert("입력 범위를 넘었습니다.");
+
+            // 입력값 초기화
+            $(this).val("");
+            $("#datecourseMaxPrice").val("");
+            return;
+          }
+
+          $("#datecourseMaxPrice").val($(this).val().replace(/,/g, ''));
+          numberFormat(currentThis);
+        })
+
+
+        /* 선택된 체크박스 카테고리 상세 옵션 추가/삭제 */
+        $("input:checkbox").each(function(index) {
+          $(this).on("change", function() {
+            let chkCount = $("input[type='checkbox']:checked").length; // 선택된 체크박스 개수
+            let checkBoxId = ""; // 선택된 체크박스 id
+            let viewVal = ""; // 선택된 필터명
+            let filterFlag = 0; // 선택된 체크박스 index
+
+            // 선택된 카테고리 상세 옵션이 1개 이상이거나 가격범위가 적용된 경우 선택 초기화 버튼 표출
+            if(chkCount > 0 || btnPriceFlag != false) {
+              $("#btnFilterClear").css("display", "block");
+            } else {
+              $("#btnFilterClear").css("display", "none");
+            }
+
+            if($(this).is(":checked")) { // 체크된 경우
+              checkBoxId = $(this).attr("id");
+              viewVal = $(this).attr('data-view-value');
+              filterFlag = index;
+
+              // 선택된 카테고리 상세 옵션 div로 생성 후, 선택필터 영역에 추가
+              $("#datecourse-detail-cate-filter-items").append(makeDiv(checkBoxId, viewVal, filterFlag));
+            } else { // 체크되지 않은 경우
+              filterFlag = index;
+
+              // 선택필터 영역에 추가했던 div 삭제
+              $("#filterDiv" + filterFlag).remove();
+            }
+          });
+        });
+
+
+        /* 타입이 체크박스인 상세 옵션 관련 X 이미지 클릭 시, 옵션 삭제 및 선택된 상세 옵션 체크해제 */
+        // 동적으로 생성된 태그의 경우, 아래와 같이 작성해준다!
+        $(document).on("click", ".xImg", function() {
+          let checkId = $(this).attr('data-check-id');
+
+          // 기존 선택된 카테고리 상세 옵션 체크해제
+          $("input:checkbox[id='" + checkId + "']").prop("checked", false);
+
+          // 선택필터 영역에 추가했던 div 삭제
+          $(this).parent().remove();
+
+          // 선택된 카테고리 상세 옵션이 1개 이상이거나 가격범위가 적용된 경우 선택 초기화 버튼 표출
+          if($("input[type='checkbox']:checked").length > 0 || btnPriceFlag != false) {
+              $("#btnFilterClear").css("display", "block");
+            } else {
+              $("#btnFilterClear").css("display", "none");
+            }
+        });
+
+
+        /* 가격대 적용 버튼 클릭 시, 선택필터 영역에 표출 */
+        $("#btnPriceApply").on("click", function() {
+          let minPrice = $("#datecourseMinPriceView").val();
+          let maxPrice = $("#datecourseMaxPriceView").val();
+
+          if((minPrice != null && minPrice != "") && (maxPrice != null && maxPrice != "")) {
+            btnPriceFlag = true;
+
+            let htmlStr = `
+                    <div style="height: 30px; display: flex; align-items: center; margin-right: 15px; text-align: center;" id="filterPriceDiv">
+                      <span style="font-size: 0.9rem; color: #F27370; margin-right: 10px;">${minPrice} ~ ${maxPrice}</span>
+                      <img src='images/x.png' style="cursor: pointer;" width="15px" height="15px" 
+                          id="priceXImg" data-min-price-id="datecourseMinPriceView" data-max-price-id="datecourseMaxPriceView">
+                    </div>
+                    `;
+
+            // 가격대 옵션 div로 생성 후, 선택필터 영역에 추가
+            $("#datecourse-detail-cate-filter-items").append(htmlStr);
+
+            // 선택 초기화 버튼 표출
+            $("#btnFilterClear").css("display", "block");
+          }
+        });
+
+        /* 가격대 옵션 관련 X 이미지 클릭 시, 옵션 삭제 및 가격 옵션 초기화 */
+        $(document).on("click", "#priceXImg", function() {
+          btnPriceFlag = false;
+
+          // 선택필터 영역에 추가했던 가격 관련 div 삭제
+          $(this).parent().remove();
+
+          // 입력된 가격 범위 초기화
+          $("#datecourseMinPriceView").val("");
+          $("#datecourseMaxPriceView").val("");
+
+          // back 단으로 보낼 실제 가격 value도 초기화
+          $("#datecourseMinPrice").val("");
+          $("#datecourseMaxPrice").val("");
+
+          // 선택된 체크박스 카테고리 상세 옵션에 따라 선택 초기화 버튼 표출
+          if($("input[type='checkbox']:checked").length > 0) {
+            $("#btnFilterClear").css("display", "block");
+          } else {
+            $("#btnFilterClear").css("display", "none");
+          }
+        });
+
+
+        /* 최신순 추천순 버튼 클릭 시 효과 설정 */
+        $(".datecourse-list-option-common").on("click", function() {
+          $(".datecourse-list-option-common").css("background-color", "white");
+          $(this).css("background-color", "#f1c40f");
+        });
+
+
+        /* 좋아요 버튼 클릭 시 효과 설정 */
+        $(".likeImg").on("click", function() {
+          if($(this).attr("src") == "images/emptystar.png") {
+            $(this).attr("src", "images/yellowstar.png");
+          } else {
+            $(this).attr("src", "images/emptystar.png");
+          }
+        });
+      });
+
+
+      /***********************************
+        메소드 영역 
+      ************************************/
+      // 콤마 찍기
+      function comma(str) {
+        str = String(str);
+        return str.replace(/(\d)(?=(?:\d{3})+(?!\d))/g, '$1,');
+      }
+
+      // 콤마 풀기
+      function uncomma(str) {
+        str = String(str);
+        return str.replace(/[^\d]+/g, '');
+      }
+
+      // 콤마 형식으로 출력
+      function numberFormat(obj) {
+        obj.val(comma(uncomma(obj.val())));
+      }
+
+      // 선택된 카테고리 상세 옵션 관련 div 생성
+      function makeDiv(inputId, viewVal, filterFlag) {
+        let htmlStr = `
+                <div style="height: 30px; display: flex; align-items: center; margin-right: 20px; text-align: center;" id="filterDiv${filterFlag}">
+                  <span style="font-size: 0.9rem; color: #F27370; margin-right: 10px;">${viewVal}</span>
+                  <img src='images/x.png' style="cursor: pointer;" width="15px" height="15px" class="xImg" data-check-id="${inputId}">
+                </div>
+                `;
+
+        return htmlStr;
+      }
+
+      // 적용된 모든 옵션 초기화
+      function fnFilterClear() {
+        // 모든 체크박스 해제 
+        $("input:checkbox").prop("checked", false);
+
+        // 선택필터 영역 자식(체크박스 카테고리 상세 옵션, 가격범위) 모두 삭제
+        $("#datecourse-detail-cate-filter-items").children().remove();
+
+        // 입력된 가격 범위 초기화
+        $("#datecourseMinPriceView").val("");
+        $("#datecourseMaxPriceView").val("");
+
+        // back 단으로 보낼 실제 가격 value도 초기화
+        $("#datecourseMinPrice").val("");
+        $("#datecourseMaxPrice").val("");
+
+        // 선택 초기화 버튼 없애기
+        $("#btnFilterClear").css("display", "none");
+      }
+    </script>
+  </th:block>
+</head>
+<!-- head 영역 끝 -->
+
+<body>
+  <div layout:fragment="content">
+    <div id="datecourse-list-container">
+
+      <!-- 데이트 코스 분류 영역 -->
+      <div id="datecourse-cate-wrapper">
+        <div class="datecourse-cate">
+          <a href="#">전체</a>
+        </div>
+        <div class="datecourse-cate">
+          <a href="#">놀거리</a>
+        </div>
+        <div class="datecourse-cate">
+          <a href="#">맛집</a>
+        </div>
+        <div class="datecourse-cate">
+          <a href="#">카페</a>
+        </div>
+      </div>
+
+      <!-- 데이트 코스 카테고리 영역 -->
+      <div id="datecourse-detail-cate-wrapper">
+        <div id="datecourse-detail-cate-title">
+          <h2>카테고리</h2>
+        </div>
+        <div class="datecourse-detail-cate" id="datecourse-detail-cate-inoutYn-wrapper">
+          <div class="datecourse-detail-cate-field">
+            <div class="datecourse-detail-cate-text">
+              실내/외
+            </div>
+            <div class="datecourse-detail-cate-items" id="datecourse-detail-cate-inoutYn">
+              <input type="checkbox" name="datecourseInoutYn" id="datecourseInoutYn-in" value="Y" data-view-value="실내">
+              <label for="datecourseInoutYn-in">실내</label>
+              <input type="checkbox" name="datecourseInoutYn" id="datecourseInoutYn-out" value="N" data-view-value="실외">
+              <label for="datecourseInoutYn-out">실외</label>
+            </div>
+          </div>
+          <hr>
+        </div>
+        <div class="datecourse-detail-cate" id="datecourse-detail-cate-foodType-wrapper">
+          <div class="datecourse-detail-cate-field">
+            <div class="datecourse-detail-cate-text">
+              음식종류
+            </div>
+            <div class="datecourse-detail-cate-items" id="datecourse-detail-cate-foodType">
+              <input type="checkbox" name="datecourseFoodType" id="datecourseFoodType-ko" value="" data-view-value="한식">
+              <label for="datecourseFoodType-ko">한식</label>
+              <input type="checkbox" name="datecourseFoodType" id="datecourseFoodType-en" value="" data-view-value="양식">
+              <label for="datecourseFoodType-en">양식</label>
+              <input type="checkbox" name="datecourseFoodType" id="datecourseFoodType-zh" value="" data-view-value="중식">
+              <label for="datecourseFoodType-zh">중식</label>
+              <input type="checkbox" name="datecourseFoodType" id="datecourseFoodType-ja" value="" data-view-value="일식">
+              <label for="datecourseFoodType-ja">일식</label>
+              <input type="checkbox" name="datecourseFoodType" id="datecourseFoodType-snack" value="" data-view-value="분식">
+              <label for="datecourseFoodType-snack">분식</label>
+              <input type="checkbox" name="datecourseFoodType" id="datecourseFoodType-etc" value="" data-view-value="기타">
+              <label for="datecourseFoodType-etc">기타</label>
+            </div>
+          </div>
+          <hr>
+        </div>
+        <div class="datecourse-detail-cate">
+          <div class="datecourse-detail-cate-field">
+            <div class="datecourse-detail-cate-text">
+              주차여부
+            </div>
+            <div class="datecourse-detail-cate-items">
+              <input type="checkbox" name="datecourseParkingYn" id="datecourseParkingYn" value="" data-view-value="주차가능">
+              <label for="datecourseParkingYn">가능</label>
+            </div>
+          </div>
+          <hr>
+        </div>
+        <div class="datecourse-detail-cate" id="datecourse-detail-cate-petYn-wrapper">
+          <div class="datecourse-detail-cate-field">
+            <div id="datecourse-detail-cate-petYn">
+              반려동물 동반<br>가능여부
+            </div>
+            <div class="datecourse-detail-cate-items">
+              <input type="checkbox" name="datecoursePetYn" id="datecoursePetYn" value="" data-view-value="반려동물 동반 가능">
+              <label for="datecoursePetYn">가능</label>
+            </div>
+          </div>
+          <hr>
+        </div>
+        <div class="datecourse-detail-cate">
+          <div class="datecourse-detail-cate-field">
+            <div class="datecourse-detail-cate-text">
+              가격대
+            </div>
+            <div class="datecourse-detail-cate-items">
+              <input type="text" name="datecourseMinPriceView" class="datecourse-price-common" id="datecourseMinPriceView" placeholder="최저가">
+              ~
+              <input type="text" name="datecourseMaxPriceView" class="datecourse-price-common" id="datecourseMaxPriceView" placeholder="최고가">
+              <button type="button" id="btnPriceApply">가격대 적용</button>
+              <!-- 실제 back단으로 넘어갈 price -->
+              <input type="hidden" name="datecourseMinPrice" class="datecourse-price-common" id="datecourseMinPrice">
+              <input type="hidden" name="datecourseMaxPrice" class="datecourse-price-common" id="datecourseMaxPrice">
+            </div>
+          </div>
+          <hr>
+        </div>
+        <div class="datecourse-detail-cate">
+          <div id="datecourse-detail-cate-filter-field">
+            <div id="datecourse-detail-cate-filter">
+              선택필터
+            </div>
+            <!-- 선택된 카테고리 상세 옵션들 표출될 영역 -->
+            <div id="datecourse-detail-cate-filter-items">
+            
+            </div>
+            <!-- 선택 초기화 버튼 -->
+            <button id="btnFilterClear" onclick="fnFilterClear();">선택 초기화</button>
+          </div>
+          <hr>
+        </div>
+      </div>
+
+      <!-- 데이트 코스 리스트 영역 -->
+      <div id="datecourse-list-wrapper">
+        <p id="searchCount">총 <span>12</span>개의 알콩달콩한 데이트 코스가 있습니다.</p>
+        <div id="datecourse-list-option-wrapper">
+          <div id="datecourse-list-option">
+            <div id="datecourse-list-option-latest" class="datecourse-list-option-common">최신순</div>
+            <div id="datecourse-list-option-reco" class="datecourse-list-option-common">추천순</div>
+          </div>
+        </div>
+        <div id="datecourse-list">
+          <div class="datecourese-list-items">
+            <div class="mainImg-wrapper">
+              <img src="images/coffee.jpg" class="mainImg">
+            </div>
+            <div class="datecourese-list-items-info">
+              <p class="datecourese-list-items-name">카페1</p>
+              <p class="datecourese-list-items-summary">일몰 명소로 유명한 아늑한 분위기의 맛집</p>
+            </div>
+            <div class="datecourse-list-items-detail">
+              <div class="datecourse-list-items-count">
+                <p>조회 3787</p>
+                <p>찜 268</p>
+              </div>
+              <div class="datecourese-list-like">
+                <img src="images/emptystar.png" class="likeImg">
+              </div>
+            </div>
+          </div>
+          <div class="datecourese-list-items">
+            <div class="mainImg-wrapper">
+              <img src="images/coffee.jpg" class="mainImg">
+            </div>
+            <div class="datecourese-list-items-info">
+              <p class="datecourese-list-items-name">카페1</p>
+              <p class="datecourese-list-items-summary">일몰 명소로 유명한 아늑한 분위기의 맛집</p>
+            </div>
+            <div class="datecourse-list-items-detail">
+              <div class="datecourse-list-items-count">
+                <p>조회 3787</p>
+                <p>찜 268</p>
+              </div>
+              <div class="datecourese-list-like">
+                <img src="images/emptystar.png" class="likeImg">
+              </div>
+            </div>
+          </div>
+          <div class="datecourese-list-items">
+            <div class="mainImg-wrapper">
+              <img src="images/coffee.jpg" class="mainImg">
+            </div>
+            <div class="datecourese-list-items-info">
+              <p class="datecourese-list-items-name">카페1</p>
+              <p class="datecourese-list-items-summary">일몰 명소로 유명한 아늑한 분위기의 맛집</p>
+            </div>
+            <div class="datecourse-list-items-detail">
+              <div class="datecourse-list-items-count">
+                <p>조회 3787</p>
+                <p>찜 268</p>
+              </div>
+              <div class="datecourese-list-like">
+                <img src="images/emptystar.png" class="likeImg">
+              </div>
+            </div>
+          </div>
+          <div class="datecourese-list-items">
+            <div class="mainImg-wrapper">
+              <img src="images/coffee.jpg" class="mainImg">
+            </div>
+            <div class="datecourese-list-items-info">
+              <p class="datecourese-list-items-name">카페1</p>
+              <p class="datecourese-list-items-summary">일몰 명소로 유명한 아늑한 분위기의 맛집</p>
+            </div>
+            <div class="datecourse-list-items-detail">
+              <div class="datecourse-list-items-count">
+                <p>조회 3787</p>
+                <p>찜 268</p>
+              </div>
+              <div class="datecourese-list-like">
+                <img src="images/emptystar.png" class="likeImg">
+              </div>
+            </div>
+          </div>
+          <div class="datecourese-list-items">
+            <div class="mainImg-wrapper">
+              <img src="images/coffee.jpg" class="mainImg">
+            </div>
+            <div class="datecourese-list-items-info">
+              <p class="datecourese-list-items-name">카페1</p>
+              <p class="datecourese-list-items-summary">일몰 명소로 유명한 아늑한 분위기의 맛집</p>
+            </div>
+            <div class="datecourse-list-items-detail">
+              <div class="datecourse-list-items-count">
+                <p>조회 3787</p>
+                <p>찜 268</p>
+              </div>
+              <div class="datecourese-list-like">
+                <img src="images/emptystar.png" class="likeImg">
+              </div>
+            </div>
+          </div>
+          <div class="datecourese-list-items">
+            <div class="mainImg-wrapper">
+              <img src="images/coffee.jpg" class="mainImg">
+            </div>
+            <div class="datecourese-list-items-info">
+              <p class="datecourese-list-items-name">카페1</p>
+              <p class="datecourese-list-items-summary">일몰 명소로 유명한 아늑한 분위기의 맛집</p>
+            </div>
+            <div class="datecourse-list-items-detail">
+              <div class="datecourse-list-items-count">
+                <p>조회 3787</p>
+                <p>찜 268</p>
+              </div>
+              <div class="datecourese-list-like">
+                <img src="images/emptystar.png" class="likeImg">
+              </div>
+            </div>
+          </div>
+          <div class="datecourese-list-items">
+            <div class="mainImg-wrapper">
+              <img src="images/coffee.jpg" class="mainImg">
+            </div>
+            <div class="datecourese-list-items-info">
+              <p class="datecourese-list-items-name">카페1</p>
+              <p class="datecourese-list-items-summary">일몰 명소로 유명한 아늑한 분위기의 맛집</p>
+            </div>
+            <div class="datecourse-list-items-detail">
+              <div class="datecourse-list-items-count">
+                <p>조회 3787</p>
+                <p>찜 268</p>
+              </div>
+              <div class="datecourese-list-like">
+                <img src="images/emptystar.png" class="likeImg">
+              </div>
+            </div>
+          </div>
+          <div class="datecourese-list-items">
+            <div class="mainImg-wrapper">
+              <img src="images/coffee.jpg" class="mainImg">
+            </div>
+            <div class="datecourese-list-items-info">
+              <p class="datecourese-list-items-name">카페1</p>
+              <p class="datecourese-list-items-summary">일몰 명소로 유명한 아늑한 분위기의 맛집</p>
+            </div>
+            <div class="datecourse-list-items-detail">
+              <div class="datecourse-list-items-count">
+                <p>조회 3787</p>
+                <p>찜 268</p>
+              </div>
+              <div class="datecourese-list-like">
+                <img src="images/emptystar.png" class="likeImg">
+              </div>
+            </div>
+          </div>
+          <div class="datecourese-list-items">
+            <div class="mainImg-wrapper">
+              <img src="images/coffee.jpg" class="mainImg">
+            </div>
+            <div class="datecourese-list-items-info">
+              <p class="datecourese-list-items-name">카페1</p>
+              <p class="datecourese-list-items-summary">일몰 명소로 유명한 아늑한 분위기의 맛집</p>
+            </div>
+            <div class="datecourse-list-items-detail">
+              <div class="datecourse-list-items-count">
+                <p>조회 3787</p>
+                <p>찜 268</p>
+              </div>
+              <div class="datecourese-list-like">
+                <img src="images/emptystar.png" class="likeImg">
+              </div>
+            </div>
+          </div>
+          <div class="datecourese-list-items">
+            <div class="mainImg-wrapper">
+              <img src="images/coffee.jpg" class="mainImg">
+            </div>
+            <div class="datecourese-list-items-info">
+              <p class="datecourese-list-items-name">카페1</p>
+              <p class="datecourese-list-items-summary">일몰 명소로 유명한 아늑한 분위기의 맛집</p>
+            </div>
+            <div class="datecourse-list-items-detail">
+              <div class="datecourse-list-items-count">
+                <p>조회 3787</p>
+                <p>찜 268</p>
+              </div>
+              <div class="datecourese-list-like">
+                <img src="images/emptystar.png" class="likeImg">
+              </div>
+            </div>
+          </div>
+          <div class="datecourese-list-items">
+            <div class="mainImg-wrapper">
+              <img src="images/coffee.jpg" class="mainImg">
+            </div>
+            <div class="datecourese-list-items-info">
+              <p class="datecourese-list-items-name">카페1</p>
+              <p class="datecourese-list-items-summary">일몰 명소로 유명한 아늑한 분위기의 맛집</p>
+            </div>
+            <div class="datecourse-list-items-detail">
+              <div class="datecourse-list-items-count">
+                <p>조회 3787</p>
+                <p>찜 268</p>
+              </div>
+              <div class="datecourese-list-like">
+                <img src="images/emptystar.png" class="likeImg">
+              </div>
+            </div>
+          </div>
+          <div class="datecourese-list-items">
+            <div class="mainImg-wrapper">
+              <img src="images/coffee.jpg" class="mainImg">
+            </div>
+            <div class="datecourese-list-items-info">
+              <p class="datecourese-list-items-name">카페1</p>
+              <p class="datecourese-list-items-summary">일몰 명소로 유명한 아늑한 분위기의 맛집</p>
+            </div>
+            <div class="datecourse-list-items-detail">
+              <div class="datecourse-list-items-count">
+                <p>조회 3787</p>
+                <p>찜 268</p>
+              </div>
+              <div class="datecourese-list-like">
+                <img src="images/emptystar.png" class="likeImg">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- page 번호 영역 -->
+      <div id="datecourese-list-page-wrapper">
+        <ul class="datecourese-list-pagination">
+          <li class="datecourese-list-pagination-button">&lt</li>
+          <li class="datecourese-list-pagination-button">1</li>
+          <li class="datecourese-list-pagination-button">2</li>
+          <li class="datecourese-list-pagination-button">3</li>
+          <li class="datecourese-list-pagination-button">4</li>
+          <li class="datecourese-list-pagination-button">5</li>
+          <li class="datecourese-list-pagination-button">&gt</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

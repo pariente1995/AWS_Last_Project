@@ -48,8 +48,17 @@ public class SecurityConfiguration {
 									.antMatchers("/admin/**").access("hasRole('ROLE_ADMIN')")
 									 
 									// Datecourse
-									.antMatchers("/datecourse/datecourseList").permitAll()
-									
+									.antMatchers("/datecourse/**").permitAll()
+
+									// Hotdeal
+									.antMatchers("/hotdeal/**").permitAll()
+
+									// Review
+									.antMatchers("/review/**").permitAll()
+
+									// Like
+									.antMatchers("/like/**").permitAll()
+
 									 
 									
 									// 위에 설정하는 요청리소스 제외한 나머지 요청리소스는

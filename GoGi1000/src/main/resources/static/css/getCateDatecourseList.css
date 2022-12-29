@@ -1,0 +1,303 @@
+#datecourse-list-container {
+  margin: 15px auto;
+  width: 1200px;
+}
+
+/* 데이트 코스 분류 영역 */
+#datecourse-cate-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 30px;
+}
+
+/* 데이트 코스 분류 버튼 */
+#datecourse-cate-wrapper .datecourse-cate {
+  margin: 0 15px;
+  text-align: center;
+  line-height: 40px;
+}
+
+.datecourse-cate a {
+  display: inline-block;
+  width: 100px;
+  height: 40px;
+  text-decoration: none;
+  background-color: white;
+  border: 1px solid black;
+  border-radius: 50px;
+  color: black;
+  font-weight: bold;
+}
+
+/* 데이트 코스 카테고리 영역 */
+#datecourse-detail-cate-wrapper {
+  margin: 0 50px;
+}
+
+#datecourse-detail-cate-wrapper #datecourse-detail-cate-title {
+  border-bottom: 3px solid black;
+}
+
+/* 데이트 코스 상세 카테고리 영역 */
+.datecourse-detail-cate-field {
+  display: flex;
+  align-items: center;
+}
+
+/* 데이트 코스 상세 카테고리 옵션 영역 */
+.datecourse-detail-cate-field .datecourse-detail-cate-items {
+  display:flex;
+  align-items: center;
+  margin-left: 20px;
+}
+
+.datecourse-detail-cate-items input[type=checkbox] {
+  cursor: pointer;
+}
+
+.datecourse-detail-cate-items label {
+  line-height: 1px;
+  margin-left: 5px;
+  cursor: pointer;
+}
+
+.datecourse-detail-cate-items #datecourseMinPriceView, 
+.datecourse-detail-cate-items #datecourseMaxPriceView::placeholder {
+  font-size: 0.8rem;
+}
+
+#datecourse-detail-cate-inoutYn label, #datecourse-detail-cate-foodType label {
+  margin-right: 20px;
+}
+
+.datecourse-detail-cate hr {
+  margin: 0;
+  background-color: lightgray;
+}
+
+/* 실내/외, 음식종류, 주차여부, 가격대 */
+.datecourse-detail-cate .datecourse-detail-cate-text {
+  width: 120px;
+  line-height: 50px;
+  text-align: center;
+  color: white;
+  background-color: #ee2d7a;
+}
+
+.datecourse-detail-cate-items #datecourseMinPriceView {
+  margin-left: 4px;
+  outline-color: #ee2d7a;
+}
+
+.datecourse-detail-cate-items #datecourseMaxPriceView {
+  margin-right: 10px;
+  outline-color: #ee2d7a;
+}
+
+/* 반려동물 동반 가능여부 */
+.datecourse-detail-cate #datecourse-detail-cate-petYn {
+  width: 120px;
+  height: 65px;
+  line-height: 32px;
+  text-align: center;
+  color: white;
+  background-color: #ee2d7a;
+}
+
+.datecourse-price-common {
+  width: 120px;
+  height: 23px;
+  margin: 0 5px;
+  border-radius: 5px;
+  border: 1px solid lightgray;
+}
+
+#datecourse-detail-cate-filter-field {
+  display: flex;
+  align-items: center;
+}
+
+/* 선택필터 */
+#datecourse-detail-cate-filter {
+  width: 100px;
+  line-height: 40px;
+  margin: 10px 10px;
+  text-align: center;
+  color: white;
+  background-color: #ee2d7a;
+  border-radius: 50px;
+}
+
+/* 가격대 적용 버튼 */
+#btnPriceApply {
+  width: 100px;
+  height: 32px;
+  line-height: 32px;
+  color: white;
+  font-weight: bold;
+  background-color: #ee2d7a;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+#datecourse-detail-cate-filter-items {
+  height: auto;
+  display: flex;
+  align-items: center;
+  margin-left: 25px;
+}
+
+/* 선택 초기화 버튼 */
+#btnFilterClear {
+  width: 100px;
+  height: 32px;
+  display: none;
+  margin-left: 100px;
+  line-height: 32px;
+  color: white;
+  font-weight: bold;
+  background-color: #ee2d7a;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+/* 데이트 코스 리스트 영역 */
+#datecourse-list-wrapper {
+  margin: 0 50px;
+}
+
+#datecourse-list-wrapper #searchCount {
+  margin-top: 50px;
+  margin-bottom: 0;
+  font-size: 1.3rem;
+  font-weight: bold;
+}
+
+#datecourse-list-wrapper p span {
+  color: #ee2d7a; 
+  font-size: 1.7rem;
+}
+
+/* 데이트 코스 리스트 옵션 영역 */
+#datecourse-list-option-wrapper {
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: right;
+}
+
+#datecourse-list-option-wrapper #datecourse-list-option {
+  display: flex;
+  align-items: center;
+  justify-content: right;
+}
+
+.datecourse-list-option-common {
+  width: 60px;
+  height: 40px;
+  line-height: 40px;
+  text-align: center;
+  font-size: 0.9rem;
+  font-weight: bold;
+  border: 1px solid #E0E0E0;
+  cursor: pointer;
+}
+
+#datecourse-list-option-latest {
+  background-color: #f1c40f;
+}
+
+/* 데이트 코스 리스트 전체 영역 */
+#datecourse-list {
+  width: 1100px;
+  margin-top: 20px;
+}
+
+/* 데이트 코스 리스트 각 영역 */
+.datecourese-list-items {
+  width: 270px;
+  height: 400px;
+  margin: 0 1px;
+  display: inline-block;
+}
+
+.datecourese-list-items .mainImg-wrapper {
+  text-align: center;
+}
+
+/* 데이트 코스 리스트 사진들 */
+.datecourese-list-items .mainImg {
+  width: 265px;
+  height: 250px;
+}
+
+.datecourese-list-items .datecourse-list-items-detail {
+  display:flex;
+  align-items: center;
+}
+
+.datecourese-list-items-info .datecourese-list-items-name {
+  margin-top: 10px;
+  margin-bottom: 0px;
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+.datecourese-list-items-info .datecourese-list-items-summary {
+  margin-top: 5px;
+  font-size: 0.9rem;
+  font-weight: bold;
+}
+
+.datecourse-list-items-detail .datecourse-list-items-count {
+  display:flex;
+  align-items: center;
+  margin-right: 120px;
+  font-weight: bold;
+}
+
+.datecourse-list-items-count p {
+  margin-right: 10px;
+  font-size: 0.8rem;
+}
+
+/* 좋아요 이미지 */
+.datecourese-list-like .likeImg {
+  width: 25px;
+  height: 25px;
+  cursor: pointer;
+}
+
+/* page 번호 영역 */
+#datecourese-list-page-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+#datecourese-list-page-wrapper .datecourese-list-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  list-style: none;
+}
+
+/* 페이지 번호 버튼 */
+.datecourese-list-pagination .datecourese-list-pagination-button {
+  width: 30px;
+  height: 30px;
+  margin: 0 5px; 
+  border: 1px solid lightgray;
+  border-radius: 5px;
+  text-align: center;
+  line-height: 30px;
+  font-weight: bold;
+}
+
+.datecourese-list-pagination .datecourese-list-pagination-button:hover {
+  color: #ee2d7a;
+}
