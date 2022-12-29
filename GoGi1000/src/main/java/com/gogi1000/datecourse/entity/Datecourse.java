@@ -47,4 +47,7 @@ public class Datecourse {
     private LocalDateTime datecourseRgstDate = LocalDateTime.now();
     private LocalDateTime datecourseModfDate = LocalDateTime.now();
     private String datecourseUseYn = "Y";
+
+    @Transient
+    private String searchKeyword;
 }

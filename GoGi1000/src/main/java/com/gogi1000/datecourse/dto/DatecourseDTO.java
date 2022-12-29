@@ -29,4 +29,5 @@ public class DatecourseDTO {
     private String datecourseRgstDate;
     private String datecourseModfDate;
     private String datecourseUseYn;
+    private String searchKeyword;
 }
