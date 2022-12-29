@@ -4,64 +4,90 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
       <!-- 스프핑 시큐리티 사용을 위한 -->
 	  <!-- xmlns:sec="http://www.thymeleaf.org/extras/spring-security"> -->
-            
-<body>
-	<header th:fragment="header">
-		<div id="container">
-			<!-- header -->
-			<div id="header">
-				<div id="header-top">
-					<div id="header-logo">
-						<a th:href="@{/home/main}" class="header-logo-link">
-							<img id="header-logo-img" th:src="@{/images/headerLogo.png}" alt="">
-						</a>
-					</div>
-					<div id="header-search-wrapper">
-						<div id="header-search">
-							<a href="#"><img id="header-search-img" th:src="@{/images/search.png}"></a>
-							<input type="search" id="header-search-input" placeholder="지역, 코스명, 음식점 또는 카페"
-								   onfocus="this.placeholder=''" onblur="placeholder='지역, 코스명, 음식점 또는 카페'">
+      
+	 <head>
+	  	<th:block layout:fragment="script">
+	      	<script th:inline="javascript">
+	      		$(function() {
+					  	// 엔터키로 검색
+					    $("searchKeyword").on("keyup",function(){
+					        if(key.keyCode==13) {
+								alert("안녕")
+					            $("searchForm").submit();
+					            
+					        }
+					    });
+					    
+					    $("#searchA").click(function() {
+							let value =  $("searchKeyword").val();
+							$("searchForm").submit(value);
+						})
+				  })
+	      	</script>
+	     </th:block>
+	 </head>
+    
+	<body>
+		<header th:fragment="header">
+			<div id="container">
+				<!-- header -->
+				<div id="header">
+					<div id="header-top">
+						<div id="header-logo">
+							<a th:href="@{/home/main}" class="header-logo-link">
+								<img id="header-logo-img" th:src="@{/images/headerLogo.png}" alt="">
+							</a>
+						</div>
+						<div id="header-search-wrapper">
+							<form action="/datecourse/datecourseList" method="get" name="searchForm">
+								<div id="header-search">
+									<a id="searchA" th:href="@{/datecourse/datecourseList}"  type="submit"><img id="header-search-img" th:src="@{/images/search.png}" ></a>   
+									<!--<button type="button" id="header-search-button"><img id="header-search-img" th:src="@{/images/search.png}"></button>--> 
+									<input type="text" name="searchKeyword" th:value="${searchKeyword}" id="header-search-input" placeholder="지역, 코스명, 음식점 또는 카페"
+										   onfocus="this.placeholder=''" onblur="placeholder='지역, 코스명, 음식점 또는 카페'">
+								</div>
+							</form>
+						</div>
+						<!-- th:remove 이 조건이 맞지 않으면 해당 div를 삭제해라 -->
+						<!-- 인증된 사용자가 있는지, 없으면  -->
+						<div id="header-login" sec:authorize="!isAuthenticated()" th:remove="tag">
+							<ul id="header-login-ul">
+								<li>
+									<a th:href="@{/user/login}" class="header-logo-link">
+										<img id="header-login-ul-image" th:src="@{/images/user.png}">
+										로그인 또는 회원가입</a>
+								</li>
+							</ul>
+						</div>
+						<div id="header-login" sec:authorize="isAuthenticated()" th:remove="tag">
+							<ul id="header-login-ul">
+								<li>
+									<a th:href="@{/mypage/mypage}" sec:authentication="principal.username"></a>
+								</li>
+								<li>
+									 <a th:href="@{/user/logout}">로그아웃</a>
+								</li>
+							</ul>
 						</div>
 					</div>
-					<!-- th:remove 이 조건이 맞지 않으면 해당 div를 삭제해라 -->
-					<!-- 인증된 사용자가 있는지, 없으면  -->
-					<div id="header-login" sec:authorize="!isAuthenticated()" th:remove="tag">
-						<ul id="header-login-ul">
-							<li>
-								<a th:href="@{/user/login}" class="header-logo-link">
-									<img id="header-login-ul-image" th:src="@{/images/user.png}">
-									로그인 또는 회원가입</a>
-							</li>
-						</ul>
-					</div>
-					<div id="header-login" sec:authorize="!isAuthenticated()" th:remove="tag">
-						<ul id="header-login-ul">
-							<li>
-								<a th:href="@{/mypage/mypage}" sec:authentication="principal.username"></a>
-							</li>
-							<li>
-								 <a th:href="@{/user/logout}">로그아웃</a>
-							</li>
-						</ul>
-					</div>
-				</div>
-				<div id="header-bottom">
-					<div id="nav">
-						<img id="nav-image" th:src="@{/images/navstyle.png}">
-						<ul id="nav-ul">
-							<div id="nav-ul-li">
-								<li><a href="#" class="nav-list-link">지역</a></li>
-								<li><a href="#" class="nav-list-link">이번주 랭킹</a></li>
-								<li><a href="#" class="nav-list-link">핫딜</a></li>
-							</div>
-							<div id="nav-div-li">
-								<li><a href="#" class="nav-list-link">마이페이지</a></li>
-							</div>
-						</ul>
+					<div id="header-bottom">
+						<div id="nav">
+							<img id="nav-image" th:src="@{/images/navstyle.png}">
+							<ul id="nav-ul">	
+								<div id="nav-ul-li">
+									<li><a href="#map-frame" class="nav-list-link">지역</a></li>
+									<li><a href="#ranking-h2" class="nav-list-link">이번주 랭킹</a></li>
+									<li><a href="#hotdeal-wrapper" class="nav-list-link">핫딜</a></li>
+								</div>
+								<!-- sec:authorize="isAuthenticated()" th:remove="tag" -->
+								<div id="nav-div-li" >
+									<li><a href="#" class="nav-list-link">마이페이지</a></li>
+								</div>
+							</ul>
+						</div>
 					</div>
 				</div>
 			</div>
-		</div>
-	</header>
-</body>
+		</header>
+	</body>
 </html>
