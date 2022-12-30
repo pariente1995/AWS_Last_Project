@@ -44,26 +44,28 @@ public class DatecourseController {
     // realUploadFiles(매개변수)는 input의 name과 동일해야 한다.
     public void insertDatecourse(DatecourseDTO datecourseDTO,
                                  @RequestParam("datecourseHoursInfo") String datecourseHoursInfo,
-                                 @RequestParam("datecourseMeunInfo") String datecourseMeunInfo,
+                                 @RequestParam("datecourseMenuInfo") String datecourseMenuInfo,
                                  MultipartFile[] realUploadFiles,
                                  HttpServletResponse response, HttpServletRequest request) throws IOException {
 
         // 데이트 코스
         Datecourse datecourse = Datecourse.builder()
-                                        .datecourseNm(datecourseDTO.getDatecourseNm())
-                                        .datecourseArea(datecourseDTO.getDatecourseArea())
-                                        .datecourseCategory(datecourseDTO.getDatecourseCategory())
-                                        .datecourseSummary(datecourseDTO.getDatecourseSummary())
-                                        .datecourseDesc(datecourseDTO.getDatecourseDesc())
-                                        .datecourseAddr(datecourseDTO.getDatecourseAddr())
-                                        .datecourseAddr(datecourseDTO.getDatecourseAddr())
-                                        .datecourseInoutYn(datecourseDTO.getDatecourseInoutYn())
-                                        .datecourseOfficialSite(datecourseDTO.getDatecourseOfficialSite())
-                                        .datecourseParkingYn(datecourseDTO.getDatecourseParkingYn())
-                                        .datecoursePetYn(datecourseDTO.getDatecoursePetYn())
-                                        .datecourseRgstDate(LocalDateTime.now())
-                                        .datecourseModfDate(LocalDateTime.now())
-                                        .build();
+                                          .datecourseNm(datecourseDTO.getDatecourseNm())
+                                          .datecourseArea(datecourseDTO.getDatecourseArea())
+                                          .datecourseCategory(datecourseDTO.getDatecourseCategory())
+                                          .datecourseSummary(datecourseDTO.getDatecourseSummary())
+                                          .datecourseDesc(datecourseDTO.getDatecourseDesc())
+                                          .datecourseAddr(datecourseDTO.getDatecourseAddr())
+                                          .datecourseInoutYn(datecourseDTO.getDatecourseInoutYn())
+                                          .datecourseFoodType(datecourseDTO.getDatecourseFoodType())
+                                          .datecourseTel(datecourseDTO.getDatecourseTel())
+                                          .datecourseOfficialSite(datecourseDTO.getDatecourseOfficialSite())
+                                          .datecourseParkingYn(datecourseDTO.getDatecourseParkingYn())
+                                          .datecoursePetYn(datecourseDTO.getDatecoursePetYn())
+                                          .datecourseRgstDate(LocalDateTime.now())
+                                          .datecourseModfDate(LocalDateTime.now())
+                                          .datecourseUseYn("Y")
+                                          .build();
 
         // 데이트 코스 영업시간
         // 화면에서 받아온 영업시간 데이터
@@ -74,25 +76,31 @@ public class DatecourseController {
 
         for(int i=0; i<datecourseHoursList.size(); i++) {
             DatecourseHours datecourseHours = DatecourseHours.builder()
-                    .datecourseHoursInfo(datecourseHoursList.get(i))
-                    .build();
+                                                             .datecourseHoursInfo(datecourseHoursList.get(i))
+                                                             .datecourseHoursRgstDate(LocalDateTime.now())
+                                                             .datecourseHoursModfDate(LocalDateTime.now())
+                                                             .datecourseHoursUseYn("Y")
+                                                             .build();
 
             iDatecourseHoursList.add(datecourseHours);
         }
 
         // 데이트 코스 메뉴
         // 화면에서 받아온 메뉴 데이터
-        List<DatecourseMenuDTO> datecourseMenuDTOList = new ObjectMapper().readValue(datecourseMeunInfo, new TypeReference<List<DatecourseMenuDTO>>() {});
+        List<DatecourseMenuDTO> datecourseMenuDTOList = new ObjectMapper().readValue(datecourseMenuInfo, new TypeReference<List<DatecourseMenuDTO>>() {});
 
         // DB에 입력될 메뉴 정보 리스트
         List<DatecourseMenu> iDatecourseMenuList = new ArrayList<DatecourseMenu>();
 
         for(int i=0; i<datecourseMenuDTOList.size(); i++) {
             DatecourseMenu datecourseMenu = DatecourseMenu.builder()
-                    .datecourseMenuType(datecourseMenuDTOList.get(i).getDatecourseMenuType())
-                    .datecourseMenuNm(datecourseMenuDTOList.get(i).getDatecourseMenuNm())
-                    .datecourseMenuPrice(datecourseMenuDTOList.get(i).getDatecourseMenuPrice())
-                    .build();
+                                                          .datecourseMenuType(datecourseMenuDTOList.get(i).getDatecourseMenuType())
+                                                          .datecourseMenuNm(datecourseMenuDTOList.get(i).getDatecourseMenuNm())
+                                                          .datecourseMenuPrice(datecourseMenuDTOList.get(i).getDatecourseMenuPrice())
+                                                          .datecourseMenuRgstDate(LocalDateTime.now())
+                                                          .datecourseMenuModfDate(LocalDateTime.now())
+                                                          .datecourseMenuUseYn("Y")
+                                                          .build();
 
             iDatecourseMenuList.add(datecourseMenu);
         }
