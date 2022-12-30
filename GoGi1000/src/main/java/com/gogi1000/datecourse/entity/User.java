@@ -1,22 +1,31 @@
-package com.gogi1000.datecourse.dto;
+package com.gogi1000.datecourse.entity;
 
 import java.time.LocalDateTime;
 
 import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
 import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.DynamicInsert;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Data
+@Entity
+@Table(name="T_GGC_USER")
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class UserDTO {
+@DynamicInsert
+@Data
+public class User {
+	@Id
 	private String userId;
+	
 	private String userPw;
 	private String userNm;
 	private int userAge;
@@ -26,7 +35,7 @@ public class UserDTO {
 	private String userAddr1;
 	private String userAddr2;
 	private String userType;
-	private String userRgstDate;
-	private String userModfDate;
-	private String userUseYn;
+	private LocalDateTime userRgstdate = LocalDateTime.now();
+	private LocalDateTime userModfdate = LocalDateTime.now();
+	private String userUseyn ="Y";
 }

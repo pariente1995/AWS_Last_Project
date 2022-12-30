@@ -2,6 +2,9 @@ package com.gogi1000.datecourse.dto;
 
 import java.util.List;
 
+import lombok.Data;
+
+@Data
 public class ResponseDTO<T> {
 	private List<T> items;
 	
