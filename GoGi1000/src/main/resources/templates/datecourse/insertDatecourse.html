@@ -77,6 +77,7 @@
 
                 // 유효성 검사
                 $("#datecourseRegForm").on("submit", function(e) {
+                    let hourFlag = true;
                     let menuFlag = true;
 
                     if(!$("#datecourseNm").val()) {
@@ -100,17 +101,31 @@
                         return;
                     }
 
+                    if(!$("#datecourseAddr").val()) {
+                        e.preventDefault();
+                        alert("주소를 입력해주세요.");
+                        $("#datecourseAddr").focus();
+                        return;
+                    }
+
+                    $("input[name='datecourseHours']").each(function() {
+                        if(!$(this).val()) {
+                            e.preventDefault();
+                            alert("영업시간을 입력해주세요.");
+                            $(this).focus();
+                            hourFlag = false;
+                            return;
+                        }
+                    });
+
+                    if(!hourFlag) {
+                        return;
+                    }
+
                     if(!$("#datecourseTel").val()) {
                         e.preventDefault();
                         alert("전화번호를 입력해주세요.");
                         $("#datecourseTel").focus();
-                        return;
-                    }
-
-                    if(!$("input[id='datecourseParkingYn']").is(":checked")) {
-                        e.preventDefault();
-                        alert("주차여부를 체크해주세요.");
-                        $("#datecourseParkingYn").focus();
                         return;
                     }
 
@@ -153,24 +168,37 @@
                 });
 
                 // 화면 오픈 시, 데이트 코스 분류가 '놀거리'이기에 음식종류, 반려동물 동반 가능여부 항목은 hide 처리
+                // 음식종류, 반려동물 동반 가능여부 항목 disabled 처리
                 $("#datecourseFoodType-wrapper").css("display", "none"); // 음식종류 항목
+                $("#datecourseFoodType").attr("disabled", true);
+
                 $("#datecoursePetYn-wrapper").css("display", "none"); // 반려동물 동반 가능여부 항목
+                $("#datecoursePetYn").attr("disabled", true);
+                $("#datecoursePetYn-hidden").attr("disabled", true);
 
                 // 데이트 코스 분류가 '놀거리'일 때만 실내/외 여부 항목 표시
+                // 실내/외 input disabled 관련 설정
                 $("#datecourseCategory").on("change", function() {
                     if($("#datecourseCategory option:selected").text() == "놀거리") {
                         $("#datecourseInoutYn-wrapper").css("display", "flex");
+                        $("#datecourseInoutYn-in").attr("disabled", false);
+                        $("#datecourseInoutYn-out").attr("disabled", false);
                     } else {
                         $("#datecourseInoutYn-wrapper").css("display", "none");
+                        $("#datecourseInoutYn-in").attr("disabled", true);
+                        $("#datecourseInoutYn-out").attr("disabled", true);
                     }
                 });
 
                 // 데이트 코스 분류가 '맛집'일 때만 음식종류 항목 표시
+                // 음식종류 select disabled 관련 설정
                 $("#datecourseCategory").on("change", function() {
                     if($("#datecourseCategory option:selected").text() == "맛집") {
                         $("#datecourseFoodType-wrapper").css("display", "flex");
+                        $("#datecourseFoodType").attr("disabled", false);
                     } else {
                         $("#datecourseFoodType-wrapper").css("display", "none");
+                        $("#datecourseFoodType").attr("disabled", true);
                     }
                 });
 
@@ -178,8 +206,22 @@
                 $("#datecourseCategory").on("change", function() {
                     if($("#datecourseCategory option:selected").text() == "카페") {
                         $("#datecoursePetYn-wrapper").css("display", "flex");
+                        $("#datecoursePetYn").attr("disabled", false);
+                        $("#datecoursePetYn-hidden").attr("disabled", false);
                     } else {
                         $("#datecoursePetYn-wrapper").css("display", "none");
+                        $("#datecoursePetYn").attr("disabled", true);
+                        $("#datecoursePetYn-hidden").attr("disabled", true);
+                    }
+                });
+
+                // 데이트 코스 분류가 '놀거리'일 때 메뉴타입 D0001로 설정
+                // 데이트 코스 분류가 '맛집', '카페'일 때 메뉴타입 D0002로 설정
+                $("#datecourseCategory").on("change", function() {
+                    if($("#datecourseCategory option:selected").text() == "놀거리") {
+                        $("#datecourseMenuType").val("D0001");
+                    } else {
+                        $("#datecourseMenuType").val("D0002");
                     }
                 });
 
@@ -243,8 +285,8 @@
                         iDatecourseMenusArr = iDatecourseMenusArr.filter((menu, index) =>
                             index != $("#datecourseMenu-field .addMenuTag:last").children(":first").next().attr("data-datecourseMenu-index"));
 
-                        $("#datecourseMeunInfo").val(JSON.stringify(iDatecourseMenusArr))
-                        console.log($("#datecourseMeunInfo").val());
+                        $("#datecourseMenuInfo").val(JSON.stringify(iDatecourseMenusArr))
+                        console.log($("#datecourseMenuInfo").val());
 
                         console.log($("#datecourseMenu-field .addMenuTag:last").remove());
 
@@ -281,8 +323,9 @@
 
                     // iDatecourseMenusArr의 해당 index의 값이 null인 경우에만 객체 담기
                     if(iDatecourseMenusArr[index] == null) {
-                        // 메뉴명과 가격을 담을 객체 생성
+                        // 메뉴타입, 메뉴명, 가격을 담을 객체 생성
                         const datecourseMenuObj = {
+                            datecourseMenuType: $("#datecourseMenuType").val(),
                             datecourseMenuNm: null,
                             datecourseMenuPrice: null
                         };
@@ -302,8 +345,9 @@
 
                     // iDatecourseMenusArr의 해당 index의 값이 null인 경우에만 객체 담기
                     if(iDatecourseMenusArr[index] == null) {
-                        // 메뉴명과 가격을 담을 객체 생성
+                        // 메뉴타입, 메뉴명, 가격을 담을 객체 생성
                         const datecourseMenuObj = {
+                            datecourseMenuType: $("#datecourseMenuType").val(),
                             datecourseMenuNm: null,
                             datecourseMenuPrice: null
                         };
@@ -319,7 +363,7 @@
                 // submit시, 영업시간 및 메뉴 정보 배열을 JSON String 형태로 변환하여 각 input에 셋팅
                 $("#datecourseRegForm").on("submit", function() {
                     $("#datecourseHoursInfo").val(JSON.stringify(iDatecourseHoursArr));
-                    $("#datecourseMeunInfo").val(JSON.stringify(iDatecourseMenusArr));
+                    $("#datecourseMenuInfo").val(JSON.stringify(iDatecourseMenusArr));
                 });
             });
 
@@ -426,6 +470,24 @@
                 // 완성된 div를 리턴
                 return div;
             }
+
+            // 주차 가능여부 체크되었을 시, 주차 가능여부 hidden input disabled 처리
+            function fnChgParkingYn(parkingYn) {
+                if($(parkingYn).is(":checked")) {
+                    $("#datecourseParkingYn-hidden").attr("disabled", true);
+                } else {
+                    $("#datecourseParkingYn-hidden").attr("disabled", false);
+                }
+            }
+
+            // 반려동물 가능여부 체크되었을 시, 반려동물 가능여부 hidden input disabled 처리
+            function fnChgPetYn(petYn) {
+                if($(petYn).is(":checked")) {
+                    $("#datecoursePetYn-hidden").attr("disabled", true);
+                } else {
+                    $("#datecoursePetYn-hidden").attr("disabled", false);
+                }
+            }
         </script>
     </th:block>
 </head>
@@ -488,6 +550,12 @@
                         <div class="common-text">데이트 코스 설명</div>
                         <textarea name="datecourseDesc" id="datecourseDesc" class="common-margin" cols="60" rows="10" placeholder="데이트 코스에 대한 설명을 작성하세요."></textarea>
                     </div>
+                    <div id="datecourseAddr-wrapper" class="common common-display">
+                        <div class="common-text">
+                            <label for="datecourseAddr">주소</label>
+                        </div>
+                        <input type="text" name="datecourseAddr" id="datecourseAddr" class="common-margin" placeholder="주소를 입력하세요.">
+                    </div>
                     <div id="datecourseInoutYn-wrapper" class="common common-display">
                         <div class="common-text">실내/외 여부</div>
                         <input type="radio" name="datecourseInoutYn" id="datecourseInoutYn-in" class="common-margin" value="Y" checked><label for="datecourseInoutYn-in">실내</label>
@@ -531,20 +599,23 @@
                     </div>
                     <div id="datecourseParkingYn-wrapper" class="common common-display">
                         <div class="common-text">
-                            <label for="datecourseParkingYn">주차여부</label>
+                            <label for="datecourseParkingYn">주차 가능여부</label>
                         </div>
-                        <input type="checkbox" name="datecourseParkingYn" id="datecourseParkingYn" class="common-margin">
+                        <input type="checkbox" name="datecourseParkingYn" id="datecourseParkingYn" class="common-margin" value="Y" onchange="fnChgParkingYn(this);">
+                        <input type="hidden" name="datecourseParkingYn" id="datecourseParkingYn-hidden" value="N">
                     </div>
                     <div id="datecoursePetYn-wrapper" class="common common-display">
                         <div id="datecoursePetYn-text" class="common-text">
                             <label for="datecoursePetYn">반려동물 <br>동반 가능여부</label>
                         </div>
-                        <input type="checkbox" name="datecoursePetYn" id="datecoursePetYn" class="common-margin">
+                        <input type="checkbox" name="datecoursePetYn" id="datecoursePetYn" class="common-margin" value="Y" onchange="fnChgPetYn(this);">
+                        <input type="hidden" name="datecoursePetYn" id="datecoursePetYn-hidden" value="N">
                     </div>
                     <div id="datecourseMenu-wrapper" class="common common-display">
                         <div class="common-text">메뉴</div>
                         <div id="datecourseMenu-field">
-                            <input type="hidden" name="datecourseMeunInfo" id="datecourseMeunInfo" value="">
+                            <input type="hidden" name="datecourseMenuType" id="datecourseMenuType" value="D0001">
+                            <input type="hidden" name="datecourseMenuInfo" id="datecourseMenuInfo" value="">
                             메뉴명<input type="text" name="datecourseMenuNm" class="datecourseMenuNm" data-datecourseMenu-index="0" placeholder="메뉴명을 입력하세요.">
                             가격<input type="text" name="datecourseMenuPrice" class="datecourseMenuPrice" data-datecourseMenu-index="0" placeholder="가격을 입력하세요."><br>
                         </div>

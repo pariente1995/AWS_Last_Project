@@ -68,6 +68,7 @@
 
         // 유효성 검사
         $("#btnUpdate").on("click", function() {
+          let hourFlag = true;
           let menuFlag = true;
 
           if(!$("#datecourseNm").val()) {
@@ -88,15 +89,28 @@
             return;
           }
 
-          if(!$("#datecourseTel").val()) {
-            alert("전화번호를 입력해주세요.");
-            $("#datecourseTel").focus();
+          if(!$("#datecourseAddr").val()) {
+            alert("주소를 입력해주세요.");
+            $("#datecourseAddr").focus();
             return;
           }
 
-          if(!$("input[id='datecourseParkingYn']").is(":checked")) {
-            alert("주차여부를 체크해주세요.");
-            $("#datecourseParkingYn").focus();
+          $("input[name='datecourseHours']").each(function() {
+            if(!$(this).val()) {
+              alert("영업시간을 입력해주세요.");
+              $(this).focus();
+              hourFlag = false;
+              return;
+            }
+          });
+
+          if(!hourFlag) {
+            return;
+          }
+
+          if(!$("#datecourseTel").val()) {
+            alert("전화번호를 입력해주세요.");
+            $("#datecourseTel").focus();
             return;
           }
 
@@ -164,6 +178,16 @@
             $("#datecoursePetYn-wrapper").css("display", "flex");
           } else {
             $("#datecoursePetYn-wrapper").css("display", "none");
+          }
+        });
+
+        // 데이트 코스 분류가 '놀거리'일 때 메뉴타입 D0001로 설정
+        // 데이트 코스 분류가 '맛집', '카페'일 때 메뉴타입 D0002로 설정
+        $("#datecourseCategory").on("change", function() {
+          if($("#datecourseCategory option:selected").text() == "놀거리") {
+            $("#datecourseMenuType").val("D0001");
+          } else {
+            $("#datecourseMenuType").val("D0002");
           }
         });
 
@@ -334,6 +358,24 @@
         // 완성된 div를 리턴
         return div;
       }
+
+      // 주차 가능여부 체크되었을 시, 주차 가능여부 hidden input disabled 처리
+      function fnChgParkingYn(parkingYn) {
+        if($(parkingYn).is(":checked")) {
+          $("#datecourseParkingYn-hidden").attr("disabled", true);
+        } else {
+          $("#datecourseParkingYn-hidden").attr("disabled", false);
+        }
+      }
+
+      // 반려동물 가능여부 체크되었을 시, 반려동물 가능여부 hidden input disabled 처리
+      function fnChgPetYn(petYn) {
+        if($(petYn).is(":checked")) {
+          $("#datecoursePetYn-hidden").attr("disabled", true);
+        } else {
+          $("#datecoursePetYn-hidden").attr("disabled", false);
+        }
+      }
     </script>
   </th:block>
 </head>
@@ -408,6 +450,12 @@
             <div class="common-text">데이트 코스 설명</div>
             <textarea name="datecourseDesc" id="datecourseDesc" class="common-margin" cols="60" rows="10" placeholder="데이트 코스에 대한 설명을 작성하세요."></textarea>
           </div>
+          <div id="datecourseAddr-wrapper" class="common common-display">
+            <div class="common-text">
+              <label for="datecourseAddr">주소</label>
+            </div>
+            <input type="text" name="datecourseAddr" id="datecourseAddr" class="common-margin" placeholder="주소를 입력하세요.">
+          </div>
           <div id="datecourseInoutYn-wrapper" class="common common-display">
             <div class="common-text">실내/외 여부</div>
             <input type="radio" name="datecourseInoutYn" id="datecourseInoutYn-in" class="common-margin" value="Y" checked><label for="datecourseInoutYn-in">실내</label>
@@ -431,6 +479,7 @@
               영업시간
             </div>
             <div id="datecourseHours-field">
+              <input type="hidden" name="datecourseHoursInfo" id="datecourseHoursInfo" value="">
               <input type="text" name="datecourseHours" class="common-margin datecourseHours" placeholder="영업시간을 입력하세요."><br>
             </div>
             <img th:src="@{/images/plus.png}" id="datecourseHours-plusImg" class="plusImg" width="25px" height="25px">
@@ -450,21 +499,25 @@
           </div>
           <div id="datecourseParkingYn-wrapper" class="common common-display">
             <div class="common-text">
-              <label for="datecourseParkingYn">주차여부</label>
+              <label for="datecourseParkingYn">주차 가능여부</label>
             </div>
-            <input type="checkbox" name="datecourseParkingYn" id="datecourseParkingYn" class="common-margin">
+            <input type="checkbox" name="datecourseParkingYn" id="datecourseParkingYn" class="common-margin" value="Y" onchange="fnChgParkingYn(this);">
+            <input type="hidden" name="datecourseParkingYn" id="datecourseParkingYn-hidden" value="N">
           </div>
           <div id="datecoursePetYn-wrapper" class="common common-display">
             <div id="datecoursePetYn-text" class="common-text">
               <label for="datecoursePetYn">반려동물 <br>동반 가능여부</label>
             </div>
-            <input type="checkbox" name="datecoursePetYn" id="datecoursePetYn" class="common-margin">
+            <input type="checkbox" name="datecoursePetYn" id="datecoursePetYn" class="common-margin" value="Y" onchange="fnChgPetYn(this);">
+            <input type="hidden" name="datecoursePetYn" id="datecoursePetYn-hidden" value="N">
           </div>
           <div id="datecourseMenu-wrapper" class="common common-display">
             <div class="common-text">메뉴</div>
             <div id="datecourseMenu-field">
-            메뉴명<input type="text" name="datecourseMenuNm" class="datecourseMenuNm" placeholder="메뉴명을 입력하세요.">
-            가격<input type="text" name="datecourseMenuPrice" class="datecourseMenuPrice" placeholder="가격을 입력하세요."><br>
+                <input type="hidden" name="datecourseMenuType" id="datecourseMenuType" value="D0001">
+                <input type="hidden" name="datecourseMenuInfo" id="datecourseMenuInfo" value="">
+                메뉴명<input type="text" name="datecourseMenuNm" class="datecourseMenuNm" placeholder="메뉴명을 입력하세요.">
+                가격<input type="text" name="datecourseMenuPrice" class="datecourseMenuPrice" placeholder="가격을 입력하세요."><br>
             </div>
             <img th:src="@{/images/plus.png}" id="datecourseMenu-plusImg" class="plusImg" width="25px" height="25px">
             <img th:src="@{/images/minus.png}" id="datecourseMenu-minusImg" class="minusImg" width="25px" height="25px">

@@ -10,8 +10,12 @@
   width: 200px;
 }
 
-/* 데이트 코스명, 데이트 코스 요약, 영업시간, 전화번호, 웹 사이트, 메뉴, 가격 높이 설정 */
-#datecourseNm, #datecourseSummary, .datecourseHours, #datecourseTel, 
+#datecourseAddr-wrapper #datecourseAddr {
+  width: 435px;
+}
+
+/* 데이트 코스명, 데이트 코스 요약, 주소, 영업시간, 전화번호, 웹 사이트, 메뉴, 가격 높이 설정 */
+#datecourseNm, #datecourseSummary, #datecourseAddr, .datecourseHours, #datecourseTel,
 #datecourseOfficialSite, .datecourseMenuNm, .datecourseMenuPrice {
   height: 23px;
 }
@@ -33,7 +37,7 @@
   height: 30px;
 }
 
-/* 주차여부, 반려동물 동반 가능 여부 크기 설정 */
+/* 주차 가능여부, 반려동물 동반 가능 여부 크기 설정 */
 #datecourseParkingYn, #datecoursePetYn {
   width:20px;
   height: 20px;
@@ -62,7 +66,7 @@
 }
 
 /* placeholder 글씨 크기 설정 */
-#datecourseNm-wrapper #datecourseNm, #datecourseSummary, .datecourseHours, 
+#datecourseNm-wrapper #datecourseNm, #datecourseSummary, #datecourseAddr, .datecourseHours,
 #datecourseTel, #datecourseOfficialSite, .datecourseMenuNm, 
 .datecourseMenuPrice::placeholder {
   font-size: 0.8rem;
