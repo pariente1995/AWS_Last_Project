@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ko"
       xmlns:th="http:///www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
       
 <!-- head 영역 시작 -->
 <!-- 개별적으로 사용할 css, js 링크 걸기 위해서 남겨둠 -->
@@ -61,9 +61,9 @@
                 </div>
             </div>
             <div class="sub_area">
-                <a href="@{/user/findId}" style="color: black;">아이디 찾기</a> |
-                <a href="@{/user/findPwd}" style="color: black;">비밀번호 찾기</a> |
-                <a href="@{/user/join}" style="color: black;">회원가입</a>
+                <a th:href="@{/user/findId}" style="color: black;">아이디 찾기</a> |
+                <a th:href="@{/user/findPwd}" style="color: black;">비밀번호 찾기</a> |
+                <a th:href="@{/user/join}" style="color: black;">회원가입</a>
             </div>
         </div>
 
