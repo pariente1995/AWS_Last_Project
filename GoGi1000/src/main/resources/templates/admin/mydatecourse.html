@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{layouts/layout-admin}">
+
+<head>
+
+    <th:block layout:fragment="css">
+        <link rel="stylesheet" th:href="@{/css/mydatecourse.css}" />
+    </th:block>
+
+    <th:block layout:fragment="script">
+        <script th:inline="javascript" src="https://code.jquery.com/jquery-3.6.1.js"></script>
+
+        <script th:inline="javascript">
+            /* 전체선택 버튼 */
+            $(function () {
+                $("#btnChkall").click(function () {
+                    if ($("#btnChkall").text() == "전체선택") {
+                        $("input[name=chk]").prop("checked", true);
+                        $("#btnChkall").text("선택해제")
+                    } else if ($("#btnChkall").text() == "선택해제") {
+                        $("input[name=chk]").prop("checked", false);
+                        $("#btnChkall").text("전체선택")
+                    }
+                });
+
+                /* 삭제 버튼 */
+                $("#btnDel").click(function () {
+                    if ($("input[name=chk]").is(":checked")) {
+                        if (confirm("삭제하시겠습니까?")) {
+                            $("input[name=chk]:checked").parent().parent().remove();
+                            alert("삭제가 완료되었습니다.")
+                            $("#board-count").text($("#tbody tr").length);
+                        } else {
+                            alert("삭제가 취소되었습니다.")
+                        }
+                    }
+                })
+            });
+
+
+            var mapContainer = document.getElementById('map'), // 지도를 표시할 div 
+                mapOption = {
+                    center: new kakao.maps.LatLng(33.450701, 126.570667), // 지도의 중심좌표
+                    level: 3 // 지도의 확대 레벨
+                };
+
+            var map = new kakao.maps.Map(mapContainer, mapOption); // 지도를 생성합니다
+
+            // 마커가 표시될 위치입니다 
+            var markerPosition = new kakao.maps.LatLng(33.450701, 126.570667);
+
+            // 마커를 생성합니다
+            var marker = new kakao.maps.Marker({
+                position: markerPosition
+            });
+
+            // 마커가 지도 위에 표시되도록 설정합니다
+            marker.setMap(map);
+
+			// 아래 코드는 지도 위의 마커를 제거하는 코드입니다
+			// marker.setMap(null);    
+        </script>
+    </th:block>
+</head>
+
+<body>
+    <main>
+        <div layout:fragment="content">
+            <div id="md-content">
+                <h1 style="margin:0;">나만의 데이트코스</h1>
+                <hr>
+                <div id="md-content-table">
+                    <div id="datecourse-userInfo">
+                        <img th:src="images/user.png" style="width:30px; height: 30px; margin-right: 5px;">
+                        <div id="datecourse-text">
+                            <span th:text="${loginUser.userId}"></span><span>님의 데이트코스</span><span
+                                style="color: #ee2d7a; font-weight: bold">
+                                Pick</span>
+                        </div>
+                        <img th:src="images/heart.png" style="transform: rotate(25deg); width:30px; height: 30px;">
+                    </div>
+                    <div id="map"><img src="images/map.png" style="width:100%; height:100%"></div>
+                    <div id="table-menu">
+                        <div>
+                            <button id="btnChkall">전체선택</button>
+                            <button id="btnDel">삭제</button>
+                        </div>
+                        <span><i stlye="font-size:0.8rem;">데이트 코스는 최대 10개까지만 등록가능합니다.</i></span>
+                    </div>
+                    <table id="mycoursetable">
+                        <tr>
+                            <th style="width:30px;"></th>
+                            <th style="width:100px;">번호</th>
+                            <th style="width:500px;">코스명</th>
+
+                        </tr>
+                        <tr>
+                            <td><input type="checkbox" name="chk"></td>
+                            <td th:text="${datecourse.datecourseNm}"></td>
+                            <td th:text="${datecouruse.datecourseAddr}"></td>
+                        </tr>
+                    </table>
+                    <div id="list-total">
+                        <span style="font-weight:bold; font-size:1.2rem">전체&ensp;<span id="board-count"
+                                style="color:#ee2d7a; font-size:28px" th:text=""></span>개</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</body>
+
+</html>
