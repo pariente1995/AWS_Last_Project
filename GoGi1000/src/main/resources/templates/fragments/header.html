@@ -39,9 +39,9 @@
 							</a>
 						</div>
 						<div id="header-search-wrapper">
-							<form action="/datecourse/datecourseList" method="get" name="searchForm">
+							<form action="/main/getCateDatecourseList" method="get" name="searchForm">
 								<div id="header-search">
-									<a id="searchA" th:href="@{/datecourse/datecourseList}"  type="submit"><img id="header-search-img" th:src="@{/images/search.png}" ></a>   
+									<a id="searchA" th:href="@{/datecourse/getCateDatecourseList}"  type="submit"><img id="header-search-img" th:src="@{/images/search.png}" ></a>   
 									<!--<button type="button" id="header-search-button"><img id="header-search-img" th:src="@{/images/search.png}"></button>--> 
 									<input type="text" name="searchKeyword" th:value="${searchKeyword}" id="header-search-input" placeholder="지역, 코스명, 음식점 또는 카페"
 										   onfocus="this.placeholder=''" onblur="placeholder='지역, 코스명, 음식점 또는 카페'">
@@ -74,14 +74,17 @@
 						<div id="nav">
 							<img id="nav-image" th:src="@{/images/navstyle.png}">
 							<ul id="nav-ul">	
-								<div id="nav-ul-li">
+								<div id="nav-ul-li" sec:authorize="!isAuthenticated()" th:remove="tag">
 									<li><a href="#map-frame" class="nav-list-link">지역</a></li>
 									<li><a href="#ranking-h2" class="nav-list-link">이번주 랭킹</a></li>
 									<li><a href="#hotdeal-wrapper" class="nav-list-link">핫딜</a></li>
 								</div>
-								<!-- sec:authorize="isAuthenticated()" th:remove="tag" -->
-								<div id="nav-div-li" >
+								<!-- sec:authorize="isAuthenticated()" th:remove="tag"  sec:authorize="hasRole('ROLE_ADMIN')-->
+								<div id="nav-div-li" sec:authorize="isAuthenticated()" th:remove="tag">
 									<li><a href="#" class="nav-list-link">마이페이지</a></li>
+								</div>
+								<div id="nav-div-li" sec:authorize="hasRole('ROLE_ADMIN')" th:remove="tag">
+									<li><a href="#" class="nav-list-link">관리자페이지</a></li>
 								</div>
 							</ul>
 						</div>

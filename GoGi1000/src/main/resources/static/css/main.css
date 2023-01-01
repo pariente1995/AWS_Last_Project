@@ -26,22 +26,22 @@
 }
 
 /* 지도위에 지역 표시 */
-#map-seoul { top:80px; left:44%;}
-#map-busan { top:325px; left:56%;}
-#map-daegu { top:250px; left:55%}
-#map-incheon { top:90px; left:40%;}
-#map-gwangju { top: 320px; left:43%;}
+#map-seoul { top:80px; left:43.8%;}
+#map-busan { top:315px; left:56%;}
+#map-daegu { top:250px; left:54.5%}
+#map-incheon { top:80px; left:40%;}
+#map-gwangju { top: 315px; left:42.3%;}
 #map-daejun { top:200px; left:47%;}
 #map-ulsan { top:290px; left:59%;}
-#map-sejong { top: 170px; left:46%;}
-#map-gyunggi { top:110px; left:46%;}
-#map-gangwon { top: 70px; left:54%;}
-#map-chungbuk { top: 150px; left:50%;}
-#map-chungnam { top:190px; left:42%;}
-#map-jeonnam { top:370px; left:40%;}
-#map-jeonbuk { top:270px; left:44%;}
-#map-gyungbuk { top:200px; left:56%;}
-#map-gyungnam { top: 300px; left:53%;}
+#map-sejong { top: 160px; left:46%;}
+#map-gyunggi { top:115px; left:45%;}
+#map-gangwon { top: 65px; left:53.5%;}
+#map-chungbuk { top: 145px; left:50%;}
+#map-chungnam { top:180px; left:42%;}
+#map-jeonnam { top:360px; left:42%;}
+#map-jeonbuk { top:265px; left:44%;}
+#map-gyungbuk { top:190px; left:56%;}
+#map-gyungnam { top: 300px; left:52%;}
 #map-jeju { top:450px; left:40%;}
 
 #map-img{

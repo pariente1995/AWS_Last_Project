@@ -6,7 +6,7 @@
 
 <head>
 	<th:block layout:fragment="css">
-		<link rel="stylesheet" th:href="@{/css/datecourseList.css}"/>
+		<link rel="stylesheet" th:href="@{/css/getAdminDatecourseList.css}"/>
 	</th:block>
 	<th:block layout:fragment="script">
 		<script th:inline="javascript">
@@ -126,7 +126,7 @@
 		              <div id="input-div">
 		                <form id="input-form-search" action="#" method="post">
 		                  <input type="search" id="input-search">
-		                  <a id="input-img-a" href="#"><img id="input-img" src="images/search.png"\></a>
+		                  <a id="input-img-a" href="#"><img id="input-img" th:src="@{/images/search.png}"\></a>
 		                </form>
 		              </div>
 		            </div>
