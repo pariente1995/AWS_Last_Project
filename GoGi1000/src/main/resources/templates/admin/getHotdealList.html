@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{layouts/layout-admin}">
+
+<head>
+    <th:block layout:fragment="css">
+        <link rel="stylesheet" th:href="@{/css/getHotdealList.css}" />
+    </th:block>
+
+    <th:block layout:fragment="script">
+        <script th:inline="javascript" src="https://code.jquery.com/jquery-3.6.1.js"></script>
+
+        <script th:inline="javascript">
+                $(function () {
+                /* $("#btnChkall").click(function () {
+    
+                     if ($("#btnChkall").text() == "전체선택") {
+                         $("input[name=chk]").prop("checked", true);
+ 
+                         $("#btnChkall").text("선택해제")
+                     } else if ($("#btnChkall").text() == "선택해제") {
+                         $("input[name=chk]").prop("checked", false);
+                         $("#btnChkall").text("전체선택")
+                     }
+                 });
+       
+                 $("#btnDel").click(function () {
+                     if ($("input[name=chk]").is(":checked")) {
+                         if($("#btnDel").text() == "숨김") {
+                             if(confirm("게시글을 숨깁니다.")) {
+                                 $.ajax({
+                                     url:'/hotdeal/updateUseYnN',
+                                     type:'POST',
+                                     data: { hotdealNo: $("#hotdealNo")
+                                     },
+                                     success: function(data){
+                                     	
+                                     },
+                                     error:function() {
+                                         alert("error");
+                                     }
+                                 }),
+                             	
+                             
+                                 $("#btnDel").text("표시");
+                             }
+                         } else if($("#btnDel").text() == "표시") {
+                             if(confirm("게시글을 표시합니다.")) {
+                                 $.ajax({
+                                     type: 'POST',
+                                     data: { hotdealNo: $("#hotdealNo")}
+                                 })
+                                 $("#btnDel").text("숨김");
+                             }
+                         }
+                     }
+                 })*/
+                $("#btnSearch").click(function () {
+                    $("input[name='page']").val(0);
+                    $("#searchForm").submit();
+                });
+
+                //엔터키로 검색
+                $("#searchKeyword").on("keydown", function (e) {
+                    if (e.keyCode == 13) {
+                        $("#btnSearch").click();
+                    }
+                });
+
+                var chkObj = document.getElementsByName("chk");
+                var rowCnt = chkObj.length;
+
+                $("input[name=chkAll]").click(function () {
+                    var chkArr = $("input[name=chk]");
+                    for (var i = 0; i < chkArr.length; i++) {
+                        chkArr[i].checked = this.checked;
+                    }
+                });
+
+                $("input[name=chk]").click(function () {
+                    if ($("input[name=chk]:checked").length == rowCnt) {
+                        $("input[name=chkAll]")[0].checked = true;
+                    } else {
+                        $("input[name=chkAll]")[0].checked = false;
+                    }
+                });
+             });
+
+                function updateUseYn() {
+                    var valueArr = new Array();
+                    var chkList = $("input[name=chk]");
+                    for (var i = 0; i < chkList.length; i++) {
+                        if (chkList[i].checked) {
+                            valueArr.push(chkList[i].value);
+                        }
+                    }
+                    if (valueArr.length == 0) {
+                            alert("선택된 항목이 없습니다.")
+                    }
+                    else {
+						  let strValueArr = JSON.stringify(valueArr);
+						  
+                          $.ajax({
+                             	url: "/hotdeal/updateHotdealUseYn",
+                                type: 'POST',
+                                data: {
+                                    valueArr : strValueArr
+                                },
+                                success: function (data) {
+									for(let i=0; i< data.pageItems.content.length; i++) {
+										$("#yntd" + i).text(data.pageItems.content[i].hotdealUseYn);
+									}
+                                }
+                            });
+                        }
+                    }
+            
+				
+        </script>
+    </th:block>
+</head>
+
+<body>
+    <main>
+        <div layout:fragment="content">
+            <div id="hl_main">
+                <h1 style="margin:0;">핫딜 목록</h1>
+                <hr>
+                <div id="hl_content">
+                    <div id="hl_content_table">
+                        <div id="button-wrap">
+                            <input type="checkbox" name="chkAll">전체선택</button>
+                            <button id="btnDel" onclick="updateUseYn();">숨김</button>
+                        </div>
+                        <div id="searchForm-wrapper">
+                            <form id="searchForm" action="/hotdeal/hotdealList" method="get">
+                                <input type="hidden" name="page" value="">
+                                <select name="searchCondition" id="searchCondtion">
+                                    <option value="ALL" th:selected="${searchCondition == 'ALL'}">전체</option>
+                                    <option value="NAME" th:selected="${searchCondtion == 'NAME'}">핫딜명</option>
+                                    <option value="DESC" th:selected="${searchCondition =='DESC'}">내용</option>
+                                </select>
+                                <div id="input-wrap">
+                                    <input type="text" style="border:none;" name="searchKeyword" id="searchKeyword"
+                                        th:value="${searchKeyword}">
+                                    <button type="button" id="btnSearch"><img th:src="@{/images/search.png}" id="searchImg"></button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <table id="hotdealtable">
+                        <tr>
+                            <th style="width: 15px"></th>
+                            <th style="width: 50px">번호</th>
+                            <th style="width: 200px">핫딜 사진</th>
+                            <th style="width: 300px;">핫딜명</th>
+                            <th style="width: 150px">등록일</th>
+                            <th style="width: 150px">종료일</th>
+                            <th style="width: 130px;">핫딜 노출여부
+                        </tr>
+                        </tr>
+                        <tr th:each="hotdeal : ${getHotdealList}">
+                            <td>
+                                <input type="checkbox" name="chk" th:id="'chk' + ${hotdeal.hotdealNo}" th:value="${hotdeal.hotdealNo}">
+                            </td>
+                            <td th:text="${hotdeal.hotdealNo}"></td>
+                            <td>
+                                <div class="image-box">
+                                    <!--<img th:src="" >-->
+                                </div>
+                            </td>
+                            <td>
+                                <a th:text="${hotdeal.hotdealNm}"
+                                    th:href="@{hotdeal/getHotdeal/{hotdealNo} (hotdealNo=${hotdeal.hotdealNo})}"></a>
+                            </td>
+                            <td th:text="${hotdeal.hotdealRgstDate}"></td>
+                            <td th:text="${hotdeal.hotdealEndDate}"></td>
+                            <td th:id = "'yntd' + ${hotdealStat.index}" th:text="${hotdeal.hotdealUseYn}"></td>
+                        </tr>
+                    </table>
+                    <nav aria-label="Page navigation example">
+                        <ul class="pagination" th:if="${getHotdealList.totalElements > 0}" th:with="pageNumber = ${getHotdealList.pageable.pageNumber},
+	          						 		  pageSize = ${getHotdealList.pageable.pageSize},
+	          						 		  totalPages = ${getHotdealList.totalPages},
+	          						 		  startPage = ${T(java.lang.Math).floor(pageNumber / pageSize) * pageSize + 1},
+	          						 		  tempEndPage = ${startPage + pageSize - 1},
+	          						 		  endPage = ${tempEndPage > totalPages ? totalPages : tempEndPage}">
+
+                            <li class="page-item" th:if="${pageNumber > 0}">
+                                <a class="page-link" aria-label="Previous" th:href="@{/hotdeal/hotdealList(page=${pageNumber -1},
+	               				searchCondition=${searchCondition},
+	               				searchKeyword=${searchKeyword})}">
+                                    <span aria-hidden="true">&lt;</span>
+                                </a>
+                            </li>
+
+                            <li class="page-item" th:each="page : ${#numbers.sequence(startPage, endPage)}">
+                                <a class="page-link" th:href="@{/hotdeal/hotdealList(page=${page - 1},
+	            				searchCondition=${searchCondition},
+	            				searchKeyword=${searchKeyword})}" th:text="${page}">
+                                </a>
+                            </li>
+
+                            <li class="page-item" th:if="${pageNumber < totalPages - 1}">
+                                <a class="page-link" aria-label="Next" th:href="@{/hotdeal/hotdealList(page=${pageNumber + 1},
+	              				searchCondition=${searchCondition},
+	              				searchKeyword=${searchKeyword})}">
+                                    <span aria-hidden="true">&gt;</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </main>
+</body>
+
+</html>
