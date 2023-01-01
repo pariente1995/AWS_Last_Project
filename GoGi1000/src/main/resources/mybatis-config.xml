@@ -8,4 +8,7 @@
 	</settings>
 	
 	<!-- alias 추가 -->
+	<typeAliases>
+		<typeAlias type="com.gogi1000.datecourse.dto.DatecourseDTO" alias="datecourse" />
+	</typeAliases>
 </configuration>
