@@ -14,7 +14,7 @@ public interface MainService {
 	List<CamelHashMap> getMapDatecourseList(String datecourseArea);
 	
 	// 탑텐 선택 후 조회
-//	Datecourse getDatecourse(int datecourseNo);
+//	List<Datecourse> getRankDatecourseList(Datecourse datecourse);
 	
 //	Hotdeal getHotdeal(int hotdealNo);
 	

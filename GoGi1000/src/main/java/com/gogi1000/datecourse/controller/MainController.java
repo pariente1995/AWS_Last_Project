@@ -14,9 +14,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.gogi1000.datecourse.common.CamelHashMap;
 import com.gogi1000.datecourse.dto.DatecourseDTO;
-import com.gogi1000.datecourse.dto.HotdealDTO;
 import com.gogi1000.datecourse.entity.Datecourse;
-import com.gogi1000.datecourse.entity.Hotdeal;
 import com.gogi1000.datecourse.service.main.MainService;
 
 @RestController
@@ -104,9 +102,37 @@ public class MainController {
 	}
 	
 	// 메인 페이지에서 탑텐 리스트 조회
+//	@RequestMapping("/getRankDatecourseList")
+//	public ModelAndView getRankDatecourseList(DatecourseDTO datecourseDTO) {
+//		Datecourse datecourse = Datecourse.builder()
+//								.datecourseNo(datecourseDTO.getDatecourseNo())
+//								.datecourseNm(datecourseDTO.getDatecourseNm())
+//								.datecourseSummary(datecourseDTO.getDatecourseSummary())
+//								.build();
+//		
+//		List<Datecourse> rankDatecourseList = mainService.getRankDatecourseList(datecourse);
+//		
+//		List<DatecourseDTO> getRankBoardList = new ArrayList<DatecourseDTO>();
+//		for(int i = 0; i < rankDatecourseList.size(); i++) {
+//			DatecourseDTO returnRankBoard = DatecourseDTO.builder()
+//										   .datecourseNo(rankDatecourseList.get(i).getDatecourseNo())
+//										   .datecourseNm(rankDatecourseList.get(i).getDatecourseNm())
+//										   .datecourseSummary(rankDatecourseList.get(i).getDatecourseSummary())
+//										   .build();
+//			getRankBoardList.add(returnRankBoard);
+//		}
+//		
+//		ModelAndView mv = new ModelAndView();
+//		// 뷰의 위치
+//		mv.setViewName("main.html");
+//		// 뷰로 보낼 데이터 값
+//		mv.addObject("getRankBoardList", getRankBoardList);
+//		
+//		
+//		return mv;
+//	}
 	
-	
-	// 메인 페이지에서 탑텐 클릭 시 상세페이지 이동
+//	// 메인 페이지에서 탑텐 클릭 시 상세페이지 이동
 //	@GetMapping("/getDatecourse/{datecourseNo}")
 //	public ModelAndView getDatecourse(@PathVariable int datecourseNo) {
 //		Datecourse datecourse = mainService.getCateDatecourseList(datecourseNo);

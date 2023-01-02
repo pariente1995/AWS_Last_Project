@@ -51,4 +51,6 @@ public interface DatecourseRepository extends JpaRepository<Datecourse, Integer>
 		   //Page<T>로 리턴할 때 사용 countQuery = "",
 		   nativeQuery = true)
 	List<CamelHashMap> findBySelectedDatecourseArea(@Param("datecourseArea") String datecourseArea);
+	
+
 }
