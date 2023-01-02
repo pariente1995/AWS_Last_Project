@@ -91,11 +91,11 @@
       font-weight: bold;
     }
 
-    #table-title a {
+    .table-title a {
        color:black; text-decoration: none;
     }
 
-    #table-title:hover {
+    .table-title:hover {
        text-decoration: underline;
     }
 

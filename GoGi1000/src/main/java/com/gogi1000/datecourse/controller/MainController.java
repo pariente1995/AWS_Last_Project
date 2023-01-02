@@ -26,29 +26,29 @@ public class MainController {
 	private MainService mainService;
 	
 	
-	// 데이트코스 카테고리별 리스트 조회
-	@GetMapping("/getCateDatecourseList")
-	public ModelAndView getCateDatecourseList(DatecourseDTO datecourseDTO) {
+	// 검색창에서 지역명, 코스명으로 검색 후 조회
+	@GetMapping("/getSearchDatecourseList")
+	public ModelAndView getSearchDatecourseList(DatecourseDTO datecourseDTO) {
 		
 			Datecourse datecourse = Datecourse.builder()
 					   .searchKeyword(datecourseDTO.getSearchKeyword())
 					   .build();
 			
-			List<Datecourse> datecourseList = mainService.getCateDatecourseList(datecourse);
+			List<Datecourse> searchDatecourseList = mainService.getSearchDatecourseList(datecourse);
 			
 			
-			List<DatecourseDTO> getCateDatecourseList = new ArrayList<DatecourseDTO>();
-			for(int i = 0; i < datecourseList.size(); i++) {
+			List<DatecourseDTO> getSearchDatecourseList = new ArrayList<DatecourseDTO>();
+			for(int i = 0; i < searchDatecourseList.size(); i++) {
 				DatecourseDTO returnDatecourse = DatecourseDTO.builder()
-											   .datecourseNo(datecourseList.get(i).getDatecourseNo())
-											   .datecourseNm(datecourseList.get(i).getDatecourseNm())
-											   .datecourseSummary(datecourseList.get(i).getDatecourseSummary())
+											   .datecourseNo(searchDatecourseList.get(i).getDatecourseNo())
+											   .datecourseNm(searchDatecourseList.get(i).getDatecourseNm())
+											   .datecourseSummary(searchDatecourseList.get(i).getDatecourseSummary())
 											   .datecourseModfDate(
-													   datecourseList.get(i).getDatecourseModfDate() == null ?  
-													    null : datecourseList.get(i).getDatecourseModfDate().toString())
-											   .datecourseUseYn(datecourseList.get(i).getDatecourseUseYn())
+													   searchDatecourseList.get(i).getDatecourseModfDate() == null ?  
+													    null : searchDatecourseList.get(i).getDatecourseModfDate().toString())
+											   .datecourseUseYn(searchDatecourseList.get(i).getDatecourseUseYn())
 											   .build();
-				getCateDatecourseList.add(returnDatecourse);
+				getSearchDatecourseList.add(returnDatecourse);
 			}
 			
 			ModelAndView mv = new ModelAndView();
@@ -59,7 +59,7 @@ public class MainController {
 				mv.addObject("searchKeyword", datecourseDTO.getSearchKeyword());
 			}
 			// 뷰로 보낼 데이터 값
-			mv.addObject("getCateDatecourseList", getCateDatecourseList);
+			mv.addObject("getSearchDatecourseList", getSearchDatecourseList);
 //			
 //			if (boardDTO.getSearchCondition() != null && !boardDTO.getSearchCondition().equals("")) {
 //				mv.addObject("searchCondition", boardDTO.getSearchCondition());
@@ -75,42 +75,89 @@ public class MainController {
 	}
 	
 	
-	// 지도에서 지역 조회
-	@GetMapping("/getCateDatecourseList/{datecourseArea}")
+	// 지도에서 지역 선택 후 조회
+	@GetMapping("/getMapDatecourseList/{datecourseArea}")
 	// key값 없이 value값만 던질때는 @PathVariable
-	public ModelAndView getCateDatecourseList(@PathVariable String datecourseArea) throws IOException {	 
+	public ModelAndView getMapDatecourseList(@PathVariable String datecourseArea) throws IOException {	 
 					
 		// Map 받는 이유: 키와 값을 받아와야하기 때문에.
 		// DB에서는 이름(컬럼)이 있고 값을 받아와야 하기 때문이고, 화면단에 NAME이 있고 KEY를 받아서 효과적으로 처리하기위해 map을 사용 
-		List<CamelHashMap> datecourseList = mainService.getCateDatecourseList(datecourseArea);
+		List<CamelHashMap> mapDatecourseList = mainService.getMapDatecourseList(datecourseArea);
 		
 		ModelAndView mv = new ModelAndView();
 		
 		mv.setViewName("datecourse/getCateDatecourseList.html");
-		mv.addObject("datecourseList", datecourseList);
+		mv.addObject("getMapDatecourseList", mapDatecourseList);
 		
 		return mv;
 		
 	}
 	
 	// 관리자 페이지 이동
-	@GetMapping("/getAdminDatecourseList")
-	public ModelAndView getAdminDatecourseList() {
+	@GetMapping("/getDatecourseList")
+	public ModelAndView getDatecourseList() {
 		ModelAndView mv = new ModelAndView();
 		
-		mv.setViewName("datecourse/getAdminDatecourseList.html");
+		mv.setViewName("datecourse/getDatecourseList.html");
 	
 		return mv;
 	}
 	
-	// 핫딜로 이동
-//	@GetMapping("getHotdeal")
-//	public ModelAndView getHotdeal(HotdealDTO hotdealDTO) {
+	// 메인 페이지에서 탑텐 리스트 조회
+	
+	
+	// 메인 페이지에서 탑텐 클릭 시 상세페이지 이동
+//	@GetMapping("/getDatecourse/{datecourseNo}")
+//	public ModelAndView getDatecourse(@PathVariable int datecourseNo) {
+//		Datecourse datecourse = mainService.getCateDatecourseList(datecourseNo);
 //		
-//		Hotdeal hotdeal = Hotdeal.builder()
-//					    	.hotdealNo(hotdealDTO.getHotdealNo())
-//					    	.build();
+//		DatecourseDTO datecourseDTO = DatecourseDTO.builder()
+//										.datecourseNo(datecourse.getDatecourseNo())
+//										.datecourseNm(datecourse.getDatecourseNm())
+//										.datecourseDesc(datecourse.getDatecourseDesc())
+//										.datecourseAddr(datecourse.getDatecourseAddr())
+//										.datecourseTel(datecourse.getDatecourseTel())
+//										.datecourseOfficialSite(datecourse.getDatecourseOfficialSite())
+//										.datecourseParkingYn(datecourse.getDatecourseParkingYn())
+//										.build();
+//		
+//		ModelAndView mv = new ModelAndView();
+//		mv.setViewName("datecourse/getDatecourse.html");
+//		mv.addObject("getDatecourse", datecourseDTO);
+//		
+//		return mv;
+//	}
+	
+	
+	// 메인 페이지에서 핫딜 리스트 조회
+	
+	
+	// 메인 페이지에서 상세 페이지로 조회
+//	@GetMapping("/getHotdeal/{hotdealNo}")
+//	public ModelAndView getHotdeal(@PathVariable int hotdealNo) {
+//		
+//		Hotdeal hotdeal = mainService.getHotdeal(hotdealNo);
+//		
+//		HotdealDTO hodealDTO = HotdealDTO.builder()
+//							.hotdealNo(hotdeal.getHotdealNo())
+//							.hotdealNm(hotdeal.getHotdealNm())
+//							.hotdealDesc(hotdeal.getHotdealDesc())
+//							.hotdealPrice(hotdeal.getHotdealPrice())
+//							.hotdealSalerate(hotdeal.getHotdealSalerate())
+//							.hotdealTel(hotdeal.getHotdealTel())
+//							.hotdealEndDate(hotdeal.getHotdealEndDate())
+//							.hotdealRgstDate(hotdeal.getHotdealRgstDate() == null ?
+//									null : hotdeal.getHotdealRgstDate().toString())
+//							.build();
 //				
+//		
+//		ModelAndView mv = new ModelAndView();
+//		mv.setViewName("hotdeal/getHotdeal.html");
+//		mv.addObject("getHotdeal", hodealDTO);	
+//		//mv.addObject("boardFileList", boardFileDTOList);
+//		
+//		return mv;
+//		
 //	}	
 	
 }

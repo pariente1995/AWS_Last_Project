@@ -7,27 +7,48 @@ import org.springframework.stereotype.Service;
 
 import com.gogi1000.datecourse.common.CamelHashMap;
 import com.gogi1000.datecourse.entity.Datecourse;
-import com.gogi1000.datecourse.repository.MainRepository;
+import com.gogi1000.datecourse.entity.Hotdeal;
+import com.gogi1000.datecourse.repository.DatecourseRepository;
+import com.gogi1000.datecourse.repository.HotdealRepository;
 import com.gogi1000.datecourse.service.main.MainService;
 
 @Service
 public class MainServiceImpl implements MainService{
-	@Autowired
-	private MainRepository mainRepository;
 	
-	// Service를 받아서 다시 쓰겠다.
+	@Autowired
+	private DatecourseRepository datecourseRepository;
+	
+	@Autowired 
+	private HotdealRepository hotdealRepository;
+	
+	// 검색창에서 지역명, 코스명으로 검색 후 조회
 	@Override
-	public List<Datecourse> getCateDatecourseList(Datecourse datecourse) {
+	public List<Datecourse> getSearchDatecourseList(Datecourse datecourse) {
 		String searchKeyword = datecourse.getSearchKeyword();
 		if(searchKeyword != null && !searchKeyword.equals("")) {
-			return mainRepository.findByDatecourseNmContainingOrDatecourseAreaContaining(searchKeyword, searchKeyword);
+			return datecourseRepository.findByDatecourseAreaContainingOrDatecourseNmContaining(searchKeyword, searchKeyword);
 		} else {
-			return mainRepository.findAll();
+			return datecourseRepository.findAll();
 		}
 	}
 	
+
+	// 지도에서 지역 선택 후 조회
 	@Override
-	public List<CamelHashMap> getCateDatecourseList(String datecourseArea) {
-		return mainRepository.findBySelectedDatecourseArea(datecourseArea);
+	public List<CamelHashMap> getMapDatecourseList(String datecourseArea) {
+		return datecourseRepository.findBySelectedDatecourseArea(datecourseArea);
 	}
+	
+	// 
+//	@Override
+//	public Datecourse getRankDatecourseList(int datecourseNo) {
+//		return datecourseRepository.findByDatecourseNoContaining(datecourseNo);
+//	}
+	
+//	@Override
+//	public Hotdeal getHotdeal(int hotdealNo) {
+//		return hotdealRepository.findByHotdealNoContaining(hotdealNo);
+//	}
+	
+	
 }
