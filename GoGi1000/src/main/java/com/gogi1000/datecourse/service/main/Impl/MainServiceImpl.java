@@ -41,8 +41,8 @@ public class MainServiceImpl implements MainService{
 	
 	// 
 //	@Override
-//	public Datecourse getRankDatecourseList(int datecourseNo) {
-//		return datecourseRepository.findByDatecourseNoContaining(datecourseNo);
+//	public List<Datecourse> getRankDatecourseList(Datecourse datecourse) {
+//		return datecourseRepository.findAll(datecourse);
 //	}
 	
 //	@Override
