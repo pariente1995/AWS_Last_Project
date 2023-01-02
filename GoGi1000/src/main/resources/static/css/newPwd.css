@@ -1,6 +1,6 @@
 /* 타이틀 영역 */
     .main-wrap{
-        width: 1200px;
+        width: 100%;
         margin: 10px auto;
         position: relative;
     }

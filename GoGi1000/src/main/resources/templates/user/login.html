@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html lang="ko"
       xmlns:th="http:///www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout-user}">
       
 <!-- head 영역 시작 -->
 <!-- 개별적으로 사용할 css, js 링크 걸기 위해서 남겨둠 -->
@@ -10,26 +11,33 @@
 		<link rel="stylesheet" th:href="@{/css/login.css}"/>
 	</th:block>
     <th:block layout:fragment="script">
-        <script th:inline="javascript" src="${pageContext.request.contextPath }/js/jquery-3.6.1.min.js"></script>
+    	<!--<script th:inline="javascript">
+	        $(function() {
+				if($("#joinMsg").val() != "" && $("#joinMsg").val() != null) {
+					alert("회원가입이 완료되었습니다. 로그인해주세요.");
+				}
+			});
+		</script> -->
     </th:block>
 </head>
 <!-- head 영역 끝 -->
 
 <body>
 	<div layout:fragment="content">
+		<input type="hidden" id="joinMsg" value="${joinMsg}">
 	  <div class="form-wrapper">
         <!-- ========== 최상단 영역 ========== -->
         <div class="main-wrap">
             <div class="main-image">
-                <img src="/images/KakaoTalk_20221216_095545610.png" alt="" />
+                <img src="/images/KakaoTalk_20221216_095545610.png"  alt="" />
             </div>
             <div>
-                <p id="main-logo" href="javascript:history.back();">←</p>
+                <p id="main-logo" href="javascript:history.back();"><a th:href="@{/home/main}" style="color: white; text-decoration-line:none">←</a></p>
             </div>
             <div class="main-logo2" style="position: relative;">
                 <img style="margin-top: -60px;" src="/images/logo.png" alt="">
                 <div
-                    style="background-color: white; width: 140px; height: 70px; margin-top: -100px; margin-left: 50px;">
+                    style="background-color: white; width: 180px; height: 70px; margin-top: -100px; margin-left: 60px;">
                 </div>
             </div>
         </div>

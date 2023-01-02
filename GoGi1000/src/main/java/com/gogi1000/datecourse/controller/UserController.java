@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,7 +25,7 @@ public class UserController {
 	private UserService userService;
 	
 	@Autowired
-//	private PasswordEncoder passwordEncoder;
+	private PasswordEncoder passwordEncoder;
 	
 	@GetMapping("/join")
 	public ModelAndView joinView() {
@@ -35,9 +36,9 @@ public class UserController {
 	}
 	
 	@PostMapping("/join")
-	public ResponseEntity<?> join(UserDTO userDTO) {
-		ResponseDTO<Map<String, String>> responseDTO = new ResponseDTO<>();
-		Map<String, String> returnMap = new HashMap<String, String>();
+	public ModelAndView join(UserDTO userDTO) {
+		ModelAndView mv = new ModelAndView();
+		
 		try {
 			//User user = new User();
 			//user.setUserId(userDTO.getUserId());
@@ -48,7 +49,7 @@ public class UserController {
 			
 			User user = User.builder()
 							.userId(userDTO.getUserId())
-							.userPw(userDTO.getUserPw())
+							.userPw(passwordEncoder.encode(userDTO.getUserPw()))
 							.userNm(userDTO.getUserNm())
 							.userTel(userDTO.getUserTel())
 							.userMail(userDTO.getUserMail())
@@ -63,17 +64,15 @@ public class UserController {
 			
 			userService.join(user);
 			
-			returnMap.put("joinMsg", "joinSuccess");
+			mv.addObject("joinMsg", "joinSuccess");
+			mv.setViewName("user/login.html");
 			
-			responseDTO.setItem(returnMap);
-			
-			return ResponseEntity.ok().body(responseDTO);
+			return mv;
 		} catch(Exception e) {
-			returnMap.put("joinMsg", "joinFail");
-			responseDTO.setErrorMessage(e.getMessage());
-			responseDTO.setItem(returnMap);
+			mv.addObject("joinMsg", "joinFail");
+			mv.setViewName("user/join.html");
 			
-			return ResponseEntity.badRequest().body(responseDTO);
+			return mv;
 		}
 	}
 	
