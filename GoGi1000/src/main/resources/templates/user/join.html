@@ -2,6 +2,7 @@
 <html lang="ko"
       xmlns:th="http:///www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout-user}">
       
 <!-- head 영역 시작 -->
 <!-- 개별적으로 사용할 css, js 링크 걸기 위해서 남겨둠 -->
@@ -11,11 +12,12 @@
 
 	</th:block>
     <th:block layout:fragment="script">
-        <script th:inline="javascript" src="${pageContext.request.contextPath }/js/jquery-3.6.1.min.js"></script>
+        
         <script th:inline="javascript" src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
         
         <script th:inline="javascript">
-		$(function () {
+        
+		$(function() {
             //회원가입 실패 시 메시지 출력
             //     if($("#joinMsg").val() != "" && $("#joinMsg").val() != null) {
             //     alert($("#joinMsg").val());
@@ -36,13 +38,12 @@
             //id 중복체크
             $("#btnIdCheck").on("click", function () {
                 $.ajax({
-                    url: "/user/idCheck",
-                    type: "post",
-                    data: $("#joinForm").serialize(),
-                    success: function (obj) {
-                        console.log(obj);
-
-                        if (obj == 'duplicatedId') {
+					url: "/user/idCheck",
+					type: "post",
+					data: {userId: $("#userId").val()},
+					success: function(obj) {
+						
+						if (obj.item.msg == 'duplicatedId') {
                             alert("중복된 아이디입니다.");
                             $("#userId").focus();
                         } else {
@@ -52,11 +53,11 @@
                                 $("#btnIdCheck").attr("disabled", true);
                             }
                         }
-                    },
-                    error: function (e) {
-                        console.log(e);
-                    }
-                })
+					},
+					error: function(e) {
+						console.log(e);
+					}
+				});
             });
 
             // 중복체크 후 id를 변경했을 때
@@ -140,28 +141,19 @@
                     e.preventDefault();
                     return;
                 }
+                
+                $("#userMail").val($("#userMail").val() + "@" + $("#domain").val());
+                
+                
+                
             });
-
-            // 회원가입 성공 후 alert창 
-            $("#joinForm").on("submit", function () {
-                if (!checkId || !pwValidation || !pwCheck) {
-
-                } else {
-                    alert("회원가입에 성공했습니다. 로그인해주세요.");
-                }
-            });
-
+            
             //  // 지역 선택 alert
-            $(function () {
-                $("#ua").submit(function () {
-                    if ($("#userArea").val() == 0) {
-                        alert('지역을 선택해주세요.')
-                        return false
-                    }
-
-                });
-
-            });
+                if ($("#userArea").val() == "seoul") {
+                    alert("지역을 선택하세요.");
+                    $("#useArea").focus();
+                    return false;
+                }
 
         });
 
@@ -208,15 +200,15 @@
         <!-- ========== 최상단 영역 ========== -->
         <div class="main-wrap">
             <div class="main-image">
-                <img src="/images/KakaoTalk_20221216_095545610.png" alt="" />
+                <img src="/images/KakaoTalk_20221216_095545610.png" alt="" />     
             </div>
             <div>
-                <p id="main-logo" href="javascript:history.back();">←</p>
+                <p id="main-logo" href="javascript:history.back();"><a th:href="@{/user/login}" style="color: white; text-decoration-line:none">←</a></p>
             </div>
             <div class="main-logo2" style="position: relative;">
                 <img style="margin-top: -60px;" src="/images/logo.png" alt="">
                 <div
-                    style="background-color: white; width: 140px; height: 70px; margin-top: -100px; margin-left: 50px;">
+                    style="background-color: white; width: 180px; height: 70px; margin-top: -100px; margin-left: 60px;">
                 </div>
             </div>
         </div>
@@ -228,7 +220,7 @@
     <!-- 사용자 작성 부분 -->
 
     <!-- ★action 수정하기 -->
-    <form id="joinForm" action="/user/join.do" method="post">
+    <form id="joinForm" action="/user/join" method="post">
         <input type="hidden" id="joinMsg" value="${joinMsg}">
 
         <!-- 사용자 id -->
@@ -299,7 +291,7 @@
                     <div>
                         <form id="ua">
                             <select name="userArea" class="dropdown">
-                                <option value="none" hidden>=== 선택 ===</option>
+                                <option value="" hidden>=== 선택 ===</option>
                                 <option value="A0001">서울</option>
                                 <option value="A0016">부산</option>
                                 <option value="A0013">대구</option>
@@ -365,14 +357,14 @@
 
                 <!-- 사용자 email -->
                 <div>
-                    <div class="label_wrapper1"><label for="userEmail">이메일</label></div>
+                    <div class="label_wrapper1"><label for="userMail">이메일</label></div>
                     <div class="input_email">
-                        <input type="text" style="margin-right: 10px; width: 210px; height: 40px;" name="userEmail"
-                            id="userEmail" required placeholder="이메일을 입력하세요.">@
+                        <input type="text" style="margin-right: 10px; width: 210px; height: 40px;" name="userMail"
+                            id="userMail" required placeholder="이메일을 입력하세요.">@
                         <div>
                             <form id="em">
-                                <select name="domain" class="dropdown" style="margin-left: 10px;">
-                                    <option value="none" hidden>=== 선택 ===</option>
+                                <select name="domain" id="domain" class="dropdown" style="margin-left: 10px;">
+                                    <option value="" hidden>=== 선택 ===</option>
                                     <option value="naver.com">naver.com</option>
                                     <option value="daum.net">daum.net</option>
                                     <option value="kakao.com">kakao.com</option>

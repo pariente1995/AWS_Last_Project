@@ -4,6 +4,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration		// 클래스가 설정파일이라고 선언
@@ -19,11 +21,11 @@ public class SecurityConfiguration {
 	// security에 의해 로그인 처리될 때 비밀번호 비교 시 무조건 사용
 	// 복호화는 불가능, match(사용자 입력값(그냥 String값), DB에 저장된 암호화된 비밀번호) => true나 false로 리턴
 	
-//	@Bean
-	// static 어디서든 사용가능함
-//	public static PasswordEncoder passwordEncoder() {
-//		return new BCryptPasswordEncoder();
-//	}
+	@Bean
+//	 static 
+	public static PasswordEncoder passwordEncoder() {
+		return new BCryptPasswordEncoder();
+	}
 	
 	// 필터 체인 구현(HttpSecurity 객체 사용)
 	@Bean
