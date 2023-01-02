@@ -67,26 +67,26 @@
 }
 
 /* header-login, join */
-#header-login {
+.header-login {
     width:18%; margin: auto;
     align-items: center; display:flex;
     justify-content: center;
 }
 
 
-#header-login-ul {
+.header-login-ul {
     margin: auto;
     padding:15px; box-sizing: content-box;
     display: flex; align-items: center;
     justify-content: center;
 }
 
-#header-login-ul:hover {
+.header-login-ul:hover {
     background-color:#F2F2F2; border-radius: 30px;
     box-shadow: 5px 5px 5px gray;
 }
 
-#header-login-ul li {
+.header-login-ul li {
     width: 180px;
     text-decoration:none; display: flex;
     justify-content: center;
@@ -114,10 +114,9 @@
     margin-right: 30px;
 }
 
-
 #nav-ul li:hover { text-decoration: underline;}
 
-#nav-div-li {
+.nav-div-li {
     width: 15%; display:flex;
     justify-content: center;
     margin-left: 5px;

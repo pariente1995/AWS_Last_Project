@@ -39,9 +39,9 @@
 							</a>
 						</div>
 						<div id="header-search-wrapper">
-							<form action="/main/getCateDatecourseList" method="get" name="searchForm">
+							<form action="/main/getSearchDatecourseList" method="get" name="searchForm">
 								<div id="header-search">
-									<a id="searchA" th:href="@{/datecourse/getCateDatecourseList}"  type="submit"><img id="header-search-img" th:src="@{/images/search.png}" ></a>   
+									<a id="searchA" th:href="@{/main/getSearchDatecourseList}"  type="submit"><img id="header-search-img" th:src="@{/images/search.png}" ></a>   
 									<!--<button type="button" id="header-search-button"><img id="header-search-img" th:src="@{/images/search.png}"></button>--> 
 									<input type="text" name="searchKeyword" th:value="${searchKeyword}" id="header-search-input" placeholder="지역, 코스명, 음식점 또는 카페"
 										   onfocus="this.placeholder=''" onblur="placeholder='지역, 코스명, 음식점 또는 카페'">
@@ -50,8 +50,8 @@
 						</div>
 						<!-- th:remove 이 조건이 맞지 않으면 해당 div를 삭제해라 -->
 						<!-- 인증된 사용자가 있는지, 없으면  -->
-						<div id="header-login" sec:authorize="!isAuthenticated()" th:remove="tag">
-							<ul id="header-login-ul">
+						<div class="header-login" sec:authorize="!isAuthenticated()" th:remove="tag">
+							<ul class="header-login-ul">
 								<li>
 									<a th:href="@{/user/login}" class="header-logo-link">
 										<img id="header-login-ul-image" th:src="@{/images/user.png}">
@@ -59,8 +59,8 @@
 								</li>
 							</ul>
 						</div>
-						<div id="header-login" sec:authorize="isAuthenticated()" th:remove="tag">
-							<ul id="header-login-ul">
+						<div class="header-login" sec:authorize="isAuthenticated()" th:remove="tag">
+							<ul class="header-login-ul">
 								<li>
 									<a th:href="@{/mypage/mypage}" sec:authentication="principal.username"></a>
 								</li>
@@ -74,16 +74,16 @@
 						<div id="nav">
 							<img id="nav-image" th:src="@{/images/navstyle.png}">
 							<ul id="nav-ul">	
-								<div id="nav-ul-li" sec:authorize="!isAuthenticated()" th:remove="tag">
+								<div id="nav-ul-li">
 									<li><a href="#map-frame" class="nav-list-link">지역</a></li>
 									<li><a href="#ranking-h2" class="nav-list-link">이번주 랭킹</a></li>
 									<li><a href="#hotdeal-wrapper" class="nav-list-link">핫딜</a></li>
 								</div>
 								<!-- sec:authorize="isAuthenticated()" th:remove="tag"  sec:authorize="hasRole('ROLE_ADMIN')-->
-								<div id="nav-div-li" sec:authorize="isAuthenticated()" th:remove="tag">
+								<div class="nav-div-li" sec:authorize="isAuthenticated()" th:remove="tag">
 									<li><a href="#" class="nav-list-link">마이페이지</a></li>
 								</div>
-								<div id="nav-div-li" sec:authorize="hasRole('ROLE_ADMIN')" th:remove="tag">
+								<div class="nav-div-li" sec:authorize="hasRole('ROLE_ADMIN')" th:remove="tag">
 									<li><a href="#" class="nav-list-link">관리자페이지</a></li>
 								</div>
 							</ul>
