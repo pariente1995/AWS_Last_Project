@@ -317,10 +317,10 @@
 	      <div id="hotdeal-frame">
 	        <div class="hotdeal" th:each="hotdeal : ${getHotdealDatecourseList}">
 	          <div class="hotdeal-div-img">
-	           <a class="hotdeal-1" th:href="@{/hotdeal/getHotdeal/{hotdealNo} (hotdealNo=${hotdeal.hotdealNo})}"><img th:if="${hotdeal.imageNm} != 'null'" th:src="@{'/upload/' + ${hotdeal.imageNm}}" width="400" height="400"></a>
+	           <a class="hotdeal-1" th:href="@{/main/getHotdeal/{hotdealNo} (hotdealNo=${hotdeal.hotdealNo})}"><img th:if="${hotdeal.imageNm} != 'null'" th:src="@{'/upload/' + ${hotdeal.imageNm}}" width="400" height="400"></a>
 	          </div>
-	          <p style="font-weight:bold; margin-bottom:-5px;"><a class="hotdeal-1" th:href="@{/hotdeal/getHotdeal/{hotdealNo} (hotdealNo=${hotdeal.hotdealNo})}" th:text="${hotdeal.hotdealNm}"></a></p>
-	          <p style="font-size:13px;"><a class="hotdeal-1" th:href="@{/hotdeal/getHotdeal/{hotdealNo} (hotdealNo=${hotdeal.hotdealNo})}" th:text="${hotdeal.hotdealDesc}"></a></p>
+	          <p style="font-weight:bold; margin-bottom:-5px;"><a class="hotdeal-1" th:href="@{/main/getHotdeal/{hotdealNo} (hotdealNo=${hotdeal.hotdealNo})}" th:text="${hotdeal.hotdealNm}"></a></p>
+	          <p style="font-size:13px;"><a class="hotdeal-1" th:href="@{/main/getHotdeal/{hotdealNo} (hotdealNo=${hotdeal.hotdealNo})}" th:text="${hotdeal.hotdealDesc}"></a></p>
 	        </div>
 	      </div>
 	    </div>
