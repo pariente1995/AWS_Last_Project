@@ -240,7 +240,7 @@ public class HotdealController {
     	List<DatecourseImage> datecourseImageList = hotdealService.getHotdealImageList(hotdealNo);
     	
     	List<DatecourseImageDTO> datecourseImageDTOList = new ArrayList<>();
-    	
+    	  
     	for(DatecourseImage datecourseImage : datecourseImageList) {
     		DatecourseImageDTO datecourseImageDTO = DatecourseImageDTO.builder()
     																  .imageGroup(datecourseImage.getImageGroup())
@@ -271,4 +271,5 @@ public class HotdealController {
 		
 		return mv;
 	}
+	
 }
