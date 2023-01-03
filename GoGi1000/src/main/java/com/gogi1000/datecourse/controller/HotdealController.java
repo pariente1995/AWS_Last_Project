@@ -16,6 +16,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -26,6 +27,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gogi1000.datecourse.common.FileUtils;
+import com.gogi1000.datecourse.dto.DatecourseImageDTO;
 import com.gogi1000.datecourse.dto.HotdealDTO;
 import com.gogi1000.datecourse.dto.ResponseDTO;
 import com.gogi1000.datecourse.entity.CustomUserDetails;
@@ -59,6 +61,8 @@ public class HotdealController {
 								 .hotdealOfficialSite(hotdealDTO.getHotdealOfficialSite())
 								 .hotdealPrice(hotdealDTO.getHotdealPrice())
 								 .hotdealSalerate(hotdealDTO.getHotdealSalerate())
+								 .hotdealSeller(hotdealDTO.getHotdealSeller())
+								 .hotdealSummary(hotdealDTO.getHotdealSummary())
 								 .hotdealTel(hotdealDTO.getHotdealTel())
 								 .hotdealDesc(hotdealDTO.getHotdealDesc())
 								 .hotdealRgstDate(LocalDateTime.now())
@@ -101,7 +105,7 @@ public class HotdealController {
 	
     @GetMapping("/hotdealList")
     public ModelAndView getHotdealList(HotdealDTO hotdealDTO,
-    		@PageableDefault(page=0, size=10) Pageable pageable) {
+    		@PageableDefault(page=0, size=15) Pageable pageable) {
     	
     	Hotdeal hotdeal = Hotdeal.builder()
     							 .hotdealNm(hotdealDTO.getHotdealNm())
@@ -175,7 +179,6 @@ public class HotdealController {
     	ResponseDTO<HotdealDTO> responseDTO = new ResponseDTO<HotdealDTO>();
     	try {
     
-    	
 	    	List<Integer> valueArrList = new ObjectMapper().readValue(valueArr,
 	    									new TypeReference<List<Integer>>() {});
 	    	
@@ -216,7 +219,45 @@ public class HotdealController {
     		return ResponseEntity.badRequest().body(responseDTO);
     	}
     }
-    
+    @GetMapping("getHotdeal/{hotdealNo}")
+    public ModelAndView getHotdeal(@PathVariable int hotdealNo ) {
+    	Hotdeal hotdeal = hotdealService.getHotdeal(hotdealNo);
+    	
+    	HotdealDTO hotdealDTO = HotdealDTO.builder()
+    									  .hotdealNo(hotdeal.getHotdealNo())
+    									  .hotdealSummary(hotdeal.getHotdealSummary())
+    									  .hotdealEndDate(hotdeal.getHotdealEndDate())
+    									  .hotdealSalerate(hotdeal.getHotdealSalerate())
+    									  .hotdealSeller(hotdeal.getHotdealSeller())
+    									  .hotdealTel(hotdeal.getHotdealTel())
+    									  .hotdealOfficialSite(hotdeal.getHotdealOfficialSite())
+    									  .hotdealDesc(hotdeal.getHotdealDesc())
+    									  .hotdealUseYn(hotdeal.getHotdealUseYn())
+    									  .build();
+    	
+    	List<DatecourseImage> datecourseImageList = hotdealService.getHotdealImageList(hotdealNo);
+    	
+    	List<DatecourseImageDTO> datecourseImageDTOList = new ArrayList<>();
+    	
+    	for(DatecourseImage datecourseImage : datecourseImageList) {
+    		DatecourseImageDTO datecourseImageDTO = DatecourseImageDTO.builder()
+    																  .imageGroup(datecourseImage.getImageGroup())
+    																  .referenceNo(datecourseImage.getReferenceNo())
+    																  .imageNo(datecourseImage.getImageNo())
+    																  .imageNm(datecourseImage.getImageNm())
+    																  .imageOriginNm(datecourseImage.getImageOriginNm())
+    																  .imageExt(datecourseImage.getImageExt())
+    																  .imagePath(datecourseImage.getImagePath())
+    																  .build();
+    		datecourseImageDTOList.add(datecourseImageDTO);				  
+    	}
+    	ModelAndView mv = new ModelAndView();
+    	mv.setViewName("admin/getHotdeal.html");
+    	mv.addObject("getHotdeal", hotdealDTO);
+    	mv.addObject("getDatecourseImageList", datecourseImageDTOList);
+    	
+ 		return mv;			  
+    	}
     
     
 	

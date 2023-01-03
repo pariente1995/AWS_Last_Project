@@ -81,4 +81,13 @@ public class HotdealServiceImpl implements HotdealService {
 			return hotdealRepository.findAll(pageable);
 		}
 	}
+	@Override
+	public List<DatecourseImage> getHotdealImageList(int hotdealNo) {
+		Hotdeal hotdeal = Hotdeal.builder()
+								 .hotdealNo(hotdealNo)
+								 .build();
+		
+		return datecourseImageRepository.findByHotdeal(hotdeal);
+	}
+	
 }

@@ -13,10 +13,14 @@ public interface HotdealService {
 	
 	List<Hotdeal> getHotdealList(Hotdeal hotdeal);
 	
+	List<DatecourseImage> getHotdealImageList(int hotdealNo);
+	
 	Page<Hotdeal> getPageHotdealList(Hotdeal hotdeal, Pageable pageable);
 	
 	void insertHotdeal(Hotdeal hotdeal, List<DatecourseImage> uploadImageList);
 	
 	void updateHotdealUseYn(int HotdealNo);
+	
+	
 	
 }

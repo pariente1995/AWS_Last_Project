@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{layouts/layout}">
+
+<head>
+    <th:block layout:fragment="css">
+        <link rel="stylesheet" th:href="{@/css/getHotdeal.css}" />
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/bxslider/4.2.12/jquery.bxslider.css" />
+        <link rel="stylesheet" href="prettyPhoto_compressed_3.1.6/css/prettyPhoto.css" type="text/css" media="screen"
+            charset="utf-8" />
+    </th:block>
+    <th:block layout:fragment="script">
+        <script th:inline="javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+        <script th:inline="javascript" src="https://cdn.jsdelivr.net/bxslider/4.2.12/jquery.bxslider.min.js"></script>
+        <script th:inline="javascript" src="prettyPhoto_compressed_3.1.6/js/jquery.js" type="text/javascript"
+            charset="utf-8"></script>
+        <script th:inline="javascript" src="prettyPhoto_compressed_3.1.6/js/jquery.prettyPhoto.js"
+            type="text/javascript" charset="utf-8"></script>
+        <script th:inline="javascript">
+            /* 메인 이미지 슬라이드 */
+            $(document).ready(function () {
+                $('#main-img').bxSlider({
+                    slideWidth: 800,        // 이미지의 너비
+                    // slideHeight: 500,    // 이미지의 높이
+                    maxSlides: 1,          // 이미지의 최대 노출 개수
+                    minSlides: 1,          // 이미지의 최소 노출 개수
+                    moveSlides: 1,         // 이미지의 이동 개수
+                    autoHover: true,        // 마우스오버시에 멈춤, 기본값: false
+                    pager: false,            // 블릿의 유무, 기본값: true
+                    stopAutoOnClick: true,  // 블릿을 클릭한 후 슬라이드 정지 유무, 기본값 false
+                    controls: true,       // 화살표 버튼 유무, 기본값: false
+                });
+            });
+
+            $(document).ready(function () {
+                $("a[rel^='prettyPhoto']").prettyPhoto();
+            });
+        </script>
+    </th:block>
+</head>
+
+<body>
+    <div id="hotdeal-detail-container">
+        <h1 th:text="${hotdeal.hotdealNm}">롯데월드</h1>
+
+        <!-- 메인 이미지 영역 -->
+        <div id="hotdeal-mainimg-container">
+            <div id="main-img">
+            <div th:each="r"
+                <div>
+                    <a href="#"><img th:src="" title="" width="800" height="500"></a>
+                </div>
+                <div>
+                    <a href="#"><img th:src="" title="" width="800" height="500"></a>
+                </div>
+                <div>
+                    <a href="#"><img th:src="" title="" width="800" height="500"></a>
+                </div>
+            </div>
+        </div>
+
+        <!-- 데이트코스 설명 부분 -->
+        <div id="hotdeal-summary">
+            <h2 th:text="${hotdeal.hotdealSummary}">잘 구워진 패티에서 육즙이 팡팡! 신선한 재료가 돋보이는 감칠맛 가득한 미국 정통 수제버거 맛집</h2><br>
+        </div>
+
+        <!-- 구분선 -->
+        <hr>
+
+        <!-- 데이트코스 서브 정보 -->
+        <div layout:fragment="content">
+            <div id="hotdeal-subinfo">
+                <div class="hotdeal-line">
+                    <p style="font-size: 20px;" th:text="${hotdeal.hotdealSeller}"><b>롯데월드</b></p>
+                </div>
+                <div class="hotdeal-line">
+                    <h2 th:text="${hotdeal.hotdealNm}">평일 자유이용권 2매</h2>
+                    <div class="hotdeal-maininfo">
+                        <span class="hotdeal-maininfo-text">종료일자 : </span><span
+                            th:text="${hotdeal.hotdealEndDate}">2023-01-01</span>
+                    </div>
+                </div>
+                <div id="hotdealPrice-wrapper">
+                    <span id="hotdeal-price" th:text="${hotdeal.hotdealPrice}">60000원</span>
+                </div>
+                <div class="hotdeal-line" style="justify-content: right;">
+                    <div class="hotdeal-maininfo">
+                        <span class="hotdeal-maininfo-text" th:text="${hotdeal.hotdealSaleRate} + '%'">50%</span>
+                        <span th:text="${hotdeal.hotdealPrice} * ${hotdeal.hotdealSalerate}/100 + '원'">30000원</span>
+                    </div>
+                </div>
+                <div id="hotdeal-sub-wrapper">
+                    <!-- 문의 번호 -->
+                    <div id="hotdeal-tel" class="hotdeal-sub">
+                        <div class="hotdeal-sub-detail">
+                            <img src="images/tel.png">
+                            <span class="hotdeal-sub-text">문의번호</span>
+                        </div>
+                        <div id="hotdeal-inquiry">
+                            <span class="hotdeal-sub-text" th:text="${hotdeal.hotdealSeller}"
+                                style="margin-right:10px;">롯데월드</span><span
+                                class="hotdeal-sub-text">010-9999-9999</span>
+                        </div>
+                    </div>
+                    <div id="hotdeal-officialSite" class="hotdeal-sub">
+                        <div class="hotdeal-sub-detail">
+                            <img src="images/tel.png">
+                            <span class="hotdeal-sub-text">구매페이지로 이동</span>
+                        </div>
+                        <div class="hotdeal-sub-text">
+                            <a style="font-weight:bold; text-shadow: 3px 3px yellow;"
+                                th:href="@{hotdeal.hotdealOfficialSite}">www.wemakeprice.com</a>
+                        </div>
+                    </div>
+                    <div class="hotdeal-sub">
+                        <div class="hotdeal-sub-detail">
+                            <img src="images/menu.png">
+                            <span class="hotdeal-sub-text">상세정보</span>
+                        </div>
+                    </div>
+                </div>
+                <div id="hotdeal-desc" th:text="${hotdeal.hotdealDesc}">
+                    근로자는 근로조건의 향상을 위하여 자주적인 단결권·단체교섭권 및 단체행동권을 가진다. 공무원은 국민전체에 대한 봉사자이며, 국민에 대하여 책임을 진다.
+
+                    의원을 제명하려면 국회재적의원 3분의 2 이상의 찬성이 있어야 한다. 국군의 조직과 편성은 법률로 정한다. 국교는 인정되지 아니하며, 종교와 정치는 분리된다.
+
+                    국무총리는 대통령을 보좌하며, 행정에 관하여 대통령의 명을 받아 행정각부를 통할한다. 재의의 요구가 있을 때에는 국회는 재의에 붙이고, 재적의원과반수의 출석과 출석의원 3분의 2
+                    이상의
+                    찬성으로
+                    전과
+                    같은 의결을 하면 그 법률안은 법률로서 확정된다.
+                </div>
+            </div>
+            <hr>
+        </div>
+    </div>
+</body>
+
+</html>

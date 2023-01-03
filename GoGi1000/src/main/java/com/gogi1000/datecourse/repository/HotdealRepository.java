@@ -33,4 +33,7 @@ public interface HotdealRepository extends JpaRepository<Hotdeal, Integer> {
 //			+"									FROM T_GGC_IMAGE C"
 //			+"			ON A_DATECOURSE_NO = B.IMAGE_NO")
 //	Hotdeal findByHotdealNoContaining(@Param("hotdealNo") int hotdealNo);
+	
+	
+	
 }
