@@ -152,12 +152,12 @@
                         <tr>
                             <th style="width: 15px"></th>
                             <th style="width: 50px">번호</th>
-                            <th style="width: 200px">핫딜 사진</th>
-                            <th style="width: 300px;">핫딜명</th>
+                            <th style="width: 150px">핫딜 사진</th>
+                            <th style="width: 250px;">핫딜명</th>
                             <th style="width: 150px">등록일</th>
                             <th style="width: 150px">종료일</th>
-                            <th style="width: 130px;">핫딜 노출여부
-                        </tr>
+                            <th style="width: 80px;">핫딜 노출여부</th>
+                            <th style="width: 150px;"></th>
                         </tr>
                         <tr th:each="hotdeal : ${getHotdealList}">
                             <td>
@@ -176,6 +176,7 @@
                             <td th:text="${hotdeal.hotdealRgstDate}"></td>
                             <td th:text="${hotdeal.hotdealEndDate}"></td>
                             <td th:id = "'yntd' + ${hotdealStat.index}" th:text="${hotdeal.hotdealUseYn}"></td>
+                            <td> <a th:href="@{/hotdeal/updateHotdeal/{hotdealNo} (hotdealNo=${hotdeal.hotdealNo})}">수정</a>
                         </tr>
                     </table>
                     <nav aria-label="Page navigation example">
