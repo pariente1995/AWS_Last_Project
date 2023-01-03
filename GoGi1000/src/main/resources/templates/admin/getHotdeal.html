@@ -31,35 +31,31 @@
 </head>
 
 <body>
-    <div id="hotdeal-detail-container">
-        <h1 th:text="${getHotdeal.hotdealNm}">롯데월드</h1>
+    <div layout:fragment="content">
+        <div id="hotdeal-detail-container">
+            <h1 th:text="${getHotdeal.hotdealNm}">롯데월드</h1>
 
-        <!-- 메인 이미지 영역 -->
-        <div id="hotdeal-mainimg-container">
-            <div id="main-img">
-            <div th:each=""
-                <div>
-                    <a href="#"><img th:src="" title="" width="800" height="500"></a>
-                </div>
-                <div>
-                    <a href="#"><img th:src="" title="" width="800" height="500"></a>
-                </div>
-                <div>
-                    <a href="#"><img th:src="" title="" width="800" height="500"></a>
+            <!-- 메인 이미지 영역 -->
+            <div id="hotdeal-mainimg-container">
+                <div id="main-img">
+                    <div th:each="datecourseImage : ${getDatecourseImageList}">
+                        <img th:if="${datecourseImage.imageNm} != 'null'"
+                        	 th:src="@{'/upload/' + ${datecourseImage.imageNm}}" style="width:800px; height:500px">
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <!-- 데이트코스 설명 부분 -->
-        <div id="hotdeal-summary">
-            <h2 th:text="${getHotdeal.hotdealSummary}">잘 구워진 패티에서 육즙이 팡팡! 신선한 재료가 돋보이는 감칠맛 가득한 미국 정통 수제버거 맛집</h2><br>
-        </div>
+            <!-- 데이트코스 설명 부분 -->
+            <div id="hotdeal-summary">
+                <h2 th:text="${getHotdeal.hotdealSummary}">잘 구워진 패티에서 육즙이 팡팡! 신선한 재료가 돋보이는 감칠맛 가득한 미국 정통 수제버거 맛집</h2>
+                <br>
+            </div>
 
-        <!-- 구분선 -->
-        <hr>
+            <!-- 구분선 -->
+            <hr>
 
-        <!-- 데이트코스 서브 정보 -->
-        <div layout:fragment="content">
+            <!-- 데이트코스 서브 정보 -->
+
             <div id="hotdeal-subinfo">
                 <div class="hotdeal-line">
                     <p style="font-size: 20px;" th:text="${getHotdeal.hotdealSeller}"><b>롯데월드</b></p>
@@ -77,7 +73,8 @@
                 <div class="hotdeal-line" style="justify-content: right;">
                     <div class="hotdeal-maininfo">
                         <span class="hotdeal-maininfo-text" th:text="${getHotdeal.hotdealSalerate} + '%'">50%</span>
-                        <span th:text="${getHotdeal.hotdealPrice} * (100 - ${getHotdeal.hotdealSalerate})/100 + '원'">30000원</span>
+                        <span
+                            th:text="${getHotdeal.hotdealPrice} * (100 - ${getHotdeal.hotdealSalerate})/100 + '원'">30000원</span>
                     </div>
                 </div>
                 <div id="hotdeal-sub-wrapper">

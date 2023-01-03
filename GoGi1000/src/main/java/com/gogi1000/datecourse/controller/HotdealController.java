@@ -75,7 +75,7 @@ public class HotdealController {
 		
 		if(uploadFiles.length > 0) {
 			String attachPath = request.getSession().getServletContext().getRealPath("/")
-					+ "/upload";
+					+ "/upload/";
 			
 			File directory = new File(attachPath);
 			
@@ -251,7 +251,8 @@ public class HotdealController {
     																  .imageExt(datecourseImage.getImageExt())
     																  .imagePath(datecourseImage.getImagePath())
     																  .build();
-    		datecourseImageDTOList.add(datecourseImageDTO);				  
+    		datecourseImageDTOList.add(datecourseImageDTO);	
+    		System.out.println(datecourseImageDTOList);
     	}
     	ModelAndView mv = new ModelAndView();
     	mv.setViewName("admin/getHotdeal.html");

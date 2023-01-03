@@ -24,8 +24,7 @@ public interface DatecourseImageRepository extends JpaRepository<DatecourseImage
     		+ "	    FROM T_GGC_IMAGE A "
     		+ "		LEFT JOIN T_GGC_HOTDEAL B ON A.REFERENCE_NO = B.HOTDEAL_NO "
     		+ "	   WHERE A.IMAGE_GROUP = 'E0002' "
-    		+ "      AND A.REFERENCE_NO = B.HOTDEAL_NO "
-    		+ "      AND A.IMAGE_NO = 1",
+    		+ "      AND A.REFERENCE_NO = B.HOTDEAL_NO ",
     		nativeQuery=true)
     List<DatecourseImage> findByHotdeal(Hotdeal hotdeal);
 }
