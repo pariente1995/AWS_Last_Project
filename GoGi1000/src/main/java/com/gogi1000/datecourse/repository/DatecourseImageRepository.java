@@ -20,6 +20,12 @@ public interface DatecourseImageRepository extends JpaRepository<DatecourseImage
     int getMaxImageNo(@Param("imageGroup") String imageGroup, @Param("referenceNo") int referenceNo);
     
     
-    @Query(value="SELECT A.*, B.HOTDEAL_NO FROM T_GGC_IMAGE A LEFT JOIN T_GGC_HOTDEAL B ON A.REFERENCE_NO = B.HOTDEAL_NO WHERE A.IMAGE_GROUP = 'E0002' AND A.REFERENCE_NO = B.HOTDEAL_NO AND A.IMAGE_NO = 1", nativeQuery=true)
+    @Query(value="SELECT A.*, B.HOTDEAL_NO "
+    		+ "	    FROM T_GGC_IMAGE A "
+    		+ "		LEFT JOIN T_GGC_HOTDEAL B ON A.REFERENCE_NO = B.HOTDEAL_NO "
+    		+ "	   WHERE A.IMAGE_GROUP = 'E0002' "
+    		+ "      AND A.REFERENCE_NO = B.HOTDEAL_NO "
+    		+ "      AND A.IMAGE_NO = 1",
+    		nativeQuery=true)
     List<DatecourseImage> findByHotdeal(Hotdeal hotdeal);
 }

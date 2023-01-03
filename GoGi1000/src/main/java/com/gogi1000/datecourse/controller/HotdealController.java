@@ -98,7 +98,7 @@ public class HotdealController {
 		
 		hotdealService.insertHotdeal(hotdeal, uploadImageList);
 		
-		response.sendRedirect("/hotdeal/hotdealList");
+		response.sendRedirect("/hotdeal/insertHotdeal");
 	}
 	
 	
@@ -225,11 +225,13 @@ public class HotdealController {
     	
     	HotdealDTO hotdealDTO = HotdealDTO.builder()
     									  .hotdealNo(hotdeal.getHotdealNo())
+    									  .hotdealNm(hotdeal.getHotdealNm())
     									  .hotdealSummary(hotdeal.getHotdealSummary())
     									  .hotdealEndDate(hotdeal.getHotdealEndDate())
     									  .hotdealSalerate(hotdeal.getHotdealSalerate())
     									  .hotdealSeller(hotdeal.getHotdealSeller())
     									  .hotdealTel(hotdeal.getHotdealTel())
+    									  .hotdealPrice(hotdeal.getHotdealPrice())
     									  .hotdealOfficialSite(hotdeal.getHotdealOfficialSite())
     									  .hotdealDesc(hotdeal.getHotdealDesc())
     									  .hotdealUseYn(hotdeal.getHotdealUseYn())
