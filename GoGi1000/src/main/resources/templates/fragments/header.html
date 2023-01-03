@@ -12,15 +12,14 @@
 					  	// 엔터키로 검색
 					    $("#header-search-input").on("keyup",function(){
 					        if(key.keyCode==13) {
-								alert("안녕")
-					            $("#searchForm").submit();
+					            $("#header-searchForm").submit();
 					            
 					        }
 					    });
 					    
 					    $("#searchA").click(function() {
 							let value =  $("#header-search-input").val();
-							$("#searchForm").submit(value);
+							$("#header-searchForm").submit(value);
 						})
 				  })
 	      	</script>
@@ -39,7 +38,7 @@
 							</a>
 						</div>
 						<div id="header-search-wrapper">
-							<form action="/main/getSearchDatecourseList" method="get" id="searchForm" name="searchForm">
+							<form action="/main/getSearchDatecourseList" method="get" id="header-searchForm" name="header-searchForm">
 								<div id="header-search">
 									<a id="searchA" th:href="@{/main/getSearchDatecourseList}"  type="submit"><img id="header-search-img" th:src="@{/images/search.png}" ></a>   
 									<!--<button type="button" id="header-search-button"><img id="header-search-img" th:src="@{/images/search.png}"></button>--> 

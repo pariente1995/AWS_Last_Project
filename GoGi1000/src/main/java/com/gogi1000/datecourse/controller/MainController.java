@@ -129,6 +129,8 @@ public class MainController {
 		ModelAndView mv = new ModelAndView();
 		mv.setViewName("hotdeal/getHotdeal.html");
 		mv.addObject("getHotdeal", hodealDTO);	
+		
+		
 		//mv.addObject("boardFileList", boardFileDTOList);
 		
 		return mv;
