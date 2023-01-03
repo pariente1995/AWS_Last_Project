@@ -1,0 +1,109 @@
+hr {
+    width: 1100px;
+  }
+
+  /* 메인 타이틀 영역 */
+  #hotdeal-detail-container {
+    margin: 0 auto;
+    width: 1200px;
+    justify-content: center;
+  }
+
+  #hotdeal-detail-container h1 {
+    margin-bottom: 50px;
+    text-align: center;
+  }
+
+  /* 슬라이더 영역 */
+
+  #hotdeal-mainimg-container {
+    margin-bottom: -50px;
+    display: flex;
+    justify-content: center;
+    text-align: center;
+  }
+
+  /* 핫딜 설명 영역 */
+
+  #hotdeal-summary {
+    text-align: center;
+    margin: 0 auto;
+    width: 500px;
+  }
+
+  /* 핫딜 상세정보 영역*/
+  #hotdeal-subinfo {
+    margin: auto;
+    text-align: left;
+    margin-top: 20px;
+    width: 900px;
+    height: auto;
+  }
+
+  #hotdeal-sub-wrapper {
+    margin-top: 40px;
+    margin-bottom: 20px;
+  }
+
+  .hotdeal-sub {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+
+  .hotdeal-sub-detail {
+    display: flex;
+    align-items: center;
+  }
+
+  .hotdeal-maininfo {
+    display: flex;
+    font-size: 25px;
+    color: red;
+    font-weight: bold;
+  }
+
+  .hotdeal-line {
+    width: 900px;
+    height: 50px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .hotdeal-maininfo-text {
+    margin-right: 10px;
+  }
+
+  #hotdealPrice-wrapper {
+    display: flex;
+    justify-content: right;
+    margin-bottom: -10px;
+  }
+
+  #hotdeal-price {
+    font-size: 20px;
+    text-decoration: line-through;
+    text-decoration-thickness: 3px;
+  }
+
+  #hotdeal-sub-wrapper {
+    margin-bottom: 30px;
+  }
+
+  .hotdeal-sub img {
+    width: 30px;
+    height: 30px;
+    margin-right: 20px;
+  }
+
+  .hotdeal-sub-text {
+    font-size: 20px;
+  }
+
+  #hotdeal-desc {
+    font-size:20px; 
+    margin-bottom: 30px;
+    white-space: pre-line;
+  }

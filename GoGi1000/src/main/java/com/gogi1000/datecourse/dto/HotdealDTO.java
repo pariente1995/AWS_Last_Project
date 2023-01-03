@@ -1,7 +1,5 @@
 package com.gogi1000.datecourse.dto;
 
-import java.time.LocalDateTime;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -18,7 +16,9 @@ public class HotdealDTO {
 	private String hotdealOfficialSite;
 	private String hotdealPrice;
 	private String hotdealSalerate;
+	private String hotdealSeller;
 	private String hotdealTel;
+	private String hotdealSummary;
 	private String hotdealDesc;
 	private String hotdealRgstDate;
 	private String hotdealModfDate;

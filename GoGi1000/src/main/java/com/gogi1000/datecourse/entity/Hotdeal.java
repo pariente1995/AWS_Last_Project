@@ -55,7 +55,13 @@ public class Hotdeal {
 	private String hotdealSalerate;
 	
 	@Column(nullable=false)
+	private String hotdealSeller;
+	
+	@Column(nullable=false)
 	private String hotdealTel;
+
+	@Column(nullable=false)
+	private String hotdealSummary;
 	
 	@Column(nullable=false)
 	private String hotdealDesc;
