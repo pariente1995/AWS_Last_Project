@@ -10,17 +10,17 @@
 	      	<script th:inline="javascript">
 	      		$(function() {
 					  	// 엔터키로 검색
-					    $("searchKeyword").on("keyup",function(){
+					    $("#header-search-input").on("keyup",function(){
 					        if(key.keyCode==13) {
 								alert("안녕")
-					            $("searchForm").submit();
+					            $("#searchForm").submit();
 					            
 					        }
 					    });
 					    
 					    $("#searchA").click(function() {
-							let value =  $("searchKeyword").val();
-							$("searchForm").submit(value);
+							let value =  $("#header-search-input").val();
+							$("#searchForm").submit(value);
 						})
 				  })
 	      	</script>
@@ -39,7 +39,7 @@
 							</a>
 						</div>
 						<div id="header-search-wrapper">
-							<form action="/main/getSearchDatecourseList" method="get" name="searchForm">
+							<form action="/main/getSearchDatecourseList" method="get" id="searchForm" name="searchForm">
 								<div id="header-search">
 									<a id="searchA" th:href="@{/main/getSearchDatecourseList}"  type="submit"><img id="header-search-img" th:src="@{/images/search.png}" ></a>   
 									<!--<button type="button" id="header-search-button"><img id="header-search-img" th:src="@{/images/search.png}"></button>--> 
@@ -76,7 +76,7 @@
 							<ul id="nav-ul">	
 								<div id="nav-ul-li">
 									<li><a href="#map-frame" class="nav-list-link">지역</a></li>
-									<li><a href="#ranking-h2" class="nav-list-link">이번주 랭킹</a></li>
+									<li><a href="#ranking-h2" class="nav-list-link">인기 랭킹</a></li>
 									<li><a href="#hotdeal-wrapper" class="nav-list-link">핫딜</a></li>
 								</div>
 								<!-- sec:authorize="isAuthenticated()" th:remove="tag"  sec:authorize="hasRole('ROLE_ADMIN')-->
