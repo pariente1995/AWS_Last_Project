@@ -2,27 +2,18 @@ package com.gogi1000.datecourse.repository;
 
 import com.gogi1000.datecourse.common.CamelHashMap;
 import com.gogi1000.datecourse.entity.Datecourse;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import java.util.List;
-
 import javax.transaction.Transactional;
+import java.util.List;
 
 @Transactional // @Modifying이 일어난 메소드가 실행된 후 바로 트랜잭션이 일어날 수 있도록 / Repository 자체를 @Transactional로 선언
 public interface DatecourseRepository extends JpaRepository<Datecourse, Integer> {
-	// datecourseArea 검색
-	// SELECT * FROM T_GGC_DATECOURSE WHERE DATECOURSE_AREA LIKE '%searchKeyword%'
-//	List<Datecourse> findByDatecourseAreaContaining(String searchKeyword);
-
-	// datecourseNm 검색
-	// Containing == like '%keyword%'
-	// SELECT * FROM T_GGC_DATECOURSE WHERE DATECOURSE_NM LIKE '%searchKeyword%'
-//	List<Datecourse> findByDatecourseNmContaining(String searchKeyword);
-	
-	
 	// SELECT * FROM T_GGC_DATECOURSE
 	// WHERE DATECOURSE_AREA LIKE '%searchKeyword1%'
 	// OR DATECOURSE_NM LIKE '%searchKeyword2%'
@@ -71,4 +62,24 @@ public interface DatecourseRepository extends JpaRepository<Datecourse, Integer>
 			nativeQuery = true)
 	List<CamelHashMap> getRankDatecourseList();
 
+	// 데이트 코스 리스트 화면(관리자)에서 datecourseArea로 검색
+	Page<Datecourse> findByDatecourseArea(String datecourseArea, Pageable pageable);
+
+	// 데이트 코스 리스트 화면(관리자)에서 datecourseCategory로 검색
+	Page<Datecourse> findByDatecourseCategory(String datecourseCategory, Pageable pageable);
+
+	// 데이트 코스 리스트 화면(관리자)에서 datecourseNm으로 검색
+	Page<Datecourse> findByDatecourseNmContaining(String searchKeyword, Pageable pageable);
+
+	// 데이트 코스 리스트 화면(관리자)에서 datecourseArea, datecourseCategory로 검색
+	Page<Datecourse> findByDatecourseAreaAndDatecourseCategory(String datecourseArea, String datecourseCategory, Pageable pageable);
+
+	// 데이트 코스 리스트 화면(관리자)에서 datecourseArea, datecourseNm으로 검색
+	Page<Datecourse> findByDatecourseAreaAndDatecourseNmContaining(String datecourseArea, String searchKeyword, Pageable pageable);
+
+	// 데이트 코스 리스트 화면(관리자)에서 datecourseCategory, datecourseNm으로 검색
+	Page<Datecourse> findByDatecourseCategoryAndDatecourseNmContaining(String datecourseCategory, String searchKeyword, Pageable pageable);
+
+	// 데이트 코스 리스트 화면(관리자)에서 datecourseArea, datecourseCategory, datecourseNm으로 검색
+	Page<Datecourse> findByDatecourseAreaAndDatecourseCategoryAndDatecourseNmContaining(String datecourseArea, String datecourseCategory, String searchKeyword, Pageable pageable);
 }

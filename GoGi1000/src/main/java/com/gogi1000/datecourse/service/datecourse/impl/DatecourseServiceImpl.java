@@ -10,6 +10,8 @@ import com.gogi1000.datecourse.repository.DatecourseMenuRepository;
 import com.gogi1000.datecourse.repository.DatecourseRepository;
 import com.gogi1000.datecourse.service.datecourse.DatecourseService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -70,6 +72,64 @@ public class DatecourseServiceImpl implements DatecourseService {
             datecourseImage.setImageNo(imageNo);
 
             datecourseImageRepository.save(datecourseImage);
+        }
+    }
+
+    // 데이트 코스 리스트 조회(관리자)
+    @Override
+    public Page<Datecourse> getPageDatecourseList(Datecourse datecourse, Pageable pageable) {
+        // 지역, 데이트 코스 분류, 검색어(데이트 코스명) 중 하나라도 입력된 경우
+        if((datecourse.getDatecourseArea() != null && !datecourse.getDatecourseArea().equals("")) ||
+                (datecourse.getDatecourseCategory() != null && !datecourse.getDatecourseCategory().equals("")) ||
+                (datecourse.getSearchKeyword() != null && !datecourse.getSearchKeyword().equals(""))) {
+            // 지역, 데이트 코스, 검색어(데이트 코스명)가 모두 입력된 경우
+            if((!datecourse.getDatecourseArea().equals("ALL")) &&
+                    (!datecourse.getDatecourseCategory().equals("ALL")) &&
+                    (datecourse.getSearchKeyword() != null && !datecourse.getSearchKeyword().equals(""))) {
+                return datecourseRepository.findByDatecourseAreaAndDatecourseCategoryAndDatecourseNmContaining(
+                        datecourse.getDatecourseArea(),
+                        datecourse.getDatecourseCategory(),
+                        datecourse.getSearchKeyword(),
+                        pageable);
+            } else if(!datecourse.getDatecourseArea().equals("ALL") &&
+                    !datecourse.getDatecourseCategory().equals("ALL")) {
+                // 지역, 데이트 코스 분류가 선택된 경우
+                return datecourseRepository.findByDatecourseAreaAndDatecourseCategory(
+                        datecourse.getDatecourseArea(),
+                        datecourse.getDatecourseCategory(),
+                        pageable);
+            } else if(!datecourse.getDatecourseArea().equals("ALL") &&
+                    (datecourse.getSearchKeyword() != null && !datecourse.getSearchKeyword().equals(""))) {
+                // 지역, 검색어(데이트 코스명)가 입력된 경우
+                return datecourseRepository.findByDatecourseAreaAndDatecourseNmContaining(
+                        datecourse.getDatecourseArea(),
+                        datecourse.getSearchKeyword(),
+                        pageable);
+            } else if(!datecourse.getDatecourseCategory().equals("ALL") &&
+                    (datecourse.getSearchKeyword() != null && !datecourse.getSearchKeyword().equals(""))) {
+                // 데이트 코스 분류, 검색어(데이트 코스명)가 입력된 경우
+                return datecourseRepository.findByDatecourseCategoryAndDatecourseNmContaining(
+                        datecourse.getDatecourseCategory(),
+                        datecourse.getSearchKeyword(),
+                        pageable);
+            } else if(!datecourse.getDatecourseArea().equals("ALL")) {
+                // 지역만 입력된 경우
+                return datecourseRepository.findByDatecourseArea(datecourse.getDatecourseArea(), pageable);
+            } else if(!datecourse.getDatecourseCategory().equals("ALL")) {
+                // 데이트 코스 분류만 입력된 경우
+                return datecourseRepository.findByDatecourseCategory(datecourse.getDatecourseCategory(), pageable);
+            } else if(datecourse.getSearchKeyword() != null && !datecourse.getSearchKeyword().equals("")) {
+                // 검색어(데이트 코스명)만 입력된 경우
+                return datecourseRepository.findByDatecourseNmContaining(datecourse.getSearchKeyword(), pageable);
+            } else {
+                // 지역="ALL" and 데이트 코스 분류="ALL" and 검색어(데이트 코스명)=null or ""
+                System.out.println("test");
+                return datecourseRepository.findAll(pageable);
+            }
+        } else {
+            // 지역, 데이트 코스 분류, 검색어(데이트 코스명)가 모두 입력되지 않은 경우
+            // 지역=null or "" and 데이트 코스 분류=null or "" and 검색어(데이트 코스명)=null or ""
+            return datecourseRepository.findAll(pageable);
         }
     }
 }

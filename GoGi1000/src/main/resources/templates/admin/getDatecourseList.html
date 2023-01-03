@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http:///www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout-admin}">
+
+<head>
+	<th:block layout:fragment="css">
+		<link rel="stylesheet" th:href="@{/css/getDatecourseList.css}"/>
+	</th:block>
+	<th:block layout:fragment="script">
+		<script th:inline="javascript">
+			$(function() {
+		      // tr 총 개수
+		      $("#board-count").text($("#tbody tr").length);
+		
+		      // 삭제버튼: 전체 선택
+			  $("#selectAll").click(function() {
+				  if ($("#selectAll").text() == "전체선택") {
+					$("input[name=chk]").prop("checked", true);
+					$("#selectAll").text("선택해제");
+		          } else if ($("#selectAll").text() == "선택해제") {
+		          	$("input[name=chk]").prop("checked", false);
+		            $("#selectAll").text("전체선택");
+		          }
+			  });
+
+			  $("input[name=chk]").click(function() {
+		        $("#selectAll").val("선택해제");
+			  });
+
+		      $("#delSelect").click(function() {
+		        if ($("input:checkbox[name='chk']:checked").length == 0) {
+		          alert("삭제할 항목을 선택해 주세요.");
+		          return;
+		        }
+		        
+		        let answer = confirm("정말 삭제하시겠습니까?")
+		
+		        $("input:checkbox[name='chk']:checked").each(function(k, kVal) {
+		          console.log("kVal::", kVal.parentElement.parentElement)
+		          let a = kVal.parentElement.parentElement;
+		
+		          if (answer) {
+		            $(a).remove();
+		          } else {
+		            return;
+		          }
+		
+		          $("#board-count").text($("#tbody tr").length);
+		        });
+		      });
+		
+		      $(".table-td-update").click(function() {
+		          let result = confirm("게시글 수정하시겠습니까?");
+		          if (result) {
+		            location.replace="{/datecourse/updateDatecourse/{datecourseNo} (datecourseNo=${datecourse.datecourseNo})}";
+		            console.log("페이지 이동하였습니다.");
+		          } else {
+		            return;
+		          }
+		      });
+
+			  // 돋보기 클릭 시, 조회조건 관련 조회
+			  $("#input-img").on("click", function() {
+				  $("input[name='page']").val(0);
+			  	  $("#searchForm").submit();
+			  });
+			});
+		</script>
+	</th:block>
+</head>
+<body>
+	<div layout:fragment="content">
+		<div id="dateCourseList-container">
+		    <!-- right -->
+		    <div id="side-right">
+		      <div id="side-right-h2">
+		        <h1>데이트 코스 리스트</h1>
+		        <hr>
+		      </div>
+		      <!--  style="width:75%; display:flex; justify-content: left; margin-left:25%;" -->
+		      
+		      <div id="dateCourseList">
+		        <div id="select">
+		          <div id="select-section1">
+		            <button id="selectAll" class="input-button">전체선택</button>
+		            <button id="delSelect" class="input-button">삭제</button>
+		          </div>
+				  <form id="searchForm" action="/datecourse/getDatecourseList" method="get">
+					  <input type="hidden" name="page" value="">
+					  <div id="select-section2">
+						<div id="datecourseArea-wrapper">
+						  <select name="datecourseArea" class="select">
+							<option value="ALL" th:selected="${datecourseArea == 'ALL'}">지역</option>
+							<option value="A0001" th:selected="${datecourseArea == 'A0001'}">서울</option>
+							<option value="A0002" th:selected="${datecourseArea == 'A0002'}">경기</option>
+							<option value="A0003" th:selected="${datecourseArea == 'A0003'}">인천</option>
+							<option value="A0004" th:selected="${datecourseArea == 'A0004'}">강원</option>
+							<option value="A0005" th:selected="${datecourseArea == 'A0005'}">충남</option>
+							<option value="A0006" th:selected="${datecourseArea == 'A0006'}">충북</option>
+							<option value="A0007" th:selected="${datecourseArea == 'A0007'}">세종</option>
+							<option value="A0008" th:selected="${datecourseArea == 'A0008'}">대전</option>
+							<option value="A0009" th:selected="${datecourseArea == 'A0009'}">경북</option>
+							<option value="A0010" th:selected="${datecourseArea == 'A0010'}">경남</option>
+							<option value="A0011" th:selected="${datecourseArea == 'A0011'}">전북</option>
+							<option value="A0012" th:selected="${datecourseArea == 'A0012'}">전남</option>
+							<option value="A0013" th:selected="${datecourseArea == 'A0013'}">대구</option>
+							<option value="A0014" th:selected="${datecourseArea == 'A0014'}">울산</option>
+							<option value="A0015" th:selected="${datecourseArea == 'A0015'}">광주</option>
+							<option value="A0016" th:selected="${datecourseArea == 'A0016'}">부산</option>
+							<option value="A0017" th:selected="${datecourseArea == 'A0017'}">제주</option>
+						  </select>
+						</div>
+						<div id="datecourseCategory-wrapper">
+						  <select name="datecourseCategory" class="select">
+							<option value="ALL" th:selected="${datecourseCategory == 'ALL'}">데이트 코스 분류</option>
+							<option value="B0001" th:selected="${datecourseCategory == 'B0001'}">놀거리</option>
+							<option value="B0002" th:selected="${datecourseCategory == 'B0002'}">맛집</option>
+							<option value="B0003" th:selected="${datecourseCategory == 'B0003'}">카페</option>
+						  </select>
+						</div>
+						<div id="input" class="select">
+						  <div id="input-div">
+							<div id="input-searchKeyword">
+							  <input type="search" name="searchKeyword" id="searchKeyword" th:value="${searchKeyword}">
+							  <a id="input-img-a" href="#"><img id="input-img" th:src="@{/images/search.png}"\></a>
+							</div>
+						  </div>
+						</div>
+					  </div>
+				  </form>
+		        </div>
+		        <table class="table-bordered">
+		          <thead>
+		          <tr class="tr">
+		            <th scope="col" style="width: 7%">선택</th>
+		            <th scope="col" style="width: 7%;">번호</th>  
+		            <th scope="col" style="width: 10%;">데이트 코스 번호</th>  
+		            <th scope="col" style="width: 17%;">데이트 코스명</th>
+		            <th scope="col" style="width: 15%;">수정일자</th> 
+		            <th scope="col" style="width: 11%;">데이트 코스<br>사용여부</th>
+		            <th scope="col" style="width: 8%">수정</th> 
+		          </tr>
+				  </thead>
+				  <tbody id="tbody">
+					  <tr th:each="datecourse : ${getDatecourseList}" class="tr">
+						<td>
+							<input type="checkbox" name='chk' th:id="'chk' + ${datecourseNo}"
+								   th:value="${datecourse.datecourseNo}">
+						</td>
+						<td th:text="${datecourseStat.count}"></td>
+						<td th:text="${datecourse.datecourseNo}"></td>
+						<td th:text="${datecourse.datecourseNm}" class="table-title"><a href="#"></a></td>
+						<td th:text="${#strings.substring(datecourse.datecourseModfDate, 0, 10)}"></td>
+						<td th:text="${datecourse.datecourseUseYn}"class="useYN"></td>
+						<td><button type="button" class="table-td-update">수정</button></td>
+					  </tr>
+				  </tbody>
+		        </table>
+		        <div id="table-total-count">
+		          <div>전체: <span id="board-count"></span>개</div>
+		        </div>
+		        <nav id="nav-pagination" aria-label="Page navigation example">
+		          <ul class="pagination" th:if="${getDatecourseList.totalElements > 0}"
+					  					 th:with="pageNumber = ${getDatecourseList.pageable.pageNumber},
+												  pageSize = ${getDatecourseList.pageable.pageSize},
+												  totalPages = ${getDatecourseList.totalPages},
+												  startPage = ${T(java.lang.Math).floor(pageNumber / pageSize) * pageSize + 1},
+												  tempEndPage = ${startPage + pageSize - 1},
+												  endPage = ${tempEndPage > totalPages ? totalPages : tempEndPage}">
+		            <li class="page-item" th:if="${pageNumber > 0}">
+		              <a class="page-link"
+						 th:href="@{/datecourse/getDatecourseList(
+						 				page=${pageNumber - 1},
+									    datecourseArea=${datecourseArea},
+									    datecourseCategory=${datecourseCategory},
+									    searchKeyword=${searchKeyword})}"
+						 aria-label="Previous">
+		                <span aria-hidden="true">&lt</span>
+		              </a>
+		            </li>
+					<!-- thymeleaf에서 제공하는 numbers 객체 및 sequence 메소드 -->
+					<li class="page-item" th:each="page : ${#numbers.sequence(startPage, endPage)}">
+					  <a class="page-link"
+						 th:href="@{/datecourse/getDatecourseList(
+						 				page=${page - 1},
+										datecourseArea=${datecourseArea},
+										datecourseCategory=${datecourseCategory},
+										searchKeyword=${searchKeyword})}" th:text="${page}">
+					  </a>
+					</li>
+		            <li class="page-item" th:if="${pageNumber < totalPages - 1}">
+		              <a class="page-link"
+						 th:href="@{/datecourse/getDatecourseList(
+						 				page=${pageNumber + 1},
+						 				datecourseArea=${datecourseArea},
+						 				datecourseCategory=${datecourseCategory},
+										searchKeyword=${searchKeyword})}"
+						 aria-label="Next">
+		                <span aria-hidden="true">&gt</span>
+		              </a>
+		            </li>
+		          </ul>
+		        </nav>
+		      </div>
+		    </div>
+	  	</div>
+	</div>
+</body>
+</html>
