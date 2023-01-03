@@ -18,6 +18,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -172,7 +173,7 @@ public class HotdealController {
     	
     }
     
-    @RequestMapping("/updateHotdealUseYn")
+    @PostMapping("/updateHotdealUseYn")
     public ResponseEntity<?> updateHotdealUseYn(HotdealDTO hotdealDTO, Pageable pageable, HttpServletRequest request, HttpServletResponse response,
     		@RequestParam("valueArr") String valueArr) throws IOException{
     	
@@ -264,12 +265,63 @@ public class HotdealController {
     
     
 	
-	@GetMapping("/updateHotdeal")
-	public ModelAndView updateHotdeal() {
-		ModelAndView mv = new ModelAndView();
-		mv.setViewName("admin/updateHotdeal.html");
+	@GetMapping("updateHotdeal/{hotdealNo}")
+	public ModelAndView updateHotdeal(@PathVariable int hotdealNo) {
 		
-		return mv;
-	}
+		
+		Hotdeal hotdeal = hotdealService.getHotdeal(hotdealNo);
+		
+		HotdealDTO hotdealDTO = HotdealDTO.builder()
+										  .hotdealNm(hotdeal.getHotdealNm())
+										  .hotdealEndDate(hotdeal.getHotdealEndDate())
+										  .hotdealOfficialSite(hotdeal.getHotdealOfficialSite())
+										  .hotdealPrice(hotdeal.getHotdealPrice())
+										  .hotdealSalerate(hotdeal.getHotdealSalerate())
+										  .hotdealSeller(hotdeal.getHotdealSeller())
+										  .hotdealSummary(hotdeal.getHotdealSummary())
+										  .hotdealTel(hotdeal.getHotdealTel())
+										  .hotdealDesc(hotdeal.getHotdealDesc())
+										  .hotdealRgstDate(hotdeal.getHotdealRgstDate() == null ?
+													 null: hotdeal.getHotdealRgstDate().toString())
+										  .hotdealModfDate(hotdeal.getHotdealModfDate() == null ?
+													 null: hotdeal.getHotdealModfDate().toString())
+										  .hotdealUseYn("Y")
+										  .build();
+		
 	
+        List<DatecourseImage> datecourseImageList = hotdealService.getHotdealImageList(hotdealNo);
+    	
+    	List<DatecourseImageDTO> datecourseImageDTOList = new ArrayList<>();
+    	  
+    	for(DatecourseImage datecourseImage : datecourseImageList) {
+    		DatecourseImageDTO datecourseImageListDTO = DatecourseImageDTO.builder()
+    																  .imageGroup(datecourseImage.getImageGroup())
+    																  .referenceNo(datecourseImage.getReferenceNo())
+    																  .imageNo(datecourseImage.getImageNo())
+    																  .imageNm(datecourseImage.getImageNm())
+    																  .imageOriginNm(datecourseImage.getImageOriginNm())
+    																  .imageExt(datecourseImage.getImageExt())
+    																  .imagePath(datecourseImage.getImagePath())
+    																  .build();
+    		datecourseImageDTOList.add(datecourseImageListDTO);	
+    		System.out.println(datecourseImageDTOList);
+    	}
+		
+		
+									
+		ModelAndView mv = new ModelAndView();
+		
+		mv.setViewName("admin/updateHotdeal.html");
+		mv.addObject("updateHotdeal", hotdealDTO);
+	
+		return mv;
+		}
+//	@PutMapping("updateHotdeal/")
+//	public ResponseEntity<?> updateHotdeal(HotdealDTO hotdealDTO, HttpServletResponse response,
+//			MultipartFile[] uploadFiles, MultipartFile[] changedFiles, HttpServletRequest request,
+//			@RequestParam("originFiles") String originFiles) throws IOException {
+//		
+//		
+//	}
+//	
 }

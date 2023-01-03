@@ -83,11 +83,8 @@ public class HotdealServiceImpl implements HotdealService {
 	}
 	@Override
 	public List<DatecourseImage> getHotdealImageList(int hotdealNo) {
-		Hotdeal hotdeal = Hotdeal.builder()
-								 .hotdealNo(hotdealNo)
-								 .build();
 		
-		return datecourseImageRepository.findByHotdeal(hotdeal);
+		return datecourseImageRepository.findByHotdealNo(hotdealNo);
 	}
 	
 }
