@@ -272,6 +272,4 @@ public class HotdealController {
 		return mv;
 	}
 	
-	@PostMapping("updateHotdeal")
-	public
 }
