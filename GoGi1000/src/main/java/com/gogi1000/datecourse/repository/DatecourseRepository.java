@@ -52,5 +52,23 @@ public interface DatecourseRepository extends JpaRepository<Datecourse, Integer>
 		   nativeQuery = true)
 	List<CamelHashMap> findBySelectedDatecourseArea(@Param("datecourseArea") String datecourseArea);
 	
+	// A.*하면 전체 컬럼 가져와버림. 필요한 것만 가져오는 것이 좋음
+	// B 테이블의 IMAGE_NM 컬럼으로 이미지를 가지고 온다.
+	// 좋아요 많은 순으로 인기 랭킹 TOP 10 조회
+	
+	// CamelHashMap 사용 이유: 다른 2개 이상의 테이블을 join할 때, join된 컬럼들을 모두 가지고 있는 entity가 존재하지 않으므로, map으로 받아준다.
+	@Modifying
+	@Query(value = "SELECT A.*, "
+			+"			   C.IMAGE_NM"
+			+"		  FROM T_GGC_DATECOURSE A"
+			+"		  JOIN ( SELECT AA.DATECOURSE_NO, COUNT(AA.DATECOURSE_NO) AS 'DATECOURSE_CNT'"
+			+"				   FROM	T_GGC_LIKE AA"
+			+"				  GROUP BY AA.DATECOURSE_NO ) B ON A.DATECOURSE_NO = B.DATECOURSE_NO"
+			+"		  JOIN T_GGC_IMAGE C ON A.DATECOURSE_NO = C.REFERENCE_NO"
+			+"		 WHERE C.IMAGE_GROUP = 'E0001'"
+			+"		 ORDER BY B.DATECOURSE_CNT DESC"	
+			+"		 LIMIT 10",
+			nativeQuery = true)
+	List<CamelHashMap> getRankDatecourseList();
 
 }

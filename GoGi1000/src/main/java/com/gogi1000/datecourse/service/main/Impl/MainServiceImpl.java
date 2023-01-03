@@ -39,16 +39,23 @@ public class MainServiceImpl implements MainService{
 		return datecourseRepository.findBySelectedDatecourseArea(datecourseArea);
 	}
 	
-	// 
-//	@Override
-//	public List<Datecourse> getRankDatecourseList(Datecourse datecourse) {
-//		return datecourseRepository.findAll(datecourse);
-//	}
+	// 메인에서 인기 랭킹 리스트 조회
+	@Override
+	public List<CamelHashMap> getRankDatecourseList() {
+		return datecourseRepository.getRankDatecourseList();
+	}
 	
-//	@Override
-//	public Hotdeal getHotdeal(int hotdealNo) {
-//		return hotdealRepository.findByHotdealNoContaining(hotdealNo);
-//	}
+	// 메인에서 핫딜 리스트 조회
+	@Override
+	public List<CamelHashMap> getHotdealDatecourseList() {
+		return hotdealRepository.getHotdealDatecourseList();
+	}
+	
+	// 메인에서 핫딜 상세 페이지 조회
+	@Override
+	public Hotdeal getHotdeal(int hotdealNo) {
+		return hotdealRepository.getHotdeal(hotdealNo);
+	}
 	
 	
 }

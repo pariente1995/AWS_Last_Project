@@ -298,153 +298,29 @@
 	    </div>
 	
 	    <!-- 랭킹 -->
-	    <h2 id="ranking-h2">이번주 랭킹 TOP 10</h2>
+	    <h2 id="ranking-h2">인기 랭킹 TOP 10</h2>
 	    <div id="ranking-wrapper">
 	      <div id="ranking-frame">
-	        <div class="ranking ranking-1">
+	      <!-- 랭킹 리스트 -->
+	        <div class="ranking ranking-1" th:each="datecourse : ${getRankDatecourseList}">
 	          <div class="ranking-div-img">
-	            <a class="ranking-1" href="#"><img class="ranking-image" th:src="@{/images/food1.jpeg}" width="200" height="200" ></a>
+	            <a class="ranking-1" href="#"><img class="ranking-image" th:if="${datecourse.imageNm} != 'null'" th:src="@{'/upload/' + ${datecourse.imageNm}}" width="200" height="200" ></a>
 	          </div>
-	          <p style="font-weight:bold; margin-bottom:-5px;"><a class="ranking-1" href="#">보쌈</a></p>
-	          <p style="font-size:11px;"><a class="ranking-1" href="#">부드러운 보쌈이 먹고 싶다면 이곳을 !</a></p>
-	        </div>
-	        <div class="ranking ranking-2">
-	          <div class="ranking-div-img">
-	            <a class="ranking-2" href="#"><img th:src="@{/images/food2.jpeg}" width="200" height="200"></a>
-	          </div>
-	          <p style="font-weight:bold; margin-bottom:-5px;"><a class="ranking-2" href="#">스테이크</a></p>
-	          <p style="font-size:11px;"><a class="ranking-2" href="#">스테이크 맛집</a></p>
-	        </div>
-	        <div class="ranking ranking-3">
-	          <div class="ranking-div-img">
-	            <a class="ranking-3" href="#"><img th:src="@{/images/food3.jpeg}" width="200" height="200"></a>
-	          </div>
-	          <p style="font-weight:bold; margin-bottom:-5px;"><a class="ranking-3" href="#">김밥</a></p>
-	          <p style="font-size:11px;"><a class="ranking-3" href="#">이색 김밥을 먹고싶다면 여기로 오세요!</a></p>
-	        </div>
-	        <div class="ranking ranking-4">
-	          <div class="ranking-div-img">
-	            <a class="ranking-4" href="#"><img th:src="@{/images/food4.jpeg}" width="200" height="200"></a>
-	          </div>
-	          <p style="font-weight:bold; margin-bottom:-5px;"><a class="ranking-4" href="#">짜장면</a></p>
-	          <p style="font-size:11px;"><a class="ranking-4" href="#">옛날 짜장면 맛이 그리우시다면 이곳을!</a></p>
-	        </div>
-	        <div class="ranking ranking-5">
-	          <div class="ranking-div-img">
-	            <a class="ranking-5" href="#"><img th:src="@{/images/food5.jpeg}" width="200" height="200"></a>
-	          </div>
-	          <p style="font-weight:bold; margin-bottom:-5px;"><a class="ranking-5" href="#">짬뽕</a></p>
-	          <p style="font-size:11px;"><a class="ranking-5" href="#">짬뽕 맛집을 소개해드립니다.</a></p>
-	        </div>
-	        <div class="ranking ranking-6">
-	          <div class="ranking-div-img">
-	            <a class="ranking-6" href="#"><img th:src="@{/images/food6.jpeg}" width="200" height="200"></a>
-	          </div>
-	          <p style="font-weight:bold; margin-bottom:-5px;"><a class="ranking-6" href="#">초밥</a></p>
-	          <p style="font-size:11px;"><a class="ranking-6" href="#">초밥 전문점입니다.</a></p>
-	        </div>
-	        <div class="ranking ranking-7">
-	          <div class="ranking-div-img">
-	            <a class="ranking-7" href="#"><img th:src="@{/images/food7.jpeg}" width="200" height="200"></a>
-	          </div>
-	          <p style="font-weight:bold; margin-bottom:-5px;"><a class="ranking-7" href="#">파스타</a></p>
-	          <p style="font-size:11px;"><a class="ranking-7" href="#">데이트하기 좋은 식당</a></p>
-	        </div>
-	        <div class="ranking ranking-8">
-	          <div class="ranking-div-img">
-	            <a class="ranking-8" href="#"><img th:src="@{/images/food8.jpeg}" width="200" height="200"></a>
-	          </div>
-	          <p style="font-weight:bold; margin-bottom:-5px;"><a class="ranking-8" href="#">양식</a></p>
-	          <p style="font-size:11px;"><a class="ranking-8" href="#">데이트할 장소로 추천 드리는 식당</a></p>
-	        </div>
-	        <div class="ranking ranking-9">
-	          <div class="ranking-div-img">
-	            <a class="ranking-9" href="#"><img th:src="@{/images/food9.jpeg}" width="200" height="200"></a>
-	          </div>
-	          <p style="font-weight:bold; margin-bottom:-5px;"><a class="ranking-9" href="#">파스타</a></p>
-	          <p style="font-size:11px;"><a class="ranking-9" href="#">파스타 맛집</a></p>
-	        </div>
-	        <div class="ranking ranking-10">
-	          <div class="ranking-div-img">
-	            <a class="ranking-10" href="#"><img th:src="@{/images/food10.jpeg}" width="200" height="200"></a>
-	          </div>
-	          <p style="font-weight:bold; margin-bottom:-5px;"><a class="ranking-10" href="#">오므라이스</a></p>
-	          <p style="font-size:11px;"><a class="ranking-10" href="#">추억에 오므라이스</a></p>    
+	          <p style="font-weight:bold; margin-bottom:-5px;"><a class="ranking-1" th:text="${datecourse.datecourseNm}" th:href="@{/datecourse/getDatecourse/{datecourseNo} (datecourseNo=${datecourse.datecourseNo})}"></a></p>
+	          <p style="font-size:13px;"><a class="ranking-1" th:text="${datecourse.datecourseSummary}" th:href="@{/datecourse/getDatecourse/{datecourseNo} (datecourseNo=${datecourse.datecourseNo})}"></a></p>
 	        </div>
 	      </div>
 	    </div>
+	    <!-- 핫딜 리스트 -->
 	    <h2 id="hotdeal-h2">핫딜</h2>
 	    <div id="hotdeal-wrapper" >
 	      <div id="hotdeal-frame">
-	        <div class="hotdeal">
+	        <div class="hotdeal" th:each="hotdeal : ${getHotdealDatecourseList}">
 	          <div class="hotdeal-div-img">
-	           <a class="hotdeal-1" href="#"><img th:src="@{/images/hotdeal1.jpeg}" width="400" height="400"></a>
+	           <a class="hotdeal-1" th:href="@{/hotdeal/getHotdeal/{hotdealNo} (hotdealNo=${hotdeal.hotdealNo})}"><img th:if="${hotdeal.imageNm} != 'null'" th:src="@{'/upload/' + ${hotdeal.imageNm}}" width="400" height="400"></a>
 	          </div>
-	          <p style="font-weight:bold; margin-bottom:-5px;"><a class="hotdeal-1" href="#">애견카페</a></p>
-	          <p style="font-size:11px;"><a class="hotdeal-1" href="#">애완동물들과 함께 즐기는 공간</a></p>
-	        </div>
-	        <div class="hotdeal">
-	          <div class="hotdeal-div-img">
-	           <a class="hotdeal-2" href="#"><img th:src="@{/images/hotdeal2.jpeg}" width="400" height="400"></a>
-	          </div>
-	          <p style="font-weight:bold; margin-bottom:-5px;"><a class="hotdeal-2" href="#">만화카페</a></p>
-	          <p style="font-size:11px;"><a class="hotdeal-2" href="#">책을 좋아하는 분들이라면 이곳을 추천!</a></p>
-	        </div>
-	        <div class="hotdeal">
-	          <div class="hotdeal-div-img">
-	           <a class="hotdeal-3" href="#"><img th:src="@{/images/hotdeal3.jpeg}" width="400" height="400"></a>
-	          </div>
-	          <p style="font-weight:bold; margin-bottom:-5px;"><a class="hotdeal-3" href="#">DVD방</a></p>
-	          <p style="font-size:11px;"><a class="hotdeal-3" href="#">애인과 가볍게 즐길 수 있는 DVD방</a></p>
-	        </div>
-	        <div class="hotdeal">
-	          <div class="hotdeal-div-img">
-	           <a class="hotdeal-4" href="#"><img th:src="@{/images/hotdeal4.jpeg}" width="400" height="400"></a>
-	          </div>
-	          <p style="font-weight:bold; margin-bottom:-5px;"><a class="hotdeal-4" href="#">PC방</a></p>
-	          <p style="font-size:11px;"><a class="hotdeal-4" href="#">화려한 조명이 나를 이끄네</a></p>
-	        </div>
-	        <div class="hotdeal">
-	          <div class="hotdeal-div-img">
-	            <a class="hotdeal-5" href="#"><img th:src="@{/images/hotdeal5.jpeg}" width="400" height="400"></a>
-	          </div>
-	          <p style="font-weight:bold; margin-bottom:-5px;"><a class="hotdeal-5" href="#">놀이공원</a></p>
-	          <p style="font-size:11px;"><a class="hotdeal-5" href="#">스트레스를 풀고 싶다면 이곳을 와라!</a></p>
-	        </div>
-	        <div class="hotdeal">
-	          <div class="hotdeal-div-img">
-	            <a class="hotdeal-6" href="#"><img th:src="@{/images/hotdeal6.jpeg}" width="400" height="400"></a>
-	          </div>
-	          <p style="font-weight:bold; margin-bottom:-5px;"><a class="hotdeal-6" href="#">카페</a></p>
-	          <p style="font-size:11px;"><a class="hotdeal-6" href="#">분위기 좋은 카페는 이곳에 있었다</a></p>
-	        </div>
-	        <div class="hotdeal">
-	          <div class="hotdeal-div-img">
-	            <a class="hotdeal-7" href="#"><img th:src="@{/images/hotdeal7.jpeg}" width="400" height="400"></a>
-	          </div>
-	          <p style="font-weight:bold; margin-bottom:-5px;"><a class="hotdeal-7" href="#">실내낚시터</a></p>
-	          <p style="font-size:11px;"><a class="hotdeal-7" href="#">이색 낚시를 즐기고 싶다면 이곳 실내 낚시터를 추천!</a></p>
-	        </div>
-	        <div class="hotdeal">
-	          <div class="hotdeal-div-img">
-	            <a class="hotdeal-8" href="#"><img th:src="@{/images/hotdeal8.jpeg}" width="400" height="400"></a>
-	          </div>
-	          <p style="font-weight:bold; margin-bottom:-5px;"><a class="hotdeal-8" href="#">클라이밍</a></p>
-	          <p style="font-size:11px;"><a class="hotdeal-8" href="#">클라이밍 재밌드라구요</a></p>
-	        </div>
-	        <div class="hotdeal">
-	          <div class="hotdeal-div-img">
-	            <a class="hotdeal-9" href="#"><img th:src="@{/images/hotdeal9.jpeg}" width="400" height="400"></a>
-	          </div>
-	          <p style="font-weight:bold; margin-bottom:-5px;"><a class="hotdeal-9" href="#">방탈출카페</a></p>
-	          <p style="font-size:11px;"><a class="hotdeal-9" href="#">영화같은 공포를 직접 체험하고 싶다면 이 카페를 와라!</a></p>
-	        </div>
-	        <div class="hotdeal">
-	          <div class="hotdeal-div-img">
-	           <a class="hotdeal-10" href="#"><img th:src="@{/images/hotdeal10.jpeg}" width="400" height="400"> </a>
-	          </div>
-	          <p style="font-weight:bold; margin-bottom:-5px;"><a class="hotdeal-10" href="#">돈까스집</a></p>
-	          <p style="font-size:11px;"><a class="hotdeal-10" href="#">바삭바삭하고, 맛있는 돈까스집을 찾고 있다면 이곳을 추천한다!</a></p>
+	          <p style="font-weight:bold; margin-bottom:-5px;"><a class="hotdeal-1" th:href="@{/hotdeal/getHotdeal/{hotdealNo} (hotdealNo=${hotdeal.hotdealNo})}" th:text="${hotdeal.hotdealNm}"></a></p>
+	          <p style="font-size:13px;"><a class="hotdeal-1" th:href="@{/hotdeal/getHotdeal/{hotdealNo} (hotdealNo=${hotdeal.hotdealNo})}" th:text="${hotdeal.hotdealDesc}"></a></p>
 	        </div>
 	      </div>
 	    </div>
