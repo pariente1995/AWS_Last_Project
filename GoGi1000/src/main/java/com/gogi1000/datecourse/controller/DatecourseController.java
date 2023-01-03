@@ -11,6 +11,9 @@ import com.gogi1000.datecourse.entity.DatecourseImage;
 import com.gogi1000.datecourse.entity.DatecourseMenu;
 import com.gogi1000.datecourse.service.datecourse.DatecourseService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
@@ -34,7 +37,7 @@ public class DatecourseController {
     @GetMapping("/insertDatecourse")
     public ModelAndView insertDatecourseView() {
         ModelAndView mv = new ModelAndView();
-        mv.setViewName("datecourse/insertDatecourse.html");
+        mv.setViewName("admin/insertDatecourse.html");
 
         return mv;
     }
@@ -50,22 +53,22 @@ public class DatecourseController {
 
         // 데이트 코스
         Datecourse datecourse = Datecourse.builder()
-                                          .datecourseNm(datecourseDTO.getDatecourseNm())
-                                          .datecourseArea(datecourseDTO.getDatecourseArea())
-                                          .datecourseCategory(datecourseDTO.getDatecourseCategory())
-                                          .datecourseSummary(datecourseDTO.getDatecourseSummary())
-                                          .datecourseDesc(datecourseDTO.getDatecourseDesc())
-                                          .datecourseAddr(datecourseDTO.getDatecourseAddr())
-                                          .datecourseInoutYn(datecourseDTO.getDatecourseInoutYn())
-                                          .datecourseFoodType(datecourseDTO.getDatecourseFoodType())
-                                          .datecourseTel(datecourseDTO.getDatecourseTel())
-                                          .datecourseOfficialSite(datecourseDTO.getDatecourseOfficialSite())
-                                          .datecourseParkingYn(datecourseDTO.getDatecourseParkingYn())
-                                          .datecoursePetYn(datecourseDTO.getDatecoursePetYn())
-                                          .datecourseRgstDate(LocalDateTime.now())
-                                          .datecourseModfDate(LocalDateTime.now())
-                                          .datecourseUseYn("Y")
-                                          .build();
+                .datecourseNm(datecourseDTO.getDatecourseNm())
+                .datecourseArea(datecourseDTO.getDatecourseArea())
+                .datecourseCategory(datecourseDTO.getDatecourseCategory())
+                .datecourseSummary(datecourseDTO.getDatecourseSummary())
+                .datecourseDesc(datecourseDTO.getDatecourseDesc())
+                .datecourseAddr(datecourseDTO.getDatecourseAddr())
+                .datecourseInoutYn(datecourseDTO.getDatecourseInoutYn())
+                .datecourseFoodType(datecourseDTO.getDatecourseFoodType())
+                .datecourseTel(datecourseDTO.getDatecourseTel())
+                .datecourseOfficialSite(datecourseDTO.getDatecourseOfficialSite())
+                .datecourseParkingYn(datecourseDTO.getDatecourseParkingYn())
+                .datecoursePetYn(datecourseDTO.getDatecoursePetYn())
+                .datecourseRgstDate(LocalDateTime.now())
+                .datecourseModfDate(LocalDateTime.now())
+                .datecourseUseYn("Y")
+                .build();
 
         // 데이트 코스 영업시간
         // 화면에서 받아온 영업시간 데이터
@@ -76,11 +79,11 @@ public class DatecourseController {
 
         for(int i=0; i<datecourseHoursList.size(); i++) {
             DatecourseHours datecourseHours = DatecourseHours.builder()
-                                                             .datecourseHoursInfo(datecourseHoursList.get(i))
-                                                             .datecourseHoursRgstDate(LocalDateTime.now())
-                                                             .datecourseHoursModfDate(LocalDateTime.now())
-                                                             .datecourseHoursUseYn("Y")
-                                                             .build();
+                    .datecourseHoursInfo(datecourseHoursList.get(i))
+                    .datecourseHoursRgstDate(LocalDateTime.now())
+                    .datecourseHoursModfDate(LocalDateTime.now())
+                    .datecourseHoursUseYn("Y")
+                    .build();
 
             iDatecourseHoursList.add(datecourseHours);
         }
@@ -94,13 +97,13 @@ public class DatecourseController {
 
         for(int i=0; i<datecourseMenuDTOList.size(); i++) {
             DatecourseMenu datecourseMenu = DatecourseMenu.builder()
-                                                          .datecourseMenuType(datecourseMenuDTOList.get(i).getDatecourseMenuType())
-                                                          .datecourseMenuNm(datecourseMenuDTOList.get(i).getDatecourseMenuNm())
-                                                          .datecourseMenuPrice(datecourseMenuDTOList.get(i).getDatecourseMenuPrice())
-                                                          .datecourseMenuRgstDate(LocalDateTime.now())
-                                                          .datecourseMenuModfDate(LocalDateTime.now())
-                                                          .datecourseMenuUseYn("Y")
-                                                          .build();
+                    .datecourseMenuType(datecourseMenuDTOList.get(i).getDatecourseMenuType())
+                    .datecourseMenuNm(datecourseMenuDTOList.get(i).getDatecourseMenuNm())
+                    .datecourseMenuPrice(datecourseMenuDTOList.get(i).getDatecourseMenuPrice())
+                    .datecourseMenuRgstDate(LocalDateTime.now())
+                    .datecourseMenuModfDate(LocalDateTime.now())
+                    .datecourseMenuUseYn("Y")
+                    .build();
 
             iDatecourseMenuList.add(datecourseMenu);
         }
@@ -136,15 +139,54 @@ public class DatecourseController {
         }
         datecourseService.insertDatecourse(datecourse, iDatecourseHoursList, iDatecourseMenuList, uploadImageList);
 
-        // 데이트 코스 리스트 화면으로 이동
-        //response.sendRedirect("/datecourse/boardList");
+        // 데이트 코스 리스트 화면(관리자)으로 이동
+        //response.sendRedirect("/admin/getDatecourseList");
     }
 
     // 데이트 코스 수정 화면으로 이동
     @GetMapping("/updateDatecourse")
     public ModelAndView updateDatecourseView() {
         ModelAndView mv = new ModelAndView();
-        mv.setViewName("datecourse/updateDatecourse.html");
+        mv.setViewName("admin/updateDatecourse.html");
+
+        return mv;
+    }
+
+    // 데이트 코스 리스트 화면(관리자)으로 이동
+    @GetMapping("/getDatecourseList")
+    public ModelAndView getPageDatecourseList(DatecourseDTO datecourseDTO, @PageableDefault(page=0, size=15) Pageable pageable) {
+        Datecourse datecourse = Datecourse.builder()
+                .datecourseArea(datecourseDTO.getDatecourseArea())
+                .datecourseCategory(datecourseDTO.getDatecourseCategory())
+                .searchKeyword(datecourseDTO.getSearchKeyword())
+                .build();
+
+        Page<Datecourse> pageDatecourseList = datecourseService.getPageDatecourseList(datecourse, pageable);
+
+        Page<DatecourseDTO> pageDatecourseDTOList = pageDatecourseList.map(pageDatecourse ->
+                DatecourseDTO.builder()
+                        .datecourseNo(pageDatecourse.getDatecourseNo())
+                        .datecourseNm(pageDatecourse.getDatecourseNm())
+                        .datecourseModfDate(pageDatecourse.getDatecourseModfDate().toString())
+                        .datecourseUseYn(pageDatecourse.getDatecourseUseYn())
+                        .build()
+        );
+
+        ModelAndView mv = new ModelAndView();
+        mv.setViewName("admin/getDatecourseList.html");
+        mv.addObject("getDatecourseList", pageDatecourseDTOList);
+
+        if(datecourseDTO.getDatecourseArea() != null && !datecourseDTO.getDatecourseArea().equals("")) {
+            mv.addObject("datecourseArea", datecourseDTO.getDatecourseArea());
+        }
+
+        if(datecourseDTO.getDatecourseCategory() != null && !datecourseDTO.getDatecourseCategory().equals("")) {
+            mv.addObject("datecourseCategory", datecourseDTO.getDatecourseCategory());
+        }
+
+        if(datecourseDTO.getSearchKeyword() != null && !datecourseDTO.getSearchKeyword().equals("")) {
+            mv.addObject("searchKeyword", datecourseDTO.getSearchKeyword());
+        }
 
         return mv;
     }
