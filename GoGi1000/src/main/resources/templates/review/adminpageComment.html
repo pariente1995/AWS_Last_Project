@@ -34,61 +34,116 @@
   				</script> 
   				
     <script th:inline="javascript">
-
-	  	
-	  
-	    let isAllSelected = false;
+		let isAllSelected = false;
 	
 	    function checkSelectAll()  {
-	    // 전체 체크박스
-	    const checkboxes 
-	      = document.querySelectorAll('input[name="number"]');
-	    // 선택된 체크박스
-	    const checked 
-	      = document.querySelectorAll('input[name="number"]:checked');
-	    // select all 체크박스
-	    const selectAll 
-	      = document.querySelector('button[name="selectall"]');
-	
-	    if(checkboxes.length === checked.length)  {
-	      isAllSelected = true;
-	      selectAll.textContent = "전체 해제";
-	    }else {
-	      isAllSelected = false;
-	    }
+		    // 전체 체크박스
+		    const checkboxes 
+		      = document.querySelectorAll('input[name="number"]');
+		    // 선택된 체크박스
+		    const checked 
+		      = document.querySelectorAll('input[name="number"]:checked');
+		    // select all 체크박스
+		    const selectAll 
+		      = document.querySelector('button[name="selectall"]');
+		
+		    if(checkboxes.length === checked.length)  {
+		      isAllSelected = true;
+		      selectAll.textContent = "전체 해제";
+		    }else {
+		      isAllSelected = false;
+		    }
 	
 	    }
 	
 	    function selectAll(selectAll)  {
-	    const checkboxes 
-	      = document.getElementsByName('number');
-	    // 선택된 체크박스
-	    const checked 
-	      = document.querySelectorAll('input[name="number"]:checked');
-	
-	    const selectBtn 
-	      = document.querySelector('button[name="selectall"]');
-	    
-	    if(isAllSelected) {
-	      checkboxes.forEach(checkbox => {
-	        checkbox.checked = false;
-	        selectBtn.textContent = "전체 선택";
-	      });
-	      isAllSelected = false;
-	    } else {
-	      checkboxes.forEach(checkbox => {
-	        checkbox.checked = true;
-	      });
-	      isAllSelected = true;
-	      selectBtn.textContent = "전체 해제";
-	    }
-	  }
+		    const checkboxes 
+		      = document.getElementsByName('number');
+		    // 선택된 체크박스
+		    const checked 
+		      = document.querySelectorAll('input[name="number"]:checked');
+		
+		    const selectBtn 
+		      = document.querySelector('button[name="selectall"]');
+		    
+		    if(isAllSelected) {
+		      checkboxes.forEach(checkbox => {
+		        checkbox.checked = false;
+		        selectBtn.textContent = "전체 선택";
+		      });
+		      isAllSelected = false;
+		    } else {
+		      checkboxes.forEach(checkbox => {
+		        checkbox.checked = true;
+		      });
+		      isAllSelected = true;
+		      selectBtn.textContent = "전체 해제";
+		    }
+		}		
 	
 	    $(function() {
-	      $("#modelBtnDelete").on("click", function() {
-	        alert("댓글이 삭제되었습니다.")
-	      })
-	    })
+		  
+		  $("#btnChkDelete").on("click", function() {
+			  let result= [];
+			   
+		      $('input[name="number"]:checked').each(function() {
+				  	const chkList = {
+						  datecourseNo: $(this).attr('datecourse-no'),
+						  reviewNo : $(this).val()
+					  }
+					  console.log(chkList);
+				result.push(chkList);
+			});
+ 
+			$.ajax({
+				url: '/review/deleteReviewList',
+				type: 'delete',
+				data: {result : JSON.stringify(result)},
+				success: function(obj) {
+					alert("삭제되었습니다.");
+					window.location.href="/review/adminpageComment";
+				},
+				error: function(e) {
+					console.log(e);
+				}
+				
+			}) 			  
+		  });
+
+
+		  $(".linkMain").on("click", function() {
+			  const requestModal = {
+				  datecourseNo: $(this).attr("datecourse-no"),
+				  reviewNo : $(this).attr("review-no")
+			  }
+			 
+			 console.log(requestModal);
+   
+			$.ajax({
+				url: '/review/reviewModal',
+				type: 'get',
+				data: {requestModal : JSON.stringify(requestModal)},
+				success: function(obj) {
+					console.log(obj);
+					$(".modal-header span").text(obj.item.getModal.reviewerId)
+					$(".modal-body p").text(obj.item.getModal.reviewModfDate);
+					$(".modal-body textarea").text(obj.item.getModal.reviewComment);
+				},
+				error: function(e) {
+					console.log(e);
+				}
+				
+			})
+			  	
+		  });
+		  
+			  
+		  $("#modelBtnDelete").on("click", function() {
+	      	alert("댓글이 삭제되었습니다.")
+	      });
+			
+	      
+	    });
 	
 	
 	    function makeSnowflaske() {
@@ -103,20 +158,30 @@
 </head>
 <body>
 	
-		<!-- 메인 화면 -->
+	<!-- 메인 화면 -->
   		<div layout:fragment="content">
-  		<div id="main-container">		  
+  		<div id="main-container">
+    
+
+    <!-- header -->
+    
+
+    <div id="wrapper01">
+
+      <!-- 사이드메뉴 -->
+      
+
+          <!-- 메인 화면 -->
           <div id="div-wrapper-main">
             <!-- 페이지 제목 -->
             <div id="main-title">
               <h1 style="margin: 0; float: left;" >댓글 리스트</h1>
-              <img id="main-title-img" th:src="@{/images/heart.png}" alt="">
                  
             </div>
             <hr style="margin: auto; width: 80%;">
 
           <!-- 전체 선택 및 검색 기능 구현 -->
-          <form id="searchForm" action="">
+          <div id="searchChkForm">
             <div class="row" style="margin: auto;" >
               <div class="col" style="margin: 10px 10px 10px 0; padding-left: 0px;">
                 <div style="float: left; height: 30px;">              
@@ -125,73 +190,96 @@
                     onclick='selectAll(this)'>
                       전체 선택
                   </button>
-                  <button>삭제</button>
+                  <button id="btnChkDelete">삭제</button>
                 </div>
               </div>
               <div class="col" style="margin: 10px 5px 10px 15px;">
-                <div class="row" style="justify-content: right; padding: 0px; ">
-                  <select th:id="searchCondition" name="searchCondition" aria-labelledby="state" >
+                <form id="searchForm" action="/review/adminpageComment" 
+                	class="row" style="justify-content: right; padding: 0px;">
+                  <select th:id="searchCondition" name="searchConditionCmt" aria-labelledby="state" >
                     <option value="ALL">전체</option>
-                    <option value="TITLE">게시글 제목</option>
+                    <option value="NAME">게시글 제목</option>
                     <option value="ID">아이디</option>
-                    <option value="CONTENT">내용</option>
-                    <option value="RGDDATE">작성일자</option>
+                    <option value="COMMENT">내용</option>
                   </select>&ensp;
                   <div id="searchDiv">
-                    <input id="searchInput" type="text" name="searchKeyword" value="">&ensp;
-                    <img th:src="@{/images/search.png}" alt="" style="height: 25px; padding: 0px; margin-bottom: 3px; width: 11%;">
+                    <input id="searchInput" type="text" name="searchKeywordCmt" th:value="${searchKeywordCmt}">&ensp;
+                    <button style="height: 25px; padding: 0px; margin-bottom: 3px; width: 11%; background-color:white;"><img th:src="@{/images/search.png}" alt="" style="height: 25px; margin-bottom: 3px;"></button>
                   </div>                  
-                </div>
+                </form>
               </div>
             </div>
-          </form>
+          </div>
 
           <!-- 댓글 내용 출력 -->
           <div style="min-height: 400px;">
             <table class="table-bordered">
               <tr style="width: 100%;">
-                <th scope="col" style="width: 6%;">선택<img src="" alt=""></th>
+                <th scope="col" style="width: 6%;">선택</th>
                 <th scope="col" style="width: 6%;">번호</th>
                 <th scope="col" style="width: 20%;">게시글 제목</th>
                 <th scope="col" style="width: 16%;">아이디</th>
                 <th scope="col" style="width: 40%;">내용</th>
                 <th scope="col" style="width: 12%;">작성일자</th>
               </tr>
-              <tr>
+              <tr th:each="review : ${reviewList}">
                 <td>
-                  <label for="chk1" style="width: 25px;">
-                    <input type="checkbox" id="chk1" name='number' value='' onclick='checkSelectAll()'>
-                  </label>
+                    <input type="checkbox" name='number' th:value='${review.reviewNo}' 
+                    th:datecourse-no="${review.datecourseNo}"onclick='checkSelectAll()'>
                 </td>
-                <td>1</td>
-                <td>음식점01</td>
-                <td>test_user01</td>
+                <td th:text="${review.reviewNo}"></td>
+                <td th:text="${review.datecourseNm}"></td>
+                <td th:text="${review.reviewerId}"></td>
                 <!-- 모달 출력하는 링크 -->
-                <td><a href="" class="linkMain" data-bs-toggle="modal" data-bs-target="#exampleModal">너무 맛있어요 뭐시기저시기...</a></td>
-                <td>xxxx.xx.xx</td>
+                <td><a href="#" class="linkMain" data-bs-toggle="modal" data-bs-target="#exampleModal" 
+                		th:text="${review.reviewComment}" th:review-no="${review.reviewNo}" th:datecourse-no="${review.datecourseNo}"></a></td>
+                <td th:text="${review.reviewModfDate eq null ? '' : #strings.substring(review.reviewModfDate, 0, 10)}"></td>
               </tr>
               
+              
+              
+             
+                
             </table>
             <div style="width: 80%; margin: auto;">
-              <span style="font-size: small; float: right;">총 댓글 갯수 : <span style="font-weight: bold; color: red;">xx</span>개</span>
+              <span style="font-size: small; float: right;">총 댓글 갯수 : 
+              	<span style="font-weight: bold; color: red;" th:text="${reviewList.getTotalElements}"></span>개
+              </span>
             </div> 
           </div>
           <!-- 페이징 -->
           <br>
           <nav aria-label="Page navigation example" style="margin: auto; width: 80%;" >
-            <ul class="pagination justify-content-center" >
-              <li class="page-item">
-                <a class="page-link" href="#" aria-label="Previous">
+            <ul class="pagination justify-content-center"
+            	th:if="${reviewList.totalElements > 0}"
+				th:with="pageNumber = ${reviewList.pageable.pageNumber},
+						 pageSize = ${reviewList.pageable.pageSize},
+						 totalPages = ${reviewList.totalPages},
+						 startPage = ${T(java.lang.Math).floor(pageNumber / pageSize) * pageSize + 1},
+						 tempEndPage = ${startPage + pageSize - 1},
+						 endPage = ${tempEndPage > totalPages ? totalPages : tempEndPage}">
+              <li class="page-item" th:if="${pageNumber > 0}">
+                <a class="page-link" th:href="@{/review/adminpageComment(
+											page=${pageNumber - 1},
+											searchConditionCmt=${searchConditionCmt},
+											searchKeywordCmt=${searchKeywordCmt})}" 
+									 aria-label="Previous">
                   <span aria-hidden="true">&lt;</span>
                 </a>
               </li>
-              <li class="page-item"><a class="page-link" href="#">1</a></li>
-              <li class="page-item"><a class="page-link" href="#">2</a></li>
-              <li class="page-item"><a class="page-link" href="#">3</a></li>
-              <li class="page-item"><a class="page-link" href="#">4</a></li>
-              <li class="page-item"><a class="page-link" href="#">5</a></li>
-              <li class="page-item">
-                <a class="page-link" href="#" aria-label="Next">
+              <li class="page-item" th:each="page : ${#numbers.sequence(startPage, endPage)}">
+              	<a class="page-link" th:href="@{/review/adminpageComment(
+											page=${page - 1},
+											searchConditionCmt=${searchConditionCmt},
+											searchKeywordCmt=${searchKeywordCmt})}" 
+									 th:text="${page}"></a>
+              </li>
+              <li class="page-item" th:if="${pageNumber < totalPages - 1}">
+                <a class="page-link" th:href="@{/review/adminpageComment(
+											page=${pageNumber + 1},
+											searchConditionCmt=${searchConditionCmt},
+											searchKeywordCmt=${searchKeywordCmt})}"
+									 aria-label="Next">
                   <span aria-hidden="true">&gt;</span>
                 </a>
               </li>
@@ -200,7 +288,9 @@
         </div>
     </div>
   </div>
-  
+
+
+
   <!-- 모달 -->
   <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
@@ -209,18 +299,17 @@
         <!-- 아이디 출력 -->
         <div class="modal-header">
           <h1 class="modal-title fs-5" id="exampleModalLabel">
-            <img src="images/user.png" alt="" style="height: 30px;">&ensp;test_user01님의 댓글</h1>
+            <img th:src="@{/images/user.png}" alt="" style="height: 30px;">&ensp;
+            <span></span> </h1>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           <br>
         </div>
 
         <!-- 댓글 내용 출력 -->
         <div class="modal-body" style="text-align: center; width: 100%;">
-          <p style="float: right; margin: 0px 10px 0px 0px;">작성일자 : xxxx.xx.xx</p>
-          <textarea class="overflow-auto" readonly style="width: 750px; height: 300px; resize: none;">
-            모든 국민은 주거의 자유를 침해받지 아니한다. 
-            주거에 대한 압수나 수색을 할 때에는 검사의 신청에 의하여 법관이 발부한 영장을 제시하여야 한다. 
-            대통령은 전시·사변 또는 이에 준하는 국가비상사태에 있어서 병력으로써 군사상의 필요에 응하거나 공공의 안녕질서를 유지할 필요가 있을 때에는 법률이 정하는 바에 의하여 계엄을 선포할 수 있다.
+          <p style="float: right; margin: 0px 10px 0px 0px;"></p>
+          <textarea class="overflow-auto" readonly 
+          style="width: 750px; height: 300px; resize: none;" >
           </textarea>
         </div>
 
@@ -231,7 +320,6 @@
       </div>
     </div>
   </div>
-		</div>
-    		
+</div>
 	</div>
 </body>
