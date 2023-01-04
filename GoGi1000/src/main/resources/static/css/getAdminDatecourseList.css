@@ -1,0 +1,174 @@
+#dateCourseList-container { width:1200px; margin:0 auto;}
+
+    /* right */
+    #side-right { 
+      width:75%;  
+      margin-left: 25%;
+    }
+
+    #side-right-h2 {
+      width:100%; 
+      display:inline-block;
+      
+    }
+
+    #dateCourseList {
+      display:inline-block;
+      width:100%;
+    }
+
+    
+    /* 전체 select */
+    #select {
+      width:100%; display:flex;
+    }
+
+    /* select1 */
+    #select-section1 {
+      width:30%; margin:7px 0 10px; display:flex; justify-content: left;
+    }
+
+    .input-button { 
+      width:80px; height:30px; background-color:rgb(238, 45, 122); border-radius: 5px;
+      color:white; font-weight:bold; border:1px solid rgb(238, 45, 122); ;
+      cursor: pointer; text-align:center;
+    }
+    
+    #select-section1 button { margin-left: 1%;}
+
+    
+
+    #select-section2 {
+       width:70%; margin:10px 0 7px;  display:flex; justify-content: right;
+    }
+    .select { margin-left:1%; border-radius: 5px; }
+
+    #select1 { width:35%; flex:1;}
+    #select2 { width:40%; flex:1;}
+    #select1, #select2 { height:23px; display:contents;}
+    
+
+    /* input-div: insert-search, input-img를 감쌈 */
+    #input { width:30%;}
+    #input-div { 
+      width:100%; height:30px; align-items: center; display:flex; 
+      border:1px solid black; border-radius: 5px;
+    }
+    #input-form-search { 
+      width:100%; display:flex; justify-content: center; align-items: center;}
+
+    #input-search { 
+      width:80%; font-size:0.8rem; border: none; background:transparent; 
+       outline:none; 
+    }
+    #input-img { width:80%; display:flex; justify-content: center; align-items: center;}
+    #input-img-a { width:15%;  display:flex; justify-content:right; align-items: center; }
+
+
+    /* table */
+    .table-bordered {
+      width: 100%;  text-align:center;
+      border-bottom: 1px solid black;
+      border-collapse: collapse;
+    }   
+
+    th {
+      background-color: rgb(238, 45, 122); border:1px solid rgb(238, 45, 122); 
+      color:white; font-size:1rem; height:50px;
+    }
+
+    td { 
+      height: 40px; font-size: 0.9rem; border: none;
+     }
+
+    tr {
+      border: none;
+    }
+    
+    tr:first-child { border-spacing: 0;}
+
+    tr:hover {
+      font-weight: bold;
+    }
+
+    #table-title a {
+       color:black; text-decoration: none;
+    }
+
+    #table-title:hover {
+       text-decoration: underline;
+    }
+
+    .table-bordered tbody .tr:first-of-type {
+       border-radius: 15px;
+    }
+
+    #table-total-count { 
+      width:96.5%; text-align:right; 
+    }
+
+    #table-total-count span {
+      color:red; font-weight:bold; 
+      font-size:1.1rem;
+    }
+
+    #table-button {
+      width:100%; justify-content: center;
+      display:flex; align-items: flex-end; 
+    }
+    
+    #button-wrap {
+      width:100%; display:flex; justify-content: center;
+    }
+
+    .table-input-button {
+      margin:10px; background-color: white;
+      border:1px solid lightgray; color:black; font-weight:bold;
+      display:flex; justify-content:space-around; border-radius: 5px;
+    }
+
+    .table-td-update {
+      background-color: rgb(238, 45, 122); 
+      border:1px solid rgb(238, 45, 122);
+      border-radius: 5px;
+      color: white;
+      
+    }
+
+    .table-td-update:hover {
+      cursor: pointer;
+    }
+
+    /* nav-pagination */
+    #nav-pagination { 
+      width:100%; text-align:center; 
+      display: flex; justify-content: center;
+    }
+
+    .pagination{
+      width: 100%; display:flex; justify-content: center;
+    }
+
+    .pagination li {
+      margin:10px;
+      list-style: none;
+    }
+
+    .page-link {
+      width:35px; height: 38px;
+      border:1px solid lightgray; color:black;
+    }
+
+    .pagination li a { 
+      text-align:center; display: flex;
+      align-items: center; border-radius: 5px;
+      justify-content: center;
+      text-decoration: none;;
+    }
+
+    .pagination li a:hover {
+      color: rgb(238, 45, 122); background-color: white;
+      border:1px solid lightgray;
+    }
+
+    tr:hover { background-color: #F9FAFB; }

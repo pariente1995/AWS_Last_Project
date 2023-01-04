@@ -25,12 +25,46 @@
 	     	$(".btnLike").each(function() {
 	        	$(this).on('click', function() {
 	          		if($(this).children('img').attr('src') === "/images/yellowStar.png") {
-	            	alert("'좋아요' 취소하였습니다.");
-	            	$(this).find("img").attr("src", "/images/star.png");      
+	            		$(this).find("img").attr("src", "/images/star.png");  
+	            		 
+	            		const likeDel = {
+						  datecourseNo: $(this).attr('datecourse-no'),
+						  userId : $(this).attr('user-id')
+					  	}
+					  	console.log(likeDel);
+	            		
+	            		$.ajax({
+							url: '/like/deleteLike',
+							type: 'delete',
+							data: {likeDel : JSON.stringify(likeDel)},
+							success: function(obj) {
+								alert("삭제되었습니다.");
+							},
+							error: function(e) {
+								console.log(e);
+							}
+						});    
 	          		}
 		          	else {
 		            	alert("'좋아요' 하였습니다.");
 		            	$(this).find("img").attr("src", "/images/yellowStar.png");
+		            	
+		            	const likeIns = {
+						  datecourseNo: $(this).attr('datecourse-no'),
+						  userId : $(this).attr('user-id')
+					  	}
+					  	
+					  	$.ajax({
+							url: '/like/InsertLike',
+							type: 'post',
+							data: {likeIns : JSON.stringify(likeIns)},
+							success: function(obj) {
+								alert("'좋아요' 하였습니다.");
+							},
+							error: function(e) {
+								console.log(e);
+							}
+						});
 		          	}
 	        	});
 	      	});
@@ -48,30 +82,44 @@
           <!-- 메인 제목 -->
           <div id="main-title">
             <h1 style="margin: 0; float: left;">좋아요 리스트</h1>
-            <img id="main-title-img" th:src="@{/images/heart.png}" alt="">
           </div>
           <hr style="margin: auto; width: 80%;">
           <!-- 메인 내용 -->
             <!-- 좋아요 리스트 출력 --> 
             <div style="text-align: center; min-height: 480px;">
               <table>
-                <tr>
+                <tr th:each="like : ${likeList}">
                   <!-- 해당 게시글 이미지 출력 -->
-                  <td><img th:src="@{/images/food1.jpeg}" alt="" class="mainImg"></td>
-                  <td>
+                  <td style="width:15%;"><img th:src="@{/images/food1.jpeg}" alt="" class="mainImg"></td>
+                  <td style="width:65%;">
                     <!-- 제목으로 해당 게시글 링크 -->
-                    <div class="row row-cols-auto">
-                      <div class="col"><a href="#" class="linkMain">음식점01</a></div>
-                    </div>
-                    <br>
-                    <div class="row row-cols-auto">
-                      <div class="col">조회수 : xxxx</div>
-                      <div class="col">찜 횟수 : xxx</div>
-                    </div>
+                    <div class="row">
+        				<div class="col-sm-5">
+          					<div class="row row-cols-auto">
+            					<div class="col">
+              						<a href="#" class="linkMain" th:text="${like.datecourseNm}" style="font-size: 1.3rem;"></a>
+            					</div>
+          					</div>
+          					<br />
+          					<div class="row row-cols-auto">
+            					<div class="col" th:text="|조회 수 : ${like.datecourseCnt}|" style="font-size: 0.8rem;"></div>
+            					<div class="col" th:text="|좋아요 : ${like.likeCnt}|" style="font-size: 0.8rem;"></div>
+          					</div>
+        				</div>
+        				<div class="col-sm-7" style="display: flex;">
+          					<div class="row" style="align-items: center;">
+            					<div class="col">
+              						<span style="float: left" th:text="${like.datecourseDesc}"></span>
+            					</div>
+          					</div>
+        				</div>
+      				</div>
+                    
                   </td>                  
-                  <!-- 버튼으로 취소 구현 -->
-                  <td>
-                    <button type="button" class="btnLike" value="" name="">
+                  <!-- 버튼으로 취소/추가 구현 -->
+                  <td style="width:20%;">
+                    <button type="button" class="btnLike" 
+                    		th:datecourse-no="${like.datecourseNo}" th:user-id="${like.userId}">
                       <img th:src="@{/images/yellowStar.png}" alt="" class="likeImg">
                     </button>
                   </td>                
@@ -80,26 +128,39 @@
                 
               </table>
               <div style="width: 80%; margin: auto;">
-            	<span style="font-size: small; float: right; margin-top: 10px">총 좋아요 갯수 : <span style="font-weight: bold; color: red;">xx</span>개</span>
+            	<span style="font-size: small; float: right; margin-top: 10px">총 좋아요 갯수 : 
+            		<span style="font-weight: bold; color: red;" th:text="${likeList.getTotalElements}"></span>개
+            	</span>
           	  </div> 
             </div>
           
 
           <br>
           <nav aria-label="Page navigation example" style="margin: auto; width: 80%;" >
-            <ul class="pagination justify-content-center" >
-              <li class="page-item">
-                <a class="page-link" href="#" aria-label="Previous">
+            <ul class="pagination justify-content-center" 
+            	th:if="${likeList.totalElements > 0}"
+				th:with="pageNumber = ${likeList.pageable.pageNumber},
+						 pageSize = ${likeList.pageable.pageSize},
+						 totalPages = ${likeList.totalPages},
+						 startPage = ${T(java.lang.Math).floor(pageNumber / pageSize) * pageSize + 1},
+						 tempEndPage = ${startPage + pageSize - 1},
+						 endPage = ${tempEndPage > totalPages ? totalPages : tempEndPage}">
+              <li class="page-item" th:if="${pageNumber > 0}">
+                <a class="page-link" th:href="@{/like/mypageLikeList(
+											page=${pageNumber - 1})}" 
+									 aria-label="Previous">
                   <span aria-hidden="true">&lt;</span>
                 </a>
               </li>
-              <li class="page-item"><a class="page-link" href="#">1</a></li>
-              <li class="page-item"><a class="page-link" href="#">2</a></li>
-              <li class="page-item"><a class="page-link" href="#">3</a></li>
-              <li class="page-item"><a class="page-link" href="#">4</a></li>
-              <li class="page-item"><a class="page-link" href="#">5</a></li>
-              <li class="page-item">
-                <a class="page-link" href="#" aria-label="Next">
+              <li class="page-item" th:each="page : ${#numbers.sequence(startPage, endPage)}">
+              	<a class="page-link" th:href="@{/like/mypageLikeList(
+											page=${page - 1})}" 
+									 th:text="${page}"></a>
+              </li>
+              <li class="page-item" th:if="${pageNumber < totalPages - 1}">
+                <a class="page-link" th:href="@{/like/mypageLikeList(
+											page=${pageNumber + 1})}"
+									 aria-label="Next">
                   <span aria-hidden="true">&gt;</span>
                 </a>
               </li>
