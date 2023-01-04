@@ -29,26 +29,53 @@
 		        $("#selectAll").val("선택해제");
 			  });
 
+			  // 삭제버튼 클릭 시, 데이트 코스 사용여부를 ('Y' -> 'N')으로 업데이트
 		      $("#delSelect").click(function() {
-		        if ($("input:checkbox[name='chk']:checked").length == 0) {
-		          alert("삭제할 항목을 선택해 주세요.");
-		          return;
-		        }
-		        
-		        let answer = confirm("정말 삭제하시겠습니까?")
-		
-		        $("input:checkbox[name='chk']:checked").each(function(k, kVal) {
-		          console.log("kVal::", kVal.parentElement.parentElement)
-		          let a = kVal.parentElement.parentElement;
-		
-		          if (answer) {
-		            $(a).remove();
-		          } else {
-		            return;
-		          }
-		
-		          $("#board-count").text($("#tbody tr").length);
-		        });
+				  // 삭제할 데이트 코스를 string형태로 담아서 백엔드로 전송할 변수
+				  let updateRows = [];
+
+				  if ($("input:checkbox[name='chk']:checked").length == 0) {
+				    alert("삭제할 항목을 선택해 주세요.");
+				    return;
+				  }
+
+				  let answer = confirm("정말 삭제하시겠습니까?");
+
+				  if(answer) {
+					  // updateRows에 삭제할 datecourseNo 담기
+					  $("input:checkbox[name='chk']:checked").each(function() {
+						  updateRows.push($(this).val());
+					  });
+
+					  $.ajax({
+						  url: '/datecourse/updateDatecourseList',
+						  type: 'post',
+						  data: {
+							  datecourseArea: $("#datecourseArea option:selected").val(),
+							  datecourseCategory: $("#datecourseCategory option:selected").val(),
+							  searchKeyword: $("#searchKeyword").val(),
+							  updateRows: JSON.stringify(updateRows)
+						  },
+						  success: function(obj) {
+							  console.log(obj);
+
+							  alert("삭제되었습니다.");
+
+							  // 데이트 코스 사용여부 다시 셋팅
+							  for(let i=0; i<obj.pageItems.content.length; i++) {
+								  $("#datecourseUseYn" + obj.pageItems.content[i].datecourseNo).text(obj.pageItems.content[i].datecourseUseYn);
+							  }
+
+							  // 선택 모두 해제
+							  $("input[name=chk]").prop("checked", false);
+						  },
+						  error: function(e) {
+							  console.log(e);
+						  }
+					  });
+				  } else {
+					  return;
+				  }
 		      });
 		
 		      $(".table-td-update").click(function() {
@@ -91,7 +118,7 @@
 					  <input type="hidden" name="page" value="">
 					  <div id="select-section2">
 						<div id="datecourseArea-wrapper">
-						  <select name="datecourseArea" class="select">
+						  <select name="datecourseArea" id="datecourseArea" class="select">
 							<option value="ALL" th:selected="${datecourseArea == 'ALL'}">지역</option>
 							<option value="A0001" th:selected="${datecourseArea == 'A0001'}">서울</option>
 							<option value="A0002" th:selected="${datecourseArea == 'A0002'}">경기</option>
@@ -113,7 +140,7 @@
 						  </select>
 						</div>
 						<div id="datecourseCategory-wrapper">
-						  <select name="datecourseCategory" class="select">
+						  <select name="datecourseCategory" id="datecourseCategory" class="select">
 							<option value="ALL" th:selected="${datecourseCategory == 'ALL'}">데이트 코스 분류</option>
 							<option value="B0001" th:selected="${datecourseCategory == 'B0001'}">놀거리</option>
 							<option value="B0002" th:selected="${datecourseCategory == 'B0002'}">맛집</option>
@@ -123,7 +150,7 @@
 						<div id="input" class="select">
 						  <div id="input-div">
 							<div id="input-searchKeyword">
-							  <input type="search" name="searchKeyword" id="searchKeyword" th:value="${searchKeyword}">
+							  <input type="search" name="searchKeyword" id="searchKeyword" th:value="${datecourseSearchKeyword}">
 							  <a id="input-img-a" href="#"><img id="input-img" th:src="@{/images/search.png}"\></a>
 							</div>
 						  </div>
@@ -146,14 +173,14 @@
 				  <tbody id="tbody">
 					  <tr th:each="datecourse : ${getDatecourseList}" class="tr">
 						<td>
-							<input type="checkbox" name='chk' th:id="'chk' + ${datecourseNo}"
+							<input type="checkbox" name="chk" th:id="'chk' + ${datecourse.datecourseNo}"
 								   th:value="${datecourse.datecourseNo}">
 						</td>
 						<td th:text="${datecourseStat.count}"></td>
 						<td th:text="${datecourse.datecourseNo}"></td>
 						<td th:text="${datecourse.datecourseNm}" class="table-title"><a href="#"></a></td>
 						<td th:text="${#strings.substring(datecourse.datecourseModfDate, 0, 10)}"></td>
-						<td th:text="${datecourse.datecourseUseYn}"class="useYN"></td>
+						<td th:text="${datecourse.datecourseUseYn}" th:id="'datecourseUseYn' + ${datecourse.datecourseNo}" class="useYN"></td>
 						<td><button type="button" class="table-td-update">수정</button></td>
 					  </tr>
 				  </tbody>
@@ -175,7 +202,7 @@
 						 				page=${pageNumber - 1},
 									    datecourseArea=${datecourseArea},
 									    datecourseCategory=${datecourseCategory},
-									    searchKeyword=${searchKeyword})}"
+									    searchKeyword=${datecourseSearchKeyword})}"
 						 aria-label="Previous">
 		                <span aria-hidden="true">&lt</span>
 		              </a>
@@ -187,7 +214,7 @@
 						 				page=${page - 1},
 										datecourseArea=${datecourseArea},
 										datecourseCategory=${datecourseCategory},
-										searchKeyword=${searchKeyword})}" th:text="${page}">
+										searchKeyword=${datecourseSearchKeyword})}" th:text="${page}">
 					  </a>
 					</li>
 		            <li class="page-item" th:if="${pageNumber < totalPages - 1}">
@@ -196,7 +223,7 @@
 						 				page=${pageNumber + 1},
 						 				datecourseArea=${datecourseArea},
 						 				datecourseCategory=${datecourseCategory},
-										searchKeyword=${searchKeyword})}"
+										searchKeyword=${datecourseSearchKeyword})}"
 						 aria-label="Next">
 		                <span aria-hidden="true">&gt</span>
 		              </a>

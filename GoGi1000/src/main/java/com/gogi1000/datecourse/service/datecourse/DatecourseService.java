@@ -14,6 +14,9 @@ public interface DatecourseService {
     void insertDatecourse(Datecourse datecourse, List<DatecourseHours> iDatecourseHoursList,
                           List<DatecourseMenu> iDatecourseMenuList, List<DatecourseImage> uploadImageList);
 
-    // 데이트 코스 리스트 조회(관리자) - 페이지 번호 추가
+    // 데이트 코스 리스트 화면(관리자) 조회 - 페이지 번호 추가
     Page<Datecourse> getPageDatecourseList(Datecourse datecourse, Pageable pageable);
+
+    // 데이트 코스 리스트 화면(관리자)에서 삭제 시, 데이트 코스 사용여부를 ('Y' -> 'N')으로 업데이트
+    void updateDatecourseList(List<Integer> updateDatecourseList);
 }
