@@ -123,13 +123,20 @@ public class DatecourseServiceImpl implements DatecourseService {
                 return datecourseRepository.findByDatecourseNmContaining(datecourse.getSearchKeyword(), pageable);
             } else {
                 // 지역="ALL" and 데이트 코스 분류="ALL" and 검색어(데이트 코스명)=null or ""
-                System.out.println("test");
                 return datecourseRepository.findAll(pageable);
             }
         } else {
             // 지역, 데이트 코스 분류, 검색어(데이트 코스명)가 모두 입력되지 않은 경우
             // 지역=null or "" and 데이트 코스 분류=null or "" and 검색어(데이트 코스명)=null or ""
             return datecourseRepository.findAll(pageable);
+        }
+    }
+
+    // 데이트 코스 리스트 화면(관리자)에서 삭제 시, 데이트 코스 사용여부를 ('Y' -> 'N')으로 업데이트
+    @Override
+    public void updateDatecourseList(List<Integer> updateDatecourseList) {
+        for(int i=0; i<updateDatecourseList.size(); i++) {
+            datecourseRepository.updateDatecourseList(updateDatecourseList.get(i));
         }
     }
 }

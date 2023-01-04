@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gogi1000.datecourse.common.FileUtils;
 import com.gogi1000.datecourse.dto.DatecourseDTO;
 import com.gogi1000.datecourse.dto.DatecourseMenuDTO;
+import com.gogi1000.datecourse.dto.ResponseDTO;
 import com.gogi1000.datecourse.entity.Datecourse;
 import com.gogi1000.datecourse.entity.DatecourseHours;
 import com.gogi1000.datecourse.entity.DatecourseImage;
@@ -14,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
@@ -152,7 +154,7 @@ public class DatecourseController {
         return mv;
     }
 
-    // 데이트 코스 리스트 화면(관리자)으로 이동
+    // 데이트 코스 리스트 화면(관리자) 조회
     @GetMapping("/getDatecourseList")
     public ModelAndView getPageDatecourseList(DatecourseDTO datecourseDTO, @PageableDefault(page=0, size=15) Pageable pageable) {
         Datecourse datecourse = Datecourse.builder()
@@ -185,9 +187,47 @@ public class DatecourseController {
         }
 
         if(datecourseDTO.getSearchKeyword() != null && !datecourseDTO.getSearchKeyword().equals("")) {
-            mv.addObject("searchKeyword", datecourseDTO.getSearchKeyword());
+            mv.addObject("datecourseSearchKeyword", datecourseDTO.getSearchKeyword());
         }
 
         return mv;
+    }
+
+    // 데이트 코스 리스트 화면(관리자)에서 삭제 시, 데이트 코스 사용여부를 ('Y' -> 'N')으로 업데이트
+    @PostMapping("/updateDatecourseList")
+    public ResponseEntity<?> updateDatecourseList(
+            DatecourseDTO datecourseDTO,
+            @RequestParam("updateRows") String updateRows,
+            @PageableDefault(page=0, size=15) Pageable pageable) throws IOException {
+        ResponseDTO<DatecourseDTO> response = new ResponseDTO<>();
+
+        List<Integer> updateRowsList = new ObjectMapper().readValue(updateRows, new TypeReference<List<Integer>>() {});
+
+        try {
+            // 업데이트
+            datecourseService.updateDatecourseList(updateRowsList);
+
+            Datecourse datecourse = Datecourse.builder()
+                    .datecourseArea(datecourseDTO.getDatecourseArea())
+                    .datecourseCategory(datecourseDTO.getDatecourseCategory())
+                    .searchKeyword(datecourseDTO.getSearchKeyword())
+                    .build();
+
+            // 변경된 내용으로 조회
+            Page<Datecourse> pageDatecourseList = datecourseService.getPageDatecourseList(datecourse, pageable);
+
+            Page<DatecourseDTO> pageDatecourseDTOList = pageDatecourseList.map(pageDatecourse ->
+                    DatecourseDTO.builder()
+                            .datecourseNo(pageDatecourse.getDatecourseNo())
+                            .datecourseUseYn(pageDatecourse.getDatecourseUseYn())
+                            .build()
+            );
+
+            response.setPageItems(pageDatecourseDTOList);
+            return ResponseEntity.ok().body(response);
+        } catch(Exception e) {
+            response.setErrorMessage(e.getMessage());
+            return ResponseEntity.badRequest().body(response);
+        }
     }
 }
