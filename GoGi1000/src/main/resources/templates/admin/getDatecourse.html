@@ -8,7 +8,7 @@
 <!-- 개별적으로 사용할 css, js 링크 걸기 위해서 남겨둠 -->
 <head>
   <th:block layout:fragment="css">
-    <link rel="stylesheet" th:href="@{/css/updateDatecourse.css}"/>
+    <link rel="stylesheet" th:href="@{/css/getDatecourse.css}"/>
   </th:block>
   <th:block layout:fragment="script">
     <script th:inline="javascript">
@@ -27,19 +27,58 @@
       // 파일 첨부 최대 개수
       const totFileCount = 10;
 
+      // 영업시간 영역 부분 '+'이미지 클릭 시, 추가된 입력칸에 부여할 index
+      let addHoursIndex = 0;
+
       // 입력된 영업시간 정보들을 담아줄 배열
       let iDatecourseHoursArr = [];
+
+      // 기존 영업시간 정보 배열
+      let originDatecourseHoursArr = [];
+
+      // 메뉴 영역 부분 '+'이미지 클릭 시, 추가된 입력칸에 부여할 index
+      let addMenuIndex = 0;
 
       // 입력된 메뉴 정보들을 담아줄 배열
       let iDatecourseMenusArr = [];
 
-      // 영업시간 영역 부분 '+'이미지 클릭 시, 입력칸 추가 개수
-      let hoursPlusCnt = 1;
-
-      // 메뉴 영역 부분 '+'이미지 클릭 시, 입력칸 추가 개수
-      let menuPlusCnt = 1;
+      // 기존 메뉴 정보 배열
+      let originDatecourseMenuArr = [];
 
       $(function() {
+        // 영업시간 영역 부분 '+'이미지 클릭 시, 입력칸 추가 개수 => 즉, 영업시간 정보 개수
+        let hoursCnt = /*[[${getDatecourseHoursList.size}]]*/;
+        console.log(hoursCnt);
+
+        // 메뉴 영역 부분 '+'이미지 클릭 시, 입력칸 추가 개수 => 즉, 메뉴 정보 개수
+        let menuCnt = /*[[${getDatecourseMenuList.size}]]*/;
+        console.log(menuCnt);
+
+        // 기존 영업시간 정보 담기
+        for(let i=0; i<hoursCnt; i++) {
+          const originHoursObj = {
+            datecourseNo: $("#datecourseNo" + i).val(),
+            datecourseHoursNo: $("#datecourseHoursNo" + i).val(),
+            datecourseHoursInfo: $("#datecourseHoursInfo" + i).val(),
+            datecourseHoursStatus: "N"
+          };
+
+          originDatecourseHoursArr.push(originHoursObj);
+        }
+
+        // 기존 메뉴 정보 담기
+        for(let i=0; i<menuCnt; i++) {
+          const originMenuObj = {
+            datecourseNo: $("#menuDatecourseNo" + i).val(),
+            datecourseMenuNo: $("#datecourseMenuNo" + i).val(),
+            datecourseMenuNm: $("#datecourseMenuNm" + i).val(),
+            datecourseMenuPrice: $("#datecourseMenuPrice" + i).val()
+          };
+
+          originDatecourseMenuArr.push(originMenuObj);
+        }
+
+
         /************************************************
          이미지 업로드 관련
          *************************************************/
@@ -171,7 +210,7 @@
           /***************************************************************
            이미지 업로드 관련
            ****************************************************************/
-                  // 마지막으로 realUploadFiles에 uploadFiles(배열)에 있는 파일들을 담아준다.
+          // 마지막으로 realUploadFiles에 uploadFiles(배열)에 있는 파일들을 담아준다.
           let dt = new DataTransfer();
 
           for (let f in uploadFiles) {
@@ -182,81 +221,26 @@
           $("#realUploadFiles")[0].files = dt.files;
         });
 
-        // 화면 오픈 시, 데이트 코스 분류가 '놀거리'이기에 음식종류, 반려동물 동반 가능여부 항목은 hide 처리
-        // 음식종류, 반려동물 동반 가능여부 항목 disabled 처리
-        $("#datecourseFoodType-wrapper").css("display", "none"); // 음식종류 항목
-        $("#datecourseFoodType").attr("disabled", true);
-
-        $("#datecoursePetYn-wrapper").css("display", "none"); // 반려동물 동반 가능여부 항목
-        $("#datecoursePetYn").attr("disabled", true);
-        $("#datecoursePetYn-hidden").attr("disabled", true);
-
-        // 데이트 코스 분류가 '놀거리'일 때만 실내/외 여부 항목 표시
-        // 실내/외 input disabled 관련 설정
-        $("#datecourseCategory").on("change", function () {
-          if ($("#datecourseCategory option:selected").text() == "놀거리") {
-            $("#datecourseInoutYn-wrapper").css("display", "flex");
-            $("#datecourseInoutYn-in").attr("disabled", false);
-            $("#datecourseInoutYn-out").attr("disabled", false);
-          } else {
-            $("#datecourseInoutYn-wrapper").css("display", "none");
-            $("#datecourseInoutYn-in").attr("disabled", true);
-            $("#datecourseInoutYn-out").attr("disabled", true);
-          }
-        });
-
-        // 데이트 코스 분류가 '맛집'일 때만 음식종류 항목 표시
-        // 음식종류 select disabled 관련 설정
-        $("#datecourseCategory").on("change", function () {
-          if ($("#datecourseCategory option:selected").text() == "맛집") {
-            $("#datecourseFoodType-wrapper").css("display", "flex");
-            $("#datecourseFoodType").attr("disabled", false);
-          } else {
-            $("#datecourseFoodType-wrapper").css("display", "none");
-            $("#datecourseFoodType").attr("disabled", true);
-          }
-        });
-
-        // 데이트 코스 분류가 '카페'일 때만 반려동물 동반 가능여부 항목 표시
-        // 반려동물 동반 가능여부 select disabled 관련 설정
-        $("#datecourseCategory").on("change", function () {
-          if ($("#datecourseCategory option:selected").text() == "카페") {
-            $("#datecoursePetYn-wrapper").css("display", "flex");
-            $("#datecoursePetYn").attr("disabled", false);
-            $("#datecoursePetYn-hidden").attr("disabled", false);
-          } else {
-            $("#datecoursePetYn-wrapper").css("display", "none");
-            $("#datecoursePetYn").attr("disabled", true);
-            $("#datecoursePetYn-hidden").attr("disabled", true);
-          }
-        });
-
-        // 데이트 코스 분류가 '놀거리'일 때 메뉴타입 D0001로 설정
-        // 데이트 코스 분류가 '맛집', '카페'일 때 메뉴타입 D0002로 설정
-        $("#datecourseCategory").on("change", function () {
-          if ($("#datecourseCategory option:selected").text() == "놀거리") {
-            $("#datecourseMenuType").val("D0001");
-          } else {
-            $("#datecourseMenuType").val("D0002");
-          }
-        });
-
+        // 영업시간 영역 부분 '+'이미지 클릭 시, 입력칸 추가
         $("#datecourseHours-plusImg").on("click", function () {
           // 최대 3개까지만 입력가능하도록
-          if (hoursPlusCnt < 3) {
+          if (hoursCnt < 3) {
             // 새로 삽입할 input 태그
             let htmlStr = `
-                    <div class='addHoursTag'><br>
-                        <input type='text' name='datecourseHours'
-                               data-datecourseHours-index='${hoursPlusCnt}'
-                               class='common-margin datecourseHours' placeholder='영업시간을 입력하세요.'>
-                    </div>
+                    <input type="text" name="datecourseHours"
+                           style="display: block; margin-top: 15px;"
+                           data-addhoursindex="${addHoursIndex}"
+                           class="common-margin datecourseHours" placeholder="영업시간을 입력하세요."
+                           data-datecourseno="0"
+                           data-datecoursehoursno="0"
+                           data-datecoursehourstagstatus="A">
             `;
 
             // input 태그 추가
             $("#datecourseHours-field").append(htmlStr);
 
-            hoursPlusCnt++;
+            hoursCnt++;
+            addHoursIndex++;
           } else {
             alert("최대 3개까지만 입력이 가능합니다.");
             return;
@@ -265,43 +249,76 @@
 
         // 영업시간 영역 부분 '-'이미지 클릭 시, 입력칸 삭제
         $("#datecourseHours-minusImg").on("click", function () {
-          if (hoursPlusCnt > 1) {
-            // 마지막 영업시간 정보도 배열에서 삭제
-            // 영업시간 input의 data-datecourseHours-index 값을 배열의 index와 비교하여 마지막만 제외
-            iDatecourseHoursArr = iDatecourseHoursArr.filter((hour, index) =>
-                    index != $("#datecourseHours-field .addHoursTag:last").children(":last").attr("data-datecourseHours-index"));
+          if (hoursCnt > 1) {
+            // 마지막으로 추가된 영업시간 input의 data-addhoursindex 값을 배열의 index와 비교하여 마지막만 제외
+            if ($("#datecourseHours-field .datecourseHours:last").attr("data-datecoursehourstagstatus") == "A") {
+              iDatecourseHoursArr = iDatecourseHoursArr.filter((hour, index) =>
+                      index != $("#datecourseHours-field .datecourseHours:last").attr("data-addhoursindex"));
 
-            // 영업시간 입력칸 div 삭제
-            $("#datecourseHours-field .addHoursTag:last").remove();
+              // 마지막 영업시간 입력칸 삭제
+              $("#datecourseHours-field .datecourseHours:last").remove();
 
-            hoursPlusCnt--;
+              hoursCnt--;
+
+              if(addHoursIndex > 0) {
+                addHoursIndex--;
+              }
+            } else {
+              const datecourseNo = $(".datecourseHoursInfo-wrapper:last .datecourseHours").attr("data-datecourseno");
+              const datecourseHoursNo = $(".datecourseHoursInfo-wrapper:last .datecourseHours").attr("data-datecoursehoursno");
+
+              // 기존 영업시간 정보를 담고 있는 배열에서 변경이 일어난 영업시간 정보 수정
+              for(let i=0; i<originDatecourseHoursArr.length; i++) {
+                if(datecourseNo == originDatecourseHoursArr[i].datecourseNo &&
+                   datecourseHoursNo == originDatecourseHoursArr[i].datecourseHoursNo) {
+                  originDatecourseHoursArr[i].datecourseHoursStatus = "D";
+                }
+              }
+
+              // 마지막 영업시간 입력칸 삭제
+              $(".datecourseHoursInfo-wrapper:last .datecourseHours").remove();
+
+              if (hoursCnt > 1) {
+                hoursCnt--;
+              }
+
+              if(addHoursIndex > 0) {
+                addHoursIndex--;
+              }
+            }
           } else {
             return;
           }
         });
 
+
+        // 메뉴 영역 부분 '+'이미지 클릭 시, 입력칸 추가
         $("#datecourseMenu-plusImg").on("click", function () {
           // 숫자만 입력 가능하도록 메소드 구현
           const fnRegex = "fnDatecourseMenuPriceKeyup(this);";
 
           // 최대 10개까지만 입력가능하도록
-          if (menuPlusCnt < 10) {
+          if (menuCnt < 10) {
             // 새로 삽입할 input 태그
             let htmlStr = "";
 
             htmlStr = `
-                <div class='addMenuTag'><br>
-                    메뉴명<input type='text' name='datecourseMenuNm' class='datecourseMenuNm'
-                    data-datecourseMenu-index='${menuPlusCnt}' placeholder='메뉴명을 입력하세요.'>
-                     가격<input type='text' name='datecourseMenuPrice' class='datecourseMenuPrice'
-                    data-datecourseMenu-index='${menuPlusCnt}' placeholder='가격을 입력하세요.'
-                    onKeyup='${fnRegex}'> 원<br><div>
+                <div class="datecourseMenu"
+                     data-addmenuindex="${addMenuIndex}"
+                     data-datecoursemenutagstatus="A">
+                    메뉴명<input type="text" name="datecourseMenuNm" class="datecourseMenuNm"
+                    data-datecoursemenu-index="${addMenuIndex}" placeholder="메뉴명을 입력하세요.">
+                     가격<input type="text" name="datecourseMenuPrice" class="datecourseMenuPrice"
+                    data-datecoursemenu-index="${addMenuIndex}" placeholder="가격을 입력하세요."
+                    onKeyup="${fnRegex}"> 원
+                <div>
             `;
 
-            // input 태그 추가
+            // div 태그 추가
             $("#datecourseMenu-field").append(htmlStr);
 
-            menuPlusCnt++;
+            menuCnt++;
+            addMenuIndex++;
           } else {
             alert("최대 10개까지만 입력이 가능합니다.");
             return;
@@ -310,18 +327,43 @@
 
         // 메뉴 영역 부분 '-'이미지 클릭 시, 입력칸 삭제
         $("#datecourseMenu-minusImg").on("click", function () {
-          if (menuPlusCnt > 1) {
-            // 마지막 메뉴 정보도 배열에서도 삭제
-            // 메뉴명 input의 data-datecourseMenu-index 값을 배열의 index와 비교하여 마지막만 제외
-            iDatecourseMenusArr = iDatecourseMenusArr.filter((menu, index) =>
-                    index != $("#datecourseMenu-field .addMenuTag:last").children(":first").next().attr("data-datecourseMenu-index"));
+          if (menuCnt > 1) {
+            // 마지막으로 추가된 메뉴 div의 data-addmenuindex 값을 배열의 index와 비교하여 마지막만 제외
+            if ($("#datecourseMenu-field .datecourseMenu:last").attr("data-datecoursemenutagstatus") == "A") {
+              iDatecourseMenusArr = iDatecourseMenusArr.filter((menu, index) =>
+                      index != $("#datecourseMenu-field .datecourseMenu:last").attr("data-addmenuindex"));
 
-            $("#datecourseMenuInfo").val(JSON.stringify(iDatecourseMenusArr))
-            console.log($("#datecourseMenuInfo").val());
+              // 마지막 메뉴 div 삭제
+              $("#datecourseMenu-field .datecourseMenu:last").remove();
 
-            console.log($("#datecourseMenu-field .addMenuTag:last").remove());
+              menuCnt--;
 
-            menuPlusCnt--;
+              if(addMenuIndex > 0) {
+                addMenuIndex--;
+              }
+            } else {
+              const datecourseNo = $("#datecourseNo").val();
+              const datecourseMenuNo = $(".datecourseMenu:last").attr("data-datecoursemenuno");
+
+              // 기존 메뉴 정보를 담고 있는 배열에서 변경이 일어난 메뉴 정보 수정
+              for(let i=0; i<originDatecourseMenuArr.length; i++) {
+                if(datecourseNo == originDatecourseMenuArr[i].datecourseNo &&
+                   datecourseMenuNo == originDatecourseMenuArr[i].datecourseMenuNo) {
+                  originDatecourseMenuArr[i].datecourseMenuStatus = "D";
+                }
+              }
+
+              // 마지막 메뉴 입력칸 삭제
+              $(".datecourseHoursInfo-wrapper:last .datecourseHours").remove();
+
+              if (menuCnt > 1) {
+                menuCnt--;
+              }
+
+              if(addMenuIndex > 0) {
+                addMenuIndex--;
+              }
+            }
           } else {
             return;
           }
@@ -330,15 +372,34 @@
         // 영업시간 정보 입력될 때 배열에 담아주기
         // 동적으로 생성된 태그이기에 아래와 같이 작성해준다!
         $(document).on("change", ".datecourseHours", function () {
-          // 해당 영업시간 input의 index 가져와서 셋팅
-          const index = $(this).attr("data-datecourseHours-index");
+          const datecourseNo = $(this).data("datecourseno");
+          const datecourseHoursNo = $(this).data("datecoursehoursno");
+          const datecourseHoursTagStatus = $(this).data("datecoursehourstagstatus");
 
-          // iDatecourseHoursArr의 해당 index가 null이 아닌 경우 내용 수정
-          // null인 경우 배열에 내용 삽입
-          if (iDatecourseHoursArr[index] != null) {
-            iDatecourseHoursArr[index] = $(this).val();
-          } else {
-            iDatecourseHoursArr.push($(this).val());
+          // 기존 영업시간 정보를 담고 있는 배열에서 변경이 일어난 영업시간 정보 수정
+          for(let i=0; i<originDatecourseHoursArr.length; i++) {
+            if(datecourseNo == originDatecourseHoursArr[i].datecourseNo &&
+               datecourseHoursNo == originDatecourseHoursArr[i].datecourseHoursNo) {
+              originDatecourseHoursArr[i].datecourseHoursStatus = "U";
+              originDatecourseHoursArr[i].newDatecourseHoursInfo = $(this).val();
+            }
+          }
+
+          // 추가된 영업시간 input의 경우, iDatecourseHoursArr 배열에 담기
+          if(datecourseHoursTagStatus == "A") {
+            // 추가된 영업시간 input의 index 가져와서 셋팅
+            const index = $(this).data("addhoursindex");
+
+            // iDatecourseHoursArr의 해당 index가 null이 아닌 경우 내용 수정
+            // index가 0이거나 iDatecourseHoursArr 배열에서 index-1의 값이 null이 아니면 배열에 내용 삽입
+            if (iDatecourseHoursArr[index] != null) {
+              iDatecourseHoursArr[index] = $(this).val();
+            } else if(index == 0 || iDatecourseHoursArr[index-1] != null) {
+              iDatecourseHoursArr.push($(this).val());
+            } else {
+              alert("순서대로 입력해주시기 바랍니다.");
+              $(this).val("");
+            }
           }
         });
 
@@ -350,7 +411,7 @@
         // 메뉴명 입력 시
         $(document).on("change", ".datecourseMenuNm", function () {
           // 메뉴명의 index 가져와서 셋팅
-          const index = $(this).attr("data-datecourseMenu-index");
+          const index = $(this).attr("data-datecoursemenu-index");
 
           // iDatecourseMenusArr의 해당 index의 값이 null인 경우에만 객체 담기
           if (iDatecourseMenusArr[index] == null) {
@@ -372,7 +433,7 @@
         // 가격 입력 시
         $(document).on("change", ".datecourseMenuPrice", function () {
           // 가격의 index 가져와서 셋팅
-          const index = $(this).attr("data-datecourseMenu-index");
+          const index = $(this).attr("data-datecoursemenu-index");
 
           // iDatecourseMenusArr의 해당 index의 값이 null인 경우에만 객체 담기
           if (iDatecourseMenusArr[index] == null) {
@@ -601,86 +662,110 @@
           <div class="common-text">
             <label for="datecourseRgstDate">등록일자</label>
           </div>
-          <input type="text" name="datecourseRgstDate" id="datecourseRgstDate" class="common-margin" readonly>
+          <input type="text" name="datecourseRgstDate" id="datecourseRgstDate"
+                 class="common-margin" readonly
+                 th:value="${#strings.substring(getDatecourse.datecourseRgstDate, 0, 10)}">
         </div>
         <div id="datecourseNo-wrapper" class="common common-display">
           <div class="common-text">
             <label for="datecourseNo">데이트 코스 번호</label>
           </div>
-          <input type="text" name="datecourseNo" id="datecourseNo" class="common-margin" readonly>
+          <input type="text" name="datecourseNo" id="datecourseNo"
+                 class="common-margin" readonly
+                 th:value="${getDatecourse.datecourseNo}">
         </div>
         <div id="datecourseNm-wrapper" class="common common-display">
           <div class="common-text">
             <label for="datecourseNm">데이트 코스명</label>
           </div>
-          <input type="text" name="datecourseNm" id="datecourseNm" class="common-margin" placeholder="데이트 코스명을 입력하세요.">
+          <input type="text" name="datecourseNm" id="datecourseNm"
+                 class="common-margin" placeholder="데이트 코스명을 입력하세요."
+                 th:value="${getDatecourse.datecourseNm}">
         </div>
         <div id="datecourseArea-wrapper" class="common common-display">
           <div class="common-text">
             <label for="datecourseArea">지역</label>
           </div>
           <select name="datecourseArea" id="datecourseArea" class="common-margin">
-            <option value="A0001" selected>서울</option>
-            <option value="A0002">경기도</option>
-            <option value="A0003">인천</option>
-            <option value="A0004">강원도</option>
-            <option value="A0005">충청남도</option>
-            <option value="A0006">충청북도</option>
-            <option value="A0007">세종</option>
-            <option value="A0008">대전</option>
-            <option value="A0009">경상북도</option>
-            <option value="A0010">경상남도</option>
-            <option value="A0011">전라북도</option>
-            <option value="A0012">전라남도</option>
-            <option value="A0013">대구</option>
-            <option value="A0014">울산</option>
-            <option value="A0015">광주</option>
-            <option value="A0016">부산</option>
-            <option value="A0017">제주도</option>
+            <option value="A0001" th:selected="${getDatecourse.datecourseArea == 'A0001'}">서울</option>
+            <option value="A0002" th:selected="${getDatecourse.datecourseArea == 'A0002'}">경기도</option>
+            <option value="A0003" th:selected="${getDatecourse.datecourseArea == 'A0003'}">인천</option>
+            <option value="A0004" th:selected="${getDatecourse.datecourseArea == 'A0004'}">강원도</option>
+            <option value="A0005" th:selected="${getDatecourse.datecourseArea == 'A0005'}">충청남도</option>
+            <option value="A0006" th:selected="${getDatecourse.datecourseArea == 'A0006'}">충청북도</option>
+            <option value="A0007" th:selected="${getDatecourse.datecourseArea == 'A0007'}">세종</option>
+            <option value="A0008" th:selected="${getDatecourse.datecourseArea == 'A0008'}">대전</option>
+            <option value="A0009" th:selected="${getDatecourse.datecourseArea == 'A0009'}">경상북도</option>
+            <option value="A0010" th:selected="${getDatecourse.datecourseArea == 'A0010'}">경상남도</option>
+            <option value="A0011" th:selected="${getDatecourse.datecourseArea == 'A0011'}">전라북도</option>
+            <option value="A0012" th:selected="${getDatecourse.datecourseArea == 'A0012'}">전라남도</option>
+            <option value="A0013" th:selected="${getDatecourse.datecourseArea == 'A0013'}">대구</option>
+            <option value="A0014" th:selected="${getDatecourse.datecourseArea == 'A0014'}">울산</option>
+            <option value="A0015" th:selected="${getDatecourse.datecourseArea == 'A0015'}">광주</option>
+            <option value="A0016" th:selected="${getDatecourse.datecourseArea == 'A0016'}">부산</option>
+            <option value="A0017" th:selected="${getDatecourse.datecourseArea == 'A0017'}">제주도</option>
           </select>
         </div>
         <div id="datecourseCategory-wrapper" class="common common-display">
           <div class="common-text">
             <label for="datecourseCategory">데이트 코스 분류</label>
           </div>
-          <select name="datecourseCategory" id="datecourseCategory" class="common-margin">
-            <option value="B0001" selected>놀거리</option>
-            <option value="B0002">맛집</option>
-            <option value="B0003">카페</option>
+          <!-- 데이트 코스 수정 화면에서는 데이트 코스 분류 변경하지 못하도록 막음 -> onFocus, onChange -->
+          <select name="datecourseCategory" id="datecourseCategory"
+                  class="common-margin"
+                  onFocus="this.initialSelect = this.selectedIndex;"
+                  onChange="this.selectedIndex = this.initialSelect;">
+            <option value="B0001" th:selected="${getDatecourse.datecourseCategory}">놀거리</option>
+            <option value="B0002" th:selected="${getDatecourse.datecourseCategory}">맛집</option>
+            <option value="B0003" th:selected="${getDatecourse.datecourseCategory}">카페</option>
           </select>
         </div>
         <div id="datecourseSummary-wrapper" class="common common-display">
           <div class="common-text">
             <label for="datecourseSummary">데이트 코스 요약</label>
           </div>
-          <input type="text" name="datecourseSummary" id="datecourseSummary" class="common-margin" placeholder="데이트 코스 요약을 입력하세요.">
+          <input type="text" name="datecourseSummary" id="datecourseSummary"
+                 class="common-margin" placeholder="데이트 코스 요약을 입력하세요."
+                 th:value="${getDatecourse.datecourseSummary}">
         </div>
         <div id="datecourseDesc-wrapper" class="common common-display">
           <div class="common-text">데이트 코스 설명</div>
-          <textarea name="datecourseDesc" id="datecourseDesc" class="common-margin" cols="60" rows="10" placeholder="데이트 코스에 대한 설명을 작성하세요."></textarea>
+          <textarea name="datecourseDesc" id="datecourseDesc"
+                    class="common-margin" cols="60" rows="10"
+                    placeholder="데이트 코스에 대한 설명을 작성하세요."
+                    th:text="${getDatecourse.datecourseDesc}">
+          </textarea>
         </div>
         <div id="datecourseAddr-wrapper" class="common common-display">
           <div class="common-text">
             <label for="datecourseAddr">주소</label>
           </div>
-          <input type="text" name="datecourseAddr" id="datecourseAddr" class="common-margin" placeholder="주소를 입력하세요.">
+          <input type="text" name="datecourseAddr" id="datecourseAddr"
+                 class="common-margin" placeholder="주소를 입력하세요."
+                 th:value="${getDatecourse.datecourseAddr}">
         </div>
-        <div id="datecourseInoutYn-wrapper" class="common common-display">
+        <div id="datecourseInoutYn-wrapper" class="common common-display"
+             th:if="${getDatecourse.datecourseCategory == 'B0001'}">
           <div class="common-text">실내/외 여부</div>
-          <input type="radio" name="datecourseInoutYn" id="datecourseInoutYn-in" class="common-margin" value="Y" checked><label for="datecourseInoutYn-in">실내</label>
-          <input type="radio" name="datecourseInoutYn" id="datecourseInoutYn-out" class="common-margin" value="N"><label for="datecourseInoutYn-out">실외</label>
+          <input type="radio" name="datecourseInoutYn" id="datecourseInoutYn-in"
+                 class="common-margin" value="Y" th:checked="${getDatecourse.datecourseInoutYn == 'Y'}">
+            <label for="datecourseInoutYn-in">실내</label>
+          <input type="radio" name="datecourseInoutYn" id="datecourseInoutYn-out"
+                 class="common-margin" value="N" th:checked="${getDatecourse.datecourseInoutYn == 'N'}">
+            <label for="datecourseInoutYn-out">실외</label>
         </div>
-        <div id="datecourseFoodType-wrapper" class="common common-display">
+        <div id="datecourseFoodType-wrapper" class="common common-display"
+             th:if="${getDatecourse.datecourseCategory == 'B0002'}">
           <div class="common-text">
             <label for="datecourseFoodType">음식종류</label>
           </div>
           <select name="datecourseFoodType" id="datecourseFoodType" class="common-margin">
-            <option value="C0001">한식</option>
-            <option value="C0002">양식</option>
-            <option value="C0003">중식</option>
-            <option value="C0004">일식</option>
-            <option value="C0005">분식</option>
-            <option value="C0006">기타</option>
+            <option value="C0001" th:selected="${getDatecourse.datecourseFoodType}">한식</option>
+            <option value="C0002" th:selected="${getDatecourse.datecourseFoodType}">양식</option>
+            <option value="C0003" th:selected="${getDatecourse.datecourseFoodType}">중식</option>
+            <option value="C0004" th:selected="${getDatecourse.datecourseFoodType}">일식</option>
+            <option value="C0005" th:selected="${getDatecourse.datecourseFoodType}">분식</option>
+            <option value="C0006" th:selected="${getDatecourse.datecourseFoodType}">기타</option>
           </select>
         </div>
         <div id="datecourseHours-wrapper" class="common common-display">
@@ -689,7 +774,21 @@
           </div>
           <div id="datecourseHours-field">
             <input type="hidden" name="datecourseHoursInfo" id="datecourseHoursInfo" value="">
-            <input type="text" name="datecourseHours" class="common-margin datecourseHours" data-datecourseHours-index="0" placeholder="영업시간을 입력하세요."><br>
+            <div th:each="hours : ${getDatecourseHoursList}" class="datecourseHoursInfo-wrapper">
+              <input type="hidden" th:id="'datecourseNo' + ${hoursStat.index}" th:name="'datecourseNo' + ${hoursStat.index}"
+                     th:value="${hours.datecourseNo}">
+              <input type="hidden" th:id="'datecourseHoursNo' + ${hoursStat.index}" th:name="'datecourseHoursNo' + ${hoursStat.index}"
+                     th:value="${hours.datecourseHoursNo}">
+              <input type="hidden" th:id="'datecourseHoursInfo' + ${hoursStat.index}" th:name="'datecourseHoursInfo' + ${hoursStat.index}"
+                     th:value="${hours.datecourseHoursInfo}">
+              <input type="text" name="datecourseHours"
+                     th:data-datecoursehours-index="${hoursStat.index}"
+                     class="common-margin datecourseHours" placeholder="영업시간을 입력하세요."
+                     th:data-datecourseno="${hours.datecourseNo}"
+                     th:data-datecoursehoursno="${hours.datecourseHoursNo}"
+                     data-datecoursehourstagstatus="O"
+                     th:value="${hours.datecourseHoursInfo}">
+            </div>
           </div>
           <img th:src="@{/images/plus.png}" id="datecourseHours-plusImg" class="plusImg" width="25px" height="25px">
           <img th:src="@{/images/minus.png}" id="datecourseHours-minusImg" class="minusImg" width="25px" height="25px">
@@ -698,37 +797,65 @@
           <div class="common-text">
             <label for="datecourseTel">전화번호</label>
           </div>
-          <input type="text" name="datecourseTel" id="datecourseTel" class="common-margin" placeholder="전화번호를 입력하세요.">
+          <input type="text" name="datecourseTel" id="datecourseTel"
+                 class="common-margin" placeholder="전화번호를 입력하세요."
+                 th:value="${getDatecourse.datecourseTel}">
         </div>
         <div id="datecourseSite-wrapper" class="common common-display">
           <div class="common-text">
             <label for="datecourseOfficialSite">웹 사이트</label>
           </div>
-          <input type="text" name="datecourseOfficialSite" id="datecourseOfficialSite" class="common-margin" placeholder="웹 사이트를 입력하세요.">
+          <input type="text" name="datecourseOfficialSite" id="datecourseOfficialSite"
+                 class="common-margin" placeholder="웹 사이트를 입력하세요."
+                 th:value="${getDatecourse.datecourseOfficialSite}">
         </div>
         <div id="datecourseParkingYn-wrapper" class="common common-display">
           <div class="common-text">
             <label for="datecourseParkingYn">주차 가능여부</label>
           </div>
-          <input type="checkbox" name="datecourseParkingYn" id="datecourseParkingYn" class="common-margin" value="Y" onchange="fnChgParkingYn(this);">
+          <input type="checkbox" name="datecourseParkingYn" id="datecourseParkingYn"
+                 class="common-margin" value="Y" onchange="fnChgParkingYn(this);"
+                 th:checked="${getDatecourse.datecourseParkingYn == 'Y'}">
           <input type="hidden" name="datecourseParkingYn" id="datecourseParkingYn-hidden" value="N">
         </div>
-        <div id="datecoursePetYn-wrapper" class="common common-display">
+        <div id="datecoursePetYn-wrapper" class="common common-display"
+             th:if="${getDatecourse.datecourseCategory == 'B0003'}">
           <div id="datecoursePetYn-text" class="common-text">
             <label for="datecoursePetYn">반려동물 <br>동반 가능여부</label>
           </div>
-          <input type="checkbox" name="datecoursePetYn" id="datecoursePetYn" class="common-margin" value="Y" onchange="fnChgPetYn(this);">
+          <input type="checkbox" name="datecoursePetYn" id="datecoursePetYn"
+                 class="common-margin" value="Y" onchange="fnChgPetYn(this);"
+                 th:checked="${getDatecourse.datecoursePetYn == 'Y'}">
           <input type="hidden" name="datecoursePetYn" id="datecoursePetYn-hidden" value="N">
         </div>
         <div id="datecourseMenu-wrapper" class="common common-display">
           <div class="common-text">메뉴</div>
+          <!-- <input type="hidden" name="datecourseMenuType" id="datecourseMenuType" value="D0001"> -->
+          <input type="hidden" name="datecourseMenuInfo" id="datecourseMenuInfo" value="">
           <div id="datecourseMenu-field">
-            <input type="hidden" name="datecourseMenuType" id="datecourseMenuType" value="D0001">
-            <input type="hidden" name="datecourseMenuInfo" id="datecourseMenuInfo" value="">
-            메뉴명<input type="text" name="datecourseMenuNm" class="datecourseMenuNm" data-datecourseMenu-index="0" placeholder="메뉴명을 입력하세요.">
-            가격<input type="text" name="datecourseMenuPrice" class="datecourseMenuPrice"
-                     data-datecourseMenu-index="0" placeholder="가격을 입력하세요."
-                     onkeyup="fnDatecourseMenuPriceKeyup(this);"> 원<br>
+            <div th:each="menu : ${getDatecourseMenuList}"
+                 class="datecourseMenu"
+                 th:data-datecoursemenuno="${menu.datecourseMenuNo}"
+                 data-datecoursemenutagstatus="O">
+              <input type="hidden" th:id="'menuDatecourseNo' + ${menuStat.index}" th:name="'menuDatecourseNo' + ${menuStat.index}"
+                     th:value="${menu.datecourseNo}">
+              <input type="hidden" th:id="'datecourseMenuNo' + ${menuStat.index}" th:name="'datecourseMenuNo' + ${menuStat.index}"
+                     th:value="${menu.datecourseMenuNo}">
+              <input type="hidden" th:id="'datecourseMenuNm' + ${menuStat.index}" th:name="'datecourseMenuNm' + ${menuStat.index}"
+                     th:value="${menu.datecourseMenuNm}">
+              <input type="hidden" th:id="'datecourseMenuPrice' + ${menuStat.index}" th:name="'datecourseMenuPrice' + ${menuStat.index}"
+                     th:value="${menu.datecourseMenuPrice}">
+              메뉴명<input type="text" name="datecourseMenuNm" class="datecourseMenuNm"
+                          data-datecoursemenu-index="${menuCnt}" placeholder="메뉴명을 입력하세요."
+                          th:value="${menu.datecourseMenuNm}"
+                          th:data-datecourseno="${menu.datecourseNo}"
+                          th:data-datecoursemenuno="${menu.datecourseMenuNo}"
+                          data-datecoursemenustatus="O">
+              가격<input type="text" name="datecourseMenuPrice" class="datecourseMenuPrice"
+                        data-datecoursemenu-index="${menuCnt}" placeholder="가격을 입력하세요."
+                        onkeyup="fnDatecourseMenuPriceKeyup(this);"
+                        th:value="${menu.datecourseMenuPrice}"> 원
+            </div>
           </div>
           <img th:src="@{/images/plus.png}" id="datecourseMenu-plusImg" class="plusImg" width="25px" height="25px">
           <img th:src="@{/images/minus.png}" id="datecourseMenu-minusImg" class="minusImg" width="25px" height="25px">

@@ -24,6 +24,7 @@
 #datecourseArea, #datecourseCategory {
   width: 80px;
   height: 30px;
+  border-radius: 3px;
 }
 
 /* 데이트 코스 요약 크기 설정 */

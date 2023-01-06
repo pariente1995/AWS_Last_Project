@@ -3,9 +3,7 @@ package com.gogi1000.datecourse.controller;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gogi1000.datecourse.common.FileUtils;
-import com.gogi1000.datecourse.dto.DatecourseDTO;
-import com.gogi1000.datecourse.dto.DatecourseMenuDTO;
-import com.gogi1000.datecourse.dto.ResponseDTO;
+import com.gogi1000.datecourse.dto.*;
 import com.gogi1000.datecourse.entity.Datecourse;
 import com.gogi1000.datecourse.entity.DatecourseHours;
 import com.gogi1000.datecourse.entity.DatecourseImage;
@@ -33,7 +31,6 @@ import java.util.List;
 public class DatecourseController {
     @Autowired
     private DatecourseService datecourseService;
-
 
     // 데이트 코스 등록 화면으로 이동
     @GetMapping("/insertDatecourse")
@@ -145,11 +142,90 @@ public class DatecourseController {
         //response.sendRedirect("/admin/getDatecourseList");
     }
 
-    // 데이트 코스 수정 화면으로 이동
-    @GetMapping("/updateDatecourse")
-    public ModelAndView updateDatecourseView() {
+    // 데이트 코스 상세 조회
+    @GetMapping("/getDatecourse/{datecourseNo}")
+    public ModelAndView getDatecourse(@PathVariable int datecourseNo) {
+        // 데이트 코스 조회
+        Datecourse datecourse = datecourseService.getDatecourse(datecourseNo);
+
+        DatecourseDTO getDatecourse = DatecourseDTO.builder()
+                .datecourseRgstDate(datecourse.getDatecourseRgstDate().toString())
+                .datecourseNo(datecourse.getDatecourseNo())
+                .datecourseNm(datecourse.getDatecourseNm())
+                .datecourseArea(datecourse.getDatecourseArea())
+                .datecourseCategory(datecourse.getDatecourseCategory())
+                .datecourseSummary(datecourse.getDatecourseSummary())
+                .datecourseDesc(datecourse.getDatecourseDesc())
+                .datecourseAddr(datecourse.getDatecourseAddr())
+                .datecourseInoutYn(datecourse.getDatecourseInoutYn())
+                .datecourseFoodType(datecourse.getDatecourseFoodType())
+                .datecourseTel(datecourse.getDatecourseTel())
+                .datecourseOfficialSite(datecourse.getDatecourseOfficialSite())
+                .datecourseParkingYn(datecourse.getDatecourseParkingYn())
+                .datecoursePetYn(datecourse.getDatecoursePetYn())
+                .build();
+        
+        // 데이트 코스 영업시간 조회
+        List<DatecourseHours> datecourseHoursList = datecourseService.getDatecourseHoursList(datecourseNo);
+
+        // 화면으로 전달할 데이트 코스 영업시간 리스트
+        List<DatecourseHoursDTO> getDatecourseHoursList = new ArrayList<>();
+
+        for(int i=0; i<datecourseHoursList.size(); i++) {
+            DatecourseHoursDTO returnDatecourseHours = DatecourseHoursDTO.builder()
+                    .datecourseNo(datecourseHoursList.get(i).getDatecourseNo())
+                    .datecourseHoursNo(datecourseHoursList.get(i).getDatecourseHoursNo())
+                    .datecourseHoursInfo(datecourseHoursList.get(i).getDatecourseHoursInfo())
+                    .build();
+
+            getDatecourseHoursList.add(returnDatecourseHours);
+        }
+
+        // 데이트 코스 메뉴 조회
+        List<DatecourseMenu> datecourseMenuList = datecourseService.getDatecourseMenuList(datecourseNo);
+
+        // 화면으로 전달할 데이트 코스 메뉴 리스트
+        List<DatecourseMenuDTO> getDatecourseMenuList = new ArrayList<>();
+
+        for(int i=0; i<datecourseMenuList.size(); i++) {
+            DatecourseMenuDTO returnDatecourseMenu = DatecourseMenuDTO.builder()
+                    .datecourseNo(datecourseMenuList.get(i).getDatecourseNo())
+                    .datecourseMenuNo(datecourseMenuList.get(i).getDatecourseMenuNo())
+                    .datecourseMenuNm(datecourseMenuList.get(i).getDatecourseMenuNm())
+                    .datecourseMenuPrice(datecourseMenuList.get(i).getDatecourseMenuPrice())
+                    .build();
+
+            getDatecourseMenuList.add(returnDatecourseMenu);
+        }
+
+        // 데이트 코스 이미지 리스트 조회
+        List<DatecourseImage> datecourseImageList = datecourseService.getDatecourseImageList(datecourseNo);
+
+        // 화면으로 전달할 데이트 코스 이미지 리스트
+        List<DatecourseImageDTO> getDatecourseImageList = new ArrayList<>();
+
+        for(DatecourseImage datecourseImage : datecourseImageList) {
+            DatecourseImageDTO datecourseImageDTO = DatecourseImageDTO.builder()
+                    .referenceNo(datecourseImage.getReferenceNo())
+                    .imageNo(datecourseImage.getImageNo())
+                    .imageNm(datecourseImage.getImageNm())
+                    .imagePath(datecourseImage.getImagePath())
+                    .build();
+
+            getDatecourseImageList.add(datecourseImageDTO);
+        }
+
+        System.out.println(getDatecourse);
+        System.out.println(getDatecourseHoursList);
+        System.out.println(getDatecourseMenuList);
+        System.out.println(getDatecourseImageList);
+
         ModelAndView mv = new ModelAndView();
-        mv.setViewName("admin/updateDatecourse.html");
+        mv.setViewName("admin/getDatecourse.html");
+        mv.addObject("getDatecourse", getDatecourse);
+        mv.addObject("getDatecourseHoursList", getDatecourseHoursList);
+        mv.addObject("getDatecourseMenuList", getDatecourseMenuList);
+        mv.addObject("getDatecourseImageList", getDatecourseImageList);
 
         return mv;
     }
