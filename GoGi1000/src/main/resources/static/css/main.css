@@ -56,8 +56,13 @@
   width:100%; display:flex; justify-content: center;
 }
 
+
 #ranking-frame {
   margin-left:3.2%;
+}
+
+.ranking {
+	cursor: pointer;
 }
 
 /* 이미지 화면 확대 */
@@ -65,10 +70,12 @@
   transition: all 0.2s linear;
 }
 
-.ranking a, .hotdeal a { color:black; text-decoration:none;}
-
 .ranking-div-img {
   overflow: hidden;
+}
+
+.bx-wrapper {
+	max-width:1200px;	
 }
 
 .ranking a:hover img {
@@ -87,6 +94,11 @@
 
 #hotdeal-h2, #ranking-h2{
   width:100%; display:flex; justify-content: flex-start;
+}
+
+.hotdeal {
+	z-index: 999;
+	cursor: pointer;
 }
 
 /* 이미지 화면 확대 */

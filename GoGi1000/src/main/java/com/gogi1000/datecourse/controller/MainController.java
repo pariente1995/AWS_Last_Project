@@ -14,8 +14,10 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.gogi1000.datecourse.common.CamelHashMap;
 import com.gogi1000.datecourse.dto.DatecourseDTO;
+import com.gogi1000.datecourse.dto.DatecourseImageDTO;
 import com.gogi1000.datecourse.dto.HotdealDTO;
 import com.gogi1000.datecourse.entity.Datecourse;
+import com.gogi1000.datecourse.entity.DatecourseImage;
 import com.gogi1000.datecourse.entity.Hotdeal;
 import com.gogi1000.datecourse.service.main.MainService;
 
@@ -26,7 +28,7 @@ public class MainController {
 	private MainService mainService;
 	
 	
-	// 검색창에서 지역명, 코스명으로 검색 후 조회
+	// 검색창에서 지역명, 코스명, 내용으로 검색 후 조회
 	@GetMapping("/getSearchDatecourseList")
 	public ModelAndView getSearchDatecourseList(DatecourseDTO datecourseDTO) {
 		
@@ -36,39 +38,17 @@ public class MainController {
 			
 			List<Datecourse> searchDatecourseList = mainService.getSearchDatecourseList(datecourse);
 			
-			
-			List<DatecourseDTO> getSearchDatecourseList = new ArrayList<DatecourseDTO>();
-			for(int i = 0; i < searchDatecourseList.size(); i++) {
-				DatecourseDTO returnDatecourse = DatecourseDTO.builder()
-											   .datecourseNo(searchDatecourseList.get(i).getDatecourseNo())
-											   .datecourseNm(searchDatecourseList.get(i).getDatecourseNm())
-											   .datecourseSummary(searchDatecourseList.get(i).getDatecourseSummary())
-											   .datecourseModfDate(
-													   searchDatecourseList.get(i).getDatecourseModfDate() == null ?  
-													    null : searchDatecourseList.get(i).getDatecourseModfDate().toString())
-											   .datecourseUseYn(searchDatecourseList.get(i).getDatecourseUseYn())
-											   .build();
-				getSearchDatecourseList.add(returnDatecourse);
-			}
-			
 			ModelAndView mv = new ModelAndView();
+			
 			// 뷰의 위치
 			mv.setViewName("datecourse/getCateDatecourseList.html");
 			
 			if (datecourseDTO.getSearchKeyword() != null && !datecourseDTO.getSearchKeyword().equals("")) {
 				mv.addObject("searchKeyword", datecourseDTO.getSearchKeyword());
 			}
-			// 뷰로 보낼 데이터 값
-			mv.addObject("getSearchDatecourseList", getSearchDatecourseList);
-//			
-//			if (boardDTO.getSearchCondition() != null && !boardDTO.getSearchCondition().equals("")) {
-//				mv.addObject("searchCondition", boardDTO.getSearchCondition());
-//			}
-//			
-//			if (boardDTO.getSearchKeyword() != null && !boardDTO.getSearchKeyword().equals("")) {
-//				mv.addObject("searchKeyword", boardDTO.getSearchKeyword());
-//			}
-			System.out.println(mv);
+			
+			System.out.println(datecourseDTO.getSearchKeyword());
+			
 			return mv;
 			
 			
@@ -89,11 +69,13 @@ public class MainController {
 		mv.setViewName("datecourse/getCateDatecourseList.html");
 		mv.addObject("getMapDatecourseList", mapDatecourseList);
 		
+		System.out.println(mapDatecourseList);
+		
 		return mv;
 		
 	}
 	
-	// 관리자 페이지 이동
+	// 메인에서 관리자 페이지 이동
 	@GetMapping("/getDatecourseList")
 	public ModelAndView getDatecourseList() {
 		ModelAndView mv = new ModelAndView();
@@ -103,11 +85,66 @@ public class MainController {
 		return mv;
 	}
 	
+	// 메인에서 마이페이지로 이동
+	@GetMapping("/mypageLikeList")
+	public ModelAndView getMypageLikeList() {
+		ModelAndView mv = new ModelAndView();
+		
+		mv.setViewName("like/mypageLikeList");
+		
+		return mv;
+	}
 	
-	// 메인 페이지에서 핫딜 리스트 조회
+	// 메인 페이지에서 인기 상세 페이지 조회
+	@GetMapping("/getDatecourse/{datecourseNo}")
+	public ModelAndView getDatecourse(@PathVariable int datecourseNo) {
+		Datecourse datecourse = mainService.getDatecourse(datecourseNo);
+		
+		DatecourseDTO datecourseDTO = DatecourseDTO.builder()
+											.datecourseNo(datecourse.getDatecourseNo())
+											.datecourseNm(datecourse.getDatecourseNm())
+											.datecourseDesc(datecourse.getDatecourseDesc())
+											.datecourseAddr(datecourse.getDatecourseAddr())
+											.datecourseTel(datecourse.getDatecourseTel())
+											.datecourseOfficialSite(datecourse.getDatecourseOfficialSite())
+											.datecourseParkingYn(datecourse.getDatecourseParkingYn())
+											.build();
+		
+		List<DatecourseImage> datecourseImageList = mainService.getDatecourseImageList(datecourseNo);
+		
+		List<DatecourseImageDTO> datecourseImageDTOList = new ArrayList<DatecourseImageDTO>();
+		
+		// DTO에 담아서 다시 던져줌
+		for (DatecourseImage datecourseImage : datecourseImageList) {
+			DatecourseImageDTO datecourseImageDTO = DatecourseImageDTO.builder()
+													.referenceNo(datecourseNo)
+													.imageNo(datecourseImage.getImageNo())
+													.imageNm(datecourseImage.getImageNm())
+													.imageOriginNm(datecourseImage.getImageOriginNm())
+													.imagePath(datecourseImage.getImagePath())
+													.imageRgstDate(datecourseImage.getImageRgstDate().toString())
+													.imageGroup(datecourseImage.getImageGroup())
+													.build();
+			
+			datecourseImageDTOList.add(datecourseImageDTO);
+		}
+		
+		
+		ModelAndView mv = new ModelAndView();
+		mv.setViewName("admin/getDatecourse.html");
+		mv.addObject("datecourseDTO", datecourseDTO);
+		mv.addObject("datecourseImageDTOList", datecourseImageDTOList);
+		
+		return mv;
+				
+	}
 	
 	
-	// 메인 페이지에서 상세 페이지로 조회
+		
+	
+		
+		
+	// 메인 페이지에서 핫딜 상세 페이지로 조회
 	@GetMapping("/getHotdeal/{hotdealNo}")
 	public ModelAndView getHotdeal(@PathVariable int hotdealNo) {
 		
@@ -118,23 +155,46 @@ public class MainController {
 							.hotdealNm(hotdeal.getHotdealNm())
 							.hotdealDesc(hotdeal.getHotdealDesc())
 							.hotdealPrice(hotdeal.getHotdealPrice())
+							.hotdealOfficialSite(hotdeal.getHotdealOfficialSite())
+							.hotdealSeller(hotdeal.getHotdealSeller())
 							.hotdealSalerate(hotdeal.getHotdealSalerate())
 							.hotdealTel(hotdeal.getHotdealTel())
 							.hotdealEndDate(hotdeal.getHotdealEndDate())
 							.hotdealRgstDate(hotdeal.getHotdealRgstDate() == null ?
 									null : hotdeal.getHotdealRgstDate().toString())
 							.build();
+		
+		// 이미지 조회하기
+		List<DatecourseImage> datecourseImageList = mainService.getDatecourseHotdealImageList(hotdealNo);
+		
+		List<DatecourseImageDTO> datecourseImageDTOList = new ArrayList<DatecourseImageDTO>();
+		
+		// DTO에 담아서 다시 던져줌
+		for (DatecourseImage datecourseImage : datecourseImageList) {
+			DatecourseImageDTO datecourseImageDTO = DatecourseImageDTO.builder()
+													.referenceNo(hotdealNo)
+													.imageNo(datecourseImage.getImageNo())
+													.imageNm(datecourseImage.getImageNm())
+													.imageOriginNm(datecourseImage.getImageOriginNm())
+													.imagePath(datecourseImage.getImagePath())
+													.imageRgstDate(datecourseImage.getImageRgstDate().toString())
+													.imageGroup(datecourseImage.getImageGroup())
+													.build();
+			
+			datecourseImageDTOList.add(datecourseImageDTO);
+		}
 				
 		
 		ModelAndView mv = new ModelAndView();
-		mv.setViewName("hotdeal/getHotdeal.html");
+		mv.setViewName("admin/getHotdeal.html");
 		mv.addObject("getHotdeal", hodealDTO);	
+		mv.addObject("datecourseImageDTOList", datecourseImageDTOList);
 		
+		System.out.println(hodealDTO);
 		
-		//mv.addObject("boardFileList", boardFileDTOList);
 		
 		return mv;
 		
-	}	
+	}		
 	
 }

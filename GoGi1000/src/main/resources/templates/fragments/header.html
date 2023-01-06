@@ -9,19 +9,15 @@
 	  	<th:block layout:fragment="script">
 	      	<script th:inline="javascript">
 	      		$(function() {
-					  	// 엔터키로 검색
-					    $("#header-search-input").on("keyup",function(){
-					        if(key.keyCode==13) {
-					            $("#header-searchForm").submit();
-					            
-					        }
-					    });
-					    
-					    $("#searchA").click(function() {
-							let value =  $("#header-search-input").val();
-							$("#header-searchForm").submit(value);
-						})
-				  })
+					  /* 
+					  	지금 현재 페이지가 header.html 페이지가 아니기 떄문에
+					  	header에 있는 script가 동작하지 않는다.
+					  	header에서 동작해야 되는 script는, 
+					  	공통 header.js로 빼서, 모든 페이지도 동작하게 만든다.
+					  	( config.html에 js파일 추가!!!! )
+					  */	
+					  
+				 })
 	      	</script>
 	     </th:block>
 	 </head>
@@ -40,8 +36,8 @@
 						<div id="header-search-wrapper">
 							<form action="/main/getSearchDatecourseList" method="get" id="header-searchForm" name="header-searchForm">
 								<div id="header-search">
-									<a id="searchA" th:href="@{/main/getSearchDatecourseList}"  type="submit"><img id="header-search-img" th:src="@{/images/search.png}" ></a>   
-									<!--<button type="button" id="header-search-button"><img id="header-search-img" th:src="@{/images/search.png}"></button>--> 
+									<a id="searchA" th:href="@{/main/getSearchDatecourseList}"><img id="header-search-img" th:src="@{/images/search.png}"></a>   
+									<!--<button type="submit" id="header-search-button"><img id="header-search-img" th:src="@{/images/search.png}"></button>--> 
 									<input type="text" name="searchKeyword" th:value="${searchKeyword}" id="header-search-input" placeholder="지역, 코스명, 음식점 또는 카페"
 										   onfocus="this.placeholder=''" onblur="placeholder='지역, 코스명, 음식점 또는 카페'">
 								</div>
@@ -80,10 +76,10 @@
 								</div>
 								<!-- sec:authorize="isAuthenticated()" th:remove="tag"  sec:authorize="hasRole('ROLE_ADMIN')-->
 								<div class="nav-div-li" sec:authorize="isAuthenticated()" th:remove="tag">
-									<li><a href="#" class="nav-list-link">마이페이지</a></li>
+									<li><a th:href="${/main/mypageLikeList}" class="nav-list-link">마이페이지</a></li>
 								</div>
 								<div class="nav-div-li" sec:authorize="hasRole('ROLE_ADMIN')" th:remove="tag">
-									<li><a href="#" class="nav-list-link">관리자페이지</a></li>
+									<li><a th:href="${/main/getDatecourseList}" class="nav-list-link">관리자페이지</a></li>
 								</div>
 							</ul>
 						</div>
