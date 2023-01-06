@@ -57,7 +57,7 @@
 						<div class="header-login" sec:authorize="isAuthenticated()" th:remove="tag">
 							<ul class="header-login-ul">
 								<li>
-									<a th:href="@{/mypage/mypage}" sec:authentication="principal.username"></a>
+									<a th:href="@{/mypage/mypage}" sec:authentication="principal.username"></a>&ensp;님 환영합니다.
 								</li>
 								<li>
 									 <a th:href="@{/user/logout}">로그아웃</a>

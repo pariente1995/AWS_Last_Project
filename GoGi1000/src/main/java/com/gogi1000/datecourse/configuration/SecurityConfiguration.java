@@ -1,5 +1,6 @@
 package com.gogi1000.datecourse.configuration;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -8,11 +9,13 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
+import com.gogi1000.datecourse.handler.LoginFailureHandler;
+
 @Configuration		// 클래스가 설정파일이라고 선언
 @EnableWebSecurity  // Security의 filterchain을 구현하기 위한 어노테이션
 public class SecurityConfiguration {
-//	@Autowired
-//	private LoginFailureHandler loginFailureHandler;
+	@Autowired
+	private LoginFailureHandler loginFailureHandler;
 
 //	@Autowired
 //	private Oauth2UserService oauth2UserService;
@@ -73,19 +76,19 @@ public class SecurityConfiguration {
 		// 로그인, 로그아웃 설정
 		// AuthenticationProvider(인증공급자)에게 사용자가 입력한 정보로 만든
 		// 인증용 객체 UsernamePasswordAuthenticationToken을 전달한 상태까지 설정
-//		http.formLogin()
-//			.loginPage("/user/login")
-//			// Spring Security에서는 id는 username
-//			// 비밀번호는 password
-//			// 다른 키 값으로 사용하고 싶으면 username, password 키 값과 매핑하여 사용한다
-//			.usernameParameter("userId")
-//			.passwordParameter("userPw")
-//			// 로그인 요청이 오면 시큐리티에서 낚아채서 처리
-//			// 낚아챌 로그인 요청 url 지정, login-Form으로 이동
-//			.loginProcessingUrl("/user/loginProc")
-//			/// 로그인 성공 후 띄워 줄 화면 url
-//			.defaultSuccessUrl("/home/main")
-//		.failureHandler(loginFailureHandler)
+		http.formLogin()
+			.loginPage("/user/login")
+			// Spring Security에서는 id는 username
+			// 비밀번호는 password
+			// 다른 키 값으로 사용하고 싶으면 username, password 키 값과 매핑하여 사용한다
+			.usernameParameter("userId")
+			.passwordParameter("userPw")
+			// 로그인 요청이 오면 시큐리티에서 낚아채서 처리
+			// 낚아챌 로그인 요청 url 지정, login-Form으로 이동
+			.loginProcessingUrl("/user/loginProc")
+			/// 로그인 성공 후 띄워 줄 화면 url
+			.defaultSuccessUrl("/home/main")
+		.failureHandler(loginFailureHandler);
 //			// OAuth기반 로그인 처리
 //			.and()
 //			.oauth2Login()
@@ -96,10 +99,10 @@ public class SecurityConfiguration {
 ////			.userInfoEndpoint()	// 사용자 정보를 다 가지고 왔을 때
 //			// 사용자 정보를 웹 사이트에 맞도록 변해주는 service 클래스 등록
 ////			.userService(oauth2UserService);
-//		http.logout()
-//			.logoutUrl("/user/logout")
-//			.invalidateHttpSession(true)
-//			.logoutSuccessUrl("/user/login");
+		http.logout()
+			.logoutUrl("/user/logout")
+			.invalidateHttpSession(true)
+			.logoutSuccessUrl("/user/login");
 		
 		// 크로스도메인 이슈 방지 설정
 		// 크로스도메인: 웹 생태계는 원래 원칙적으로 하나의 웹 어플리케이션에서 요청에 대한 주소가 변경이 되면 안된다.

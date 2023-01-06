@@ -51,15 +51,16 @@ public class UserController {
 							.userId(userDTO.getUserId())
 							.userPw(passwordEncoder.encode(userDTO.getUserPw()))
 							.userNm(userDTO.getUserNm())
+							.userAge(userDTO.getUserAge())
 							.userTel(userDTO.getUserTel())
 							.userMail(userDTO.getUserMail())
 							.userArea(userDTO.getUserTel())
 							.userAddr1(userDTO.getUserAddr1())
 							.userAddr2(userDTO.getUserAddr2())
 							.userType(userDTO.getUserType())
-							.userRgstdate(LocalDateTime.now())
-							.userModfdate(LocalDateTime.now())
-							.userUseyn(userDTO.getUserUseYn())
+							.userRgstDate(LocalDateTime.now())
+							.userModfDate(LocalDateTime.now())
+							.userUseYn(userDTO.getUserUseYn())
 							.build();
 			
 			userService.join(user);
@@ -136,15 +137,16 @@ public class UserController {
 											.userId(checkedUser.getUserId())
 											.userPw(checkedUser.getUserPw())
 											.userNm(checkedUser.getUserNm())
+											.userAge(checkedUser.getUserAge())
 											.userTel(checkedUser.getUserTel())
 											.userMail(checkedUser.getUserMail())
 											.userArea(checkedUser.getUserTel())
 											.userAddr1(checkedUser.getUserAddr1())
 											.userAddr2(checkedUser.getUserAddr2())
 											.userType(checkedUser.getUserType())
-											.userRgstDate(checkedUser.getUserRgstdate().toString())
-											.userModfDate(checkedUser.getUserModfdate().toString())
-											.userUseYn(checkedUser.getUserUseyn())
+											.userRgstDate(checkedUser.getUserRgstDate().toString())
+											.userModfDate(checkedUser.getUserModfDate().toString())
+											.userUseYn(checkedUser.getUserUseYn())
 											.build();
 					
 					returnMap.put("msg", "loginSuccess");
@@ -158,5 +160,21 @@ public class UserController {
 			responseDTO.setErrorMessage(e.getMessage());
 			return ResponseEntity.badRequest().body(responseDTO);
 		}
+	}
+	
+	@GetMapping("/findId")
+	public ModelAndView findIdView() {
+		ModelAndView mv = new ModelAndView();
+		
+		mv.setViewName("user/findId.html");
+		return mv;
+	}
+	
+	@GetMapping("/findPwd")
+	public ModelAndView findPwdView() {
+		ModelAndView mv = new ModelAndView();
+		
+		mv.setViewName("user/findPwd.html");
+		return mv;
 	}
 }
