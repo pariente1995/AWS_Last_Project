@@ -7,7 +7,9 @@ import org.springframework.stereotype.Service;
 
 import com.gogi1000.datecourse.common.CamelHashMap;
 import com.gogi1000.datecourse.entity.Datecourse;
+import com.gogi1000.datecourse.entity.DatecourseImage;
 import com.gogi1000.datecourse.entity.Hotdeal;
+import com.gogi1000.datecourse.repository.DatecourseImageRepository;
 import com.gogi1000.datecourse.repository.DatecourseRepository;
 import com.gogi1000.datecourse.repository.HotdealRepository;
 import com.gogi1000.datecourse.service.main.MainService;
@@ -21,12 +23,15 @@ public class MainServiceImpl implements MainService{
 	@Autowired 
 	private HotdealRepository hotdealRepository;
 	
-	// 검색창에서 지역명, 코스명으로 검색 후 조회
+	@Autowired
+	private DatecourseImageRepository datecourseImageRepository;
+	
+	// 검색창에서 지역명, 코스명, 내용으로 검색 후 조회
 	@Override
 	public List<Datecourse> getSearchDatecourseList(Datecourse datecourse) {
 		String searchKeyword = datecourse.getSearchKeyword();
 		if(searchKeyword != null && !searchKeyword.equals("")) {
-			return datecourseRepository.findByDatecourseAreaContainingOrDatecourseNmContaining(searchKeyword, searchKeyword);
+			return datecourseRepository.findByDatecourseAddrContainingOrDatecourseNmContainingOrDatecourseDescContaining(searchKeyword, searchKeyword, searchKeyword);
 		} else {
 			return datecourseRepository.findAll();
 		}
@@ -51,10 +56,35 @@ public class MainServiceImpl implements MainService{
 		return hotdealRepository.getHotdealDatecourseList();
 	}
 	
+	// 메인에서 인기 상세 리스트 조회 
+	@Override
+	public Datecourse getDatecourse(int datecourseNo) {
+		return datecourseRepository.findById(datecourseNo).get();
+	}
+	
+	// 메인에서 인기 상세 리스트 조회 시, 이미지 리스트 조회
+	public List<DatecourseImage> getDatecourseImageList(int datecourseNo) {
+		Datecourse datecourse = Datecourse.builder()
+										  .datecourseNo(datecourseNo)
+										  .build();
+		
+		return datecourseImageRepository.findByDatecourse(datecourse);
+	}
+	
 	// 메인에서 핫딜 상세 페이지 조회
 	@Override
 	public Hotdeal getHotdeal(int hotdealNo) {
-		return hotdealRepository.getHotdeal(hotdealNo);
+		return hotdealRepository.findById(hotdealNo).get();
+	}
+	
+	// 핫딜 상세 페이지에서 이미지 조회
+	@Override
+	public List<DatecourseImage> getDatecourseHotdealImageList(int hotdealNo) {
+		Hotdeal hotdeal = Hotdeal.builder()
+							     .hotdealNo(hotdealNo)
+							     .build();
+		
+		return datecourseImageRepository.findByHotdeal(hotdeal);
 	}
 	
 	

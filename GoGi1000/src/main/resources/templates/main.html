@@ -176,12 +176,13 @@
 				/* Ranking */
 				/* Ranking-frame: ranking에 올라온 게시글 10개를 잡아주는 background */
 				$("#ranking-frame").bxSlider({
-					slideWidth: 200,        // 이미지의 너비
+					touchEnabled : (navigator.maxTouchPoints > 0),
+					slideWidth: 280,        // 이미지의 너비
 					// slideHeight: 500,    // 이미지의 높이
-					maxSlides : 5,          // 이미지의 최대 노출 개수
-					minSlides : 2,          // 이미지의 최소 노출 개수
+					maxSlides : 4,          // 이미지의 최대 노출 개수
+					minSlides : 4,          // 이미지의 최소 노출 개수
 					moveSlides : 2,         // 이미지의 이동 개수
-					slideMargin: 105,        // 이미지 사이의 마진
+					slideMargin: 28,        // 이미지 사이의 마진
 					pause: 5000,            // 이미지의 노출 시간(전환 + 이동포함), 5000=5초
 					speed: 1000,            // 이미지의 이동 시간, 2000=2초
 					auto: true,             // 자동 화면전환 유무, 기본값: false
@@ -192,10 +193,12 @@
 					controls:  true,       // 화살표 버튼 유무, 기본값: false
 					autoControls:false,     // 재생/정비 버튼 유무, 기본값: false
 					// mode: 'vertical'       // 가로/세로 배치, 기본값의 기준: 가로
+					useCss: true,
 				})
 
 				/* Hot deal */
 				$("#hotdeal-frame").bxSlider({
+					touchEnabled : (navigator.maxTouchPoints > 0),
 					slideWidth: 400,        // 이미지의 너비
 					// slideHeight: 500,    // 이미지의 높이
 					maxSlides : 3,          // 이미지의 최대 노출 개수
@@ -212,6 +215,23 @@
 					controls:  true,       // 화살표 버튼 유무, 기본값: false
 					autoControls:false,     // 재생/정비 버튼 유무, 기본값: false
 					// mode: 'vertical'       // 가로/세로 배치, 기본값의 기준: 가로
+				})
+				
+				
+				$(".ranking").on("click", function() {
+					let datecourseno = $(this).data("datecourseno");
+					
+					window.location.href = "/main/getDatecourse/" + datecourseno;
+				})
+				
+				$(".hotdeal").on("click", function() {
+					// 중괄호 묶으면 Map형태로, 키와 value를 나눌 수 있다.
+					// DB에 접속할려면 컬럼이랑, 값이 필요한데 그걸 받기 위해서 map형식으로 받음.
+					//let hotdealNo = { dataImage: $(this).attr("data-image") }					
+					let hotdealNo = $(this).data("hotdealno");
+					
+					window.location.href = "/main/getHotdeal/" + hotdealNo;
+							
 				})
 			})
         </script>
@@ -302,12 +322,12 @@
 	    <div id="ranking-wrapper">
 	      <div id="ranking-frame">
 	      <!-- 랭킹 리스트 -->
-	        <div class="ranking ranking-1" th:each="datecourse : ${getRankDatecourseList}">
+	        <div class="ranking ranking-1" th:each="datecourse : ${getRankDatecourseList}" th:data-datecourseno="${datecourse.datecourseNo}">
 	          <div class="ranking-div-img">
-	            <a class="ranking-1" href="#"><img class="ranking-image" th:if="${datecourse.imageNm} != 'null'" th:src="@{'/upload/' + ${datecourse.imageNm}}" width="200" height="200" ></a>
+	            <img class="ranking-image" th:src="@{'/upload/' + ${datecourse.imageNm}}" width="200" height="200" >
 	          </div>
-	          <p style="font-weight:bold; margin-bottom:-5px;"><a class="ranking-1" th:text="${datecourse.datecourseNm}" th:href="@{/datecourse/getDatecourse/{datecourseNo} (datecourseNo=${datecourse.datecourseNo})}"></a></p>
-	          <p style="font-size:13px;"><a class="ranking-1" th:text="${datecourse.datecourseSummary}" th:href="@{/datecourse/getDatecourse/{datecourseNo} (datecourseNo=${datecourse.datecourseNo})}"></a></p>
+	          <p style="font-weight:bold; margin-bottom:-5px;" th:text="${datecourse.datecourseNm}"></p>
+	          <p style="font-size:13px;" th:text="${datecourse.datecourseSummary}"></p>
 	        </div>
 	      </div>
 	    </div>
@@ -315,13 +335,13 @@
 	    <h2 id="hotdeal-h2">핫딜</h2>
 	    <div id="hotdeal-wrapper" >
 	      <div id="hotdeal-frame">
-	        <div class="hotdeal" th:each="hotdeal : ${getHotdealDatecourseList}">
+	        <div class="hotdeal" th:each="hotdeal : ${getHotdealDatecourseList}" th:data-hotdealno="${hotdeal.hotdealNo}">         
 	          <div class="hotdeal-div-img">
-	           <a class="hotdeal-1" th:href="@{/main/getHotdeal/{hotdealNo} (hotdealNo=${hotdeal.hotdealNo})}"><img th:if="${hotdeal.imageNm} != 'null'" th:src="@{'/upload/' + ${hotdeal.imageNm}}" width="400" height="400"></a>
+	           <img th:src="@{'/upload/' + ${hotdeal.imageNm}}" class="hotdeal-image" width="400" height="400">
 	          </div>
-	          <p style="font-weight:bold; margin-bottom:-5px;"><a class="hotdeal-1" th:href="@{/main/getHotdeal/{hotdealNo} (hotdealNo=${hotdeal.hotdealNo})}" th:text="${hotdeal.hotdealNm}"></a></p>
-	          <p style="font-size:13px;"><a class="hotdeal-1" th:href="@{/main/getHotdeal/{hotdealNo} (hotdealNo=${hotdeal.hotdealNo})}" th:text="${hotdeal.hotdealDesc}"></a></p>
-	        </div>
+	          <p style="font-weight:bold; margin-bottom:-5px;" th:text="${hotdeal.hotdealNm}"></p>
+	          <p style="font-size:13px;" th:text="${hotdeal.hotdealDesc}"></p>
+	       </div>
 	      </div>
 	    </div>
 	  </div>

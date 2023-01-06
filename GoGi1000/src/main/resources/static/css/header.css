@@ -61,7 +61,7 @@
 
 #header-search-button {
 	width:60px;
-	background-color: white; 
+	background-color: none; 
 	border:none; cursor:pointer;
 	border-radius:30px;
 }
