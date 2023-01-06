@@ -1,14 +1,13 @@
 package com.gogi1000.datecourse.repository;
 
-import java.util.List;
-
+import com.gogi1000.datecourse.entity.DatecourseImage;
+import com.gogi1000.datecourse.entity.DatecourseImageId;
+import com.gogi1000.datecourse.entity.Hotdeal;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import com.gogi1000.datecourse.entity.DatecourseImage;
-import com.gogi1000.datecourse.entity.DatecourseImageId;
-import com.gogi1000.datecourse.entity.Hotdeal;
+import java.util.List;
 
 public interface DatecourseImageRepository extends JpaRepository<DatecourseImage, DatecourseImageId> {
     // @Query: 원하는 쿼리를 작성할 수 있는 어노테이션
@@ -30,10 +29,18 @@ public interface DatecourseImageRepository extends JpaRepository<DatecourseImage
     List<DatecourseImage>  findByHotdeal(Hotdeal hotdeal);
     
     
-    @Query(value="SELECT * "
+    @Query(value="SELECT *"
     		+ "	    FROM T_GGC_IMAGE  "
     		+ "	   WHERE A.IMAGE_GROUP = 'E0002' "
     		+ "      AND A.REFERENCE_NO = :hotdealNo ",
     		nativeQuery=true)
     List<DatecourseImage> findByHotdealNo(@Param("hotdealNo") int hotdealNo);
+
+
+	// 데이트 코스 이미지 리스트 조회
+	@Query(value="SELECT *"
+			+"      FROM T_GGC_IMAGE I"
+			+"     WHERE I.IMAGE_GROUP = 'E0001'"
+			+"       AND I.REFERENCE_NO = :datecourseNo", nativeQuery=true)
+	List<DatecourseImage> getDatecourseImageList(@Param("datecourseNo") int datecourseNo);
 }

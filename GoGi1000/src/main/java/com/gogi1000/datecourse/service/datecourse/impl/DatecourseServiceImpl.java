@@ -139,4 +139,28 @@ public class DatecourseServiceImpl implements DatecourseService {
             datecourseRepository.updateDatecourseList(updateDatecourseList.get(i));
         }
     }
+
+    // 데이트 코스 상세 조회
+    @Override
+    public Datecourse getDatecourse(int datecourseNo) {
+        return datecourseRepository.findById(datecourseNo).get();
+    }
+
+    // 데이트 코스 영업시간 조회
+    @Override
+    public List<DatecourseHours> getDatecourseHoursList(int datecourseNo) {
+        return datecourseHoursRepository.findByDatecourseNo(datecourseNo);
+    }
+
+    // 데이트 코스 메뉴 조회
+    @Override
+    public List<DatecourseMenu> getDatecourseMenuList(int datecourseNo) {
+        return datecourseMenuRepository.findByDatecourseNo(datecourseNo);
+    }
+
+    // 데이트 코스 이미지 조회
+    @Override
+    public List<DatecourseImage> getDatecourseImageList(int datecourseNo) {
+        return datecourseImageRepository.getDatecourseImageList(datecourseNo);
+    }
 }

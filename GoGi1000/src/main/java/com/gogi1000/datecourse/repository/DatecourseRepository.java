@@ -24,7 +24,7 @@ public interface DatecourseRepository extends JpaRepository<Datecourse, Integer>
 	// \n: 커서를 한칸 아래로 이동
 	// serviceImpl에서 nativeQuery로 보내면 Query어노테이션에 nativeQuery처리 해줘야됨.
 	@Modifying	// 데이터의 변경이 일어나는 @Query을 사용할 떄는 @Modifying 어노테이션을 사용해야한다.
-	@Query(value = "SELECT A.*"
+	@Query(value = "SELECT A.* "
 			+ "			 , IFNULL(B.LIKE_CNT, 0) AS LIKE_CNT"
 			+ "			FROM T_GGC_DATECOURSE A"
 			+ "			LEFT OUTER JOIN ("
@@ -50,15 +50,15 @@ public interface DatecourseRepository extends JpaRepository<Datecourse, Integer>
 	// CamelHashMap 사용 이유: 다른 2개 이상의 테이블을 join할 때, join된 컬럼들을 모두 가지고 있는 entity가 존재하지 않으므로, map으로 받아준다.
 	@Modifying
 	@Query(value = "SELECT A.*, "
-			+"			   C.IMAGE_NM"
-			+"		  FROM T_GGC_DATECOURSE A"
-			+"		  JOIN ( SELECT AA.DATECOURSE_NO, COUNT(AA.DATECOURSE_NO) AS 'DATECOURSE_CNT'"
-			+"				   FROM	T_GGC_LIKE AA"
-			+"				  GROUP BY AA.DATECOURSE_NO ) B ON A.DATECOURSE_NO = B.DATECOURSE_NO"
-			+"		  JOIN T_GGC_IMAGE C ON A.DATECOURSE_NO = C.REFERENCE_NO"
-			+"		 WHERE C.IMAGE_GROUP = 'E0001'"
-			+"		 ORDER BY B.DATECOURSE_CNT DESC"	
-			+"		 LIMIT 10",
+				  +"	   C.IMAGE_NM"
+				  +"  FROM T_GGC_DATECOURSE A"
+				  +"  JOIN ( SELECT AA.DATECOURSE_NO, COUNT(AA.DATECOURSE_NO) AS 'DATECOURSE_CNT'"
+				  +"		   FROM	T_GGC_LIKE AA"
+				  +"		  GROUP BY AA.DATECOURSE_NO ) B ON A.DATECOURSE_NO = B.DATECOURSE_NO"
+				  +"  JOIN T_GGC_IMAGE C ON A.DATECOURSE_NO = C.REFERENCE_NO"
+				  +" WHERE C.IMAGE_GROUP = 'E0001'"
+				  +" ORDER BY B.DATECOURSE_CNT DESC"
+				  +" LIMIT 10",
 			nativeQuery = true)
 	List<CamelHashMap> getRankDatecourseList();
 
@@ -85,6 +85,8 @@ public interface DatecourseRepository extends JpaRepository<Datecourse, Integer>
 
 	// 데이트 코스 리스트 화면(관리자)에서 삭제 시, 데이트 코스 사용여부를 ('Y' -> 'N')으로 업데이트
 	@Modifying
-	@Query(value="UPDATE T_GGC_DATECOURSE SET DATECOURSE_USE_YN = 'N' WHERE DATECOURSE_NO = :datecourseNo", nativeQuery = true)
+	@Query(value="UPDATE T_GGC_DATECOURSE "
+			    +"   SET DATECOURSE_USE_YN = 'N' "
+			    +" WHERE DATECOURSE_NO = :datecourseNo", nativeQuery = true)
 	void updateDatecourseList(@Param("datecourseNo") int datecourseNo) ;
 }

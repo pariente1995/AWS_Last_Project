@@ -19,4 +19,16 @@ public interface DatecourseService {
 
     // 데이트 코스 리스트 화면(관리자)에서 삭제 시, 데이트 코스 사용여부를 ('Y' -> 'N')으로 업데이트
     void updateDatecourseList(List<Integer> updateDatecourseList);
+
+    // 데이트 코스 상세 조회
+    Datecourse getDatecourse(int datecourseNo);
+
+    // 데이트 코스 영업시간 조회
+    List<DatecourseHours> getDatecourseHoursList(int datecourseNo);
+
+    // 데이트 코스 메뉴 조회
+    List<DatecourseMenu> getDatecourseMenuList(int datecourseNo);
+
+    // 데이트 코스 이미지 조회
+    List<DatecourseImage> getDatecourseImageList(int datecourseNo);
 }

@@ -32,6 +32,11 @@
 #datecourseArea, #datecourseCategory {
   width: 80px;
   height: 30px;
+  border-radius: 3px;
+}
+
+#datecourseCategory {
+  background-color: lightgray;
 }
 
 /* 데이트 코스 요약 크기 설정 */
@@ -43,6 +48,10 @@
 #datecourseFoodType {
   width: 60px;
   height: 30px;
+}
+
+.datecourseHoursInfo-wrapper {
+  margin-bottom: 15px;
 }
 
 /* 주차 가능여부, 반려동물 동반 가능 여부 크기 설정 */
@@ -107,6 +116,15 @@
 
 #datecourseMenu-field {
   padding-left: 35px;
+}
+
+.datecourseMenu {
+  display: flex;
+  margin-bottom: 15px;
+}
+
+.datecourseMenu .datecourseMenuPrice {
+  margin-right: 5px;
 }
 
 .datecourseMenuNm {
