@@ -9,6 +9,7 @@
 <head>
 	<th:block layout:fragment="css">
 		<link rel="stylesheet" th:href="@{/css/login.css}"/>
+		
 	</th:block>
     <th:block layout:fragment="script">
     	<!--<script th:inline="javascript">
@@ -18,6 +19,41 @@
 				}
 			});
 		</script> -->
+		<script th:inline="javascript">
+				$(function() {
+					console.log($("#errorMsg").val());
+					
+					const url = new URL(window.location.href);
+					
+					const urlParams = url.searchParams;
+					
+					if(urlParams.get("error")) {
+						alert(urlParams.get("errorMsg"));
+					}
+					/*$("#btnLogin").on("click", function() {
+						$.ajax({
+							url: '/user/login',
+							type: 'post',
+							data: $("#loginForm").serialize(),
+							success: function(obj) {
+								console.log(obj);
+								if(obj.item.msg == "idFail") {
+									alert("존재하지 않는 아이디입니다.");
+									return;
+								} else if(obj.item.msg == "pwFail") {
+									alert("비밀번호가 틀렸습니다.");
+									return;
+								}
+								
+								window.location.href="/";
+							},
+							error: function(e) {
+								console.log(e);
+							}
+						})
+					});*/
+				});
+			</script>
     </th:block>
 </head>
 <!-- head 영역 끝 -->
@@ -47,6 +83,9 @@
     </div>
 
     <!-- 로그인 부분 -->
+    
+    <!-- ★action 수정하기 -->
+    <form id="joinForm" action="/user/loginProc" method="post">
 
     <div class="container" style="margin-bottom: 100px;">
 
@@ -93,6 +132,7 @@
         </div>
 
     </div>
+    </form>
 	</div>
 </body>
 </html>

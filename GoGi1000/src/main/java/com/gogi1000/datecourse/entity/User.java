@@ -34,8 +34,12 @@ public class User {
 	private String userArea;
 	private String userAddr1;
 	private String userAddr2;
+	@Column
+	@ColumnDefault("'ROLE_USER")
 	private String userType;
-	private LocalDateTime userRgstdate = LocalDateTime.now();
-	private LocalDateTime userModfdate = LocalDateTime.now();
-	private String userUseyn ="Y";
+	private LocalDateTime userRgstDate = LocalDateTime.now();
+	private LocalDateTime userModfDate = LocalDateTime.now();
+	@Column
+	@ColumnDefault("'Y")
+	private String userUseYn;
 }
