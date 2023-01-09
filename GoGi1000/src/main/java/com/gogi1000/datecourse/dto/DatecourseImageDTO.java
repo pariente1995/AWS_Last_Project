@@ -21,4 +21,6 @@ public class DatecourseImageDTO {
     // 자바 -> 자바스크립트, 자바스크립트 -> 자바로 넘길 때 Date 형식 처리가 매우 불편하다.
     private String imageRgstDate;
     private String imageModfDate;
+    private String datecourseImageStatus;
+    private String newImageNm;
 }

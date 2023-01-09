@@ -64,28 +64,28 @@ public interface DatecourseRepository extends JpaRepository<Datecourse, Integer>
 			nativeQuery = true)
 	List<CamelHashMap> getRankDatecourseList();
 
-	// 데이트 코스 리스트 화면(관리자)에서 datecourseArea로 검색
+	// 데이트 코스 리스트 화면(관리자)에서 datecourseArea로 검색_세혁
 	Page<Datecourse> findByDatecourseArea(String datecourseArea, Pageable pageable);
 
-	// 데이트 코스 리스트 화면(관리자)에서 datecourseCategory로 검색
+	// 데이트 코스 리스트 화면(관리자)에서 datecourseCategory로 검색_세혁
 	Page<Datecourse> findByDatecourseCategory(String datecourseCategory, Pageable pageable);
 
-	// 데이트 코스 리스트 화면(관리자)에서 datecourseNm으로 검색
+	// 데이트 코스 리스트 화면(관리자)에서 datecourseNm으로 검색_세혁
 	Page<Datecourse> findByDatecourseNmContaining(String searchKeyword, Pageable pageable);
 
-	// 데이트 코스 리스트 화면(관리자)에서 datecourseArea, datecourseCategory로 검색
+	// 데이트 코스 리스트 화면(관리자)에서 datecourseArea, datecourseCategory로 검색_세혁
 	Page<Datecourse> findByDatecourseAreaAndDatecourseCategory(String datecourseArea, String datecourseCategory, Pageable pageable);
 
-	// 데이트 코스 리스트 화면(관리자)에서 datecourseArea, datecourseNm으로 검색
+	// 데이트 코스 리스트 화면(관리자)에서 datecourseArea, datecourseNm으로 검색_세혁
 	Page<Datecourse> findByDatecourseAreaAndDatecourseNmContaining(String datecourseArea, String searchKeyword, Pageable pageable);
 
-	// 데이트 코스 리스트 화면(관리자)에서 datecourseCategory, datecourseNm으로 검색
+	// 데이트 코스 리스트 화면(관리자)에서 datecourseCategory, datecourseNm으로 검색_세혁
 	Page<Datecourse> findByDatecourseCategoryAndDatecourseNmContaining(String datecourseCategory, String searchKeyword, Pageable pageable);
 
-	// 데이트 코스 리스트 화면(관리자)에서 datecourseArea, datecourseCategory, datecourseNm으로 검색
+	// 데이트 코스 리스트 화면(관리자)에서 datecourseArea, datecourseCategory, datecourseNm으로 검색_세혁
 	Page<Datecourse> findByDatecourseAreaAndDatecourseCategoryAndDatecourseNmContaining(String datecourseArea, String datecourseCategory, String searchKeyword, Pageable pageable);
 
-	// 데이트 코스 리스트 화면(관리자)에서 삭제 시, 데이트 코스 사용여부를 ('Y' -> 'N')으로 업데이트
+	// 데이트 코스 리스트 화면(관리자)에서 삭제 시, 데이트 코스 사용여부를 ('Y' -> 'N')으로 업데이트_세혁
 	@Modifying
 	@Query(value="UPDATE T_GGC_DATECOURSE "
 			    +"   SET DATECOURSE_USE_YN = 'N' "

@@ -35,4 +35,10 @@ public class DatecourseHours {
 
     @Column(nullable = false)
     private String datecourseHoursUseYn;
+
+    @Transient
+    private String datecourseHoursStatus;
+
+    @Transient
+    private String newDatecourseHoursInfo;
 }

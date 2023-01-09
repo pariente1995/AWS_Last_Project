@@ -40,4 +40,10 @@ public class DatecourseImage {
 
     @Column(nullable = false)
     private LocalDateTime imageModfDate = LocalDateTime.now();
+
+    @Transient
+    private String datecourseImageStatus;
+
+    @Transient
+    private String newImageNm;
 }

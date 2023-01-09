@@ -18,4 +18,6 @@ public class DatecourseHoursDTO {
     private String datecourseHoursRgstDate;
     private String datecourseHoursModfDate;
     private String datecourseHoursUseYn;
+    private String datecourseHoursStatus;
+    private String newDatecourseHoursInfo;
 }
