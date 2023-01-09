@@ -30,7 +30,7 @@ public class DatecourseServiceImpl implements DatecourseService {
     @Autowired
     private DatecourseMenuRepository datecourseMenuRepository;
 
-    // 데이트 코스 등록
+    // 데이트 코스 등록_세혁
     @Override
     public void insertDatecourse(Datecourse datecourse, List<DatecourseHours> iDatecourseHoursList,
                                  List<DatecourseMenu> iDatecourseMenuList, List<DatecourseImage> uploadImageList) {
@@ -75,7 +75,7 @@ public class DatecourseServiceImpl implements DatecourseService {
         }
     }
 
-    // 데이트 코스 리스트 조회(관리자)
+    // 데이트 코스 리스트 조회(관리자)_세혁
     @Override
     public Page<Datecourse> getPageDatecourseList(Datecourse datecourse, Pageable pageable) {
         // 지역, 데이트 코스 분류, 검색어(데이트 코스명) 중 하나라도 입력된 경우
@@ -132,7 +132,7 @@ public class DatecourseServiceImpl implements DatecourseService {
         }
     }
 
-    // 데이트 코스 리스트 화면(관리자)에서 삭제 시, 데이트 코스 사용여부를 ('Y' -> 'N')으로 업데이트
+    // 데이트 코스 리스트 화면(관리자)에서 삭제 시, 데이트 코스 사용여부를 ('Y' -> 'N')으로 업데이트_세혁
     @Override
     public void updateDatecourseList(List<Integer> updateDatecourseList) {
         for(int i=0; i<updateDatecourseList.size(); i++) {
@@ -140,27 +140,102 @@ public class DatecourseServiceImpl implements DatecourseService {
         }
     }
 
-    // 데이트 코스 상세 조회
+    // 데이트 코스 상세 조회_세혁
     @Override
     public Datecourse getDatecourse(int datecourseNo) {
         return datecourseRepository.findById(datecourseNo).get();
     }
 
-    // 데이트 코스 영업시간 조회
+    // 데이트 코스 영업시간 조회_세혁
     @Override
     public List<DatecourseHours> getDatecourseHoursList(int datecourseNo) {
         return datecourseHoursRepository.findByDatecourseNo(datecourseNo);
     }
 
-    // 데이트 코스 메뉴 조회
+    // 데이트 코스 메뉴 조회_세혁
     @Override
     public List<DatecourseMenu> getDatecourseMenuList(int datecourseNo) {
         return datecourseMenuRepository.findByDatecourseNo(datecourseNo);
     }
 
-    // 데이트 코스 이미지 조회
+    // 데이트 코스 이미지 조회_세혁
     @Override
     public List<DatecourseImage> getDatecourseImageList(int datecourseNo) {
-        return datecourseImageRepository.getDatecourseImageList(datecourseNo);
+        return datecourseImageRepository.findByImageGroupAndReferenceNo("E0001", datecourseNo);
+    }
+
+    // 데이트 코스 수정_세혁
+    @Override
+    public Datecourse updateDatecourse(Datecourse datecourse,
+                                List<DatecourseHours> uDatecourseHoursList,
+                                List<DatecourseMenu> uDatecourseMenuList,
+                                List<DatecourseImage> uImageList) {
+
+        // 데이트 코스 수정
+        datecourseRepository.save(datecourse);
+
+        // 상태에 따른 데이트 코스 영업시간 수정
+        if(uDatecourseHoursList.size() > 0) {
+            for(int i=0; i < uDatecourseHoursList.size(); i++) {
+                if(uDatecourseHoursList.get(i).getDatecourseHoursStatus().equals("U")) {
+                    System.out.println(i + ": " + uDatecourseHoursList.get(i));
+                    datecourseHoursRepository.save(uDatecourseHoursList.get(i));
+                } else if(uDatecourseHoursList.get(i).getDatecourseHoursStatus().equals("D")) {
+                    datecourseHoursRepository.delete(uDatecourseHoursList.get(i));
+                } else if(uDatecourseHoursList.get(i).getDatecourseHoursStatus().equals("I")) {
+                    // 추가한 파일들은 datecourseNo는 가지고 있지만 datecourseHoursNo가 없는 상태라
+                    // datecourseHoursNo를 추가
+                    int datecourseHoursNo = datecourseHoursRepository.getMaxDatecourseHoursNo(
+                            uDatecourseHoursList.get(i).getDatecourseNo());
+
+                    uDatecourseHoursList.get(i).setDatecourseHoursNo(datecourseHoursNo);
+                    datecourseHoursRepository.save(uDatecourseHoursList.get(i));
+                }
+            }
+        }
+
+
+        // 상태에 따른 데이트 코스 메뉴 수정
+        if(uDatecourseMenuList.size() > 0) {
+            for(int i=0; i < uDatecourseMenuList.size(); i++) {
+                if(uDatecourseMenuList.get(i).getDatecourseMenuStatus().equals("U")) {
+                    datecourseMenuRepository.save(uDatecourseMenuList.get(i));
+                } else if(uDatecourseMenuList.get(i).getDatecourseMenuStatus().equals("D")) {
+                    datecourseMenuRepository.delete(uDatecourseMenuList.get(i));
+                } else if(uDatecourseMenuList.get(i).getDatecourseMenuStatus().equals("I")) {
+                    // 추가한 파일들은 datecourseNo는 가지고 있지만 datecourseMenuNo가 없는 상태라
+                    // datecourseMenuNo를 추가
+                    int datecourseMenuNo = datecourseMenuRepository.getMaxDatecourseMenuNo(
+                            uDatecourseMenuList.get(i).getDatecourseNo());
+
+                    uDatecourseMenuList.get(i).setDatecourseMenuNo(datecourseMenuNo);
+                    datecourseMenuRepository.save(uDatecourseMenuList.get(i));
+                }
+            }
+        }
+
+
+        // 상태에 따른 이미지 파일 수정
+        if(uImageList.size() > 0) {
+            for(int i=0; i < uImageList.size(); i++) {
+                if (uImageList.get(i).getDatecourseImageStatus().equals("U")) {
+                    datecourseImageRepository.save(uImageList.get(i));
+                } else if(uImageList.get(i).getDatecourseImageStatus().equals("D")) {
+                    datecourseImageRepository.delete(uImageList.get(i));
+                } else if(uImageList.get(i).getDatecourseImageStatus().equals("I")) {
+                    // 추가한 파일들은 imageGroup, referenceNo는 가지고 있지만 imageNo가 없는 상태라
+                    // imageNo를 추가
+                    int imageNo = datecourseImageRepository.getMaxImageNo(
+                            uImageList.get(i).getImageGroup(), uImageList.get(i).getReferenceNo());
+                    uImageList.get(i).setImageNo(imageNo);
+
+                    datecourseImageRepository.save(uImageList.get(i));
+                }
+            }
+        }
+
+        datecourseRepository.flush(); // commit 후 새로고침
+
+        return datecourse;
     }
 }

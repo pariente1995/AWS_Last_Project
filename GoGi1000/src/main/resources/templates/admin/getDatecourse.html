@@ -12,19 +12,16 @@
   </th:block>
   <th:block layout:fragment="script">
     <script th:inline="javascript">
-      // 추가된 파일들을 담아줄 배열. File 객체로 하나씩 담음
+      // 추가된 이미지 파일들을 담아줄 배열. File 객체로 하나씩 담음
       let uploadFiles = [];
 
-      // 기존 첨부파일 배열
+      // 기존 이미지 파일 배열
       let originFiles = [];
 
-      // 변경된 첨부파일 배열
+      // 변경된 이미지 파일 배열
       let changedFiles = [];
 
-      // 기존 첨부된 파일 개수
-      let fileCount = 0;
-
-      // 파일 첨부 최대 개수
+      // 이미지 파일 첨부 최대 개수
       const totFileCount = 10;
 
       // 영업시간 영역 부분 '+'이미지 클릭 시, 추가된 입력칸에 부여할 index
@@ -48,34 +45,61 @@
       $(function() {
         // 영업시간 영역 부분 '+'이미지 클릭 시, 입력칸 추가 개수 => 즉, 영업시간 정보 개수
         let hoursCnt = /*[[${getDatecourseHoursList.size}]]*/;
-        console.log(hoursCnt);
 
         // 메뉴 영역 부분 '+'이미지 클릭 시, 입력칸 추가 개수 => 즉, 메뉴 정보 개수
         let menuCnt = /*[[${getDatecourseMenuList.size}]]*/;
-        console.log(menuCnt);
 
+        // 기존 첨부된 이미지 파일 개수
+        let fileCount = /*[[${getDatecourseImageList.size}]]*/;
+
+        console.log(fileCount)
         // 기존 영업시간 정보 담기
-        for(let i=0; i<hoursCnt; i++) {
+        for (let i = 0; i < hoursCnt; i++) {
           const originHoursObj = {
             datecourseNo: $("#datecourseNo" + i).val(),
             datecourseHoursNo: $("#datecourseHoursNo" + i).val(),
             datecourseHoursInfo: $("#datecourseHoursInfo" + i).val(),
+            datecourseHoursRgstDate: $("#datecourseHoursRgstDate" + i).val(),
+            datecourseHoursUseYn: $("#datecourseHoursUseYn" + i).val(),
             datecourseHoursStatus: "N"
           };
 
           originDatecourseHoursArr.push(originHoursObj);
         }
 
+        console.log("originDatecourseHoursArr")
+        console.log(originDatecourseHoursArr)
         // 기존 메뉴 정보 담기
-        for(let i=0; i<menuCnt; i++) {
+        for (let i = 0; i < menuCnt; i++) {
           const originMenuObj = {
             datecourseNo: $("#menuDatecourseNo" + i).val(),
             datecourseMenuNo: $("#datecourseMenuNo" + i).val(),
+            datecourseMenuType: $("#datecourseMenuType" + i).val(),
             datecourseMenuNm: $("#datecourseMenuNm" + i).val(),
-            datecourseMenuPrice: $("#datecourseMenuPrice" + i).val()
+            datecourseMenuPrice: $("#datecourseMenuPrice" + i).val(),
+            datecourseMenuRgstDate: $("#datecourseMenuRgstDate" + i).val(),
+            datecourseMenuUseYn: $("#datecourseMenuUseYn" + i).val(),
+            datecourseMenuStatus: "N"
           };
 
           originDatecourseMenuArr.push(originMenuObj);
+        }
+        console.log("originDatecourseMenuArr")
+        console.log(originDatecourseMenuArr)
+
+        // 화면 오픈 시 주차 가능여부, 반려동물 가능여부 관련 처리 => 수정 시, 해당 값들을 수정하지 않아도 이중으로 값을 가져가기에
+        // 주차 가능여부 체크되었을 시, 주차 가능여부 hidden input disabled 처리
+        if($("#datecourseParkingYn").is(":checked")) {
+          $("#datecourseParkingYn-hidden").attr("disabled", true);
+        } else {
+          $("#datecourseParkingYn-hidden").attr("disabled", false);
+        }
+
+        // 반려동물 가능여부 체크되었을 시, 반려동물 가능여부 hidden input disabled 처리
+        if($("#datecoursePetYn").is(":checked")) {
+          $("#datecoursePetYn-hidden").attr("disabled", true);
+        } else {
+          $("#datecoursePetYn-hidden").attr("disabled", false);
         }
 
 
@@ -84,16 +108,16 @@
          *************************************************/
         // input type=flie이 변경되면 미리보기 동작
         $("#realUploadFiles").on("change", function (e) {
-          // input type=file에 추가된 파일들을 변수로 받아옴
+          // input type=file에 추가된 이미지 파일들을 변수로 받아옴
           const files = e.target.files;
 
-          // 변수로 받아온 파일들을 배열 형태로 변환
+          // 변수로 받아온 이미지 파일들을 배열 형태로 변환
           const fileArr = Array.prototype.slice.call(files);
 
-          // 첨부된 파일 개수
+          // 첨부된 이미지 파일 개수
           let uploadFileCount = fileArr.length;
 
-          // 배열에 있는 파일들을 하나씩 꺼내서 처리
+          // 배열에 있는 이미지 파일들을 하나씩 꺼내서 처리
           // 이미지 확장자가 아닌 경우, 미리보기 X & input type=file value 비워주기
           for (let f of fileArr) {
             // 파일 확장자
@@ -123,21 +147,25 @@
           }
         });
 
-        for(let i=0; i<$("#datecourseImageCnt").val(); i++) {
+        for (let i = 0; i < $("#datecourseImageCnt").val(); i++) {
           const originFileObj = {
-            imageGroup: $("#imageGroup").val(),
-            referenceNo: $("#referenceNo").val(),
+            imageGroup: $(".imageGroup:first").val(),
+            referenceNo: $("#datecourseNo").val(),
             imageNo: $("#imageNo" + i).val(),
             imageNm: $("#imageNm" + i).val(),
+            imageRgstDate: $("#imageRgstDate" + i).val(),
             // 업로드 파일 경로가 각각 다를 때는 imagePath 속성도 추가
             // 파일 상태값(수정되거나 삭제된 파일은 변경)
-            imageStatus: "N"
+            datecourseImageStatus: "N"
           };
 
           originFiles.push(originFileObj);
         }
 
-        // 유효성 검사
+
+        /*******************************
+          유효성 검사 && 게시글 수정
+        ********************************/
         $("#btnUpdate").on("click", function () {
           let hourFlag = true;
           let menuFlag = true;
@@ -219,6 +247,61 @@
           }
 
           $("#realUploadFiles")[0].files = dt.files;
+
+          // dt.clearData();
+          // clearData() 사용하면 배열의 모든 내용이 담기지 않고,
+          // 파일 하나씩만 담기는 현상이 발생해서 dt를 두 개로 분리하여 사용
+          let dt2 = new DataTransfer();
+
+          for(let f in changedFiles) {
+            const file = changedFiles[f];
+            dt2.items.add(file);
+          }
+
+          $("#changedFiles")[0].files = dt2.files;
+
+          console.log(originDatecourseHoursArr)
+          console.log(originDatecourseMenuArr)
+          console.log(iDatecourseHoursArr)
+          console.log(iDatecourseMenusArr)
+
+          // 영업시간 / 메뉴 정보 / 이미지 파일 관련 배열을 JSON String 형태로 변환하여 각 input에 셋팅
+          $("#originDatecourseHours").val(JSON.stringify(originDatecourseHoursArr));
+          $("#originDatecourseMenu").val(JSON.stringify(originDatecourseMenuArr));
+          $("#datecourseHoursInfo").val(JSON.stringify(iDatecourseHoursArr));
+          $("#datecourseMenuInfo").val(JSON.stringify(iDatecourseMenusArr));
+          $("#originFiles").val(JSON.stringify(originFiles));
+          console.log($("#originDatecourseHours").val())
+          console.log($("#originDatecourseMenu").val())
+          console.log($("#datecourseHoursInfo").val())
+          console.log($("#datecourseMenuInfo").val())
+          console.log($("#originFiles").val())
+
+          // ajax에서 multipart/form-data형식을 전송하기 위해서는
+          // new FormData()를 사용하여 직접 폼데이터 객체를 만들어준다.
+          // form.serialize()는 multipart/form-data 전송불가
+          let formData = new FormData($("#datecourseUpdateForm")[0]);
+
+          // ajax에서
+          // enctype: multipart/form-data,
+          // processData: false,
+          // contentType: false로 설정
+          $.ajax({
+            enctype: 'multipart/form-data',
+            url: '/datecourse/updateDatecourse',
+            type: 'post',
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function(obj) {
+              console.log(obj);
+              alert("수정되었습니다.");
+              window.location.href="/datecourse/getDatecourse/" + obj.item.getDatecourse.datecourseNo;
+            },
+            error: function (e) {
+              console.log(e);
+            }
+          });
         });
 
         // 영업시간 영역 부분 '+'이미지 클릭 시, 입력칸 추가
@@ -260,7 +343,7 @@
 
               hoursCnt--;
 
-              if(addHoursIndex > 0) {
+              if (addHoursIndex > 0) {
                 addHoursIndex--;
               }
             } else {
@@ -268,9 +351,9 @@
               const datecourseHoursNo = $(".datecourseHoursInfo-wrapper:last .datecourseHours").attr("data-datecoursehoursno");
 
               // 기존 영업시간 정보를 담고 있는 배열에서 변경이 일어난 영업시간 정보 수정
-              for(let i=0; i<originDatecourseHoursArr.length; i++) {
-                if(datecourseNo == originDatecourseHoursArr[i].datecourseNo &&
-                   datecourseHoursNo == originDatecourseHoursArr[i].datecourseHoursNo) {
+              for (let i = 0; i < originDatecourseHoursArr.length; i++) {
+                if (datecourseNo == originDatecourseHoursArr[i].datecourseNo &&
+                        datecourseHoursNo == originDatecourseHoursArr[i].datecourseHoursNo) {
                   originDatecourseHoursArr[i].datecourseHoursStatus = "D";
                 }
               }
@@ -282,7 +365,7 @@
                 hoursCnt--;
               }
 
-              if(addHoursIndex > 0) {
+              if (addHoursIndex > 0) {
                 addHoursIndex--;
               }
             }
@@ -306,10 +389,8 @@
                 <div class="datecourseMenu"
                      data-addmenuindex="${addMenuIndex}"
                      data-datecoursemenutagstatus="A">
-                    메뉴명<input type="text" name="datecourseMenuNm" class="datecourseMenuNm"
-                    data-datecoursemenu-index="${addMenuIndex}" placeholder="메뉴명을 입력하세요.">
-                     가격<input type="text" name="datecourseMenuPrice" class="datecourseMenuPrice"
-                    data-datecoursemenu-index="${addMenuIndex}" placeholder="가격을 입력하세요."
+                    메뉴명<input type="text" name="datecourseMenuNm" class="datecourseMenuNm" placeholder="메뉴명을 입력하세요.">
+                     가격<input type="text" name="datecourseMenuPrice" class="datecourseMenuPrice" placeholder="가격을 입력하세요."
                     onKeyup="${fnRegex}"> 원
                 <div>
             `;
@@ -338,29 +419,29 @@
 
               menuCnt--;
 
-              if(addMenuIndex > 0) {
+              if (addMenuIndex > 0) {
                 addMenuIndex--;
               }
             } else {
-              const datecourseNo = $("#datecourseNo").val();
-              const datecourseMenuNo = $(".datecourseMenu:last").attr("data-datecoursemenuno");
+              const datecourseNo = $("#datecourseMenu-field .datecourseMenu:last").attr("data-datecourseno");
+              const datecourseMenuNo = $("#datecourseMenu-field .datecourseMenu:last").attr("data-datecoursemenuno");
 
               // 기존 메뉴 정보를 담고 있는 배열에서 변경이 일어난 메뉴 정보 수정
-              for(let i=0; i<originDatecourseMenuArr.length; i++) {
-                if(datecourseNo == originDatecourseMenuArr[i].datecourseNo &&
-                   datecourseMenuNo == originDatecourseMenuArr[i].datecourseMenuNo) {
+              for (let i = 0; i < originDatecourseMenuArr.length; i++) {
+                if (datecourseNo == originDatecourseMenuArr[i].datecourseNo &&
+                        datecourseMenuNo == originDatecourseMenuArr[i].datecourseMenuNo) {
                   originDatecourseMenuArr[i].datecourseMenuStatus = "D";
                 }
               }
 
-              // 마지막 메뉴 입력칸 삭제
-              $(".datecourseHoursInfo-wrapper:last .datecourseHours").remove();
+              // 마지막 메뉴 div 삭제
+              $("#datecourseMenu-field .datecourseMenu:last").remove();
 
               if (menuCnt > 1) {
                 menuCnt--;
               }
 
-              if(addMenuIndex > 0) {
+              if (addMenuIndex > 0) {
                 addMenuIndex--;
               }
             }
@@ -377,16 +458,16 @@
           const datecourseHoursTagStatus = $(this).data("datecoursehourstagstatus");
 
           // 기존 영업시간 정보를 담고 있는 배열에서 변경이 일어난 영업시간 정보 수정
-          for(let i=0; i<originDatecourseHoursArr.length; i++) {
-            if(datecourseNo == originDatecourseHoursArr[i].datecourseNo &&
-               datecourseHoursNo == originDatecourseHoursArr[i].datecourseHoursNo) {
+          for (let i = 0; i < originDatecourseHoursArr.length; i++) {
+            if (datecourseNo == originDatecourseHoursArr[i].datecourseNo &&
+                    datecourseHoursNo == originDatecourseHoursArr[i].datecourseHoursNo) {
               originDatecourseHoursArr[i].datecourseHoursStatus = "U";
               originDatecourseHoursArr[i].newDatecourseHoursInfo = $(this).val();
             }
           }
 
           // 추가된 영업시간 input의 경우, iDatecourseHoursArr 배열에 담기
-          if(datecourseHoursTagStatus == "A") {
+          if (datecourseHoursTagStatus == "A") {
             // 추가된 영업시간 input의 index 가져와서 셋팅
             const index = $(this).data("addhoursindex");
 
@@ -394,7 +475,7 @@
             // index가 0이거나 iDatecourseHoursArr 배열에서 index-1의 값이 null이 아니면 배열에 내용 삽입
             if (iDatecourseHoursArr[index] != null) {
               iDatecourseHoursArr[index] = $(this).val();
-            } else if(index == 0 || iDatecourseHoursArr[index-1] != null) {
+            } else if (index == 0 || iDatecourseHoursArr[index - 1] != null) {
               iDatecourseHoursArr.push($(this).val());
             } else {
               alert("순서대로 입력해주시기 바랍니다.");
@@ -410,52 +491,89 @@
         */
         // 메뉴명 입력 시
         $(document).on("change", ".datecourseMenuNm", function () {
-          // 메뉴명의 index 가져와서 셋팅
-          const index = $(this).attr("data-datecoursemenu-index");
+          const datecourseNo = $(this).parent().data("datecourseno");
+          const datecourseMenuNo = $(this).parent().data("datecoursemenuno");
+          const datecourseMenuStatus = $(this).parent().data("datecoursemenutagstatus");
 
-          // iDatecourseMenusArr의 해당 index의 값이 null인 경우에만 객체 담기
-          if (iDatecourseMenusArr[index] == null) {
-            // 메뉴타입, 메뉴명, 가격을 담을 객체 생성
-            const datecourseMenuObj = {
-              datecourseMenuType: $("#datecourseMenuType").val(),
-              datecourseMenuNm: null,
-              datecourseMenuPrice: null
-            };
-
-            // datecourseMenuObj 객체를 배열에 담기
-            iDatecourseMenusArr.push(datecourseMenuObj);
+          // 기존 메뉴 정보를 담고 있는 배열에서 변경이 일어난 메뉴 정보 수정
+          for (let i = 0; i < originDatecourseMenuArr.length; i++) {
+            if (datecourseNo == originDatecourseMenuArr[i].datecourseNo &&
+                    datecourseMenuNo == originDatecourseMenuArr[i].datecourseMenuNo) {
+              originDatecourseMenuArr[i].datecourseMenuStatus = "U";
+              originDatecourseMenuArr[i].newDatecourseMenuNm = $(this).val();
+            }
           }
 
-          // 메뉴명 셋팅
-          iDatecourseMenusArr[index].datecourseMenuNm = $(this).val();
+          // 추가된 메뉴 div의 경우, iDatecourseMenusArr 배열에 담기
+          if (datecourseMenuStatus == "A") {
+            // 추가된 메뉴 div의 index 가져와서 셋팅
+            const index = $(this).parent().data("addmenuindex");
+
+            // iDatecourseMenusArr의 해당 index가 null이 아닌 경우, 해당 index의 객체에 메뉴명 삽입
+            // index가 0이거나 iDatecourseMenusArr 배열에서 index-1의 값이 null이 아니면 배열에 객체 삽입 후 메뉴명 셋팅
+            if (iDatecourseMenusArr[index] != null) {
+              iDatecourseMenusArr[index].datecourseMenuNm = $(this).val();
+            } else if (index == 0 || iDatecourseMenusArr[index - 1] != null) {
+              // 메뉴타입, 메뉴명, 가격을 담을 객체 생성
+              const datecourseMenuObj = {
+                datecourseMenuType: $("#datecourseMenuType0").val(),
+                datecourseMenuNm: null,
+                datecourseMenuPrice: null
+              };
+
+              // datecourseMenuObj 객체를 배열에 담기
+              iDatecourseMenusArr.push(datecourseMenuObj);
+
+              // 메뉴명 셋팅
+              iDatecourseMenusArr[index].datecourseMenuNm = $(this).val();
+            } else {
+              alert("순서대로 입력해주시기 바랍니다.");
+              $(this).val("");
+            }
+          }
         });
 
         // 가격 입력 시
         $(document).on("change", ".datecourseMenuPrice", function () {
-          // 가격의 index 가져와서 셋팅
-          const index = $(this).attr("data-datecoursemenu-index");
+          const datecourseNo = $(this).parent().data("datecourseno");
+          const datecourseMenuNo = $(this).parent().data("datecoursemenuno");
+          const datecourseMenuStatus = $(this).parent().data("datecoursemenutagstatus");
 
-          // iDatecourseMenusArr의 해당 index의 값이 null인 경우에만 객체 담기
-          if (iDatecourseMenusArr[index] == null) {
-            // 메뉴타입, 메뉴명, 가격을 담을 객체 생성
-            const datecourseMenuObj = {
-              datecourseMenuType: $("#datecourseMenuType").val(),
-              datecourseMenuNm: null,
-              datecourseMenuPrice: null
-            };
-
-            // datecourseMenuObj 객체를 배열에 담기
-            iDatecourseMenusArr.push(datecourseMenuObj);
+          // 기존 메뉴 정보를 담고 있는 배열에서 변경이 일어난 메뉴 정보 수정
+          for (let i = 0; i < originDatecourseMenuArr.length; i++) {
+            if (datecourseNo == originDatecourseMenuArr[i].datecourseNo &&
+                    datecourseMenuNo == originDatecourseMenuArr[i].datecourseMenuNo) {
+              originDatecourseMenuArr[i].datecourseMenuStatus = "U";
+              originDatecourseMenuArr[i].newDatecourseMenuPrice = $(this).val();
+            }
           }
 
-          // 가격 셋팅
-          iDatecourseMenusArr[index].datecourseMenuPrice = $(this).val();
-        });
+          if (datecourseMenuStatus == "A") {
+            // 추가된 메뉴 div의 index 가져와서 셋팅
+            const index = $(this).parent().data("addmenuindex");
 
-        // submit시, 영업시간 및 메뉴 정보 배열을 JSON String 형태로 변환하여 각 input에 셋팅
-        $("#datecourseRegForm").on("submit", function () {
-          $("#datecourseHoursInfo").val(JSON.stringify(iDatecourseHoursArr));
-          $("#datecourseMenuInfo").val(JSON.stringify(iDatecourseMenusArr));
+            // iDatecourseMenusArr의 해당 index가 null이 아닌 경우, 해당 index의 객체에 가격 삽입
+            // index가 0이거나 iDatecourseMenusArr 배열에서 index-1의 값이 null이 아니면 배열에 객체 삽입 후 가격 셋팅
+            if (iDatecourseMenusArr[index] != null) {
+              iDatecourseMenusArr[index].datecourseMenuPrice = $(this).val();
+            } else if (index == 0 || iDatecourseMenusArr[index - 1] != null) {
+              // 메뉴타입, 메뉴명, 가격을 담을 객체 생성
+              const datecourseMenuObj = {
+                datecourseMenuType: $("#datecourseMenuType0").val(),
+                datecourseMenuNm: null,
+                datecourseMenuPrice: null
+              };
+
+              // datecourseMenuObj 객체를 배열에 담기
+              iDatecourseMenusArr.push(datecourseMenuObj);
+
+              // 가격 셋팅
+              iDatecourseMenusArr[index].datecourseMenuPrice = $(this).val();
+            } else {
+              alert("순서대로 입력해주시기 바랍니다.");
+              $(this).val("");
+            }
+          }
         });
       });
 
@@ -469,7 +587,7 @@
         reader.onload = function(e) {
           // 이미지를 표출해줄 img태그 선언
           let img = document.createElement("img");
-          img.setAttribute("style", "width: 100%; height: 100%; z-index: none;");
+          img.setAttribute("style", "width: 100%; height: 100%; z-index: auto;");
 
           // 이미지 파일인지 아닌지 체크
           if(file.name.toLowerCase().match(/(.*?)\.(jpg|jpeg|png|gif|svg|bmp)$/)) {
@@ -598,8 +716,8 @@
         // 기존 파일을 담고 있는 배열에서 변경이 일어난 파일 수정
         for(let i=0; i<originFiles.length; i++) {
           if(imageNo == originFiles[i].imageNo) {
-            originFiles[i].imageStatus = "U";
-            originFiles[i].newFileNm = fileArr[0].name;
+            originFiles[i].datecourseImageStatus = "U";
+            originFiles[i].newImageNm = fileArr[0].name;
           }
         }
       }
@@ -614,7 +732,7 @@
 
         for(let i=0; i<originFiles.length; i++) {
           if(delFile == originFiles[i].imageNo) {
-            originFiles[i].imageStatus = "D";
+            originFiles[i].datecourseImageStatus = "D";
           }
         }
 
@@ -656,13 +774,19 @@
     <h1>데이트 코스 수정</h1>
     <hr>
     <div id="datecourse-form-wrapper">
-      <form action="#" id="datecourseUpdateForm" method="" enctype="multipart/form-data">
+      <form id="datecourseUpdateForm" enctype="multipart/form-data">
+        <input type="hidden" name="datecourseRgstDate"  id="datecourseRgstDate"
+               th:value="${getDatecourse.datecourseRgstDate}">
+        <input type="hidden" name="datecourseUseYn" id="datecourseUseYn"
+               th:value="${getDatecourse.datecourseUseYn}">
+        <input type="hidden" name="originDatecourseHours" id="originDatecourseHours">
+        <input type="hidden" name="originDatecourseMenu" id="originDatecourseMenu">
         <input type="hidden" name="originFiles" id="originFiles">
         <div id="datecourseRgstDate-wrapper" class="common common-display">
           <div class="common-text">
             <label for="datecourseRgstDate">등록일자</label>
           </div>
-          <input type="text" name="datecourseRgstDate" id="datecourseRgstDate"
+          <input type="text" name="datecourseRgstDateText" id="datecourseRgstDateText"
                  class="common-margin" readonly
                  th:value="${#strings.substring(getDatecourse.datecourseRgstDate, 0, 10)}">
         </div>
@@ -715,9 +839,9 @@
                   class="common-margin"
                   onFocus="this.initialSelect = this.selectedIndex;"
                   onChange="this.selectedIndex = this.initialSelect;">
-            <option value="B0001" th:selected="${getDatecourse.datecourseCategory}">놀거리</option>
-            <option value="B0002" th:selected="${getDatecourse.datecourseCategory}">맛집</option>
-            <option value="B0003" th:selected="${getDatecourse.datecourseCategory}">카페</option>
+            <option value="B0001" th:selected="${getDatecourse.datecourseCategory == 'B0001'}">놀거리</option>
+            <option value="B0002" th:selected="${getDatecourse.datecourseCategory == 'B0002'}">맛집</option>
+            <option value="B0003" th:selected="${getDatecourse.datecourseCategory == 'B0003'}">카페</option>
           </select>
         </div>
         <div id="datecourseSummary-wrapper" class="common common-display">
@@ -760,12 +884,12 @@
             <label for="datecourseFoodType">음식종류</label>
           </div>
           <select name="datecourseFoodType" id="datecourseFoodType" class="common-margin">
-            <option value="C0001" th:selected="${getDatecourse.datecourseFoodType}">한식</option>
-            <option value="C0002" th:selected="${getDatecourse.datecourseFoodType}">양식</option>
-            <option value="C0003" th:selected="${getDatecourse.datecourseFoodType}">중식</option>
-            <option value="C0004" th:selected="${getDatecourse.datecourseFoodType}">일식</option>
-            <option value="C0005" th:selected="${getDatecourse.datecourseFoodType}">분식</option>
-            <option value="C0006" th:selected="${getDatecourse.datecourseFoodType}">기타</option>
+            <option value="C0001" th:selected="${getDatecourse.datecourseFoodType == 'C0001'}">한식</option>
+            <option value="C0002" th:selected="${getDatecourse.datecourseFoodType == 'C0002'}">양식</option>
+            <option value="C0003" th:selected="${getDatecourse.datecourseFoodType == 'C0003'}">중식</option>
+            <option value="C0004" th:selected="${getDatecourse.datecourseFoodType == 'C0004'}">일식</option>
+            <option value="C0005" th:selected="${getDatecourse.datecourseFoodType == 'C0005'}">분식</option>
+            <option value="C0006" th:selected="${getDatecourse.datecourseFoodType == 'C0006'}">기타</option>
           </select>
         </div>
         <div id="datecourseHours-wrapper" class="common common-display">
@@ -788,6 +912,10 @@
                      th:data-datecoursehoursno="${hours.datecourseHoursNo}"
                      data-datecoursehourstagstatus="O"
                      th:value="${hours.datecourseHoursInfo}">
+              <input type="hidden" th:name="'datecourseHoursRgstDate' + ${hoursStat.index}" th:id="'datecourseHoursRgstDate' + ${hoursStat.index}"
+                     th:value="${hours.datecourseHoursRgstDate}">
+              <input type="hidden" th:name="'datecourseHoursUseYn' + ${hoursStat.index}" th:id="'datecourseHoursUseYn' + ${hoursStat.index}"
+                     th:value="${hours.datecourseHoursUseYn}">
             </div>
           </div>
           <img th:src="@{/images/plus.png}" id="datecourseHours-plusImg" class="plusImg" width="25px" height="25px">
@@ -830,29 +958,30 @@
         </div>
         <div id="datecourseMenu-wrapper" class="common common-display">
           <div class="common-text">메뉴</div>
-          <!-- <input type="hidden" name="datecourseMenuType" id="datecourseMenuType" value="D0001"> -->
           <input type="hidden" name="datecourseMenuInfo" id="datecourseMenuInfo" value="">
           <div id="datecourseMenu-field">
             <div th:each="menu : ${getDatecourseMenuList}"
                  class="datecourseMenu"
+                 th:data-datecourseno="${menu.datecourseNo}"
                  th:data-datecoursemenuno="${menu.datecourseMenuNo}"
                  data-datecoursemenutagstatus="O">
-              <input type="hidden" th:id="'menuDatecourseNo' + ${menuStat.index}" th:name="'menuDatecourseNo' + ${menuStat.index}"
+              <input type="hidden" th:name="'menuDatecourseNo' + ${menuStat.index}" th:id="'menuDatecourseNo' + ${menuStat.index}"
                      th:value="${menu.datecourseNo}">
-              <input type="hidden" th:id="'datecourseMenuNo' + ${menuStat.index}" th:name="'datecourseMenuNo' + ${menuStat.index}"
+              <input type="hidden" th:name="'datecourseMenuNo' + ${menuStat.index}" th:id="'datecourseMenuNo' + ${menuStat.index}"
                      th:value="${menu.datecourseMenuNo}">
-              <input type="hidden" th:id="'datecourseMenuNm' + ${menuStat.index}" th:name="'datecourseMenuNm' + ${menuStat.index}"
+              <input type="hidden" th:name="'datecourseMenuType' + ${menuStat.index}" th:id="'datecourseMenuType' + ${menuStat.index}"
+                     th:value="${menu.datecourseMenuType}">
+              <input type="hidden" th:name="'datecourseMenuNm' + ${menuStat.index}" th:id="'datecourseMenuNm' + ${menuStat.index}"
                      th:value="${menu.datecourseMenuNm}">
-              <input type="hidden" th:id="'datecourseMenuPrice' + ${menuStat.index}" th:name="'datecourseMenuPrice' + ${menuStat.index}"
+              <input type="hidden" th:name="'datecourseMenuPrice' + ${menuStat.index}" th:id="'datecourseMenuPrice' + ${menuStat.index}"
                      th:value="${menu.datecourseMenuPrice}">
-              메뉴명<input type="text" name="datecourseMenuNm" class="datecourseMenuNm"
-                          data-datecoursemenu-index="${menuCnt}" placeholder="메뉴명을 입력하세요."
-                          th:value="${menu.datecourseMenuNm}"
-                          th:data-datecourseno="${menu.datecourseNo}"
-                          th:data-datecoursemenuno="${menu.datecourseMenuNo}"
-                          data-datecoursemenustatus="O">
-              가격<input type="text" name="datecourseMenuPrice" class="datecourseMenuPrice"
-                        data-datecoursemenu-index="${menuCnt}" placeholder="가격을 입력하세요."
+              <input type="hidden" th:name="'datecourseMenuRgstDate' + ${menuStat.index}" th:id="'datecourseMenuRgstDate' + ${menuStat.index}"
+                     th:value="${menu.datecourseMenuRgstDate}">
+              <input type="hidden" th:name="'datecourseMenuUseYn' + ${menuStat.index}" th:id="'datecourseMenuUseYn' + ${menuStat.index}"
+                     th:value="${menu.datecourseMenuUseYn}">
+              메뉴명<input type="text" name="datecourseMenuNm" class="datecourseMenuNm" placeholder="메뉴명을 입력하세요."
+                          th:value="${menu.datecourseMenuNm}">
+              가격<input type="text" name="datecourseMenuPrice" class="datecourseMenuPrice" placeholder="가격을 입력하세요."
                         onkeyup="fnDatecourseMenuPriceKeyup(this);"
                         th:value="${menu.datecourseMenuPrice}"> 원
             </div>
@@ -865,10 +994,50 @@
           <div id="btnUploadFiles" class="common-margin">
             <label for="realUploadFiles" id="realUploadFiles-label">이미지 업로드</label>
             <input type="file" name="realUploadFiles" id="realUploadFiles" multiple="multiple" accept="image/*">
+            <input type="file" name="changedFiles" id="changedFiles" style="display: none; multiple: multiple;">
           </div>
           <p id="file-info">※ 이미지 파일의 경우, 최대 10개까지만 첨부가 가능합니다.</p>
         </div>
-        <div id="image-preview" class="common"></div>
+        <div id="image-preview" class="common">
+          <div th:each="datecourseImage : ${getDatecourseImageList}"
+            style="display: inline-block; position: relative; width: 150px; height: 120px;
+            margin: 5px; border: 1px solid #ee2d7a; border-radius: 3px; z-index: 1;">
+
+            <!-- index는 0부터 시작, count는 1부터 시작 -->
+            <!-- ${datecourseImageStat.index} -> jstl의 ${status.index}와 동일 -->
+            <input type="hidden" class="imageGroup" name="imageGroup" th:value="${datecourseImage.imageGroup}">
+            <input type="hidden" th:id="'imageNo' + ${datecourseImageStat.index}" th:name="'imageNo' + ${datecourseImageStat.index}"
+                   th:value="${datecourseImage.imageNo}">
+            <input type="hidden" th:id="'imageNm' + ${datecourseImageStat.index}" th:name="'imageNm' + ${datecourseImageStat.index}"
+                   th:value="${datecourseImage.imageNm}">
+            <input type="hidden" th:id="'imageRgstDate' + ${datecourseImageStat.index}" th:name="'imageRgstDate' + ${datecourseImageStat.index}"
+                   th:value="${datecourseImage.imageRgstDate}">
+            <input type="file" th:id="'changedFile' + ${datecourseImage.imageNo}"
+                   th:name="'changedFile' + ${datecourseImage.imageNo}"
+                   style="display: none;"
+                   th:onchange="fnGetChangedFileInfo([[${datecourseImage.imageNo}]], event)">
+            <!-- 마지막 이미지 파일일 때, 이미지 파일개수 찍어주기-->
+            <input th:if="${datecourseImageStat.last}" type="hidden" id="datecourseImageCnt"
+                   name="datecourseImageCnt" th:value="${datecourseImageStat.count}">
+
+            <img th:id="'img' + ${datecourseImage.imageNo}"
+                 th:src="@{'/upload/' + ${datecourseImage.imageNm}}"
+                 style="width: 100%; height: 100%; z-index: auto; cursor: pointer;"
+                 class="fileImg" th:onclick="fnImgChange([[${datecourseImage.imageNo}]])">
+
+            <input type="button" class="btnDel"
+                   value="x"
+                   th:data-del-file="${datecourseImage.imageNo}"
+                   style="width: 30px; height: 30px; position: absolute; right: 0px; bottom: 0px;
+												   z-index: 999; background-color: rgba(255, 255, 255, 0.1);"
+                   onclick="fnImgDel(event)">
+
+            <p th:id="'fileNm' + ${datecourseImage.imageNo}"
+               style="display:inline-block; font-size: 8px; cursor:pointer;"
+               th:text="${datecourseImage.imageOriginNm}">
+            </p>
+          </div>
+        </div>
         <div id="btn-wrapper">
           <button type="button" id="btnUpdate">수정하기</button>
           <button type="button" id="btnDelete">삭제하기</button>

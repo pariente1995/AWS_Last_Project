@@ -15,7 +15,7 @@
 }
 
 /* 등록일자, 데이트 코스 번호 */
-#datecourseRgstDate, #datecourseNo {
+#datecourseRgstDateText, #datecourseNo {
   height: 25px;
   background-color: lightgray;
   border: none;
@@ -171,7 +171,7 @@
 
 /* 이미지 미리보기 영역 */
 #image-preview {
-  width: 648px;
+  width: 658px;
   min-height: 250px;
   margin-left: 160px;
   border: 1px solid black;
@@ -180,7 +180,7 @@
 
 #btn-wrapper {
   text-align: right;
-  margin-right: 190px;
+  margin-right: 180px;
 }
 
 /* 수정하기, 삭제하기 버튼 */

@@ -1,20 +1,20 @@
 package com.gogi1000.datecourse.repository;
 
-import java.util.List;
-
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
-
 import com.gogi1000.datecourse.entity.Datecourse;
 import com.gogi1000.datecourse.entity.DatecourseImage;
 import com.gogi1000.datecourse.entity.DatecourseImageId;
 import com.gogi1000.datecourse.entity.Hotdeal;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+
+import java.util.List;
 
 public interface DatecourseImageRepository extends JpaRepository<DatecourseImage, DatecourseImageId> {
     // @Query: 원하는 쿼리를 작성할 수 있는 어노테이션
     // nativeQuery: true로 설정하면 원하는 대로 쿼리 작성, 메소드명도 JPA 규칙에서 벗어날 수 있다.
     // value: 쿼리 작성
+	// 데이트 코스 이미지 테이블의 (IMAGE_NO MAX 값 + 1) 조회_세혁
     @Query(value="SELECT IFNULL(MAX(I.IMAGE_NO), 0) + 1 FROM T_GGC_IMAGE I WHERE I.IMAGE_GROUP =:imageGroup AND I.REFERENCE_NO =:referenceNo", nativeQuery=true)
     // ServiceImpl에서 넘겨주는 파라미터의 변수명이 받아주는 변수의 이름과 다를 때, 해당 파라미터이름을 명시
     // 매퍼나 리포지토리에 여러 개의 파라미터를 보낼 때 @Param 어노테이션 사용!
@@ -39,12 +39,8 @@ public interface DatecourseImageRepository extends JpaRepository<DatecourseImage
     List<DatecourseImage> findByHotdealNo(@Param("hotdealNo") int hotdealNo);
 
 
-	// 데이트 코스 이미지 리스트 조회
-	@Query(value="SELECT *"
-			+"      FROM T_GGC_IMAGE I"
-			+"     WHERE I.IMAGE_GROUP = 'E0001'"
-			+"       AND I.REFERENCE_NO = :datecourseNo", nativeQuery=true)
-	List<DatecourseImage> getDatecourseImageList(@Param("datecourseNo") int datecourseNo);
+	// 데이트 코스 이미지 리스트 조회_세혁
+	List<DatecourseImage> findByImageGroupAndReferenceNo(String imageGroup, int referenceNo);
 	
 	// 메인에서 인기 상세 리스트 조회 시, 이미지 리스트 조회
 	@Query(value = "SELECT A.*,"

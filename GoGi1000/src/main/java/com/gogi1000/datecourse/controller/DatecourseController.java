@@ -20,11 +20,14 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.transaction.Transactional;
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/datecourse")
@@ -32,7 +35,7 @@ public class DatecourseController {
     @Autowired
     private DatecourseService datecourseService;
 
-    // 데이트 코스 등록 화면으로 이동
+    // 데이트 코스 등록 화면으로 이동_세혁
     @GetMapping("/insertDatecourse")
     public ModelAndView insertDatecourseView() {
         ModelAndView mv = new ModelAndView();
@@ -41,7 +44,7 @@ public class DatecourseController {
         return mv;
     }
 
-    // 데이트 코스 등록
+    // 데이트 코스 등록_세혁
     @PostMapping("/insertDatecourse")
     // realUploadFiles(매개변수)는 input의 name과 동일해야 한다.
     public void insertDatecourse(DatecourseDTO datecourseDTO,
@@ -142,7 +145,7 @@ public class DatecourseController {
         //response.sendRedirect("/admin/getDatecourseList");
     }
 
-    // 데이트 코스 상세 조회
+    // 데이트 코스 상세 조회_세혁
     @GetMapping("/getDatecourse/{datecourseNo}")
     public ModelAndView getDatecourse(@PathVariable int datecourseNo) {
         // 데이트 코스 조회
@@ -163,6 +166,8 @@ public class DatecourseController {
                 .datecourseOfficialSite(datecourse.getDatecourseOfficialSite())
                 .datecourseParkingYn(datecourse.getDatecourseParkingYn())
                 .datecoursePetYn(datecourse.getDatecoursePetYn())
+                .datecourseModfDate(datecourse.getDatecourseModfDate().toString())
+                .datecourseUseYn(datecourse.getDatecourseUseYn())
                 .build();
         
         // 데이트 코스 영업시간 조회
@@ -176,6 +181,8 @@ public class DatecourseController {
                     .datecourseNo(datecourseHoursList.get(i).getDatecourseNo())
                     .datecourseHoursNo(datecourseHoursList.get(i).getDatecourseHoursNo())
                     .datecourseHoursInfo(datecourseHoursList.get(i).getDatecourseHoursInfo())
+                    .datecourseHoursRgstDate(datecourseHoursList.get(i).getDatecourseHoursRgstDate().toString())
+                    .datecourseHoursUseYn(datecourseHoursList.get(i).getDatecourseHoursUseYn())
                     .build();
 
             getDatecourseHoursList.add(returnDatecourseHours);
@@ -191,8 +198,11 @@ public class DatecourseController {
             DatecourseMenuDTO returnDatecourseMenu = DatecourseMenuDTO.builder()
                     .datecourseNo(datecourseMenuList.get(i).getDatecourseNo())
                     .datecourseMenuNo(datecourseMenuList.get(i).getDatecourseMenuNo())
+                    .datecourseMenuType(datecourseMenuList.get(i).getDatecourseMenuType())
                     .datecourseMenuNm(datecourseMenuList.get(i).getDatecourseMenuNm())
                     .datecourseMenuPrice(datecourseMenuList.get(i).getDatecourseMenuPrice())
+                    .datecourseMenuRgstDate(datecourseMenuList.get(i).getDatecourseMenuRgstDate().toString())
+                    .datecourseMenuUseYn(datecourseMenuList.get(i).getDatecourseMenuUseYn())
                     .build();
 
             getDatecourseMenuList.add(returnDatecourseMenu);
@@ -206,10 +216,13 @@ public class DatecourseController {
 
         for(DatecourseImage datecourseImage : datecourseImageList) {
             DatecourseImageDTO datecourseImageDTO = DatecourseImageDTO.builder()
+                    .imageGroup(datecourseImage.getImageGroup())
                     .referenceNo(datecourseImage.getReferenceNo())
                     .imageNo(datecourseImage.getImageNo())
                     .imageNm(datecourseImage.getImageNm())
+                    .imageOriginNm(datecourseImage.getImageOriginNm())
                     .imagePath(datecourseImage.getImagePath())
+                    .imageRgstDate(datecourseImage.getImageRgstDate().toString())
                     .build();
 
             getDatecourseImageList.add(datecourseImageDTO);
@@ -230,7 +243,7 @@ public class DatecourseController {
         return mv;
     }
 
-    // 데이트 코스 리스트 화면(관리자) 조회
+    // 데이트 코스 리스트 화면(관리자) 조회_세혁
     @GetMapping("/getDatecourseList")
     public ModelAndView getPageDatecourseList(DatecourseDTO datecourseDTO, @PageableDefault(page=0, size=15) Pageable pageable) {
         Datecourse datecourse = Datecourse.builder()
@@ -269,7 +282,7 @@ public class DatecourseController {
         return mv;
     }
 
-    // 데이트 코스 리스트 화면(관리자)에서 삭제 시, 데이트 코스 사용여부를 ('Y' -> 'N')으로 업데이트
+    // 데이트 코스 리스트 화면(관리자)에서 삭제 시, 데이트 코스 사용여부를 ('Y' -> 'N')으로 업데이트_세혁
     @PostMapping("/updateDatecourseList")
     public ResponseEntity<?> updateDatecourseList(
             DatecourseDTO datecourseDTO,
@@ -304,6 +317,273 @@ public class DatecourseController {
         } catch(Exception e) {
             response.setErrorMessage(e.getMessage());
             return ResponseEntity.badRequest().body(response);
+        }
+    }
+
+    // 데이트 코스 수정_세혁
+    @Transactional // 쿼리가 실행된 후 바로 트랜잭션을 호출
+    @PostMapping("/updateDatecourse")
+    public ResponseEntity<?> updateDatecourse(DatecourseDTO datecourseDTO,
+                                              @RequestParam("originDatecourseHours") String originDatecourseHours,
+                                              @RequestParam("originDatecourseMenu") String originDatecourseMenu,
+                                              @RequestParam("datecourseHoursInfo") String datecourseHoursInfo,
+                                              @RequestParam("datecourseMenuInfo") String datecourseMenuInfo,
+                                              @RequestParam("originFiles") String originFiles,
+                                              MultipartFile[] realUploadFiles,
+                                              MultipartFile[] changedFiles,
+                                              HttpServletRequest request) throws IOException {
+
+        ResponseDTO<Map<String, Object>> responseDTO = new ResponseDTO<>();
+
+        // 기존 영업시간 리스트 정보
+        List<DatecourseHoursDTO> originDatecourseHoursList = new ObjectMapper().readValue(originDatecourseHours, new TypeReference<List<DatecourseHoursDTO>>() {});
+
+        // 기존 메뉴 리스트 정보
+        List<DatecourseMenuDTO> originDatecourseMenuList = new ObjectMapper().readValue(originDatecourseMenu, new TypeReference<List<DatecourseMenuDTO>>() {});
+
+        // 새로 추가된 영업시간 리스트 정보
+        List<String> datecourseHoursList = new ObjectMapper().readValue(datecourseHoursInfo, new TypeReference<List<String>>() {});
+
+        // 새로 추가된 메뉴 리스트 정보
+        List<DatecourseMenuDTO> datecourseMenuList = new ObjectMapper().readValue(datecourseMenuInfo, new TypeReference<List<DatecourseMenuDTO>>() {});
+
+        // 기존 첨부된 이미지 파일 리스트 정보
+        List<DatecourseImageDTO> originFileList = new ObjectMapper().readValue(originFiles, new TypeReference<List<DatecourseImageDTO>>() {});
+
+        String attachPath = request.getSession().getServletContext().getRealPath("/")
+                + "/upload/";
+
+        File directory = new File(attachPath);
+
+        if(!directory.exists()) {
+            directory.mkdir();
+        }
+
+        // DB에서 수정, 삭제, 추가 될 영업시간 정보를 담는 리스트
+        List<DatecourseHours> uDatecourseHoursList = new ArrayList<DatecourseHours>();
+
+        // DB에서 수정, 삭제, 추가 될 메뉴 정보를 담는 리스트
+        List<DatecourseMenu> uDatecourseMenuList = new ArrayList<DatecourseMenu>();
+
+        // DB에서 수정, 삭제, 추가 될 이미지 파일 정보를 담는 리스트
+        List<DatecourseImage> uImageList = new ArrayList<DatecourseImage>();
+
+        try {
+            Datecourse datecourse = Datecourse.builder()
+                    .datecourseNo(datecourseDTO.getDatecourseNo())
+                    .datecourseNm(datecourseDTO.getDatecourseNm())
+                    .datecourseArea(datecourseDTO.getDatecourseArea())
+                    .datecourseCategory(datecourseDTO.getDatecourseCategory())
+                    .datecourseSummary(datecourseDTO.getDatecourseSummary())
+                    .datecourseDesc(datecourseDTO.getDatecourseDesc())
+                    .datecourseAddr(datecourseDTO.getDatecourseAddr())
+                    .datecourseInoutYn(datecourseDTO.getDatecourseInoutYn())
+                    .datecourseFoodType(datecourseDTO.getDatecourseFoodType())
+                    .datecourseTel(datecourseDTO.getDatecourseTel())
+                    .datecourseOfficialSite(datecourseDTO.getDatecourseOfficialSite())
+                    .datecourseParkingYn(datecourseDTO.getDatecourseParkingYn())
+                    .datecoursePetYn(datecourseDTO.getDatecoursePetYn())
+                    .datecourseRgstDate(LocalDateTime.parse(datecourseDTO.getDatecourseRgstDate()))
+                    .datecourseModfDate(LocalDateTime.now()) // 수정일자는 현재일자로 수정되도록
+                    .datecourseUseYn(datecourseDTO.getDatecourseUseYn())
+                    .build();
+
+
+            /**********************************
+                영업시간 정보 처리
+            ***********************************/
+            for(int i=0; i<originDatecourseHoursList.size(); i++) {
+                // 수정되는 영업시간 정보 처리
+                if(originDatecourseHoursList.get(i).getDatecourseHoursStatus().equals("U")) {
+                    DatecourseHours datecourseHours = new DatecourseHours();
+
+                    datecourseHours.setDatecourseNo(originDatecourseHoursList.get(i).getDatecourseNo());
+                    datecourseHours.setDatecourseHoursNo(originDatecourseHoursList.get(i).getDatecourseHoursNo());
+                    datecourseHours.setDatecourseHoursInfo(originDatecourseHoursList.get(i).getNewDatecourseHoursInfo());
+                    datecourseHours.setDatecourseHoursRgstDate(
+                            LocalDateTime.parse(originDatecourseHoursList.get(i).getDatecourseHoursRgstDate()));
+                    datecourseHours.setDatecourseHoursModfDate(LocalDateTime.now());
+                    datecourseHours.setDatecourseHoursUseYn(originDatecourseHoursList.get(i).getDatecourseHoursUseYn());
+                    datecourseHours.setDatecourseHoursStatus("U");
+
+                    uDatecourseHoursList.add(datecourseHours);
+
+                // 삭제되는 영업시간 정보 처리
+                } else if(originDatecourseHoursList.get(i).getDatecourseHoursStatus().equals("D")) {
+                    DatecourseHours datecourseHours = new DatecourseHours();
+
+                    datecourseHours.setDatecourseNo(originDatecourseHoursList.get(i).getDatecourseNo());
+                    datecourseHours.setDatecourseHoursNo(originDatecourseHoursList.get(i).getDatecourseHoursNo());
+                    datecourseHours.setDatecourseHoursStatus("D");
+
+                    uDatecourseHoursList.add(datecourseHours);
+                }
+            }
+
+            // 추가되는 영업시간 정보 처리
+            if(datecourseHoursList.size() > 0) {
+                for(int i=0; i<datecourseHoursList.size(); i++) {
+                    if(datecourseHoursList.get(i) != null && !datecourseHoursList.get(i).equals("")) {
+                        DatecourseHours datecourseHours = new DatecourseHours();
+
+                        datecourseHours.setDatecourseNo(datecourse.getDatecourseNo());
+                        datecourseHours.setDatecourseHoursInfo(datecourseHoursList.get(i));
+                        datecourseHours.setDatecourseHoursRgstDate(LocalDateTime.now());
+                        datecourseHours.setDatecourseHoursModfDate(LocalDateTime.now());
+                        datecourseHours.setDatecourseHoursUseYn("Y");
+                        datecourseHours.setDatecourseHoursStatus("I");
+
+                        uDatecourseHoursList.add(datecourseHours);
+                    }
+                }
+            }
+
+
+            /**********************************
+                메뉴 정보 처리
+            ***********************************/
+            for(int i=0; i<originDatecourseMenuList.size(); i++) {
+                // 수정되는 메뉴 정보 처리
+                if(originDatecourseMenuList.get(i).getDatecourseMenuStatus().equals("U")) {
+                    DatecourseMenu datecourseMenu = new DatecourseMenu();
+
+                    datecourseMenu.setDatecourseNo(originDatecourseMenuList.get(i).getDatecourseNo());
+                    datecourseMenu.setDatecourseMenuNo(originDatecourseMenuList.get(i).getDatecourseMenuNo());
+                    datecourseMenu.setDatecourseMenuType(originDatecourseMenuList.get(i).getDatecourseMenuType());
+                    if(originDatecourseMenuList.get(i).getNewDatecourseMenuNm() != null &&
+                            !originDatecourseMenuList.get(i).getNewDatecourseMenuNm().equals("")) {
+                        datecourseMenu.setDatecourseMenuNm(originDatecourseMenuList.get(i).getNewDatecourseMenuNm());
+                    } else {
+                        datecourseMenu.setDatecourseMenuNm(originDatecourseMenuList.get(i).getDatecourseMenuNm());
+                    }
+                    if(originDatecourseMenuList.get(i).getNewDatecourseMenuPrice() != 0) {
+                        datecourseMenu.setDatecourseMenuPrice(originDatecourseMenuList.get(i).getNewDatecourseMenuPrice());
+                    } else {
+                        datecourseMenu.setDatecourseMenuPrice(originDatecourseMenuList.get(i).getDatecourseMenuPrice());
+                    }
+                    datecourseMenu.setDatecourseMenuRgstDate(
+                            LocalDateTime.parse(originDatecourseMenuList.get(i).getDatecourseMenuRgstDate()));
+                    datecourseMenu.setDatecourseMenuModfDate(LocalDateTime.now());
+                    datecourseMenu.setDatecourseMenuUseYn(originDatecourseMenuList.get(i).getDatecourseMenuUseYn());
+                    datecourseMenu.setDatecourseMenuStatus("U");
+
+                    uDatecourseMenuList.add(datecourseMenu);
+
+                // 삭제되는 메뉴 정보 처리
+                } else if(originDatecourseMenuList.get(i).getDatecourseMenuStatus().equals("D")) {
+                    DatecourseMenu datecourseMenu = new DatecourseMenu();
+
+                    datecourseMenu.setDatecourseNo(originDatecourseMenuList.get(i).getDatecourseNo());
+                    datecourseMenu.setDatecourseMenuNo(originDatecourseMenuList.get(i).getDatecourseMenuNo());
+                    datecourseMenu.setDatecourseMenuStatus("D");
+
+                    uDatecourseMenuList.add(datecourseMenu);
+                }
+            }
+
+            // 추가되는 메뉴 정보 처리
+            if(datecourseMenuList.size() > 0) {
+                for(int i=0; i<datecourseMenuList.size(); i++) {
+                    DatecourseMenu datecourseMenu = new DatecourseMenu();
+
+                    datecourseMenu.setDatecourseNo(datecourse.getDatecourseNo());
+                    datecourseMenu.setDatecourseMenuType(datecourseMenuList.get(i).getDatecourseMenuType());
+                    if(datecourseMenuList.get(i).getDatecourseMenuNm() != null && !datecourseMenuList.get(i).getDatecourseMenuNm().equals("")) {
+                        datecourseMenu.setDatecourseMenuNm(datecourseMenuList.get(i).getDatecourseMenuNm());
+                    }
+
+                    if(datecourseMenuList.get(i).getDatecourseMenuPrice() != 0) {
+                        datecourseMenu.setDatecourseMenuPrice(datecourseMenuList.get(i).getDatecourseMenuPrice());
+                    }
+                    datecourseMenu.setDatecourseMenuRgstDate(LocalDateTime.now());
+                    datecourseMenu.setDatecourseMenuModfDate(LocalDateTime.now());
+                    datecourseMenu.setDatecourseMenuUseYn("Y");
+                    datecourseMenu.setDatecourseMenuStatus("I");
+
+                    uDatecourseMenuList.add(datecourseMenu);
+                }
+            }
+
+
+            /**********************************
+                파일 처리
+            ***********************************/
+            for(int i=0; i<originFileList.size(); i++) {
+                // 수정되는 파일 처리
+                if(originFileList.get(i).getDatecourseImageStatus().equals("U")) {
+                    for(int j=0; j<changedFiles.length; j++) {
+                        if(originFileList.get(i).getNewImageNm().equals(changedFiles[j].getOriginalFilename())) {
+                            DatecourseImage datecourseImage = new DatecourseImage();
+
+                            MultipartFile file = changedFiles[j];
+
+                            datecourseImage = FileUtils.parseFileInfo(file, attachPath);
+                            datecourseImage.setImageGroup(originFileList.get(i).getImageGroup());
+                            datecourseImage.setReferenceNo(originFileList.get(i).getReferenceNo());
+                            datecourseImage.setImageNo(originFileList.get(i).getImageNo());
+                            datecourseImage.setImageRgstDate(LocalDateTime.parse(originFileList.get(i).getImageRgstDate()));
+                            datecourseImage.setImageModfDate(LocalDateTime.now());
+                            datecourseImage.setDatecourseImageStatus("U");
+
+                            uImageList.add(datecourseImage);
+                        }
+                    }
+                    // 삭제되는 파일 처리
+                } else if(originFileList.get(i).getDatecourseImageStatus().equals("D")) {
+                    DatecourseImage datecourseImage = new DatecourseImage();
+
+                    datecourseImage.setImageGroup(originFileList.get(i).getImageGroup());
+                    datecourseImage.setReferenceNo(originFileList.get(i).getReferenceNo());
+                    datecourseImage.setImageNo(originFileList.get(i).getImageNo());
+                    datecourseImage.setDatecourseImageStatus("D");
+
+                    // 실제 파일 삭제
+                    File dFile = new File(attachPath + originFileList.get(i).getImageNm());
+                    dFile.delete();
+
+                    uImageList.add(datecourseImage);
+                }
+            }
+
+            // 추가되는 파일 처리
+            if(realUploadFiles.length > 0) {
+                for(int i=0; i<realUploadFiles.length; i++) {
+                    MultipartFile file = realUploadFiles[i];
+
+                    if(file.getOriginalFilename() != null &&
+                            !file.getOriginalFilename().equals("")) {
+                        DatecourseImage datecourseImage = new DatecourseImage();
+
+                        datecourseImage = FileUtils.parseFileInfo(file, attachPath);
+
+                        datecourseImage.setImageGroup("E0001");
+                        datecourseImage.setReferenceNo(datecourse.getDatecourseNo());
+                        datecourseImage.setImageRgstDate(LocalDateTime.now());
+                        datecourseImage.setImageModfDate(LocalDateTime.now());
+                        datecourseImage.setDatecourseImageStatus("I");
+
+                        uImageList.add(datecourseImage);
+                    }
+                }
+            }
+
+            datecourseService.updateDatecourse(datecourse, uDatecourseHoursList, uDatecourseMenuList, uImageList);
+
+            DatecourseDTO returnDatecourse = DatecourseDTO.builder()
+                    .datecourseNo(datecourse.getDatecourseNo())
+                    .build();
+
+            Map<String, Object> returnMap = new HashMap<String, Object>();
+
+            returnMap.put("getDatecourse", returnDatecourse);
+
+            responseDTO.setItem(returnMap);
+
+            return ResponseEntity.ok().body(responseDTO);
+        } catch(Exception e) {
+            responseDTO.setErrorMessage(e.getMessage());
+
+            return ResponseEntity.badRequest().body(responseDTO);
         }
     }
 }

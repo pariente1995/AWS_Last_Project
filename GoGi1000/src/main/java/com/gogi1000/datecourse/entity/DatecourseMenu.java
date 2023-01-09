@@ -31,7 +31,7 @@ public class DatecourseMenu {
     private String datecourseMenuNm;
 
     @Column(nullable = false)
-    private String datecourseMenuPrice;
+    private int datecourseMenuPrice;
 
     @Column(nullable = false)
     private LocalDateTime datecourseMenuRgstDate;
@@ -41,4 +41,13 @@ public class DatecourseMenu {
 
     @Column(nullable = false)
     private String datecourseMenuUseYn;
+
+    @Transient
+    private String datecourseMenuStatus;
+
+    @Transient
+    private String newDatecourseMenuNm;
+
+    @Transient
+    private int newDatecourseMenuPrice;
 }
