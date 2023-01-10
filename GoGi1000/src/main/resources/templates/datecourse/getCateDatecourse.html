@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http:///www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout}">
+
+<!-- head 영역 시작 -->
+<!-- 개별적으로 사용할 css, js 링크 걸기 위해서 남겨둠 -->
+<head>
+  <th:block layout:fragment="css">
+      <link rel="stylesheet" th:href="@{/css/getCateDatecourse.css}"/>
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/bxslider/4.2.12/jquery.bxslider.css">
+      <link rel="stylesheet" href="prettyPhoto_compressed_3.1.6/css/prettyPhoto.css" type="text/css" media="screen" charset="utf-8" />
+  </th:block>
+  
+  <th:block layout:fragment="script">
+  <!--  <script type="text/javascript" charset="utf-8"></script> -->
+	  <script th:inline="javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+	  <script th:inline="javascript" src="https://cdn.jsdelivr.net/bxslider/4.2.12/jquery.bxslider.min.js"></script>
+	  <script th:inline="javascript" src="prettyPhoto_compressed_3.1.6/js/jquery.prettyPhoto.js" type="text/javascript" charset="utf-8"></script>
+	    <script th:inline="javascript">
+			/* 메인 이미지 슬라이드 */
+		    $(document).ready(function(){
+		      $('#main-img').bxSlider({
+		        slideWidth: 800,        // 이미지의 너비
+		        // slideHeight: 500,    // 이미지의 높이
+		        maxSlides : 1,          // 이미지의 최대 노출 개수
+		        minSlides : 1,          // 이미지의 최소 노출 개수
+		        moveSlides : 1,         // 이미지의 이동 개수
+		        autoHover: true,        // 마우스오버시에 멈춤, 기본값: false
+		        pager:false,            // 블릿의 유무, 기본값: true
+		        stopAutoOnClick: true,  // 블릿을 클릭한 후 슬라이드 정지 유무, 기본값 false
+		        controls:  true,       // 화살표 버튼 유무, 기본값: false
+		       });
+		      });
+		
+		      /* 메뉴 이미지 슬라이드 */
+		      $(document).ready(function() {
+		      $("#menu-img").bxSlider({
+		        slideWidth: 150,        // 이미지의 너비
+		        maxSlides : 3,          // 이미지의 최대 노출 개수
+		        minSlides : 2,          // 이미지의 최소 노출 개수
+		        moveSlides : 1,         // 이미지의 이동 개수
+		        slideMargin: 20,        // 이미지 사이의 마진
+		        pager:false,            // 블릿의 유무, 기본값: true
+		        infiniteLoop:false,     // 슬라이더 무한루프 여부
+		        hideControlOnEnd: true, // 슬라이더 첫번재 마지막 버튼 감추기
+		        controls:  true,       // 화살표 버튼 유무, 기본값: false
+		      })    
+		    })
+		    
+		    $(document).ready(function(){
+		      //$("a[rel^='prettyPhoto']").prettyPhoto();
+		    });
+		</script>
+  </th:block>  
+  
+    
+</head>
+<body>
+	<div layout:fragment="content">
+	  <div id="datecourse-detail-container">
+	    <h1 th:text="${datecourse.datecourseNm}"></h1>
+	  </div>
+	
+	  <!-- 메인 이미지 영역 -->
+	  <div id="datecourse-img-container">
+	    <div id="main-img">
+	      <div>
+	        <a href="#"><img th:src="@{'/upload/' + ${datecourseImageDTOList.imageNm.get(0)}"  width="800" height="500" ></a>
+	      </div>
+	    </div>
+	  </div>
+	
+	  <!-- 데이트코스 설명 부분 -->
+	  <div id="datecourse-main-info">
+	    <div id="main-info">
+	      <h2 th:text="${datecourse.datecourseDesc}"></h2><br>
+	    </div>
+	  </div>
+	
+	  <!-- 구분선 -->
+	  <hr width="1100">
+	
+	  <!-- 데이트코스 서브 정보 -->
+	  <div id="datecourse-sub-info">
+	    <div class="datecourse-line">
+	      <div class="sub-img">
+	        <img th:src="@{/images/address.png}" width="30" height="30">
+	      </div>
+	      <div class="sub-title">
+	        <h3>주소</h3>
+	      </div>
+	      <div class="sub-info" >
+	        <h5 th:text="${datecourse.datecourseAddr}"></h5>
+	      </div>
+	      <button type="button" class="btn1" id="datecourseAdd">
+	        <span class="btn_inner">데이트 코스에 추가</span>
+	      </button>
+	    </div>
+	    <div class="datecourse-line">
+	      <div class="sub-img">
+	        <img th:src="@{/images/tel.png}" width="30" height="30">
+	      </div>
+	      <div class="sub-title">
+	        <h3>전화번호</h3>
+	      </div>
+	      <div class="sub-info">
+	        <h5 th:text="${datecourse.datecourseTel}"></h5>
+	      </div>
+	          <!-- 데이트코스 검색 -->
+	          <div id="searchDatecourse">
+	            <div style="padding-top: 20px;">
+	              <button type="button" id="searchNaver" style="height: 35px; float: right; background-color: white; border: 0px; cursor: pointer; font-size: medium; font: bold;">
+	                <span>검색</span>
+	              </button>
+	            </div>
+	            <div style="width: 150px; height: 30px; margin-right: 10px; border: 3px solid #03C75A; float: right;">
+	              <h4 style="margin: auto; padding-left: 10px;">데이트 코스 명</h4>
+	              <img th:src="@{/images/expand.PNG}" style="float: right; margin-top: -20px;">
+	            </div>
+	            <div style="float: right; margin-right: 10px;">
+	              <img th:src="@{/images/search.png}" width="30" height="30">
+	            </div>
+	          </div>
+	
+	    </div> 
+	    <div class="datecourse-line">
+	      <div class="sub-img">
+	        <img th:src="@{/images/site.png}" width="30" height="30">
+	      </div>
+	      <div class="sub-title">
+	        <h3>웹 사이트</h3>
+	      </div>
+	      <div class="sub-info">
+	        <a href="#"><h5 th:text="${datecourse.datecourseOfficialSite}"></h5></a>
+	      </div>
+	    </div>   
+	    <div class="datecourse-line">
+	      <div class="sub-img">
+	        <img th:src="@{/images/park.png}" width="30" height="30">
+	      </div>
+	      <div class="sub-title">
+	        <h3>주차</h3>
+	      </div>
+	      <div class="sub-info">
+	        <h5 th:text="${datecourse.datecourseParkingYn}"></h5>
+	      </div>
+	    </div>   
+	    <div class="datecourse-line">
+	      <div class="sub-img">
+	        <img th:src="@{/images/time.png}" width="30" height="30">
+	      </div>
+	      <div class="sub-title">
+	        <h3>영업 정보</h3>
+	      </div>
+	      <div class="sub-info">
+	        <div style="display:flex; justify-content: left; align-items: center;" th:each="datecourseHours : ${datecourseHours}">
+	        	<h5 th:text="${datecourseHours.datecourseHoursInfo}"></h5>
+	        </div>
+	      </div>
+	    </div>   
+	    <div class="datecourse-line" style="display:inline-block;">
+	      <div class="sub-img">
+	        <img th:src="@{/images/menu.png}" width="30" height="30">
+	      </div>
+	      <div class="sub-title">
+	        <h3>메뉴</h3>
+	      </div>
+	      <div class="sub-info">
+	        <div style="display:flex; justify-content: left; align-items: center;" th:each="datecourseMenu : ${datecourseMenu}" >
+	          <h5 style="margin-right:10px;" th:text="${datecourseMenu.datecourseMenuNm}"></h5> 
+	          <h5 th:text="${datecourseMenu.datecourseMenuPrice}"></h5>
+	        </div>
+	      </div>
+	    </div>          
+	  </div>
+	
+	    <!-- 메뉴 이미지 영역 -->
+	    <div id="menu-img-container">
+	      <div id="menu-img" >
+	        <div th:each="datecourseImageDTOList : ${datecourseImageDTOList}">
+	          <a th:href="@{/images/burger1.jpg}"><img th:if="@{datecourseImageDTOList.imageNm != 0}" title="" width="800" height="100" ></a>
+	        </div>
+	      </div>
+	    </div>
+	  
+	  <!-- 맵 영역 -->
+	  <div id="datecourse-map-container">
+	
+	  </div>
+	  
+	  <!-- 구분선 -->
+	  <hr width="1100">
+	
+	  <!-- 댓글 영역 -->
+	  <div id="datecourse-comment-container"><h2>댓글</h2>
+	    <div class="comment-container">
+	      <div class="comment-left-section">
+	        <div>
+	          <img th:src="@{/images/user.png}">
+	        </div>
+	      </div>
+	      <div class="comment-right-section">
+	        <div class="comment-right-top">
+	          <div class="comment-user">
+	            <a>user0001</a>
+	          </div>
+	          <div class="comment-regdate">
+	            <a>2022-12-23</a>
+	          </div>
+	        </div>
+	        <div class="comment-right-bottom">
+	          <div class="comment-comment">
+	            <p>『훈민정음』(訓民正音, 중세 한국어: 훈민정음)은 한글의 옛 이름(첫 이름)으로 세종대왕이 창제한 문자의 명칭이자 훈민정음의 창제 원리와 사용법 등을 해설해 놓은 책의 제목이기도 하다. 세종 25년(1443년)에 창제 된 후 1446년(세종 28년)에 반포된 훈민정음의 뜻은 '백성(民)을 가르치는(訓) 바른(正) 소리(音)'이며, 28개의 낱자로 구성되어 있다. 소리글자에 속하며, 배우기 쉽고 읽고 쓰기에 편리한 장점을 가지고 있다. 이 훈민정음이 우리가 지금 사용하고 있는 한글이며,</p>
+	          </div>
+	        </div>
+	      </div>
+	    </div>
+	    
+	   
+	    <div id="hide" style="display: none">
+	  
+	      <div class="comment-container">
+	        <div class="comment-left-section">
+	          <div>
+	            <img th:src="@{/images/user.png}">
+	          </div>
+	        </div>
+	        <div class="comment-right-section">
+	          <div class="comment-right-top">
+	            <div class="comment-user">
+	              <a>user0001</a>
+	            </div>
+	            <div class="comment-regdate">
+	              <a>2022-12-23</a>
+	            </div>
+	          </div>
+	          <div class="comment-right-bottom">
+	            <div class="comment-comment">
+	              <p>『훈민정음』(訓民正音, 중세 한국어: 훈민정음)은 한글의 옛 이름(첫 이름)으로 세종대왕이 창제한 문자의 명칭이자 훈민정음의 창제 원리와 사용법 등을 해설해 놓은 책의 제목이기도 하다. 세종 25년(1443년)에 창제 된 후 1446년(세종 28년)에 반포된 훈민정음의 뜻은 '백성(民)을 가르치는(訓) 바른(正) 소리(音)'이며, 28개의 낱자로 구성되어 있다. 소리글자에 속하며, 배우기 쉽고 읽고 쓰기에 편리한 장점을 가지고 있다. 이 훈민정음이 우리가 지금 사용하고 있는 한글이며,</p>
+	            </div>
+	          </div>
+	        </div>
+	      </div>
+	      <div class="comment-container">
+	        <div class="comment-left-section">
+	          <div>
+	            <img th:src="@{/images/user.png}">
+	          </div>
+	        </div>
+	        <div class="comment-right-section">
+	          <div class="comment-right-top">
+	            <div class="comment-user">
+	              <a>user0001</a>
+	            </div>
+	            <div class="comment-regdate">
+	              <a>2022-12-23</a>
+	            </div>
+	          </div>
+	          <div class="comment-right-bottom">
+	            <div class="comment-comment">
+	              <p>『훈민정음』(訓民正音, 중세 한국어: 훈민정음)은 한글의 옛 이름(첫 이름)으로 세종대왕이 창제한 문자의 명칭이자 훈민정음의 창제 원리와 사용법 등을 해설해 놓은 책의 제목이기도 하다. 세종 25년(1443년)에 창제 된 후 1446년(세종 28년)에 반포된 훈민정음의 뜻은 '백성(民)을 가르치는(訓) 바른(正) 소리(音)'이며, 28개의 낱자로 구성되어 있다. 소리글자에 속하며, 배우기 쉽고 읽고 쓰기에 편리한 장점을 가지고 있다. 이 훈민정음이 우리가 지금 사용하고 있는 한글이며,</p>
+	            </div>
+	          </div>
+	        </div>
+	      </div>
+	    </div>
+	    <div class="comment-hide">
+	      <a href=#none id="show" onclick="if(hide.style.display=='none') {hide.style.display='';show.innerText='----- 댓글 접기 -----'} 
+	      else {hide.style.display='none';show.innerText='----- 댓글 더보기 -----'}">----- 댓글 더보기 -----</a>
+	    </div>
+	  </div>
+  </div>
+</body> 
+  
+</html>

@@ -56,13 +56,14 @@ public interface DatecourseImageRepository extends JpaRepository<DatecourseImage
 	// 데이트 코스 이미지 리스트 조회_세혁
 	List<DatecourseImage> findByImageGroupAndReferenceNo(String imageGroup, int referenceNo);
 	
-	// 메인에서 인기 상세 리스트 조회 시, 이미지 리스트 조회
-	@Query(value = "SELECT A.*,"
+	// 메인에서 인기 상세 리스트 조회 시, '이미지' 리스트 조회_인겸
+	@Query(value =" SELECT A.*,"
     		+ "		  	   B.DATECOURSE_NO"
     		+ "		  FROM T_GGC_IMAGE A"
     		+ "		  JOIN T_GGC_DATECOURSE B"
     		+ "			ON A.REFERENCE_NO = B.DATECOURSE_NO"
-    		+ "		 WHERE A.IMAGE_GROUP = 'E0001'",
+    		+ "		 WHERE A.IMAGE_GROUP = 'E0001'"
+    		+ "		   AND A.REFERENCE_NO = :datecourseNo",
     		nativeQuery=true)
-    List<DatecourseImage> findByDatecourse(Datecourse datecourse);
+    List<DatecourseImage> findByDatecourse(@Param("datecourseNo") int datecourseNo);
 }
