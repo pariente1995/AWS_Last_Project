@@ -110,6 +110,7 @@
 									for(let i=0; i< data.pageItems.content.length; i++) {
 										$("#yntd" + i).text(data.pageItems.content[i].hotdealUseYn);
 									}
+									$("input[name=chk]").prop("checked", false);
                                 }
                             });
                         }
@@ -124,13 +125,13 @@
     <main>
         <div layout:fragment="content">
             <div id="hl_main">
-                <h1 style="margin:0;">핫딜 목록</h1>
+                <h1 style="margin:0;">핫딜 리스트</h1>
                 <hr>
                 <div id="hl_content">
                     <div id="hl_content_table">
                         <div id="button-wrap">
                             <input type="checkbox" name="chkAll">전체선택</button>
-                            <button id="btnDel" onclick="updateUseYn();">숨김</button>
+                            <button id="btnDel" onclick="updateUseYn();">삭제</button>
                         </div>
                         <div id="searchForm-wrapper">
                             <form id="searchForm" action="/hotdeal/hotdealList" method="get">
@@ -150,14 +151,13 @@
                     </div>
                     <table id="hotdealtable">
                         <tr>
-                            <th style="width: 15px"></th>
-                            <th style="width: 50px">번호</th>
-                            <th style="width: 150px">핫딜 사진</th>
+                            <th style="width: 70px">선택</th>
+                            <th style="width: 70px">번호</th>
                             <th style="width: 250px;">핫딜명</th>
-                            <th style="width: 150px">등록일</th>
-                            <th style="width: 150px">종료일</th>
-                            <th style="width: 80px;">핫딜 노출여부</th>
-                            <th style="width: 150px;"></th>
+                            <th style="width: 200px">등록일</th>
+                            <th style="width: 200px">종료일</th>
+                            <th style="width: 120px;">핫딜<br>사용여부</th>
+                            <th style="width: 100px;">수정</th>
                         </tr>
                         <tr th:each="hotdeal : ${getHotdealList}">
                             <td>
@@ -165,18 +165,17 @@
                             </td>
                             <td th:text="${hotdeal.hotdealNo}"></td>
                             <td>
-                                <div class="image-box">
-                                    <!--<img th:src="" >-->
-                                </div>
-                            </td>
-                            <td>
                                 <a th:text="${hotdeal.hotdealNm}"
                                     th:href="@{/hotdeal/getHotdeal/{hotdealNo} (hotdealNo=${hotdeal.hotdealNo})}"></a>
                             </td>
-                            <td th:text="${hotdeal.hotdealRgstDate}"></td>
+                            <td th:text="${#strings.substring(hotdeal.hotdealRgstDate, 0, 10)}"></td>
                             <td th:text="${hotdeal.hotdealEndDate}"></td>
                             <td th:id = "'yntd' + ${hotdealStat.index}" th:text="${hotdeal.hotdealUseYn}"></td>
-                            <td> <a th:href="@{/hotdeal/updateHotdeal/{hotdealNo} (hotdealNo=${hotdeal.hotdealNo})}">수정</a>
+                            <td> 
+                            <a th:href="@{/hotdeal/updateHotdeal/{hotdealNo} (hotdealNo=${hotdeal.hotdealNo})}">
+                            <button type="button" id="btnUpdate">수정</button>
+                            </a>
+                            </td>
                         </tr>
                     </table>
                     <nav aria-label="Page navigation example">

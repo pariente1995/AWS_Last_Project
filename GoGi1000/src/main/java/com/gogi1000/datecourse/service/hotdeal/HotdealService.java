@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import com.gogi1000.datecourse.common.CamelHashMap;
 import com.gogi1000.datecourse.entity.DatecourseImage;
 import com.gogi1000.datecourse.entity.Hotdeal;
 
@@ -21,6 +22,5 @@ public interface HotdealService {
 	
 	void updateHotdealUseYn(int HotdealNo);
 	
-	
-	
+	Hotdeal updateHotdeal(Hotdeal hotdeal, List<CamelHashMap> uFileList);
 }

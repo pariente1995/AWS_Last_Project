@@ -1,109 +1,132 @@
-hr {
-    width: 1100px;
-  }
+#hu-content {
+    width: 1000px;
+}
 
-  /* 메인 타이틀 영역 */
-  #hotdeal-detail-container {
-    margin: 0 auto;
-    width: 1200px;
-    justify-content: center;
-  }
-
-  #hotdeal-detail-container h1 {
-    margin-bottom: 50px;
-    text-align: center;
-  }
-
-  /* 슬라이더 영역 */
-
-  #hotdeal-mainimg-container {
-    margin-bottom: -50px;
+#hu-form-wrapper {
+    width: 90%;
+    margin-top: 30px;
     display: flex;
-    justify-content: center;
-    text-align: center;
-  }
+    align-items: center;
+    justify-content: left;
+}
 
-  /* 핫딜 설명 영역 */
+.input_wrapper {
+    margin-bottom: 23px;
+    line-height: 2;
+    display: flex;
+}
 
-  #hotdeal-summary {
-    text-align: center;
-    margin: 0 auto;
-    width: 500px;
-  }
-
-  /* 핫딜 상세정보 영역*/
-  #hotdeal-subinfo {
-    margin: auto;
+.input_wrapper input {
+    width: 300px;
+    height: 25px;
+    border: 1px solid black;
+    border-radius: 4px;
     text-align: left;
-    margin-top: 20px;
-    width: 900px;
-    height: auto;
-  }
+    font-size: 18px;
+    outline: none;
+    padding-left: 5px;
+}
 
-  #hotdeal-sub-wrapper {
-    margin-top: 40px;
-    margin-bottom: 20px;
-  }
+.input_wrapper ::placeholder {
+    text-align: center;
+    padding: 5px;
+    font-size: 0.9rem;
+}
 
-  .hotdeal-sub {
+.label_wrapper {
+    width: 150px;
+    text-align: right;
+    margin-right: 35px;
+}
+
+#hotdealSummary {
+	resize: none;
+	border: 1px solid black;
+	border-radius: 8px;
+	outline: none;
+	padding-left: 10px;
+}
+
+#hotdealDesc {
+    resize: none;
+    border: 1px solid black;
+    border-radius: 8px;
+    outline: none;
+    padding-left: 10px;
+}
+
+#hotdealImageFile-wrapper {
+    width: 600px;
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-  }
+    justify-content: left;
+}
 
-  .hotdeal-sub-detail {
-    display: flex;
-    align-items: center;
-  }
-
-  .hotdeal-maininfo {
-    display: flex;
-    font-size: 25px;
-    color: red;
-    font-weight: bold;
-  }
-
-  .hotdeal-line {
-    width: 900px;
-    height: 50px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-
-  .hotdeal-maininfo-text {
-    margin-right: 10px;
-  }
-
-  #hotdealPrice-wrapper {
-    display: flex;
-    justify-content: right;
-    margin-bottom: -10px;
-  }
-
-  #hotdeal-price {
-    font-size: 20px;
-    text-decoration: line-through;
-    text-decoration-thickness: 3px;
-  }
-
-  #hotdeal-sub-wrapper {
-    margin-bottom: 30px;
-  }
-
-  .hotdeal-sub img {
-    width: 30px;
+#btnUploadFiles {
+    width: 100px;
     height: 30px;
-    margin-right: 20px;
-  }
+    padding-top: 4px;
+    background-color: #ee2d7a;
+    color: white;
+    font-size: 0.9rem;
+    font-weight: bold;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    text-align: center;
+}
 
-  .hotdeal-sub-text {
-    font-size: 20px;
-  }
+#uploadFiles {
+    display: none;
+}
 
-  #hotdeal-desc {
-    font-size:20px; 
-    margin-bottom: 30px;
-    white-space: pre-line;
-  }
+#image-preview-zone {
+    width: 600px;
+    height: 250px;
+    border: 1px solid black;
+    border-radius: 8px;
+    min-height: 150px;
+    margin-left: 180px;
+}
+
+#image-preview-zone:empty:before {
+    content: attr(data-placeholder);
+    padding-left: 10px;
+    color: grey;
+    font-size: 0.9rem;
+}
+
+#button-wrapper {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+#button-wrapper #btnUpd {
+    width: 100px;
+    height: 35px;
+    background-color: #ee2d7a;
+    color: white;
+    font-size: 1rem;
+    font-weight: bold;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    justify-content: center;
+    margin-top: 30px;
+    margin-left: 100px;
+}
+
+#button-wrapper #btnList {
+    width: 100px;
+    height: 35px;
+    background-color: #ee2d7a;
+    color: white;
+    font-size: 1rem;
+    font-weight: bold;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    justify-content: center;
+    margin-top: 30px;
+    margin-left: 50px;
+}

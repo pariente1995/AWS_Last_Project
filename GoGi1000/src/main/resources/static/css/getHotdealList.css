@@ -1,6 +1,5 @@
 #hl_main {
     width: 1000px;
-    padding-left: 50px;
 }
 
 #hl_content {
@@ -104,21 +103,32 @@
     font-weight: bold;
 }
 
+#hotdealtable a {
+	text-decoration: none;
+	color:black;
+}
+
 #hotdealtable a:hover {
     text-decoration: underline;
 }
 
-/* 핫딜 사진 크기 지정 */
-.image-box img {
-    margin-top: 10px;
-    width: 100%;
-    height: 100%;
+#hotdealtable tr {
+	height: 40px;
 }
 
-#hdealtable img {
-    width: 80%;
-    height: 80px;
+#btnUpdate {
+    background-color: rgb(238, 45, 122);
+    border:1px solid rgb(238, 45, 122);
+    border-radius: 5px;
+    color: white;
+
 }
+
+#btnUpdate:hover {
+    cursor: pointer;
+}
+
+
 
 /* 페이징 버튼 */
 #nav-pagination {
