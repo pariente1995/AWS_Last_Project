@@ -49,6 +49,8 @@ public class SecurityConfiguration {
 									.antMatchers("/user/login").permitAll()
 									.antMatchers("/user/loginProc").permitAll()
 									.antMatchers("/user/idCheck").permitAll()
+									.antMatchers("/user/findId").permitAll()
+									.antMatchers("/user/findPwd").permitAll()
 									// 권한을 가지고 있는 유저들만 접근할 수 있는 요청리소스 설정
 									// Authentication 객체를 만든 후에 가져올 수 있는 권한들
 									.antMatchers("/admin/**").access("hasRole('ROLE_ADMIN')")

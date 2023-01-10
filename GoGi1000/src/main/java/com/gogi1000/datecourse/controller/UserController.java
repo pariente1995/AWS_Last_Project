@@ -47,7 +47,7 @@ public class UserController {
 							.userAge(userDTO.getUserAge())
 							.userTel(userDTO.getUserTel())
 							.userMail(userDTO.getUserMail())
-							.userArea(userDTO.getUserTel())
+							.userArea(userDTO.getUserArea())
 							.userAddr1(userDTO.getUserAddr1())
 							.userAddr2(userDTO.getUserAddr2())
 							.userType(userDTO.getUserType())
@@ -133,7 +133,7 @@ public class UserController {
 											.userAge(checkedUser.getUserAge())
 											.userTel(checkedUser.getUserTel())
 											.userMail(checkedUser.getUserMail())
-											.userArea(checkedUser.getUserTel())
+											.userArea(checkedUser.getUserArea())
 											.userAddr1(checkedUser.getUserAddr1())
 											.userAddr2(checkedUser.getUserAddr2())
 											.userType(checkedUser.getUserType())
@@ -155,7 +155,6 @@ public class UserController {
 		}
 	}
 	
-	/*
 	@GetMapping("/findId")
 	public ModelAndView findIdView() {
 		ModelAndView mv = new ModelAndView();
@@ -164,7 +163,6 @@ public class UserController {
 		return mv;
 	}
 	
-	
 	@GetMapping("/findPwd")
 	public ModelAndView findPwdView() {
 		ModelAndView mv = new ModelAndView();
@@ -172,7 +170,38 @@ public class UserController {
 		mv.setViewName("user/findPwd.html");
 		return mv;
 	}
-	*/
 	
+	@PostMapping("/findPwd")
+	public ResponseEntity<?> findPwd(UserDTO userDTO) {
+		ResponseDTO<Map<String, String>> response = new ResponseDTO<>();
+		
+		try {
+			User user = User.builder()
+							.userId(userDTO.getUserId())
+							.userMail(userDTO.getUserMail())
+							.build();
+			
+			User chkUser = userService.findPwd(user);
+			
+			Map<String, String> returnMap = new HashMap<String, String>();
+			
+			if(userService.idCheck(user) == null) {
+				returnMap.put("findPwdMsg", "wrongId");
+			} else if(chkUser == null) {
+				returnMap.put("findPwdMsg", "wrongMail");
+			} else {
+				userService.sendCert(user);
+				returnMap.put("findPwdMsg", "sendCert");
+			}
+			
+			response.setItem(returnMap);
+			
+			return ResponseEntity.ok().body(response);
+		} catch(Exception e) {
+			response.setErrorMessage(e.getMessage());
+			return ResponseEntity.badRequest().body(response);
+		}
+	}
 	
+	//입력한 인증번호랑 비밀번호랑 비교(passwordEncoder.matches(1: 입력한 비밀번호(암호화 되지않은 비밀번호), 2: db 저장된 암호(암호화된 비밀번호))
 }

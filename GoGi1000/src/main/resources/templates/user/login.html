@@ -12,13 +12,17 @@
 		
 	</th:block>
     <th:block layout:fragment="script">
-    	<!--<script th:inline="javascript">
+    	<script th:inline="javascript">
+    	/*
 	        $(function() {
 				if($("#joinMsg").val() != "" && $("#joinMsg").val() != null) {
 					alert("회원가입이 완료되었습니다. 로그인해주세요.");
+					$("#joinMsg").val('');
+					window.location.herf="/user/login";
 				}
 			});
-		</script> -->
+			*/
+		</script>
 		<script th:inline="javascript">
 				$(function() {
 					console.log($("#errorMsg").val());
@@ -121,12 +125,12 @@
             </button>
         </div>
         <div style="display: flex; justify-content: center; margin-top: 15px;">
-            <button type="submit" onclick="location.href = '/oauth2/authorization/kakao';" class="btn3" id="kakaoLogin">
+            <button type="button" onclick="location.href = '/oauth2/authorization/kakao';" class="btn3" id="kakaoLogin">
                 <img width="100%" src="/images/login_kakao.png">
             </button>
         </div>
         <div style="display: flex; justify-content: center; margin-top: 15px;">
-            <button type="submit" onclick="location.href = '/oauth2/authorization/naver';" class="btn4" id="naverLogin">
+            <button type="button" onclick="location.href = '/oauth2/authorization/naver';" class="btn4" id="naverLogin">
                 <img width="40px" height="38px" style="float: left;" src="/images/btnG_아이콘사각.png">네이버 로그인
             </button>
         </div>

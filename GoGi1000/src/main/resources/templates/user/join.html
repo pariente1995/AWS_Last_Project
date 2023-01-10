@@ -37,6 +37,10 @@
 
             //id 중복체크
             $("#btnIdCheck").on("click", function () {
+				if($("#userId").val() == '' || $("#userId").val() == null) {
+					alert("아이디를 입력하세요.");
+					return;
+				}
                 $.ajax({
 					url: "/user/idCheck",
 					type: "post",
@@ -290,7 +294,7 @@
                 <div class="input  label_wrapper2">
                     <div>
                         <form id="ua">
-                            <select name="userArea" class="dropdown">
+                            <select name="userArea" class="dropdown" required>
                                 <option value="" hidden>=== 선택 ===</option>
                                 <option value="A0001">서울</option>
                                 <option value="A0016">부산</option>
@@ -363,7 +367,7 @@
                             id="userMail" required placeholder="이메일을 입력하세요.">@
                         <div>
                             <form id="em">
-                                <select name="domain" id="domain" class="dropdown" style="margin-left: 10px;">
+                                <select name="domain" id="domain" class="dropdown" style="margin-left: 10px;" required>
                                     <option value="" hidden>=== 선택 ===</option>
                                     <option value="naver.com">naver.com</option>
                                     <option value="daum.net">daum.net</option>
