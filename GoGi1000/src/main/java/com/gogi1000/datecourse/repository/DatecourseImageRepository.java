@@ -33,10 +33,24 @@ public interface DatecourseImageRepository extends JpaRepository<DatecourseImage
     
     @Query(value="SELECT *"
     		+ "	    FROM T_GGC_IMAGE  "
-    		+ "	   WHERE A.IMAGE_GROUP = 'E0002' "
-    		+ "      AND A.REFERENCE_NO = :hotdealNo ",
+    		+ "	   WHERE IMAGE_GROUP = 'E0002' "
+    		+ "      AND REFERENCE_NO = :hotdealNo ",
     		nativeQuery=true)
     List<DatecourseImage> findByHotdealNo(@Param("hotdealNo") int hotdealNo);
+    
+    /*
+    @Modifying
+    @Query(value="UPDATE T_GGC_IMAGE"
+    		+ " SET IMAGE_NM = :#{#uDatecourseImage.imageNm},"
+    		+ "	   IMAGE_ORIGIN_NM = :#{#uDatecourseImage.imageOriginNm},"
+    		+ "	   IMAGE_EXT = :#{#uDatecourseImage.imageExt},"
+    		+ "    IMAGE_PATH = :#{#uDatecourseImage.imagePath},"
+    		+ "    IMAGE_MODF_DATE = :#{uDatecourseImage.imageModfDate}"
+    		+ " WHERE REFERENCE_NO = :#{#uDatecourseImage.referenceNo}"
+    		+ "	 AND IMAGE_NO = :#{#uDatecourseImage.imageNo}"
+    		+ "  AND IMAGE_GROUP = :#{#uDatecourseImage.imageGroup}", nativeQuery=true)	  
+    void updateHotdealImage(@Param("uDatecourseImage") DatecourseImage uDatecourseImage);*/
+    
 
 
 	// 데이트 코스 이미지 리스트 조회_세혁
