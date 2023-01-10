@@ -39,14 +39,7 @@ public class UserController {
 	public ModelAndView join(UserDTO userDTO) {
 		ModelAndView mv = new ModelAndView();
 		
-		try {
-			//User user = new User();
-			//user.setUserId(userDTO.getUserId());
-			//user.setUserPw(userDTO.getUserPw());
-			//user.setUserNm(userDTO.getUserNm());
-			//user.setUserMail(userDTO.getUserMail());
-			//user.setUserId(userDTO.getUserId());
-			
+		try {			
 			User user = User.builder()
 							.userId(userDTO.getUserId())
 							.userPw(passwordEncoder.encode(userDTO.getUserPw()))
@@ -162,6 +155,7 @@ public class UserController {
 		}
 	}
 	
+	/*
 	@GetMapping("/findId")
 	public ModelAndView findIdView() {
 		ModelAndView mv = new ModelAndView();
@@ -170,6 +164,7 @@ public class UserController {
 		return mv;
 	}
 	
+	
 	@GetMapping("/findPwd")
 	public ModelAndView findPwdView() {
 		ModelAndView mv = new ModelAndView();
@@ -177,4 +172,7 @@ public class UserController {
 		mv.setViewName("user/findPwd.html");
 		return mv;
 	}
+	*/
+	
+	
 }
