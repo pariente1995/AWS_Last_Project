@@ -17,13 +17,11 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.gogi1000.datecourse.common.CamelHashMap;
 import com.gogi1000.datecourse.dto.DatecourseDTO;
 import com.gogi1000.datecourse.dto.MyDatecourseDTO;
-import com.gogi1000.datecourse.dto.ReviewDTO;
-import com.gogi1000.datecourse.entity.Datecourse;
 import com.gogi1000.datecourse.entity.MyDatecourse;
 import com.gogi1000.datecourse.entity.MyDatecourseId;
-import com.gogi1000.datecourse.entity.Review;
 import com.gogi1000.datecourse.service.my.MyDatecourseService;
 
 @RestController
@@ -43,15 +41,16 @@ public class MyDatecourseController {
 												.userId(myDatecourseDTO.getUserId())
 												.build();
 		
-		List<Datecourse> DatecourseList = myDatecourseService.getMyDatecourseList(myDatecourse);
+		List<CamelHashMap> DatecourseList = myDatecourseService.getMyDatecourseList(myDatecourse);
 		
 		List<DatecourseDTO> myDatecourseDTOList = new ArrayList<DatecourseDTO>();
 		
 		for(int i=0; i < DatecourseList.size(); i++) {
+			
 			DatecourseDTO returnDatecourse = DatecourseDTO.builder()
-					  									  .datecourseNo(DatecourseList.get(i).getDatecourseNo())
-					  									  .datecourseNm(DatecourseList.get(i).getDatecourseNm())
-					  									  .datecourseAddr(DatecourseList.get(i).getDatecourseAddr())
+					  									  .datecourseNo(Integer.valueOf(DatecourseList.get(i).get("datecourseNo").toString()))
+					  									  .datecourseNm(DatecourseList.get(i).get("datecourseNm").toString())
+					  									  .datecourseAddr(DatecourseList.get(i).get("datecourseAddr").toString())
 					  									  .build();
 			
 			myDatecourseDTOList.add(returnDatecourse);
@@ -84,7 +83,12 @@ public class MyDatecourseController {
 		Map<String, String> MyDateDel = new ObjectMapper().readValue(myDateDel, 
 				new TypeReference<Map<String, String>>() {});
 		
+		System.err.println(MyDateDel);
+		
 		MyDatecourseId myDatecourseId = new MyDatecourseId();
+		
+		System.out.println(Integer.valueOf(MyDateDel.get("datecourseNo")));
+		System.out.println(MyDateDel.get("userId"));
 		
 		myDatecourseId.setDatecourseNo(Integer.valueOf(MyDateDel.get("datecourseNo")));
 		myDatecourseId.setUserId(MyDateDel.get("userId"));
