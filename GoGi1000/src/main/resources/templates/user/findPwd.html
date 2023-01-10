@@ -13,7 +13,58 @@
     <th:block layout:fragment="script">
         
         <script th:inline="javascript">
-			
+		$(function() {
+			$('.modal').on('hidden.bs.modal', function (e) {
+		        console.log('modal close');
+		        $(this).find('form')[0].reset()
+		    });
+		
+		    $("#btnCert").click(function () {
+		        let userMail = $("#userMail").val();
+		        let userId = $("#userId").val();
+		
+		        $.ajax({
+		            type: "post",
+		            url: "/user/findPwd",
+		            data: {
+		                "userMail": userMail,
+		                "userId": userId
+		            },
+		            success: function (res) {
+						if(res.item.findPwdMsg == "wrongId") {
+							alert("존재하지 않는 아이디입니다.");
+						} else if(res.item.findPwdMsg == "wrongMail") {
+							alert("이메일이 일치하지 않습니다.");
+						} else {
+							alert("인증번호가 발송되었습니다. 메일을 확인해주세요.");
+							
+							//timer 구현
+						}
+		                /*if (res['check']) {
+		                    swal("발송 완료!", "입력하신 이메일로 임시비밀번호가 발송되었습니다.", "success").then((OK) =>  {
+		                        if(OK) {
+		                            $.ajax({
+		                                type: "POST",
+		                                url: "/user/findPwd/sendEmail",
+		                                data: {
+		                                    "userEmail": userEmail,
+		                                    "userId": userId
+		                                }
+		                            })
+		                            window.location = "/login";
+		                        }
+		
+		
+		                    }
+		                )
+		                    $('#checkMsg').html('<p style="color:darkblue"></p>');
+		                } else {
+		                    $('#checkMsg').html('<p style="color:red">일치하는 정보가 없습니다.</p>');
+		                }*/
+		            }
+		        })
+		    })
+	    });
         </script>
     </th:block>
 </head>
@@ -61,9 +112,9 @@
     <div id="container-info">
 
          <!-- 이름 -->
-        <div class="input  label_wrapper2" style="font-size: 1em; ">이름&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;
+        <div class="input  label_wrapper2" style="font-size: 1em; ">아이디&ensp;&ensp;&ensp;&ensp;
             <div class="input_wrapper">
-                <input type="text" name="userId" id="userId" required placeholder="이름을 입력하세요.">
+                <input type="text" name="userId" id="userId" required placeholder="아이디를 입력하세요.">
                 <div class="input_border" ></div>
            </div>
            <span class="square"></span>
@@ -72,7 +123,7 @@
         <!-- 이메일 -->
         <div class="input  label_wrapper2" style="font-size: 1em;">이메일 주소
             <div class="input_wrapper">
-                <input type="text" name="userEmail" id="userEmail" required placeholder="이메일을 입력하세요.">
+                <input type="text" name="userMail" id="userMail" required placeholder="이메일을 입력하세요.">
                 <span class="input_border" ></span>
            </div>
            <button type="button" class="btn1" id="btnCert">
