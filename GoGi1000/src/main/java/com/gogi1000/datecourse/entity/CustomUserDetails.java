@@ -7,6 +7,7 @@ import java.util.Map;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -17,7 +18,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class CustomUserDetails implements UserDetails  {
+public class CustomUserDetails implements UserDetails, OAuth2User  {
 private User user;
 	
 	//소셜로그인에서 사용자 정보를 담아줄 맵
@@ -78,14 +79,14 @@ private User user;
 		return true;
 	}
 	
-//	@Override
-//	public Map<String, Object> getAttributes() {
-//		return attributes;
-//	}
-//
-//	@Override
-//	public String getName() {
-//		// TODO Auto-generated method stub
-//		return null;
-//	}
+	@Override
+	public Map<String, Object> getAttributes() {
+		return attributes;
+	}
+
+	@Override
+	public String getName() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }
