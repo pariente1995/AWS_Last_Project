@@ -56,19 +56,33 @@ public class MainServiceImpl implements MainService{
 		return hotdealRepository.getHotdealDatecourseList();
 	}
 	
-	// 메인에서 인기 상세 리스트 조회 
+	// 메인에서 인기 상세 페이지 조회 시, 조회수 증가_인겸
 	@Override
-	public Datecourse getDatecourse(int datecourseNo) {
-		return datecourseRepository.findById(datecourseNo).get();
+	public void updateCateDatecourseCnt(int datecourseNo) {
+		datecourseRepository.updateCateDatecourseCnt(datecourseNo);
 	}
 	
-	// 메인에서 인기 상세 리스트 조회 시, 이미지 리스트 조회
+	// 메인에서 인기 상세 페이지 조회 _인겸
+	@Override
+	public Datecourse getCateDatecourse(int datecourseNo) {
+		return datecourseRepository.getCateDatecourse(datecourseNo);
+	}
+	
+	// 메인에서 인기 상세 페이지 조회 시, 데이트 코스 메뉴, 가격 조회
+	@Override
+	public List<CamelHashMap> getCateDatecourseMenu(int datecourseNo) {
+		return datecourseRepository.getCateDatecourseMenu(datecourseNo);
+	}
+	
+	// 메인에서 인기 상세 페이지 조회 시, 영업 시간 리스트 조회_인겸
+	@Override
+	public List<CamelHashMap> getCateDatecourseHours(int datecourseNo) {
+		return datecourseRepository.getCateDatecourseHours(datecourseNo);
+	}
+	
+	// 메인에서 인기 페이지 조회 시, 이미지 리스트 조회_인겸
 	public List<DatecourseImage> getDatecourseImageList(int datecourseNo) {
-		Datecourse datecourse = Datecourse.builder()
-										  .datecourseNo(datecourseNo)
-										  .build();
-		
-		return datecourseImageRepository.findByDatecourse(datecourse);
+		return datecourseImageRepository.findByDatecourse(datecourseNo);
 	}
 	
 	// 메인에서 핫딜 상세 페이지 조회

@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -30,11 +32,11 @@ public class MainController {
 	
 	// 검색창에서 지역명, 코스명, 내용으로 검색 후 조회
 	@GetMapping("/getSearchDatecourseList")
-	public ModelAndView getSearchDatecourseList(DatecourseDTO datecourseDTO) {
+	public ModelAndView getSearchDatecourseList(DatecourseDTO datecourseDTO, HttpServletResponse response)  throws IOException  {
 		
 			Datecourse datecourse = Datecourse.builder()
-					   .searchKeyword(datecourseDTO.getSearchKeyword())
-					   .build();
+										   .searchKeyword(datecourseDTO.getSearchKeyword())
+										   .build();
 			
 			List<Datecourse> searchDatecourseList = mainService.getSearchDatecourseList(datecourse);
 			
@@ -45,12 +47,10 @@ public class MainController {
 			
 			if (datecourseDTO.getSearchKeyword() != null && !datecourseDTO.getSearchKeyword().equals("")) {
 				mv.addObject("searchKeyword", datecourseDTO.getSearchKeyword());
-			}
-			
-			System.out.println(datecourseDTO.getSearchKeyword());
+			} 
+			mv.addObject("searchDatecourseList", searchDatecourseList);
 			
 			return mv;
-			
 			
 	}
 	
@@ -69,8 +69,6 @@ public class MainController {
 		mv.setViewName("datecourse/getCateDatecourseList.html");
 		mv.addObject("getMapDatecourseList", mapDatecourseList);
 		
-		System.out.println(mapDatecourseList);
-		
 		return mv;
 		
 	}
@@ -80,7 +78,7 @@ public class MainController {
 	public ModelAndView getDatecourseList() {
 		ModelAndView mv = new ModelAndView();
 		
-		mv.setViewName("datecourse/getDatecourseList.html");
+		mv.setViewName("admin/getDatecourseList.html");
 	
 		return mv;
 	}
@@ -90,25 +88,29 @@ public class MainController {
 	public ModelAndView getMypageLikeList() {
 		ModelAndView mv = new ModelAndView();
 		
-		mv.setViewName("like/mypageLikeList");
+		mv.setViewName("like/mypageLikeList.html");
 		
 		return mv;
 	}
 	
-	// 메인 페이지에서 인기 상세 페이지 조회
-	@GetMapping("/getDatecourse/{datecourseNo}")
-	public ModelAndView getDatecourse(@PathVariable int datecourseNo) {
-		Datecourse datecourse = mainService.getDatecourse(datecourseNo);
+	// 메인에서 인기 상세 페이지 조회 시, 조회수 증가_인겸
+	@GetMapping("/updateCateDatecourseCnt/{datecourseNo}")
+	public void updateBoardCnt(@PathVariable int datecourseNo, HttpServletResponse response) throws IOException {
+		mainService.updateCateDatecourseCnt(datecourseNo);
 		
-		DatecourseDTO datecourseDTO = DatecourseDTO.builder()
-											.datecourseNo(datecourse.getDatecourseNo())
-											.datecourseNm(datecourse.getDatecourseNm())
-											.datecourseDesc(datecourse.getDatecourseDesc())
-											.datecourseAddr(datecourse.getDatecourseAddr())
-											.datecourseTel(datecourse.getDatecourseTel())
-											.datecourseOfficialSite(datecourse.getDatecourseOfficialSite())
-											.datecourseParkingYn(datecourse.getDatecourseParkingYn())
-											.build();
+		response.sendRedirect("/main/getCateDatecourse/" + datecourseNo);
+	}
+	
+	// 메인 페이지에서 인기 상세 페이지 조회_인겸
+	@GetMapping("/getCateDatecourse/{datecourseNo}")
+	public ModelAndView getCateDatecourse(@PathVariable int datecourseNo) {
+		Datecourse datecourse = mainService.getCateDatecourse(datecourseNo);
+		
+		List<CamelHashMap> datecourseHours = mainService.getCateDatecourseHours(datecourseNo);
+		
+		List<CamelHashMap> datecourseMenu = mainService.getCateDatecourseMenu(datecourseNo); 
+		
+		
 		
 		List<DatecourseImage> datecourseImageList = mainService.getDatecourseImageList(datecourseNo);
 		
@@ -131,19 +133,22 @@ public class MainController {
 		
 		
 		ModelAndView mv = new ModelAndView();
-		mv.setViewName("admin/getDatecourse.html");
-		mv.addObject("datecourseDTO", datecourseDTO);
+		mv.setViewName("datecourse/getCateDatecourse.html");
+		mv.addObject("datecourse", datecourse);
+		
 		mv.addObject("datecourseImageDTOList", datecourseImageDTOList);
+		
+		mv.addObject("datecourseMenu", datecourseMenu);
+		
+		mv.addObject("datecourseHours", datecourseHours);
+		
+		System.out.println(datecourseImageDTOList);
+		
 		
 		return mv;
 				
 	}
 	
-	
-		
-	
-		
-		
 	// 메인 페이지에서 핫딜 상세 페이지로 조회
 	@GetMapping("/getHotdeal/{hotdealNo}")
 	public ModelAndView getHotdeal(@PathVariable int hotdealNo) {
@@ -186,7 +191,7 @@ public class MainController {
 				
 		
 		ModelAndView mv = new ModelAndView();
-		mv.setViewName("admin/getHotdeal.html");
+		mv.setViewName("admin/getHotdealDetail.html");
 		mv.addObject("getHotdeal", hodealDTO);	
 		mv.addObject("datecourseImageDTOList", datecourseImageDTOList);
 		
@@ -195,6 +200,6 @@ public class MainController {
 		
 		return mv;
 		
-	}		
+	}			
 	
 }

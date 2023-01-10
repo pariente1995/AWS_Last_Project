@@ -103,7 +103,7 @@
 #nav-image { width:100%; height:90px; margin-bottom:30px;}
 
 #nav-ul {
-    width: 100%; position:absolute; display:flex; margin-top:24px;
+    width: 96%; position:absolute; display:flex; margin-top:24px;
 }
 
 #nav-ul-li {
@@ -118,7 +118,7 @@
 
 .nav-div-li {
     width: 15%; display:flex;
-    justify-content: center;
+    justify-content: right;
     margin-left: 5px;
 }
 

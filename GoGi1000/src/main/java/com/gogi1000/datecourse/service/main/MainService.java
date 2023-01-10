@@ -8,22 +8,31 @@ import com.gogi1000.datecourse.entity.DatecourseImage;
 import com.gogi1000.datecourse.entity.Hotdeal;
 
 public interface MainService {
-	// 검색창에서 지역명, 코스명, 내용으로 검색 후 조회
+	// 검색창에서 지역명, 코스명, 내용으로 검색 후 조회_인겸
 	List<Datecourse> getSearchDatecourseList(Datecourse datecourse);
 
-	// 지도에서 선택 후 조회
+	// 지도에서 선택 후 조회_인겸
 	List<CamelHashMap> getMapDatecourseList(String datecourseArea);
 	
-	// 탑텐 선택 후 조회
+	// 메인에서 인기 리스트 조회_인겸
 	List<CamelHashMap> getRankDatecourseList();
 	
-	// 메인에 핫딜 리스트 조회
+	// 메인에 핫딜 리스트 조회_인겸
 	List<CamelHashMap> getHotdealDatecourseList();
 	
-	// 메인에서 인기 상세 리스트 조회
-	Datecourse getDatecourse(int datecourseNo);
+	// 메인에서 인기 상세 데이트 코스 조회 시, 조회수 증가_인겸
+	void updateCateDatecourseCnt(int datecourseNo);
 	
-	// 인기 상세 페이지 이미지 조회
+	// 메인에서 인기 상세 데이트 코스 조회_인겸
+	Datecourse getCateDatecourse(int datecourseNo);
+	
+	// 메인에서 인기 상세 데이트 코스 조회 시, 데이트코스 메뉴 이름, 가격 조회_인겸
+	List<CamelHashMap> getCateDatecourseMenu(int datecourseNo);
+	
+	// 메인에서 인기 상세 데이트 코스 조회 시, 데이트 코스 영업 시간 조회_인겸
+	List<CamelHashMap> getCateDatecourseHours(int datecourseNo);
+	
+	// 인기 상세 페이지 이미지 조회_인겸
 	List<DatecourseImage> getDatecourseImageList(int datecourseNo);
 	
 	// 메인에서 핫딜 상세 페이지 조회

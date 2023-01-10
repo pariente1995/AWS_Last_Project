@@ -18,12 +18,16 @@ public interface DatecourseRepository extends JpaRepository<Datecourse, Integer>
 	// WHERE DATECOURSE_AREA LIKE '%searchKeyword1%'
 	// OR DATECOURSE_NM LIKE '%searchKeyword2%'
 	// OR DATECOURSE_DESC LIKE '%searchKeyword3%'
+	
+	// 메인에서 검색창에 '데이트 코스 주소, 데이트 코스명, 데이트 코스 설명'을 쓰고 검색 시, 관련 검색 내용 조회_인겸
 	List<Datecourse> findByDatecourseAddrContainingOrDatecourseNmContainingOrDatecourseDescContaining(String searchKeyword, String searchKeyword1, String keyword2);
 	
 	
 	// \r: 커서를 가장 왼쪽으로 이동
 	// \n: 커서를 한칸 아래로 이동
 	// serviceImpl에서 nativeQuery로 보내면 Query어노테이션에 nativeQuery처리 해줘야됨.
+	
+	// 해당 지역 클릭 시 '지역' 관련 리스트들 조회_인겸
 	@Modifying	// 데이터의 변경이 일어나는 @Query을 사용할 떄는 @Modifying 어노테이션을 사용해야한다.
 	@Query(value = "SELECT A.*"
 		+ "			     , IFNULL(B.LIKE_CNT, 0) AS LIKE_CNT"
@@ -42,8 +46,9 @@ public interface DatecourseRepository extends JpaRepository<Datecourse, Integer>
 	// A.*하면 전체 컬럼 가져와버림. 필요한 것만 가져오는 것이 좋음
 	// B 테이블의 IMAGE_NM 컬럼으로 이미지를 가지고 온다.
 	// 좋아요 많은 순으로 인기 랭킹 TOP 10 조회
-	
 	// CamelHashMap 사용 이유: 다른 2개 이상의 테이블을 join할 때, join된 컬럼들을 모두 가지고 있는 entity가 존재하지 않으므로, map으로 받아준다.
+	
+	// 메인에서 인기 리스트 조회, 이미지 Min으로 1개만 받아오기_인겸
 	@Modifying
 	@Query(value = "SELECT A.*, "
 			+"			   C.IMAGE_NM"
@@ -91,4 +96,37 @@ public interface DatecourseRepository extends JpaRepository<Datecourse, Integer>
 			    +"   SET DATECOURSE_USE_YN = 'N' "
 			    +" WHERE DATECOURSE_NO = :datecourseNo", nativeQuery = true)
 	void updateDatecourseList(@Param("datecourseNo") int datecourseNo) ;
+	
+	// 메인에서 인기 상세 페이지 조회 시 '조회수' 증가_인겸
+	@Modifying	// 데이터의 변경이 일어나는 @Query을 사용할 떄는 @Modifying 어노테이션을 사용해야한다.
+	@Query(value="UPDATE T_GGC_DATECOURSE"
+			+ "		 SET DATECOURSE_CNT = DATECOURSE_CNT + 1"
+			+ "	   WHERE DATECOURSE_NO = :datecourseNo", 
+			nativeQuery = true)
+	void updateCateDatecourseCnt(@Param("datecourseNo") int datecourseNo);
+	
+	// 메인에서 인기 '상세' 페이지 조회_인겸
+	@Query(value="SELECT A.*"
+			+ "		FROM T_GGC_DATECOURSE A"
+			+ "	   WHERE A.DATECOURSE_NO = :datecourseNo",
+			nativeQuery = true)
+	Datecourse getCateDatecourse(@Param("datecourseNo") int datecourseNo);
+	
+	// 메인에서 인기 상세 페이지 조회 시, 데이트 코스 '메뉴' 리스트 조회_인겸
+	@Query(value="SELECT A.*"
+			+ "			,B.DATECOURSE_NO"
+			+ "		FROM T_GGC_DATECOURSE_MENU A"
+			+ "		JOIN T_GGC_DATECOURSE B ON A.DATECOURSE_NO = B.DATECOURSE_NO"
+			+ "	   WHERE A.DATECOURSE_NO = :datecourseNo",
+			nativeQuery = true)
+	List<CamelHashMap> getCateDatecourseMenu(@Param("datecourseNo") int datecourseNo);
+	
+	// 메인에서 인기 상세 페이지 조회 시, 데이트 코스 '시간' 리스트 조회_인겸
+	@Query(value="SELECT A.*"
+			+ "			,B.DATECOURSE_NO"
+			+ "		FROM T_GGC_DATECOURSE_HOURS A"
+			+ "		JOIN T_GGC_DATECOURSE B ON A.DATECOURSE_NO = B.DATECOURSE_NO"
+			+ "	   WHERE A.DATECOURSE_NO = :datecourseNo",
+			nativeQuery = true)
+	List<CamelHashMap> getCateDatecourseHours(@Param("datecourseNo") int datecourseNo);
 }

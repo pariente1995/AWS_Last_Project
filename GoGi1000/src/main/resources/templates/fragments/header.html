@@ -14,8 +14,14 @@
 					  	header에 있는 script가 동작하지 않는다.
 					  	header에서 동작해야 되는 script는, 
 					  	공통 header.js로 빼서, 모든 페이지도 동작하게 만든다.
+					  	header.js 만들면, config.html에 추가해야된다.
 					  	( config.html에 js파일 추가!!!! )
-					  */	
+					  	
+					  	Form 태그안에 input박스 하나라도 있으면, 
+					  	자동으로 submit이 되기 때문에, 따로 엔터조회, a조회 할 필요가 없다.
+					  	
+					  	a태그 사용하여 form submit시 무조건 e.preventDefault()하기._인겸
+					  */		
 					  
 				 })
 	      	</script>
@@ -75,11 +81,9 @@
 									<li><a href="#hotdeal-wrapper" class="nav-list-link">핫딜</a></li>
 								</div>
 								<!-- sec:authorize="isAuthenticated()" th:remove="tag"  sec:authorize="hasRole('ROLE_ADMIN')-->
-								<div class="nav-div-li" sec:authorize="isAuthenticated()" th:remove="tag">
-									<li><a th:href="${/main/mypageLikeList}" class="nav-list-link">마이페이지</a></li>
-								</div>
-								<div class="nav-div-li" sec:authorize="hasRole('ROLE_ADMIN')" th:remove="tag">
-									<li><a th:href="${/main/getDatecourseList}" class="nav-list-link">관리자페이지</a></li>
+								<div class="nav-div-li">
+									<li sec:authorize="hasRole('ROLE_USER')"><a th:href="@{/main/mypageLikeList}" class="nav-list-link">마이페이지</a></li>
+									<li sec:authorize="hasRole('ROLE_ADMIN')"><a th:href="@{/main/getDatecourseList}" class="nav-list-link">관리자페이지</a></li>
 								</div>
 							</ul>
 						</div>
