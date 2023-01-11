@@ -215,13 +215,14 @@
 					controls:  true,       // 화살표 버튼 유무, 기본값: false
 					autoControls:false,     // 재생/정비 버튼 유무, 기본값: false
 					// mode: 'vertical'       // 가로/세로 배치, 기본값의 기준: 가로
+					useCss: true,
 				})
 				
 				
 				$(".ranking").on("click", function() {
 					let datecourseno = $(this).data("datecourseno");
 					
-					window.location.href = "/main/getDatecourse/" + datecourseno;
+					window.location.href = "/main/updateCateDatecourseCnt/" + datecourseno;
 				})
 				
 				$(".hotdeal").on("click", function() {
@@ -317,14 +318,14 @@
 	      <img id="map-img" th:src="@{/images/지도1.jpeg}" >
 	    </div>
 	
-	    <!-- 랭킹 -->
+	    <!-- 인기 -->
 	    <h2 id="ranking-h2">인기 랭킹 TOP 10</h2>
 	    <div id="ranking-wrapper">
 	      <div id="ranking-frame">
-	      <!-- 랭킹 리스트 -->
+	      <!-- 인기 리스트 -->
 	        <div class="ranking ranking-1" th:each="datecourse : ${getRankDatecourseList}" th:data-datecourseno="${datecourse.datecourseNo}">
 	          <div class="ranking-div-img">
-	            <img class="ranking-image" th:src="@{'/upload/' + ${datecourse.imageNm}}" width="200" height="200" >
+	            <a><img class="ranking-image" th:src="@{'/upload/' + ${datecourse.imageNm}}" width="200" height="200" ></a>
 	          </div>
 	          <p style="font-weight:bold; margin-bottom:-5px;" th:text="${datecourse.datecourseNm}"></p>
 	          <p style="font-size:13px;" th:text="${datecourse.datecourseSummary}"></p>
@@ -335,9 +336,10 @@
 	    <h2 id="hotdeal-h2">핫딜</h2>
 	    <div id="hotdeal-wrapper" >
 	      <div id="hotdeal-frame">
+	      <!-- 핫딜 리스트 -->
 	        <div class="hotdeal" th:each="hotdeal : ${getHotdealDatecourseList}" th:data-hotdealno="${hotdeal.hotdealNo}">         
 	          <div class="hotdeal-div-img">
-	           <img th:src="@{'/upload/' + ${hotdeal.imageNm}}" class="hotdeal-image" width="400" height="400">
+	          	<a><img class="hotdeal-image" th:src="@{'/upload/' + ${hotdeal.imageNm}}" width="400" height="400"></a>
 	          </div>
 	          <p style="font-weight:bold; margin-bottom:-5px;" th:text="${hotdeal.hotdealNm}"></p>
 	          <p style="font-size:13px;" th:text="${hotdeal.hotdealDesc}"></p>

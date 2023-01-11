@@ -8,6 +8,9 @@ import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -50,6 +53,7 @@ public class MainController {
 			} 
 			mv.addObject("searchDatecourseList", searchDatecourseList);
 			
+			
 			return mv;
 			
 	}
@@ -69,6 +73,8 @@ public class MainController {
 		mv.setViewName("datecourse/getCateDatecourseList.html");
 		mv.addObject("getMapDatecourseList", mapDatecourseList);
 		
+		System.out.println(mapDatecourseList);
+		
 		return mv;
 		
 	}
@@ -83,15 +89,23 @@ public class MainController {
 		return mv;
 	}
 	
-	// 메인에서 마이페이지로 이동
-	@GetMapping("/mypageLikeList")
-	public ModelAndView getMypageLikeList() {
-		ModelAndView mv = new ModelAndView();
-		
-		mv.setViewName("like/mypageLikeList.html");
-		
-		return mv;
-	}
+//	@GetMapping("/mypageLikeList")
+//    public ModelAndView mypageLikeListView(@PageableDefault(page=0, size=7) Pageable pageable) {
+//        ModelAndView mv = new ModelAndView();
+//        
+//        Page<CamelHashMap> likeList = mainService.mypageLikeList(pageable);
+//        
+//        System.out.println(likeList.getPageable().toString());
+//        System.out.println("=======================================");
+//        System.out.println(likeList.getContent().toString());
+//        System.out.println("=======================================");
+//        System.out.println(likeList.getTotalElements());
+//        
+//        mv.setViewName("like/mypageLikeList.html");
+//        mv.addObject("likeList", likeList);
+//
+//        return mv;
+//    }
 	
 	// 메인에서 인기 상세 페이지 조회 시, 조회수 증가_인겸
 	@GetMapping("/updateCateDatecourseCnt/{datecourseNo}")
@@ -131,8 +145,8 @@ public class MainController {
 			datecourseImageDTOList.add(datecourseImageDTO);
 		}
 		
-		
 		ModelAndView mv = new ModelAndView();
+		
 		mv.setViewName("datecourse/getCateDatecourse.html");
 		mv.addObject("datecourse", datecourse);
 		
