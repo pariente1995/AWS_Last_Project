@@ -1,10 +1,12 @@
 package com.gogi1000.datecourse.entity;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.IdClass;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
@@ -27,4 +29,7 @@ public class Like {
 	private String userId;
 	@Id
 	private int datecourseNo;
+	@Column(nullable=false)
+	@ColumnDefault("Y")
+	private String likeYn;
 }

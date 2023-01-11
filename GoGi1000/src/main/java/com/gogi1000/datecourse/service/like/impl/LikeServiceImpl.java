@@ -1,14 +1,12 @@
 package com.gogi1000.datecourse.service.like.impl;
 
-import java.util.List;
-import java.util.Map;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.gogi1000.datecourse.common.CamelHashMap;
+import com.gogi1000.datecourse.dto.ReviewDTO;
 import com.gogi1000.datecourse.entity.Like;
 import com.gogi1000.datecourse.entity.LikeId;
 import com.gogi1000.datecourse.repository.LikeRepository;
@@ -20,11 +18,13 @@ public class LikeServiceImpl implements LikeService {
 	@Autowired
 	LikeRepository likeRepository;
 	
+	// 좋아요 리스트 출력_장찬영
 	@Override
-	public Page<CamelHashMap> mypageLikeList(Pageable pageable) {
-		return likeRepository.mypageLikeList(pageable);
+	public Page<CamelHashMap> mypageLikeList(ReviewDTO reviewDTO, Pageable pageable) {
+		return likeRepository.mypageLikeList(reviewDTO, pageable);
 	}
 	
+	// 좋아요 삭제_장찬영
 	@Override
 	public void deleteLike(LikeId likeId) {
 		System.out.println(likeId);
@@ -32,6 +32,7 @@ public class LikeServiceImpl implements LikeService {
 		likeRepository.deleteById(likeId);
 	}
 	
+	// 좋아요 등록_장찬영
 	@Override
 	public void insertLike(Like like) {
 		likeRepository.save(like);

@@ -1,12 +1,12 @@
 package com.gogi1000.datecourse.controller;
 
-import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,6 +20,8 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gogi1000.datecourse.common.CamelHashMap;
+import com.gogi1000.datecourse.dto.ReviewDTO;
+import com.gogi1000.datecourse.entity.CustomUserDetails;
 import com.gogi1000.datecourse.entity.Like;
 import com.gogi1000.datecourse.entity.LikeId;
 import com.gogi1000.datecourse.service.like.LikeService;
@@ -30,12 +32,17 @@ public class LikeController {
 	@Autowired
 	LikeService likeService;
 	
-	// 마이페이지 - 좋아요 리스트 화면으로 이동
+	// 마이페이지 - 좋아요 리스트 출력_장찬영
     @GetMapping("/mypageLikeList")
-    public ModelAndView mypageLikeListView(@PageableDefault(page=0, size=7) Pageable pageable) {
+    public ModelAndView mypageLikeListView(@PageableDefault(page=0, size=7) Pageable pageable,
+    		@AuthenticationPrincipal CustomUserDetails customUser) {
         ModelAndView mv = new ModelAndView();
         
-        Page<CamelHashMap> likeList = likeService.mypageLikeList(pageable);
+        ReviewDTO reviewDTO = ReviewDTO.builder()
+										.reviewerId(customUser.getUsername())
+										.build();
+        
+        Page<CamelHashMap> likeList = likeService.mypageLikeList(reviewDTO, pageable);
         
         System.out.println(likeList.getPageable().toString());
         System.out.println("=======================================");
@@ -49,29 +56,32 @@ public class LikeController {
         return mv;
     }
     
-    // 좋아요 삭제
+    // 좋아요 삭제_장찬영
     @DeleteMapping("/deleteLike")
-    public void deleteLike(@RequestParam("likeDel") String likeDel) throws JsonMappingException, JsonProcessingException {
+    public void deleteLike(@RequestParam("likeDel") String likeDel,
+    		@AuthenticationPrincipal CustomUserDetails customUser) throws JsonMappingException, JsonProcessingException {
     	Map<String, Object> like = new ObjectMapper().readValue(likeDel, 
 				new TypeReference<Map<String, Object>>() {});
     	
     	LikeId likeId = new LikeId();
     	
     	likeId.setDatecourseNo(Integer.valueOf((String)like.get("datecourseNo")));
-    	likeId.setUserId(String.valueOf(like.get("userId")));
+    	likeId.setUserId(customUser.getUsername());
         
     	likeService.deleteLike(likeId);       
     }
     
-    // 좋아요 등록
+    // 좋아요 등록_장찬영
     @PostMapping("/InsertLike")
-    public void InsertLike(@RequestParam("likeIns") String likeIns) throws JsonMappingException, JsonProcessingException {
+    public void InsertLike(@RequestParam("likeIns") String likeIns,
+    		@AuthenticationPrincipal CustomUserDetails customUser) throws JsonMappingException, JsonProcessingException {
     	Map<String, Object> likeInt = new ObjectMapper().readValue(likeIns, 
 				new TypeReference<Map<String, Object>>() {});
     	
     	Like like = Like.builder()
     					.datecourseNo(Integer.valueOf((String)likeInt.get("datecourseNo")))
-    					.userId(String.valueOf(likeInt.get("userId")))
+    					.userId(customUser.getUsername())
+    					.likeYn("Y")
     					.build();
     	
     	likeService.insertLike(like);

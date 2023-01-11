@@ -23,30 +23,31 @@
   	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js" 
   				integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3" 
   				crossorigin="anonymous">
-  				
+  				// 부트 스트랩으로 모달 생성
   				const myModal = document.getElementById('myModal')
 			    const myInput = document.getElementById('myInput')
 			
 			    myModal.addEventListener('shown.bs.modal', () => {
 			      myInput.focus()
-			    });
-		  				
-  				</script> 
+			    });		  				
+  	</script> 
   				
     <script th:inline="javascript">
+    	// 체크박스가 전체 선택됐는지 구분하는 용도_장찬영
 		let isAllSelected = false;
 	
 	    function checkSelectAll()  {
-		    // 전체 체크박스
+		    // 전체 체크박스_장찬영
 		    const checkboxes 
 		      = document.querySelectorAll('input[name="number"]');
-		    // 선택된 체크박스
+		    // 선택된 체크박스_장찬영
 		    const checked 
 		      = document.querySelectorAll('input[name="number"]:checked');
-		    // select all 체크박스
+		    // select all 체크박스_장찬영
 		    const selectAll 
 		      = document.querySelector('button[name="selectall"]');
-		
+		      
+			// 전체 체크박스 수가 선택된 체크박스의 수와 같을 때 true로 변경하고 문구도 변경_장찬영
 		    if(checkboxes.length === checked.length)  {
 		      isAllSelected = true;
 		      selectAll.textContent = "전체 해제";
@@ -57,21 +58,23 @@
 	    }
 	
 	    function selectAll(selectAll)  {
+			// 전체 체크박스_장찬영
 		    const checkboxes 
 		      = document.getElementsByName('number');
-		    // 선택된 체크박스
+		    // 선택된 체크박스_장찬영
 		    const checked 
 		      = document.querySelectorAll('input[name="number"]:checked');
-		
+			// select all 체크박스_장찬영
 		    const selectBtn 
 		      = document.querySelector('button[name="selectall"]');
-		    
+		      
+		    // 체크박스 전체가 체크 됐을 때 true로 변경하고 문구도 변경_장찬영
 		    if(isAllSelected) {
 		      checkboxes.forEach(checkbox => {
-		        checkbox.checked = false;
-		        selectBtn.textContent = "전체 선택";
+		        checkbox.checked = false;		        
 		      });
 		      isAllSelected = false;
+		      selectBtn.textContent = "전체 선택";
 		    } else {
 		      checkboxes.forEach(checkbox => {
 		        checkbox.checked = true;
@@ -82,7 +85,7 @@
 		}		
 	
 	    $(function() {
-		  
+		  // 전체 삭제 버튼 클릭 시 선택된 리뷰 삭제_장찬영
 		  $("#btnChkDelete").on("click", function() {
 			  let result= [];
 			   
@@ -94,7 +97,6 @@
 					  console.log(chkList);
 				result.push(chkList);
 			});
- 
 			$.ajax({
 				url: '/review/deleteReviewList',
 				type: 'delete',
@@ -105,72 +107,68 @@
 				},
 				error: function(e) {
 					console.log(e);
-				}
-				
-			}) 			  
+				}				
+			}); 			  
 		  });
 
-
+		  // 리뷰리스트의 내용 클릭 시 모달 창의 내용 출력_장찬영
 		  $(".linkMain").on("click", function() {
 			  const requestModal = {
 				  datecourseNo: $(this).attr("datecourse-no"),
 				  reviewNo : $(this).attr("review-no")
-			  }
-			 
-			 console.log(requestModal);
-   
+			  }			 
+			 console.log(requestModal); 
 			$.ajax({
 				url: '/review/reviewModal',
 				type: 'get',
 				data: {requestModal : JSON.stringify(requestModal)},
 				success: function(obj) {
-					console.log(obj);
-					$(".modal-header span").text(obj.item.getModal.reviewerId)
-					$(".modal-body p").text(obj.item.getModal.reviewModfDate);
+					
+					$(".modal-header span").text(obj.item.getModal.reviewerId);
+					$(".modal-body p").text(obj.item.getModal.reviewModfDate.split('T')[0]);
 					$(".modal-body textarea").text(obj.item.getModal.reviewComment);
+					$("#modelBtnDelete").attr('review-no', obj.item.getModal.reviewNo);
+					$("#modelBtnDelete").attr('datecourse-no', obj.item.getModal.datecourseNo);					
+				},
+				error: function(e) {
+					console.log(e);
+				}				
+			})			  	
+		  });
+		  
+		  // 모달 창에서 삭제 버튼 클릭 시 해당 리뷰 삭제_장찬영
+		  $("#modelBtnDelete").on("click", function() {
+			  const result = {
+						  datecourseNo: $(this).attr('datecourse-no'),
+						  reviewNo : $(this).attr('review-no')
+					  }
+					  console.log(result)
+					  
+			  $.ajax({
+				url: '/review/deleteReview',
+				type: 'delete',
+				data: {result : JSON.stringify(result)},
+				async : false,
+				success: function(obj) {
+					alert("삭제되었습니다.");
+					window.location.href="/review/adminpageComment";					
 				},
 				error: function(e) {
 					console.log(e);
 				}
 				
-			})
-			  	
-		  });
-		  
-			  
-		  $("#modelBtnDelete").on("click", function() {
-	      	alert("댓글이 삭제되었습니다.")
+			});
 	      });
 			
-	      
 	    });
-	
-	
-	    function makeSnowflaske() {
-	      const snowflake = document.createElement("div");
-	
-	      snowflake.classList.add("snowflake");
-	      snowflake.style.left = `${Math.random() * window.screen.width}px`;
-	    }
-    
   	</script>
   </th:block>
 </head>
 <body>
 	
-	<!-- 메인 화면 -->
   		<div layout:fragment="content">
   		<div id="main-container">
-    
-
-    <!-- header -->
-    
-
     <div id="wrapper01">
-
-      <!-- 사이드메뉴 -->
-      
-
           <!-- 메인 화면 -->
           <div id="div-wrapper-main">
             <!-- 페이지 제목 -->
@@ -178,7 +176,7 @@
               <h1 style="margin: 0; float: left;" >댓글 리스트</h1>
                  
             </div>
-            <hr style="margin: auto; width: 80%;">
+            <hr style="width: 80%;">
 
           <!-- 전체 선택 및 검색 기능 구현 -->
           <div id="searchChkForm">
@@ -197,10 +195,10 @@
                 <form id="searchForm" action="/review/adminpageComment" 
                 	class="row" style="justify-content: right; padding: 0px;">
                   <select th:id="searchCondition" name="searchConditionCmt" aria-labelledby="state" >
-                    <option value="ALL">전체</option>
-                    <option value="NAME">게시글 제목</option>
-                    <option value="ID">아이디</option>
-                    <option value="COMMENT">내용</option>
+                    <option value="ALL" th:selected="${searchConditionCmt == 'ALL'}">전체</option>
+                    <option value="NAME" th:selected="${searchConditionCmt == 'NAME'}">데이트 코스명</option>
+                    <option value="ID" th:selected="${searchConditionCmt == 'ID'}">아이디</option>
+                    <option value="COMMENT" th:selected="${searchConditionCmt == 'COMMENT'}">내용</option>
                   </select>&ensp;
                   <div id="searchDiv">
                     <input id="searchInput" type="text" name="searchKeywordCmt" th:value="${searchKeywordCmt}">&ensp;
@@ -211,13 +209,13 @@
             </div>
           </div>
 
-          <!-- 댓글 내용 출력 -->
+          <!-- 리뷰 내용 출력 -->
           <div style="min-height: 400px;">
             <table class="table-bordered">
               <tr style="width: 100%;">
                 <th scope="col" style="width: 6%;">선택</th>
                 <th scope="col" style="width: 6%;">번호</th>
-                <th scope="col" style="width: 20%;">게시글 제목</th>
+                <th scope="col" style="width: 20%;">데이트 코스명</th>
                 <th scope="col" style="width: 16%;">아이디</th>
                 <th scope="col" style="width: 40%;">내용</th>
                 <th scope="col" style="width: 12%;">작성일자</th>
@@ -234,22 +232,18 @@
                 <td><a href="#" class="linkMain" data-bs-toggle="modal" data-bs-target="#exampleModal" 
                 		th:text="${review.reviewComment}" th:review-no="${review.reviewNo}" th:datecourse-no="${review.datecourseNo}"></a></td>
                 <td th:text="${review.reviewModfDate eq null ? '' : #strings.substring(review.reviewModfDate, 0, 10)}"></td>
-              </tr>
-              
-              
-              
-             
-                
+              </tr>         
             </table>
-            <div style="width: 80%; margin: auto;">
-              <span style="font-size: small; float: right;">총 댓글 갯수 : 
+            <!-- 리뷰 갯수 -->
+            <div style="width: 80%;">
+              <span style="font-size: small; float: right;">총 리뷰 갯수 : 
               	<span style="font-weight: bold; color: red;" th:text="${reviewList.getTotalElements}"></span>개
               </span>
             </div> 
           </div>
           <!-- 페이징 -->
           <br>
-          <nav aria-label="Page navigation example" style="margin: auto; width: 80%;" >
+          <nav aria-label="Page navigation example" style="width: 80%;" >
             <ul class="pagination justify-content-center"
             	th:if="${reviewList.totalElements > 0}"
 				th:with="pageNumber = ${reviewList.pageable.pageNumber},
@@ -259,6 +253,7 @@
 						 tempEndPage = ${startPage + pageSize - 1},
 						 endPage = ${tempEndPage > totalPages ? totalPages : tempEndPage}">
               <li class="page-item" th:if="${pageNumber > 0}">
+              <!-- th:classappend="${1 == pageNumber + 1} ? 'disabled' : '' " -->
                 <a class="page-link" th:href="@{/review/adminpageComment(
 											page=${pageNumber - 1},
 											searchConditionCmt=${searchConditionCmt},
@@ -275,6 +270,7 @@
 									 th:text="${page}"></a>
               </li>
               <li class="page-item" th:if="${pageNumber < totalPages - 1}">
+              	<!-- th:classappend="${totalPages == pageNumber + 1} ? 'disabled' : '' " -->
                 <a class="page-link" th:href="@{/review/adminpageComment(
 											page=${pageNumber + 1},
 											searchConditionCmt=${searchConditionCmt},
@@ -289,13 +285,10 @@
     </div>
   </div>
 
-
-
   <!-- 모달 -->
   <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
       <div class="modal-content">
-
         <!-- 아이디 출력 -->
         <div class="modal-header">
           <h1 class="modal-title fs-5" id="exampleModalLabel">
@@ -304,7 +297,6 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           <br>
         </div>
-
         <!-- 댓글 내용 출력 -->
         <div class="modal-body" style="text-align: center; width: 100%;">
           <p style="float: right; margin: 0px 10px 0px 0px;"></p>
@@ -312,10 +304,10 @@
           style="width: 750px; height: 300px; resize: none;" >
           </textarea>
         </div>
-
         <!-- 삭제 -->
         <div class="modal-footer">        
-          <button id="modelBtnDelete" type="button" aria-label="Close" data-bs-dismiss="modal">삭제</button>
+          <button id="modelBtnDelete" type="button" aria-label="Close" 
+          		data-bs-dismiss="modal">삭제</button>
         </div>
       </div>
     </div>

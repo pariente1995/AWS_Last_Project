@@ -32,18 +32,19 @@ import com.gogi1000.datecourse.common.CamelHashMap;
 import com.gogi1000.datecourse.dto.ResponseDTO;
 import com.gogi1000.datecourse.dto.ReviewDTO;
 import com.gogi1000.datecourse.entity.Review;
+import com.gogi1000.datecourse.entity.ReviewId;
 import com.gogi1000.datecourse.service.review.ReviewService;
 
 @RestController
 @RequestMapping("/review")
 public class ReviewController {
 	@Autowired
-	ReviewService reviewService; 
+	private ReviewService reviewService; 
 	
-	// 관리자페이지 - 댓글 리스트 화면으로 이동 및 리뷰 리스트
+	// 관리자페이지 - 댓글 리스트 화면으로 이동 및 리뷰 리스트 출력_장찬영
     @GetMapping("/adminpageComment")
     public ModelAndView mypageLikeListView(ReviewDTO reviewDTO,
-    		@PageableDefault(page=0, size=5) Pageable pageable) {
+    		@PageableDefault(page=0, size=15) Pageable pageable) {
         ModelAndView mv = new ModelAndView();
         
         Review review = Review.builder()
@@ -68,11 +69,11 @@ public class ReviewController {
         return mv;
     }
     
-    // 리뷰 등록
+    // 리뷰 등록_장찬영
     @PostMapping("/insertReview") 
     public void insertReview(ReviewDTO reviewDTO /*@AuthenticationPrincipal CustomUserDetails customUser*/) {
     	Review reivew = Review.builder()
-    							.datecourseNo(reviewDTO.getDatacourseNo())
+    							.datecourseNo(reviewDTO.getDatecourseNo())
     							.reviewComment(reviewDTO.getReviewComment())
     							.reviewerId("aa")
     							.reviewRgstDate(LocalDateTime.now())
@@ -82,7 +83,7 @@ public class ReviewController {
     	reviewService.insertReview(reivew);
     }
     
-    // 리뷰 수정
+    // 리뷰 수정_장찬영
     @PutMapping("/updateReview/{reviewNo}")
     public void updateReview(@PathVariable int reviewNo, 
     		ReviewDTO reviewDTO, HttpServletResponse response) throws IOException {
@@ -91,20 +92,27 @@ public class ReviewController {
     							.reviewComment(reviewDTO.getReviewComment())
     							.reviewModfDate(LocalDateTime.now())
     							.build();
-    	int datecourseNo = reviewDTO.getDatacourseNo();
+    	int datecourseNo = reviewDTO.getDatecourseNo();
     	
     	reviewService.updateReview(review);
     	response.sendRedirect("/datecourse/" + datecourseNo);
     }
     
-    // 리뷰 삭제
-    @DeleteMapping("/deleteReview/{reviewNo}")
-    public void deleteReview(@PathVariable int reviewNo, 
-    		@RequestParam("datecourseNo") int datecourseNo) {
-    	reviewService.deleteReview(reviewNo, datecourseNo);
+    // 관리자페이지 - 리뷰 삭제_장찬영
+    @DeleteMapping("/deleteReview")
+    public void deleteReview(@RequestParam("result") String result) throws JsonMappingException, JsonProcessingException {
+    	Map<String, Integer> resultById = new ObjectMapper().readValue(result, 
+				new TypeReference<Map<String, Integer>>() {});
+    	
+    	ReviewId reviewId = new ReviewId();
+    	reviewId.setDatecourseNo(resultById.get("datecourseNo"));
+    	reviewId.setReviewNo(resultById.get("reviewNo"));
+    	
+    	
+    	reviewService.deleteReview(reviewId);
     }
     
-    // 리뷰 리스트 삭제
+    // 관리자페이지 - 리뷰 리스트 삭제_장찬영
     @DeleteMapping("/deleteReviewList")
     public void deleteReviewList(@RequestParam("result") String result, ReviewDTO reviewDTO) throws JsonMappingException, JsonProcessingException {
     	List<Map<String, Integer>> resultList = new ObjectMapper().readValue(result, 
@@ -119,11 +127,12 @@ public class ReviewController {
     		
     		reviewListDel.add(reviewDel);
     	}
+    	
     	reviewService.deleteReviewList(reviewListDel);
     	   	    	  	
     }
     
-    // 상세 리뷰(모달)
+    // 관리자페이지 - 상세 리뷰(모달) 출력_장찬영
     @GetMapping("/reviewModal")
     public ResponseEntity<?> reviewModel(@RequestParam("requestModal") String requestModal) throws JsonMappingException, JsonProcessingException {
     	Map<String, Integer> modal = new ObjectMapper().readValue(requestModal, 
@@ -143,7 +152,7 @@ public class ReviewController {
     		System.out.println("Modal : " + getModal);
     		
     		ReviewDTO getModalDTO = ReviewDTO.builder()
-    				.datacourseNo(getModal.getDatecourseNo())
+    				.datecourseNo(getModal.getDatecourseNo())
     				.reviewNo(getModal.getReviewNo())
 					.reviewerId(getModal.getReviewerId())
 					.reviewComment(getModal.getReviewComment())

@@ -17,8 +17,9 @@ import com.gogi1000.datecourse.service.review.ReviewService;
 public class ReviewServiceImpl implements ReviewService {
 	
 	@Autowired
-	ReviewRepository reviewRepository;
+	private ReviewRepository reviewRepository;
 	
+	// 리뷰리스트 출력 및 검색 기능 구현
 	@Override
 	public Page<CamelHashMap> getReviewList(Review review, Pageable pageable) {
 		System.out.println("getReviewList Impl :" + review);
@@ -41,13 +42,13 @@ public class ReviewServiceImpl implements ReviewService {
 		}
 		else {
 			return reviewRepository.getReviewList(pageable);
-		}
-		
-		
+		}		
 	}
 	
+	// 리뷰 등록(완전하지 않음)
 	@Override
 	public void insertReview(Review review) {
+		// 리뷰 넘버 부여
 		int reviewNo = reviewRepository.getNextReviewNo(review.getDatecourseNo());
 		
 		review.setReviewNo(reviewNo);
@@ -55,29 +56,27 @@ public class ReviewServiceImpl implements ReviewService {
 		reviewRepository.save(review);
 	}
 	
+	// 리뷰 수정(완전하지 않음)
 	@Override
 	public void updateReview(Review review) {
 		reviewRepository.save(review);
 	}
 	
+	// 리뷰 삭제
 	@Override
-	public void deleteReview(int reviewNo, int datacourseNo) {
-		ReviewId reviewId = new ReviewId();
-		reviewId.setDatecourseNo(datacourseNo);
-		reviewId.setReviewNo(reviewNo);
-		reviewRepository.deleteById(reviewId);
-		// reviewRepository.
+	public void deleteReview(ReviewId reviewId) {		
+		reviewRepository.deleteById(reviewId);		
 	}
 	
+	// 리뷰 리스트 삭제
 	@Override
 	public void deleteReviewList(List<Review> reviewList) {
 		reviewRepository.deleteAll(reviewList);
 	}
 	
+	// 상세 리뷰 출력(모달)
 	@Override
 	public Review reviewModel(Review review) {
-		System.out.println("Impl : " + review);
-		
 		return reviewRepository.selectModal(review);
 	}
 }

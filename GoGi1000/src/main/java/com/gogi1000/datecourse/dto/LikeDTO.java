@@ -12,4 +12,5 @@ import lombok.NoArgsConstructor;
 public class LikeDTO {
 	private String userId;
 	private int datecourseNo;	
+	private String likeYn;
 }
