@@ -4,7 +4,7 @@ $(function() {
 	headerSearchForm.addEventListener("submit", function(e) {
 		let headerSearchInput = document.getElementById("header-search-input");
 		if (headerSearchInput.value.length == 0) {
-			alert("입력창에 입력해 주세요.");
+			alert("검색어에 입력해 주세요.");
 			e.preventDefault();
 		}
 	}) 
@@ -14,7 +14,7 @@ $(function() {
 	searchA.addEventListener("click", function(e) {
 		let headerSearchInput = document.getElementById("header-search-input");
 		if (headerSearchInput.value.length == 0) {
-			alert("입력창에 입력해 주세요.");
+			alert("검색어에 입력해 주세요.");
 			e.preventDefault();
 		}
 	})

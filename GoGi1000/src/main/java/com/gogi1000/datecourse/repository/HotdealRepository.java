@@ -34,11 +34,12 @@ public interface HotdealRepository extends JpaRepository<Hotdeal, Integer> {
 	@Modifying
 	@Query(value = "SELECT A.*, "
 			+ "			   B.IMAGE_NM"
-			+"		  FROM T_GGC_HOTDEAL A"
-			+"		  JOIN T_GGC_IMAGE B"
-			+"		    ON A.HOTDEAL_NO = B.REFERENCE_NO"
-			+"		 WHERE B.IMAGE_GROUP = 'E0002'"
-			+"		 LIMIT 10",
+			+ "		  FROM T_GGC_HOTDEAL A"
+			+ "		  JOIN T_GGC_IMAGE B"
+			+ "		    ON A.HOTDEAL_NO = B.REFERENCE_NO"
+			+ "		 WHERE B.IMAGE_GROUP = 'E0002'"
+			+ "		   AND A.HOTDEAL_USE_YN = 'Y'"
+			+ "		 LIMIT 10",
 			nativeQuery=true)
 	List<CamelHashMap> getHotdealDatecourseList();
 	

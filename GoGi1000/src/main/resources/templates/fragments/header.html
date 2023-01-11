@@ -63,8 +63,10 @@
 						<div class="header-login" sec:authorize="isAuthenticated()" th:remove="tag">
 							<ul class="header-login-ul">
 								<li>
-									<a th:href="@{/mypage/mypage}" sec:authentication="principal.username"></a>&ensp;님 환영합니다.
+									<a th:href="@{/like/mypageLikeList}"><span  sec:authentication="principal.username"></span><span> 님 환영합니다.</span></a>
 								</li>
+							</ul>
+							<ul class="header-login-ul">
 								<li>
 									 <a th:href="@{/user/logout}">로그아웃</a>
 								</li>
@@ -74,18 +76,18 @@
 					<div id="header-bottom">
 						<div id="nav">
 							<img id="nav-image" th:src="@{/images/navstyle.png}">
-							<ul id="nav-ul">	
+							<div id="nav-ul">	
 								<div id="nav-ul-li">
 									<li><a href="#map-frame" class="nav-list-link">지역</a></li>
 									<li><a href="#ranking-h2" class="nav-list-link">인기 랭킹</a></li>
 									<li><a href="#hotdeal-wrapper" class="nav-list-link">핫딜</a></li>
 								</div>
 								<!-- sec:authorize="isAuthenticated()" th:remove="tag"  sec:authorize="hasRole('ROLE_ADMIN')-->
-								<div class="nav-div-li">
-									<li sec:authorize="hasRole('ROLE_USER')"><a th:href="@{/main/mypageLikeList}" class="nav-list-link">마이페이지</a></li>
-									<li sec:authorize="hasRole('ROLE_ADMIN')"><a th:href="@{/main/getDatecourseList}" class="nav-list-link">관리자페이지</a></li>
+								<div id="nav-div-li">
+									<li sec:authorize="hasRole('ROLE_USER')"><a th:href="@{/like/mypageLikeList}" class="nav-list-link">마이페이지</a></li>
+									<li sec:authorize="hasRole('ROLE_ADMIN')"><a th:href="@{/datecourse/getDatecourseList}" class="nav-list-link">관리자페이지</a></li>
 								</div>
-							</ul>
+							</div>
 						</div>
 					</div>
 				</div>
