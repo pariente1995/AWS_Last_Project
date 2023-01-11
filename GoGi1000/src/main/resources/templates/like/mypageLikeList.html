@@ -21,15 +21,16 @@
   					integrity="sha256-pkn2CUZmheSeyssYw3vMp1+xyub4m+e+QK4sQskvuo4="
   					crossorigin="anonymous"></script>  
     <script th:inline="javascript">
-    	 $(function() {
+    	 $(function() { 
+
+			// '좋아요' 상태에서 클릭 시 좋아요 취소_장찬영
 	     	$(".btnLike").each(function() {
 	        	$(this).on('click', function() {
 	          		if($(this).children('img').attr('src') === "/images/yellowStar.png") {
 	            		$(this).find("img").attr("src", "/images/star.png");  
 	            		 
 	            		const likeDel = {
-						  datecourseNo: $(this).attr('datecourse-no'),
-						  userId : $(this).attr('user-id')
+						  datecourseNo: $(this).attr('datecourse-no')
 					  	}
 					  	console.log(likeDel);
 	            		
@@ -45,13 +46,12 @@
 							}
 						});    
 	          		}
+	          		// '좋아요'가 아닌 상태에서 클릭 시 좋아요 등록_장찬영
 		          	else {
-		            	alert("'좋아요' 하였습니다.");
 		            	$(this).find("img").attr("src", "/images/yellowStar.png");
 		            	
 		            	const likeIns = {
-						  datecourseNo: $(this).attr('datecourse-no'),
-						  userId : $(this).attr('user-id')
+						  datecourseNo: $(this).attr('datecourse-no')
 					  	}
 					  	
 					  	$.ajax({
@@ -83,14 +83,14 @@
           <div id="main-title">
             <h1 style="margin: 0; float: left;">좋아요 리스트</h1>
           </div>
-          <hr style="margin: auto; width: 80%;">
+          <hr style="width: 80%;">
           <!-- 메인 내용 -->
             <!-- 좋아요 리스트 출력 --> 
             <div style="text-align: center; min-height: 480px;">
               <table>
                 <tr th:each="like : ${likeList}">
                   <!-- 해당 게시글 이미지 출력 -->
-                  <td style="width:15%;"><img th:src="@{/images/food1.jpeg}" alt="" class="mainImg"></td>
+                  <td style="width:15%;"><img th:src="@{'/upload/' + ${like.imageNm}}" alt="" class="mainImg"></td>
                   <td style="width:65%;">
                     <!-- 제목으로 해당 게시글 링크 -->
                     <div class="row">
@@ -118,16 +118,14 @@
                   </td>                  
                   <!-- 버튼으로 취소/추가 구현 -->
                   <td style="width:20%;">
-                    <button type="button" class="btnLike" 
-                    		th:datecourse-no="${like.datecourseNo}" th:user-id="${like.userId}">
-                      <img th:src="@{/images/yellowStar.png}" alt="" class="likeImg">
+                    <button type="button" class="btnLike" th:datecourse-no="${like.datecourseNo}">
+                      <img th:src="${like.likeYn} eq 'Y' ? @{/images/yellowStar.png} : @{/images/star.png}" alt="" class="likeImg">
                     </button>
                   </td>                
-                </tr>
-               
-                
+                </tr>         
               </table>
-              <div style="width: 80%; margin: auto;">
+              <!-- 갯수 출력 -->
+              <div style="width: 80%;">
             	<span style="font-size: small; float: right; margin-top: 10px">총 좋아요 갯수 : 
             		<span style="font-weight: bold; color: red;" th:text="${likeList.getTotalElements}"></span>개
             	</span>
@@ -136,6 +134,7 @@
           
 
           <br>
+          <!-- 페이징 -->
           <nav aria-label="Page navigation example" style="margin: auto; width: 80%;" >
             <ul class="pagination justify-content-center" 
             	th:if="${likeList.totalElements > 0}"

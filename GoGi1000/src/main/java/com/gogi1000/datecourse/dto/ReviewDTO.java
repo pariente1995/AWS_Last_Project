@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class ReviewDTO {
-	private int datacourseNo;
+	private int datecourseNo;
 	private int reviewNo;
 	private String reviewerId;
 	private String reviewComment;
