@@ -114,19 +114,10 @@ public interface DatecourseRepository extends JpaRepository<Datecourse, Integer>
 	
 	// 메인에서 인기 상세 페이지 조회 시, 데이트 코스 '메뉴' 리스트 조회_인겸
 	@Query(value="SELECT A.*"
-			+ "			,B.DATECOURSE_NO"
 			+ "		FROM T_GGC_DATECOURSE_MENU A"
-			+ "		JOIN T_GGC_DATECOURSE B ON A.DATECOURSE_NO = B.DATECOURSE_NO"
 			+ "	   WHERE A.DATECOURSE_NO = :datecourseNo",
 			nativeQuery = true)
 	List<CamelHashMap> getCateDatecourseMenu(@Param("datecourseNo") int datecourseNo);
 	
-	// 메인에서 인기 상세 페이지 조회 시, 데이트 코스 '시간' 리스트 조회_인겸
-	@Query(value="SELECT A.*"
-			+ "			,B.DATECOURSE_NO"
-			+ "		FROM T_GGC_DATECOURSE_HOURS A"
-			+ "		JOIN T_GGC_DATECOURSE B ON A.DATECOURSE_NO = B.DATECOURSE_NO"
-			+ "	   WHERE A.DATECOURSE_NO = :datecourseNo",
-			nativeQuery = true)
-	List<CamelHashMap> getCateDatecourseHours(@Param("datecourseNo") int datecourseNo);
+	
 }

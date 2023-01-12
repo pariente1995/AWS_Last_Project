@@ -1,5 +1,6 @@
 package com.gogi1000.datecourse.repository;
 
+import com.gogi1000.datecourse.common.CamelHashMap;
 import com.gogi1000.datecourse.entity.DatecourseHours;
 import com.gogi1000.datecourse.entity.DatecourseHoursId;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -21,4 +22,11 @@ public interface DatecourseHoursRepository extends JpaRepository<DatecourseHours
 
     // 데이트 코스 영업시간 리스트 조회_세혁
     List<DatecourseHours> findByDatecourseNo(int datecourseNo);
+    
+    // 메인에서 인기 상세 페이지 조회 시, 데이트 코스 '시간' 리스트 조회_인겸
+ 	@Query(value="SELECT A.*"
+ 			+ "		FROM T_GGC_DATECOURSE_HOURS A"
+ 			+ "	   WHERE A.DATECOURSE_NO = :datecourseNo",
+ 			nativeQuery = true)
+ 	List<CamelHashMap> getCateDatecourseHours(@Param("datecourseNo") int datecourseNo);
 }
