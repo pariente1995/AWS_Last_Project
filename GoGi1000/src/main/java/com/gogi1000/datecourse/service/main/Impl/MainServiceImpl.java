@@ -9,6 +9,7 @@ import com.gogi1000.datecourse.common.CamelHashMap;
 import com.gogi1000.datecourse.entity.Datecourse;
 import com.gogi1000.datecourse.entity.DatecourseImage;
 import com.gogi1000.datecourse.entity.Hotdeal;
+import com.gogi1000.datecourse.repository.DatecourseHoursRepository;
 import com.gogi1000.datecourse.repository.DatecourseImageRepository;
 import com.gogi1000.datecourse.repository.DatecourseRepository;
 import com.gogi1000.datecourse.repository.HotdealRepository;
@@ -19,6 +20,9 @@ public class MainServiceImpl implements MainService{
 	
 	@Autowired
 	private DatecourseRepository datecourseRepository;
+	
+	@Autowired
+	private DatecourseHoursRepository datecourseHoursRepository;
 	
 	@Autowired 
 	private HotdealRepository hotdealRepository;
@@ -77,7 +81,7 @@ public class MainServiceImpl implements MainService{
 	// 메인에서 인기 상세 페이지 조회 시, 영업 시간 리스트 조회_인겸
 	@Override
 	public List<CamelHashMap> getCateDatecourseHours(int datecourseNo) {
-		return datecourseRepository.getCateDatecourseHours(datecourseNo);
+		return datecourseHoursRepository.getCateDatecourseHours(datecourseNo);
 	}
 	
 	// 메인에서 인기 페이지 조회 시, 이미지 리스트 조회_인겸
