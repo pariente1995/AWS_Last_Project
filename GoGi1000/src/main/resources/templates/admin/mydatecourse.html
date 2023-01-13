@@ -11,63 +11,82 @@
             <script th:inline="javascript" src="https://code.jquery.com/jquery-3.6.1.js"></script>
             <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=47a1b106ab3eb419877b9f10cf48ce66&libraries=services"></script>
             <script th:inline="javascript">
-                $(function () {
-					var container = document.getElementById("map");
-					var options = {
-						center: new kakao.maps.LatLng(33.450701, 126.570667),
-						level: 3
-					}
-					
-					var map = new kakao.maps.Map(container, options);
-					var geocoder = new kakao.maps.services.Geocoder();
-					
-					
-	                var addrArr = new Array();
+                 $(function () {
+                    /*global kakao*/
+                    var container = document.getElementById("map");
+                    var options = {
+                        center: new kakao.maps.LatLng(33.450701, 126.570667),
+                        level: 3
+                    }
+
+                    var map = new kakao.maps.Map(container, options);
+                    var geocoder = new kakao.maps.services.Geocoder();
+
+
+                    var addrArr = new Array();
                     $("input[name=chk]").each(function () {
                         const chkList = {
                             addr: $(this).attr('datecourse-addr')
                         }
                         addrArr.push(chkList);
-                        
+
                     })
                     
+                    var addrArrList = new Array();
+                    
+                    for(var a in addrArr){
+						var $obj = addrArr[a];
+						var	aa = $obj.addr
+						addrArrList.push(aa)
+						}
+                    
+                    
+                    
+
                     let markers = new Array();
                     let infoWindows = new Array();
-
-
-                    for (var i = 0; i < addrArr.length; i++) {
-                        console.log(addrArr[i].addr)
-                        geocoder.addressSearch(addrArr[i].addr, function (result, status) {
+                    var index = 1;
+                    
+                    
+                    addrArrList.forEach(function (addr, index) {
+                        geocoder.addressSearch(addr, function (result, status) {
                             if (status != kakao.maps.services.Status.OK) {
                                 return alert('Something wrong!');
                             }
                             if (status === kakao.maps.services.Status.OK) {
                                 var coords = new kakao.maps.LatLng(
-									result[0].y, result[0].x);
-                                
-                                
+                                    result[0].y, result[0].x);
+
+
                                 var marker = new kakao.maps.Marker({
                                     map: map,
                                     position: coords
                                 })
                                 console.log(result)
                                 console.log(status)
-                                var content = '<div style="width:100%; text-align:center;"><b>' + result[0].road_address.building_name + '</b><br> -카카오 지도- </div>'
                                 
+                                
+                                
+                                var content = '<div style="width:100%; text-align:center;"><b>' + (index+1) + '</b><br> -카카오 지도- </div>'
+
                                 var infoWindow = new kakao.maps.InfoWindow({
-									content: content,
-									removable: true
-									
-								})
-                                
+                                    content: content,
+                                    removable: true
+
+                                })
+
                                 infoWindow.open(map, marker)
                                 
-                                map.setCenter(coords);
+                                if(index == 0){
+									map.setCenter(coords);
+								}
+                                
                             }
                         })
-                    }
-                 })
-
+                    })
+                })
+              
+                        
 
 
                 $(function () {
@@ -130,7 +149,9 @@
                             }
                         })
                     });
+                    $("#board-count").text($("#tbody tr").length);
                 })
+                
 
             </script>
         </th:block>
@@ -161,6 +182,7 @@
                         <span><i stlye="font-size:0.8rem;">데이트 코스는 최대 10개까지만 등록가능합니다.</i></span>
                     </div>
                     <table id="mycoursetable">
+                        <thead>
                         <tr>
                             <th style="width:50px;">선택</th>
                             <th style="width:100px;">번호</th>
@@ -168,6 +190,8 @@
                             <th style="width:500px;">주소</th>
 
                         </tr>
+                        <thead>
+                        <tbody id="tbody">
                         <tr th:each="datecourse : ${myDatecourseList}">
                         <div>
                             <td><input type="checkbox" name="chk" th:value="${datecourse.datecourseNo}" th:user-id="${datecourse.userId}"
@@ -178,6 +202,7 @@
                             </td>
                         </div>
                         </tr>
+                        <tbody>
                     </table>
                     <div id="list-total">
                         <span style="font-weight:bold; font-size:1.2rem">전체&ensp;<span id="board-count"
