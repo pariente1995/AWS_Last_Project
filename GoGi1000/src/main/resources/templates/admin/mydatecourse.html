@@ -2,52 +2,139 @@
 <html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
     layout:decorate="~{layouts/layout-admin}">
 
-<head>
+ <head>
 
-    <th:block layout:fragment="css">
-        <link rel="stylesheet" th:href="@{/css/mydatecourse.css}" />
-    </th:block>
-
-    <th:block layout:fragment="script">
-    	<script type="text/javascript" src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=7kzng8jdl4"></script>
-        <script th:inline="javascript" src="https://code.jquery.com/jquery-3.6.1.js"></script>
-
-        <script th:inline="javascript">
-            /* 전체선택 버튼 */
-            $(function () {
-                $("#btnChkall").click(function () {
-                    if ($("#btnChkall").text() == "전체선택") {
-                        $("input[name=chk]").prop("checked", true);
-                        $("#btnChkall").text("선택해제")
-                    } else if ($("#btnChkall").text() == "선택해제") {
-                        $("input[name=chk]").prop("checked", false);
-                        $("#btnChkall").text("전체선택")
-                    }
-                });
-
-                /* 삭제 버튼 */
-                $("#btnDel").click(function () {
-                    if ($("input[name=chk]").is(":checked")) {
-                        if (confirm("삭제하시겠습니까?")) {
-                            $("input[name=chk]:checked").parent().parent().remove();
-                            alert("삭제가 완료되었습니다.")
-                            $("#board-count").text($("#tbody tr").length);
-                        } else {
-                            alert("삭제가 취소되었습니다.")
+        <th:block layout:fragment="css">
+            <link rel="stylesheet" th:href="@{/css/mydatecourse.css}" />
+        </th:block>
+        <th:block layout:fragment="script">
+            <script th:inline="javascript" src="https://code.jquery.com/jquery-3.6.1.js"></script>
+            <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=47a1b106ab3eb419877b9f10cf48ce66&libraries=services"></script>
+            <script th:inline="javascript">
+                $(function () {
+					var container = document.getElementById("map");
+					var options = {
+						center: new kakao.maps.LatLng(33.450701, 126.570667),
+						level: 3
+					}
+					
+					var map = new kakao.maps.Map(container, options);
+					var geocoder = new kakao.maps.services.Geocoder();
+					
+					
+	                var addrArr = new Array();
+                    $("input[name=chk]").each(function () {
+                        const chkList = {
+                            addr: $(this).attr('datecourse-addr')
                         }
-                    }
-                })
-				var mapOptions = {
-    			center: new naver.maps.LatLng(37.3595704, 127.105399),
-    			zoom: 10
-				};
+                        addrArr.push(chkList);
+                        
+                    })
+                    
+                    let markers = new Array();
+                    let infoWindows = new Array();
 
-				var map = new naver.maps.Map('map', mapOptions);
-            });
-           
-        </script>
-    </th:block>
-</head>
+
+                    for (var i = 0; i < addrArr.length; i++) {
+                        console.log(addrArr[i].addr)
+                        geocoder.addressSearch(addrArr[i].addr, function (result, status) {
+                            if (status != kakao.maps.services.Status.OK) {
+                                return alert('Something wrong!');
+                            }
+                            if (status === kakao.maps.services.Status.OK) {
+                                var coords = new kakao.maps.LatLng(
+									result[0].y, result[0].x);
+                                
+                                
+                                var marker = new kakao.maps.Marker({
+                                    map: map,
+                                    position: coords
+                                })
+                                console.log(result)
+                                console.log(status)
+                                var content = '<div style="width:100%; text-align:center;"><b>' + result[0].road_address.building_name + '</b><br> -카카오 지도- </div>'
+                                
+                                var infoWindow = new kakao.maps.InfoWindow({
+									content: content,
+									removable: true
+									
+								})
+                                
+                                infoWindow.open(map, marker)
+                                
+                                map.setCenter(coords);
+                            }
+                        })
+                    }
+                 })
+
+
+
+                $(function () {
+                    let isAllSelected = false;
+                    const checkboxes
+                        = document.querySelectorAll('input[name="chk"]');
+                    // 선택된 체크박스
+                    const checked
+                        = document.querySelectorAll('input[name="chk"]:checked');
+                    // select all 체크박스
+                    const selectAll
+                        = document.getElementById("btnChkAll");
+                    $("input[name='chk']").on("click", function () {
+                        if (checkboxes.length === checked.length) {
+                            isAllSelected = true;
+                            selectAll.textContent = "전체 해제";
+                        } else {
+                            isAllSelected = false;
+                        }
+                    })
+
+                    $("#btnChkAll").on("click", function () {
+                        if (isAllSelected) {
+                            checkboxes.forEach(checkbox => {
+                                checkbox.checked = false;
+                                selectAll.textContent = "전체 선택";
+                            });
+                            isAllSelected = false;
+                        } else {
+                            checkboxes.forEach(checkbox => {
+                                checkbox.checked = true;
+                            });
+                            isAllSelected = true;
+                            selectAll.textContent = "전체 해제";
+                        }
+                    })
+
+                    $("#btnDel").on("click", function () {
+                        let MyDateDel = [];
+
+                        $('input[name=chk]:checked').each(function () {
+                            const chkList = {
+                                datecourseNo: $(this).val(),
+                                userId: $(this).attr('user-id')
+                            }
+
+                            MyDateDel.push(chkList);
+                        });
+
+                        $.ajax({
+                            url: '/datecourse/deleteMyDatecourseList',
+                            type: 'delete',
+                            data: { MyDateDel: JSON.stringify(MyDateDel) },
+                            success: function (obj) {
+                                alert("삭제되었습니다.");
+                                window.location.href = "/datecourse/getMyDatecourseList";
+                            },
+                            error: function (e) {
+                                console.log(e);
+                            }
+                        })
+                    });
+                })
+
+            </script>
+        </th:block>
+    </head>
 
 <body>
     <main>
@@ -59,31 +146,37 @@
                     <div id="datecourse-userInfo">
                         <img th:src="@{/images/user.png}" style="width:30px; height: 30px; margin-right: 5px;">
                         <div id="datecourse-text">
-                            <span></span><span>님의 데이트코스</span><span
+                            <span>[[${#authentication.principal.username}]]</span><span>님의 데이트코스</span><span
                                 style="color: #ee2d7a; font-weight: bold">
                                 Pick</span>
                         </div>
                         <img th:src="@{/images/heart.png}" style="transform: rotate(25deg); width:30px; height: 30px;">
                     </div>
-                    <div id="map"><img th:src="@{/images/map.png}" style="width:100%; height:100%"></div>
+                    <div id="map"></div>
                     <div id="table-menu">
                         <div>
-                            <button id="btnChkall">전체선택</button>
+                            <button id="btnChkAll">전체선택</button>
                             <button id="btnDel">삭제</button>
                         </div>
                         <span><i stlye="font-size:0.8rem;">데이트 코스는 최대 10개까지만 등록가능합니다.</i></span>
                     </div>
                     <table id="mycoursetable">
                         <tr>
-                            <th style="width:30px;"></th>
+                            <th style="width:50px;">선택</th>
                             <th style="width:100px;">번호</th>
-                            <th style="width:500px;">코스명</th>
+                            <th style="width:200px;">데이트코스명</th>
+                            <th style="width:500px;">주소</th>
 
                         </tr>
                         <tr th:each="datecourse : ${myDatecourseList}">
-                            <td><input type="checkbox" name="chk"></td>
+                        <div>
+                            <td><input type="checkbox" name="chk" th:value="${datecourse.datecourseNo}" th:user-id="${datecourse.userId}"
+                            th:datecourse-addr="${datecourse.datecourseAddr}"></td>
+                            <td th:text="${datecourse.datecourseNo}"></td>
                             <td th:text="${datecourse.datecourseNm}"></td>
-                            <td th:text="${datecourse.datecourseAddr}"></td>
+                            <td th:text="${datecourse.datecourseAddr}" class="addrtd" th:datecourse-addr="${datecourse.datecourseAddr}">
+                            </td>
+                        </div>
                         </tr>
                     </table>
                     <div id="list-total">
