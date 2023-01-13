@@ -24,6 +24,7 @@
 		})
   	  </script>
 	  <script th:inline="javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+	  <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=47a1b106ab3eb419877b9f10cf48ce66&libraries=services"></script>
 	  <script th:inline="javascript" src="https://code.jquery.com/jquery-3.6.1.js"></script>
 	  <script th:inline="javascript" src="https://cdn.jsdelivr.net/bxslider/4.2.12/jquery.bxslider.min.js"></script>
 	  <script th:inline="javascript" src="prettyPhoto_compressed_3.1.6/js/jquery.prettyPhoto.js" type="text/javascript" charset="utf-8"></script>
@@ -77,6 +78,53 @@
 		    $(document).ready(function(){
 		      //$("a[rel^='prettyPhoto']").prettyPhoto();
 		    });
+		    $(function () {
+                    /*global kakao*/
+                    var container = document.getElementById("datecourse-map-container");
+                    var options = {
+                        center: new kakao.maps.LatLng(33.450701, 126.570667),
+                        level: 3
+                    }
+
+                    var map = new kakao.maps.Map(container, options);
+                    var geocoder = new kakao.maps.services.Geocoder();
+
+                    geocoder.addressSearch($("#datecourseAddr").text(), function (result, status) {
+                        if (status != kakao.maps.services.Status.OK) {
+                            return alert('Something wrong!');
+                        }
+                        if (status === kakao.maps.services.Status.OK) {
+                            var coords = new kakao.maps.LatLng(
+                                result[0].y, result[0].x);
+
+
+                            var marker = new kakao.maps.Marker({
+                                map: map,
+                                position: coords
+                            })
+                            console.log(result)
+                            console.log(status)
+                            var content = '<div style="width:100%; text-align:center;"><b>' + result[0].road_address.building_name + '</b><br> -카카오 지도- </div>'
+
+                            var infoWindow = new kakao.maps.InfoWindow({
+                                content: content,
+                                removable: true
+
+                            })
+
+                            infoWindow.open(map, marker)
+
+                            map.setCenter(coords)
+                        }
+
+                    })
+                })
+              
+                        
+		    
+		    
+		    
+		    
 		    
 		    $(function(){
 	        	$("#datecourseAdd").on("click", function() {
@@ -168,7 +216,7 @@
 	        <h5>주소</h5>
 	      </div>
 	      <div class="sub-info" >
-	        <h5 th:text="${datecourse.datecourseAddr}"></h5>
+	        <h5 th:text="${datecourse.datecourseAddr}" id="datecourseAddr"></h5>
 	      </div>
 	      <button type="button" class="btn1" id="datecourseAdd" th:datecourse-no="${datecourse.datecourseNo}">
 	        <span class="btn_inner" id="datecourseAdd-text">데이트 코스에 추가</span>
@@ -318,7 +366,7 @@
 	  
 	  <!-- 맵 영역 -->
 	  <div id="datecourse-map-container">
-	
+	  
 	  </div>
 	  
 	  <!-- 구분선 -->

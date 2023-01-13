@@ -40,10 +40,9 @@ public class MyDatecourseController {
 		ModelAndView mv = new ModelAndView();
 		
 		MyDatecourse myDatecourse = MyDatecourse.builder()
-									       		.datecourseNo(myDatecourseDTO.getDatecourseNo())
-												.userId(customUser.getUsername())
+												.userId(customUser.getUser().getUserId())
 												.build();
-		
+													  
 		List<CamelHashMap> DatecourseList = myDatecourseService.getMyDatecourseList(myDatecourse);
 
 		mv.setViewName("admin/mydatecourse.html");
