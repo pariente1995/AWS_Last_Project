@@ -24,6 +24,7 @@
 		})
   	  </script>
 	  <script th:inline="javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+	  <script th:inline="javascript" src="https://code.jquery.com/jquery-3.6.1.js"></script>
 	  <script th:inline="javascript" src="https://cdn.jsdelivr.net/bxslider/4.2.12/jquery.bxslider.min.js"></script>
 	  <script th:inline="javascript" src="prettyPhoto_compressed_3.1.6/js/jquery.prettyPhoto.js" type="text/javascript" charset="utf-8"></script>
 	    <script th:inline="javascript">
@@ -76,6 +77,54 @@
 		    $(document).ready(function(){
 		      //$("a[rel^='prettyPhoto']").prettyPhoto();
 		    });
+		    
+		    $(function(){
+	        	$("#datecourseAdd").on("click", function() {
+					console.log("hi")
+	          		if($("#datecourseAdd-text").text() == "데이트 코스에 추가") { 
+						  console.log("hi")
+	            		const MyDateIns = {
+						  datecourseNo: $("#datecourseAdd").attr('datecourse-no')
+					  	}
+					  	console.log(MyDateIns)
+					  	
+	            		$.ajax({
+							url: '/datecourse/insertMyDatecourse',
+							type: 'post',
+							data: {MyDateIns : JSON.stringify(MyDateIns)},
+							success: function(obj) {
+								alert("내 데이트코스에 추가 하였습니다.");
+								$("#datecourseAdd-text").text("데이트 코스에서 제외")
+							},
+							error: function(e) {
+								console.log(e);
+							}
+						});
+						
+	            		
+	          		}
+	          		
+		          	else if($("#datecourseAdd-text").text() == "데이트 코스에서 제외"){
+						  console.log($("#datecourseAdd").attr('datecourse-no'))
+		            	const MyDateDel = {
+						  datecourseNo: $("#datecourseAdd").attr('datecourse-no')
+					  	}
+					  	$.ajax({
+							url: '/datecourse/deleteMyDatecourse',
+							type: 'delete',
+							data: {MyDateDel : JSON.stringify(MyDateDel)},
+							success: function(obj) {
+								alert("내 데이트코스에서 제외되었습니다.");
+							},
+							error: function(e) {
+								console.log(e);
+							}
+						});
+						$("#datecourseAdd-text").text("데이트 코스에 추가")   
+		          	}
+	      	})
+	      	})
+		    
 		</script>
   </th:block>  
   
@@ -121,8 +170,8 @@
 	      <div class="sub-info" >
 	        <h5 th:text="${datecourse.datecourseAddr}"></h5>
 	      </div>
-	      <button type="button" class="btn1" id="datecourseAdd">
-	        <span class="btn_inner">데이트 코스에 추가</span>
+	      <button type="button" class="btn1" id="datecourseAdd" th:datecourse-no="${datecourse.datecourseNo}">
+	        <span class="btn_inner" id="datecourseAdd-text">데이트 코스에 추가</span>
 	      </button>
 	    </div>
 	    <div class="datecourse-line">

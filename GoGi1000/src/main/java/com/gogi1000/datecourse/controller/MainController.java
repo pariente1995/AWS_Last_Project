@@ -119,7 +119,7 @@ public class MainController {
 	@GetMapping("/getCateDatecourse/{datecourseNo}")
 	public ModelAndView getCateDatecourse(@PathVariable int datecourseNo) {
 		Datecourse datecourse = mainService.getCateDatecourse(datecourseNo);
-		
+				
 		List<CamelHashMap> datecourseHours = mainService.getCateDatecourseHours(datecourseNo);
 		
 		List<CamelHashMap> datecourseMenu = mainService.getCateDatecourseMenu(datecourseNo); 
@@ -146,8 +146,8 @@ public class MainController {
 		}
 		
 		ModelAndView mv = new ModelAndView();
-		
 		mv.setViewName("datecourse/getCateDatecourse.html");
+		System.out.println(datecourse);
 		mv.addObject("datecourse", datecourse);
 		
 		mv.addObject("datecourseImageDTOList", datecourseImageDTOList);
