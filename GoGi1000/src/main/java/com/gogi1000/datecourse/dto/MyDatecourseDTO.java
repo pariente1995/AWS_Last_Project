@@ -13,5 +13,5 @@ public class MyDatecourseDTO {
 	
 	private String userId;
 	private int datecourseNo;
-	
+	private String myDatecourseRgstDate;
 }

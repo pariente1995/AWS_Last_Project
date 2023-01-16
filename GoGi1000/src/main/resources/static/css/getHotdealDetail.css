@@ -29,7 +29,8 @@ hr {
   #hotdeal-summary {
     text-align: center;
     margin: 0 auto;
-    width: 500px;
+    width: 800px;
+    white-space: pre-line;
   }
 
   /* 핫딜 상세정보 영역*/
@@ -102,6 +103,7 @@ hr {
   .hotdeal-sub-text {
     font-size: 20px;
   }
+  
 
   #hotdeal-desc {
     font-size:20px; 

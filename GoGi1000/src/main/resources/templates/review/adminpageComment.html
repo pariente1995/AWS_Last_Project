@@ -4,12 +4,12 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layouts/layout-admin}">
 <head>
-	<th:block layout:fragment="css">
-		<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" 
-			  rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" 
-			  crossorigin="anonymous">
-		<link rel="stylesheet" th:href="@{/css/adminpageComment.css}"/>	
-	</th:block>
+   <th:block layout:fragment="css">
+      <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" 
+           rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" 
+           crossorigin="anonymous">
+      <link rel="stylesheet" th:href="@{/css/adminpageComment.css}"/>   
+   </th:block>
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -18,156 +18,156 @@
      <script th:inline="javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
      <script th:inline="javascript" src="https://cdn.jsdelivr.net/bxslider/4.2.12/jquery.bxslider.min.js"></script>
      <script src="https://code.jquery.com/jquery-3.6.2.js"
-  					integrity="sha256-pkn2CUZmheSeyssYw3vMp1+xyub4m+e+QK4sQskvuo4="
-  					crossorigin="anonymous"></script>  
-  	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js" 
-  				integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3" 
-  				crossorigin="anonymous">
-  				// 부트 스트랩으로 모달 생성
-  				const myModal = document.getElementById('myModal')
-			    const myInput = document.getElementById('myInput')
-			
-			    myModal.addEventListener('shown.bs.modal', () => {
-			      myInput.focus()
-			    });		  				
-  	</script> 
-  				
+                 integrity="sha256-pkn2CUZmheSeyssYw3vMp1+xyub4m+e+QK4sQskvuo4="
+                 crossorigin="anonymous"></script>  
+     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js" 
+              integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3" 
+              crossorigin="anonymous">
+              // 부트 스트랩으로 모달 생성
+              const myModal = document.getElementById('myModal')
+             const myInput = document.getElementById('myInput')
+         
+             myModal.addEventListener('shown.bs.modal', () => {
+               myInput.focus()
+             });                    
+     </script> 
+              
     <script th:inline="javascript">
-    	// 체크박스가 전체 선택됐는지 구분하는 용도_장찬영
-		let isAllSelected = false;
-	
-	    function checkSelectAll()  {
-		    // 전체 체크박스_장찬영
-		    const checkboxes 
-		      = document.querySelectorAll('input[name="number"]');
-		    // 선택된 체크박스_장찬영
-		    const checked 
-		      = document.querySelectorAll('input[name="number"]:checked');
-		    // select all 체크박스_장찬영
-		    const selectAll 
-		      = document.querySelector('button[name="selectall"]');
-		      
-			// 전체 체크박스 수가 선택된 체크박스의 수와 같을 때 true로 변경하고 문구도 변경_장찬영
-		    if(checkboxes.length === checked.length)  {
-		      isAllSelected = true;
-		      selectAll.textContent = "전체 해제";
-		    }else {
-		      isAllSelected = false;
-		    }
-	
-	    }
-	
-	    function selectAll(selectAll)  {
-			// 전체 체크박스_장찬영
-		    const checkboxes 
-		      = document.getElementsByName('number');
-		    // 선택된 체크박스_장찬영
-		    const checked 
-		      = document.querySelectorAll('input[name="number"]:checked');
-			// select all 체크박스_장찬영
-		    const selectBtn 
-		      = document.querySelector('button[name="selectall"]');
-		      
-		    // 체크박스 전체가 체크 됐을 때 true로 변경하고 문구도 변경_장찬영
-		    if(isAllSelected) {
-		      checkboxes.forEach(checkbox => {
-		        checkbox.checked = false;		        
-		      });
-		      isAllSelected = false;
-		      selectBtn.textContent = "전체 선택";
-		    } else {
-		      checkboxes.forEach(checkbox => {
-		        checkbox.checked = true;
-		      });
-		      isAllSelected = true;
-		      selectBtn.textContent = "전체 해제";
-		    }
-		}		
-	
-	    $(function() {
-		  // 전체 삭제 버튼 클릭 시 선택된 리뷰 삭제_장찬영
-		  $("#btnChkDelete").on("click", function() {
-			  let result= [];
-			   
-		      $('input[name="number"]:checked').each(function() {
-				  	const chkList = {
-						  datecourseNo: $(this).attr('datecourse-no'),
-						  reviewNo : $(this).val()
-					  }
-					  console.log(chkList);
-				result.push(chkList);
-			});
-			$.ajax({
-				url: '/review/deleteReviewList',
-				type: 'delete',
-				data: {result : JSON.stringify(result)},
-				success: function(obj) {
-					alert("삭제되었습니다.");
-					window.location.href="/review/adminpageComment";
-				},
-				error: function(e) {
-					console.log(e);
-				}				
-			}); 			  
-		  });
+       // 체크박스가 전체 선택됐는지 구분하는 용도_장찬영
+      let isAllSelected = false;
+   
+       function checkSelectAll()  {
+          // 전체 체크박스_장찬영
+          const checkboxes 
+            = document.querySelectorAll('input[name="number"]');
+          // 선택된 체크박스_장찬영
+          const checked 
+            = document.querySelectorAll('input[name="number"]:checked');
+          // select all 체크박스_장찬영
+          const selectAll 
+            = document.querySelector('button[name="selectall"]');
+            
+         // 전체 체크박스 수가 선택된 체크박스의 수와 같을 때 true로 변경하고 문구도 변경_장찬영
+          if(checkboxes.length === checked.length)  {
+            isAllSelected = true;
+            selectAll.textContent = "전체 해제";
+          }else {
+            isAllSelected = false;
+          }
+   
+       }
+   
+       function selectAll(selectAll)  {
+         // 전체 체크박스_장찬영
+          const checkboxes 
+            = document.getElementsByName('number');
+          // 선택된 체크박스_장찬영
+          const checked 
+            = document.querySelectorAll('input[name="number"]:checked');
+         // select all 체크박스_장찬영
+          const selectBtn 
+            = document.querySelector('button[name="selectall"]');
+            
+          // 체크박스 전체가 체크 됐을 때 true로 변경하고 문구도 변경_장찬영
+          if(isAllSelected) {
+            checkboxes.forEach(checkbox => {
+              checkbox.checked = false;              
+            });
+            isAllSelected = false;
+            selectBtn.textContent = "전체 선택";
+          } else {
+            checkboxes.forEach(checkbox => {
+              checkbox.checked = true;
+            });
+            isAllSelected = true;
+            selectBtn.textContent = "전체 해제";
+          }
+      }      
+   
+       $(function() {
+        // 전체 삭제 버튼 클릭 시 선택된 리뷰 삭제_장찬영
+        $("#btnChkDelete").on("click", function() {
+           let result= [];
+            
+            $('input[name="number"]:checked').each(function() {
+                 const chkList = {
+                    datecourseNo: $(this).attr('datecourse-no'),
+                    reviewNo : $(this).val()
+                 }
+                 console.log(chkList);
+            result.push(chkList);
+         });
+         $.ajax({
+            url: '/review/deleteReviewList',
+            type: 'delete',
+            data: {result : JSON.stringify(result)},
+            success: function(obj) {
+               alert("삭제되었습니다.");
+               window.location.href="/review/adminpageComment";
+            },
+            error: function(e) {
+               console.log(e);
+            }            
+         });            
+        });
 
-		  // 리뷰리스트의 내용 클릭 시 모달 창의 내용 출력_장찬영
-		  $(".linkMain").on("click", function() {
-			  const requestModal = {
-				  datecourseNo: $(this).attr("datecourse-no"),
-				  reviewNo : $(this).attr("review-no")
-			  }			 
-			 console.log(requestModal); 
-			$.ajax({
-				url: '/review/reviewModal',
-				type: 'get',
-				data: {requestModal : JSON.stringify(requestModal)},
-				success: function(obj) {
-					
-					$(".modal-header span").text(obj.item.getModal.reviewerId);
-					$(".modal-body p").text(obj.item.getModal.reviewModfDate.split('T')[0]);
-					$(".modal-body textarea").text(obj.item.getModal.reviewComment);
-					$("#modelBtnDelete").attr('review-no', obj.item.getModal.reviewNo);
-					$("#modelBtnDelete").attr('datecourse-no', obj.item.getModal.datecourseNo);					
-				},
-				error: function(e) {
-					console.log(e);
-				}				
-			})			  	
-		  });
-		  
-		  // 모달 창에서 삭제 버튼 클릭 시 해당 리뷰 삭제_장찬영
-		  $("#modelBtnDelete").on("click", function() {
-			  const result = {
-						  datecourseNo: $(this).attr('datecourse-no'),
-						  reviewNo : $(this).attr('review-no')
-					  }
-					  console.log(result)
-					  
-			  $.ajax({
-				url: '/review/deleteReview',
-				type: 'delete',
-				data: {result : JSON.stringify(result)},
-				async : false,
-				success: function(obj) {
-					alert("삭제되었습니다.");
-					window.location.href="/review/adminpageComment";					
-				},
-				error: function(e) {
-					console.log(e);
-				}
-				
-			});
-	      });
-			
-	    });
-  	</script>
+        // 리뷰리스트의 내용 클릭 시 모달 창의 내용 출력_장찬영
+        $(".linkMain").on("click", function() {
+           const requestModal = {
+              datecourseNo: $(this).attr("datecourse-no"),
+              reviewNo : $(this).attr("review-no")
+           }          
+          console.log(requestModal); 
+         $.ajax({
+            url: '/review/reviewModal',
+            type: 'get',
+            data: {requestModal : JSON.stringify(requestModal)},
+            success: function(obj) {
+               
+               $(".modal-header span").text(obj.item.getModal.reviewerId);
+               $(".modal-body p").text(obj.item.getModal.reviewModfDate.split('T')[0]);
+               $(".modal-body textarea").text(obj.item.getModal.reviewComment);
+               $("#modelBtnDelete").attr('review-no', obj.item.getModal.reviewNo);
+               $("#modelBtnDelete").attr('datecourse-no', obj.item.getModal.datecourseNo);               
+            },
+            error: function(e) {
+               console.log(e);
+            }            
+         })              
+        });
+        
+        // 모달 창에서 삭제 버튼 클릭 시 해당 리뷰 삭제_장찬영
+        $("#modelBtnDelete").on("click", function() {
+           const result = {
+                    datecourseNo: $(this).attr('datecourse-no'),
+                    reviewNo : $(this).attr('review-no')
+                 }
+                 console.log(result)
+                 
+           $.ajax({
+            url: '/review/deleteReview',
+            type: 'delete',
+            data: {result : JSON.stringify(result)},
+            async : false,
+            success: function(obj) {
+               alert("삭제되었습니다.");
+               window.location.href="/review/adminpageComment";               
+            },
+            error: function(e) {
+               console.log(e);
+            }
+            
+         });
+         });
+         
+       });
+     </script>
   </th:block>
 </head>
 <body>
-	
-  		<div layout:fragment="content">
-  		<div id="main-container">
+   
+        <div layout:fragment="content">
+        <div id="main-container">
     <div id="wrapper01">
           <!-- 메인 화면 -->
           <div id="div-wrapper-main">
@@ -193,7 +193,7 @@
               </div>
               <div class="col" style="margin: 10px 5px 10px 15px;">
                 <form id="searchForm" action="/review/adminpageComment" 
-                	class="row" style="justify-content: right; padding: 0px;">
+                   class="row" style="justify-content: right; padding: 0px;">
                   <select th:id="searchCondition" name="searchConditionCmt" aria-labelledby="state" >
                     <option value="ALL" th:selected="${searchConditionCmt == 'ALL'}">전체</option>
                     <option value="NAME" th:selected="${searchConditionCmt == 'NAME'}">데이트 코스명</option>
@@ -225,19 +225,19 @@
                     <input type="checkbox" name='number' th:value='${review.reviewNo}' 
                     th:datecourse-no="${review.datecourseNo}"onclick='checkSelectAll()'>
                 </td>
-                <td th:text="${review.reviewNo}"></td>
+                <td th:text="${reviewStat.count}"></td>
                 <td th:text="${review.datecourseNm}"></td>
                 <td th:text="${review.reviewerId}"></td>
                 <!-- 모달 출력하는 링크 -->
                 <td><a href="#" class="linkMain" data-bs-toggle="modal" data-bs-target="#exampleModal" 
-                		th:text="${review.reviewComment}" th:review-no="${review.reviewNo}" th:datecourse-no="${review.datecourseNo}"></a></td>
+                      th:text="${review.reviewComment}" th:review-no="${review.reviewNo}" th:datecourse-no="${review.datecourseNo}"></a></td>
                 <td th:text="${review.reviewModfDate eq null ? '' : #strings.substring(review.reviewModfDate, 0, 10)}"></td>
               </tr>         
             </table>
             <!-- 리뷰 갯수 -->
             <div style="width: 80%;">
               <span style="font-size: small; float: right;">총 리뷰 갯수 : 
-              	<span style="font-weight: bold; color: red;" th:text="${reviewList.getTotalElements}"></span>개
+                 <span style="font-weight: bold; color: red;" th:text="${reviewList.getTotalElements}"></span>개
               </span>
             </div> 
           </div>
@@ -245,37 +245,37 @@
           <br>
           <nav aria-label="Page navigation example" style="width: 80%;" >
             <ul class="pagination justify-content-center"
-            	th:if="${reviewList.totalElements > 0}"
-				th:with="pageNumber = ${reviewList.pageable.pageNumber},
-						 pageSize = ${reviewList.pageable.pageSize},
-						 totalPages = ${reviewList.totalPages},
-						 startPage = ${T(java.lang.Math).floor(pageNumber / pageSize) * pageSize + 1},
-						 tempEndPage = ${startPage + pageSize - 1},
-						 endPage = ${tempEndPage > totalPages ? totalPages : tempEndPage}">
+               th:if="${reviewList.totalElements > 0}"
+            th:with="pageNumber = ${reviewList.pageable.pageNumber},
+                   pageSize = ${reviewList.pageable.pageSize},
+                   totalPages = ${reviewList.totalPages},
+                   startPage = ${T(java.lang.Math).floor(pageNumber / pageSize) * pageSize + 1},
+                   tempEndPage = ${startPage + pageSize - 1},
+                   endPage = ${tempEndPage > totalPages ? totalPages : tempEndPage}">
               <li class="page-item" th:if="${pageNumber > 0}">
               <!-- th:classappend="${1 == pageNumber + 1} ? 'disabled' : '' " -->
                 <a class="page-link" th:href="@{/review/adminpageComment(
-											page=${pageNumber - 1},
-											searchConditionCmt=${searchConditionCmt},
-											searchKeywordCmt=${searchKeywordCmt})}" 
-									 aria-label="Previous">
+                                 page=${pageNumber - 1},
+                                 searchConditionCmt=${searchConditionCmt},
+                                 searchKeywordCmt=${searchKeywordCmt})}" 
+                            aria-label="Previous">
                   <span aria-hidden="true">&lt;</span>
                 </a>
               </li>
               <li class="page-item" th:each="page : ${#numbers.sequence(startPage, endPage)}">
-              	<a class="page-link" th:href="@{/review/adminpageComment(
-											page=${page - 1},
-											searchConditionCmt=${searchConditionCmt},
-											searchKeywordCmt=${searchKeywordCmt})}" 
-									 th:text="${page}"></a>
+                 <a class="page-link" th:href="@{/review/adminpageComment(
+                                 page=${page - 1},
+                                 searchConditionCmt=${searchConditionCmt},
+                                 searchKeywordCmt=${searchKeywordCmt})}" 
+                            th:text="${page}"></a>
               </li>
               <li class="page-item" th:if="${pageNumber < totalPages - 1}">
-              	<!-- th:classappend="${totalPages == pageNumber + 1} ? 'disabled' : '' " -->
+                 <!-- th:classappend="${totalPages == pageNumber + 1} ? 'disabled' : '' " -->
                 <a class="page-link" th:href="@{/review/adminpageComment(
-											page=${pageNumber + 1},
-											searchConditionCmt=${searchConditionCmt},
-											searchKeywordCmt=${searchKeywordCmt})}"
-									 aria-label="Next">
+                                 page=${pageNumber + 1},
+                                 searchConditionCmt=${searchConditionCmt},
+                                 searchKeywordCmt=${searchKeywordCmt})}"
+                            aria-label="Next">
                   <span aria-hidden="true">&gt;</span>
                 </a>
               </li>
@@ -307,11 +307,11 @@
         <!-- 삭제 -->
         <div class="modal-footer">        
           <button id="modelBtnDelete" type="button" aria-label="Close" 
-          		data-bs-dismiss="modal">삭제</button>
+                data-bs-dismiss="modal">삭제</button>
         </div>
       </div>
     </div>
   </div>
 </div>
-	</div>
+   </div>
 </body>

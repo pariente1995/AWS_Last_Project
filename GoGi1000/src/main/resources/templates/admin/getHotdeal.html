@@ -9,53 +9,70 @@
 
     <th:block layout:fragment="script">
         <script th:inline="javascript" src="https://code.jquery.com/jquery-3.6.1.js"></script>
-
+        
+        
         <script th:inline="javascript">
+            /*업데이트 파일 처리*/
+            
+            //추가파일 배열
             let uploadFiles = [];
-
+            //기존파일 배열
             let originFiles = [];
-
+            //변경파일 배열
             let changedFiles = [];
-
+            
+            //유효성 검사
             $(function () {
                 $("#updateHotdealForm").on("submit", function (e) {
                     if (!$("#hotdealNm").val()) {
-                        e.preventDefault();
-                        alert("핫딜 상품명을 입력해주세요.");
-                        $("#hotdealNm").focus();
-                        return;
-                    }
-
-                    if (!$("#hotdealEndDate").val()) {
-                        e.preventDefault();
-                        alert("핫딜 링크명을 입력해주세요.");
-                        $("#hotdealEndDate").focus();
-                        return;
-                    }
-
-
-                    if (!$("#hotdealOfficialSite").val()) {
-                        e.preventDefault();
-                        alert("핫딜 판매처를 입력해주세요.");
-                        $("#hotdealOfficialSite").focus();
-                        return;
-                    }
-
-
-                    if (!$("#hotdealPrice").val()) {
-                        e.preventDefault();
-                        alert("기존가를 입력해주세요.");
-                        $("#hotdealTitle").focus();
-                        return;
-                    }
-
-                    if (!$("#hotdealSalerate").val()) {
-                        e.preventDefault();
-                        alert("할인율을 입력해주세요.");
-                        $("#hotdealSalerate").focus();
-                        return;
-                    }
-                });
+                       e.preventDefault();
+                       alert("핫딜 상품명을 입력해주세요.");
+                       $("#hotdealNm").focus();
+                       return;
+                     }
+                     
+                     if (!$("#hotdealEndDate").val()) {
+                         e.preventDefault();
+                         alert("핫딜 종료일을 입력해주세요.");
+                         $("#hotdealEndDate").focuse();
+                         return;			
+                     }
+                     
+                     if (!$("#hotdealOfficialSite").val()) {
+                       e.preventDefault();
+                       alert("핫딜 링크를 입력해주세요.");
+                       $("#hotdealOfficialSite").focus();
+                       return;
+                     }
+         	
+                     if (!$("#hotdealPrice").val()) {
+                       e.preventDefault();
+                       alert("기존가를 입력해주세요.");
+                       $("#hotdealPrice").focus();
+                       return;
+                     }
+         	
+                     if (!$("#hotdealSalerate").val()) {
+                       e.preventDefault();
+                       alert("할인율을 입력해주세요.");
+                       $("#hotdealSalerate").focus();
+                       return;
+                     }
+                     if (!$("#hotdealSeller").val()) {
+                         e.preventDefault();
+                         alert("판매처를 입력해주세요");
+                         $("#hotdealSeller").focus();
+                         return;
+                     }
+                     if (!$("#hotdealTel").val()) {
+                         e.preventDefault();
+                         alert("문의 번호를 입력해주세요.");
+                         $("#hotdealTel").focus();
+                         return;
+                     }
+                     $("#hotdealSummary").text("");
+                     $("#hotdealDesc").text("");   
+                   })
 
                 $("#uploadFiles").on("change", function (e) {
                     //input type=file에 추가된 파일들을 변수로 받아옴
@@ -93,8 +110,7 @@
 
        
 
-            //미리보기 영역에 들어갈 img태그 생성 및 선택된 파일을 Base64 인코딩된 문자열 형태로 변환하여
-            //미리보기가 가능하게 해줌
+            //미리보기 영역에 들어갈 img태그 생성 및 선택된 파일을 Base64 인코딩된 문자열 형태로 변환
             function imageLoader(file) {
                 uploadFiles.push(file);
 
@@ -126,16 +142,16 @@
                 //div 생성
                 let div = document.createElement("div");
                 div.setAttribute("style", "display: inline-block; position: relative;"
-                    + " width: 150px; height: 120px; margin: 5px; border: 1px solid #00f; z-index: 1;");
-
-                //button 생성
+                    + " width: 150px; height: 120px; margin: 5px; border: 1px solid black; border-radius:3px; z-index: 1;");
+                    
+                //삭제 button 생성
                 let btn = document.createElement("input");
                 btn.setAttribute("type", "button");
                 btn.setAttribute("value", "x");
                 btn.setAttribute("data-del-file", file.name);
-                btn.setAttribute("style", "width: 30px; height: 30px; position: absolute;"
+                btn.setAttribute("style", "width: 30px; height: 30px; position: absolute; border: none;"
                     + " right: 0px; bottom: 0px; z-index: 999; background-color: rgba(255, 255, 255, 0.1);"
-                    + " color: #f00;");
+                    + " color: red;");
 
                 //버튼 클릭 이벤트
                 //버튼 클릭 시 해당 파일이 삭제되도록 설정
@@ -174,7 +190,7 @@
 
                 //파일명 표출할 p태그 생성
                 const fName = document.createElement("p");
-                fName.setAttribute("style", "display: inline-block; font-size: 8px;");
+                fName.setAttribute("style", "width: 150px; display: inline-block; font-size: 8px; white-space: nowrap; overflow: hidden; text-overflow:ellipsis;");
                 fName.textContent = file.name;
 
                 //div에 하나씩 추가
@@ -260,7 +276,6 @@
                 $("#uploadFiles")[0].files = dt.files;
                 console.log("#uploadFiles");
 
-                //dt.clearData();
                 //clearData() 사용하면 배열의 모든 내용이 담기지 않고
                 //파일 하나씩만 담기는 현상이 발생해서 dt를 두 개로 분리하여 사용
                 dt2 = new DataTransfer();
@@ -275,14 +290,9 @@
                 console.log($("#changedFiles")[0].files);
 
                 //변경된 파일정보와 삭제된 파일정보를 담고있는 배열 전송
-                //배열 형태로 전송 시 백단(Java)에서 처리불가
-                //JSON String 형태로 변환하여 전송한다.
                 $("#originFiles").val(JSON.stringify(originFiles));
 
-                //ajax에서 multipart/form-data형식을 전송하기 위해서는
-                //new FormData()를 사용하여 직접 폼데이터 객체를 만들어준다.
-                //form.serialize()는 multipart/form-data 전송불가
-
+                //form.serialize()는 multipart/form-data 전송불가하기 때문에 formdata생성
                 let formData = new FormData($("#updateHotdealForm")[0]);
                 $.ajax({
                     enctype: 'multipart/form-data',
@@ -293,6 +303,7 @@
                     contentType: false,
                     success: function (obj) {
                         console.log(obj)
+                        //수정된 정보 변경
                         $("#hotdealNo").val(obj.item.getHotdeal.hotdealNo);
                         $("#hotdealNm").val(obj.item.getHotdeal.hotdealNm);
                         $("#hotdealEndDate").val(obj.item.getHotdeal.hotdealEndDate);

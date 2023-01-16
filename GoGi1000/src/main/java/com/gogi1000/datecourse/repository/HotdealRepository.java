@@ -50,6 +50,12 @@ public interface HotdealRepository extends JpaRepository<Hotdeal, Integer> {
 			+"		 WHERE HOTDEAL_NO = :hotdealNo",
 			nativeQuery=true)
 	Hotdeal getHotdeal(@Param("hotdealNo") int hotdealNo);
+
+	
+	
+	
+	
+	
 	
 	
 	

@@ -12,7 +12,7 @@
             <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=47a1b106ab3eb419877b9f10cf48ce66&libraries=services"></script>
             <script th:inline="javascript">
                  $(function () {
-                    /*global kakao*/
+                    /* 기본 맵 생성 */
                     var container = document.getElementById("map");
                     var options = {
                         center: new kakao.maps.LatLng(33.450701, 126.570667),
@@ -20,9 +20,10 @@
                     }
 
                     var map = new kakao.maps.Map(container, options);
+                    /* 주소 값을 좌표값으로 변환할 지오코더 생성*/
                     var geocoder = new kakao.maps.services.Geocoder();
 
-
+					/* 주소 값 배열에 담아주기 */
                     var addrArr = new Array();
                     $("input[name=chk]").each(function () {
                         const chkList = {
@@ -47,8 +48,9 @@
                     let infoWindows = new Array();
                     var index = 1;
                     
-                    
+                    /*지도에 마커 찍기*/
                     addrArrList.forEach(function (addr, index) {
+						/*지오코드로 주소형태를 좌표형태로 변환*/
                         geocoder.addressSearch(addr, function (result, status) {
                             if (status != kakao.maps.services.Status.OK) {
                                 return alert('Something wrong!');
@@ -58,39 +60,103 @@
                                     result[0].y, result[0].x);
 
 
+								/*customOverlay content*/
+								var custom = '<div style="width:10px; height:10px;text-align:center; color:white;border-radius:50%;"><b>' + (index+1) + '</b></div>'
+                                
+                                /* 주소 확대시 customOverlay*/
+                                var customOverlay = new kakao.maps.CustomOverlay({
+									position: coords,
+									content: custom,
+									yAnchor: 2.2,
+									xAnchor: 0.4
+								})
+								/* 지도 축소 시 customOverlay*/
+								var customOverlay1 = new kakao.maps.CustomOverlay({
+									position: coords,
+									content: custom,
+									yAnchor: -0.2,
+									xAnchor: 0.2
+							    })
+							    /*customOverlay 배치*/
+								customOverlay.setMap(map)
+								
+								/*마커 이미지 변수 선언*/
+								var imageSrc="/images/markerImage.png",
+								imageSize = new kakao.maps.Size(50, 55), // 마커이미지의 크기입니다
+    							imageOption = {offset: new kakao.maps.Point(23,37)}; // 마커이미지의 옵션입니다. 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정합니다.
+								
+								/*마커 이미지 설정*/
+								var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize, imageOption)
+								
+								/*변경한 이미지로 마커 생성*/
                                 var marker = new kakao.maps.Marker({
                                     map: map,
-                                    position: coords
+                                    position: coords,
+                                    image: markerImage  
                                 })
-                                console.log(result)
-                                console.log(status)
+                               
+                               	/* 마우스 오버, 마우스 아웃 이벤트에 사용할 infoWindow(정보창) 생성*/
+                               	var content = '<div style="width:100%; text-align:center;"><b>' + result[0].address_name + '</b><br> -카카오 지도- </div>'
+                                var infowindow = new kakao.maps.InfoWindow({
+									content: content
+								});
                                 
                                 
                                 
-                                var content = '<div style="width:100%; text-align:center;"><b>' + (index+1) + '</b><br> -카카오 지도- </div>'
-
-                                var infoWindow = new kakao.maps.InfoWindow({
-                                    content: content,
-                                    removable: true
-
-                                })
-
-                                infoWindow.open(map, marker)
-                                
+                                /* 지도에 마커가 없을시 기본 지도의 중심으로 */
                                 if(index == 0){
 									map.setCenter(coords);
 								}
-                                
+								/* 마커 클릭 이벤트 -> 지도의 중심을 해당 마커의 좌표로 이동*/
+								kakao.maps.event.addListener(marker, "click", function() {
+									map.setCenter(marker.getPosition())
+								})
+								/* 마커 마우스 오버 이벤트 -> 마커 위에 마우스를 올리면 infoWindow open*/
+								kakao.maps.event.addListener(marker, "mouseover", function() {
+        							infowindow.open(map, marker);
+								})
+								/* 마커 마우스 아웃 이벤트 -> 올려둔 마우스를 내렸을 때 infoWindow close*/
+								kakao.maps.event.addListener(marker, "mouseout", function() {
+								    infowindow.close();
+								})
+								/* 줌 이벤트 -> 지도를 확대/축소시 일정 지도 레벨에 따라 마커 크기 변경 */
+								kakao.maps.event.addListener(map, "zoom_changed", function() {
+									
+									var level = map.getLevel();
+									if(level <= 5) {
+										var markerImage1 = new kakao.maps.MarkerImage(imageSrc, imageSize, imageOption)
+										marker.setImage(markerImage1)
+									}
+									customOverlay1.setMap(null)
+									customOverlay.setMap(map)
+									
+									
+									if(level > 5) {
+
+										var imageSize2 = new kakao.maps.Size(33, 35)
+										var imageOption2 =  {offset: new kakao.maps.Point(13,0)};
+										var markerImage2 = new kakao.maps.MarkerImage(imageSrc, imageSize2, imageOption2)
+										marker.setImage(markerImage2);
+										
+										customOverlay.setMap(null);
+										customOverlay1.setMap(map)
+										
+										
+										
+									}
+									console.log(level);
+								})
+								
                             }
                         })
+                      })
                     })
-                })
               
                         
 
-
                 $(function () {
                     let isAllSelected = false;
+                    //체크박스의 배열
                     const checkboxes
                         = document.querySelectorAll('input[name="chk"]');
                     // 선택된 체크박스
@@ -99,6 +165,7 @@
                     // select all 체크박스
                     const selectAll
                         = document.getElementById("btnChkAll");
+                    //모두 선택일때 버튼 내용 변경
                     $("input[name='chk']").on("click", function () {
                         if (checkboxes.length === checked.length) {
                             isAllSelected = true;
@@ -107,7 +174,8 @@
                             isAllSelected = false;
                         }
                     })
-
+                    
+                    //전체선택 버튼 클릭시 체크박스 모두 선택
                     $("#btnChkAll").on("click", function () {
                         if (isAllSelected) {
                             checkboxes.forEach(checkbox => {
@@ -123,7 +191,8 @@
                             selectAll.textContent = "전체 해제";
                         }
                     })
-
+                    
+                    //삭제 버튼 클릭시 해당 데이터 삭제
                     $("#btnDel").on("click", function () {
                         let MyDateDel = [];
 
@@ -149,9 +218,10 @@
                             }
                         })
                     });
-                    $("#board-count").text($("#tbody tr").length);
+                    //게시물 전체 개수
+                     $("#board-count").text($("#tbody tr").length);
                 })
-                
+               
 
             </script>
         </th:block>
@@ -167,7 +237,7 @@
                     <div id="datecourse-userInfo">
                         <img th:src="@{/images/user.png}" style="width:30px; height: 30px; margin-right: 5px;">
                         <div id="datecourse-text">
-                            <span>[[${#authentication.principal.username}]]</span><span>님의 데이트코스</span><span
+                            <span> [[${#authentication.principal.username}]]</span><span> 님의 데이트코스</span><span
                                 style="color: #ee2d7a; font-weight: bold">
                                 Pick</span>
                         </div>
@@ -196,7 +266,7 @@
                         <div>
                             <td><input type="checkbox" name="chk" th:value="${datecourse.datecourseNo}" th:user-id="${datecourse.userId}"
                             th:datecourse-addr="${datecourse.datecourseAddr}"></td>
-                            <td th:text="${datecourse.datecourseNo}"></td>
+                            <td th:text="${datecourseStat.count}"></td>
                             <td th:text="${datecourse.datecourseNm}"></td>
                             <td th:text="${datecourse.datecourseAddr}" class="addrtd" th:datecourse-addr="${datecourse.datecourseAddr}">
                             </td>
@@ -205,8 +275,8 @@
                         <tbody>
                     </table>
                     <div id="list-total">
-                        <span style="font-weight:bold; font-size:1.2rem">전체&ensp;<span id="board-count"
-                                style="color:#ee2d7a; font-size:28px"></span>개</span>
+                        <span style="font-weight:bold; font-size:1.0rem">전체 <span id="board-count"
+                                style="color:#ee2d7a; font-size:20px"></span> 개</span>
                     </div>
                 </div>
             </div>
