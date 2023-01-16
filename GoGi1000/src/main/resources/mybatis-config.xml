@@ -4,11 +4,14 @@
 	"http://mybatis.org/dtd/mybatis-3-config.dtd">
 <configuration>
 	<settings>
+		<!-- 자바빈즈(DTO/VO) 등에만 적용됨. -->
+		<!-- 컬렉션 속성(map)의 경우에는 CamelHashMap 클래스 사용 -->
 		<setting name="mapUnderscoreToCamelCase" value="true" />
 	</settings>
 	
 	<!-- alias 추가 -->
 	<typeAliases>
+		<typeAlias type="com.gogi1000.datecourse.common.CamelHashMap" alias="camelHashMap"></typeAlias>
 		<typeAlias type="com.gogi1000.datecourse.dto.DatecourseDTO" alias="datecourse" />
 	</typeAliases>
 </configuration>

@@ -167,6 +167,7 @@
 /* 데이트 코스 리스트 영역 */
 #datecourse-list-wrapper {
   margin: 0 50px;
+  min-height: 250px;
 }
 
 #datecourse-list-wrapper #searchCount {
@@ -239,6 +240,10 @@
   align-items: center;
 }
 
+.datecourese-list-items-info {
+  height: 75px;
+}
+
 .datecourese-list-items-info .datecourese-list-items-name {
   margin-top: 10px;
   margin-bottom: 0px;
@@ -253,9 +258,9 @@
 }
 
 .datecourse-list-items-detail .datecourse-list-items-count {
+  width: 243px;
   display:flex;
   align-items: center;
-  margin-right: 120px;
   font-weight: bold;
 }
 
@@ -277,6 +282,7 @@
   align-items: center;
   justify-content: center;
   margin-top: 20px;
+  margin-bottom: 100px;
 }
 
 #datecourese-list-page-wrapper .datecourese-list-pagination {
@@ -298,6 +304,11 @@
   font-weight: bold;
 }
 
-.datecourese-list-pagination .datecourese-list-pagination-button:hover {
+.datecourese-list-pagination-button a {
+  text-decoration: none;
+  color: black;
+}
+
+.datecourese-list-pagination-button a:hover {
   color: #ee2d7a;
 }

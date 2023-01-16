@@ -1,9 +1,12 @@
 package com.gogi1000.datecourse.service.datecourse.impl;
 
+import com.gogi1000.datecourse.common.CamelHashMap;
+import com.gogi1000.datecourse.dto.DatecourseDTO;
 import com.gogi1000.datecourse.entity.Datecourse;
 import com.gogi1000.datecourse.entity.DatecourseHours;
 import com.gogi1000.datecourse.entity.DatecourseImage;
 import com.gogi1000.datecourse.entity.DatecourseMenu;
+import com.gogi1000.datecourse.mapper.DatecourseMapper;
 import com.gogi1000.datecourse.repository.DatecourseHoursRepository;
 import com.gogi1000.datecourse.repository.DatecourseImageRepository;
 import com.gogi1000.datecourse.repository.DatecourseMenuRepository;
@@ -11,10 +14,11 @@ import com.gogi1000.datecourse.repository.DatecourseRepository;
 import com.gogi1000.datecourse.service.datecourse.DatecourseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.util.*;
 
 @Service
 public class DatecourseServiceImpl implements DatecourseService {
@@ -29,6 +33,11 @@ public class DatecourseServiceImpl implements DatecourseService {
 
     @Autowired
     private DatecourseMenuRepository datecourseMenuRepository;
+
+    // 데이트 코스 Mapper 추가_세혁
+    @Autowired
+    private DatecourseMapper datecourseMapper;
+
 
     // 데이트 코스 등록_세혁
     @Override
@@ -237,5 +246,50 @@ public class DatecourseServiceImpl implements DatecourseService {
         datecourseRepository.flush(); // commit 후 새로고침
 
         return datecourse;
+    }
+
+    // 카테고리 선택에 따른 데이트 코스 조회_세혁
+    @Override
+    public Page<CamelHashMap> getPageCateDatecourseList(DatecourseDTO datecourseDTO, Pageable pageable) {
+        Map<String, Object> paramMap = new HashMap<String, Object>();
+
+        // 실내/외 여부 값을 ','를 기준으로 List 형태로 생성
+        if(datecourseDTO.getDatecourseInoutYn() != null && !datecourseDTO.getDatecourseInoutYn().equals("")) {
+            List<String> datecourseInoutYnList = Arrays.asList(datecourseDTO.getDatecourseInoutYn().split(","));
+            paramMap.put("datecourseInoutYnList", datecourseInoutYnList);
+        }
+
+        // 음식종류 값을 ','를 기준으로 List 형태로 생성
+        if(datecourseDTO.getDatecourseFoodType() != null && !datecourseDTO.getDatecourseFoodType().equals("")) {
+            List<String> datecourseFoodTypeList = Arrays.asList(datecourseDTO.getDatecourseFoodType().split(","));
+            paramMap.put("datecourseFoodTypeList", datecourseFoodTypeList);
+        }
+
+        /* 
+            paramMap에 datecourseInoutYnList 키가 존재하지 않으면,
+            datecourseInoutYnList 키에 빈 ArrayList value 셋팅
+        */
+        if(!paramMap.containsKey("datecourseInoutYnList")) {
+            paramMap.put("datecourseInoutYnList", new ArrayList<>());
+        }
+        
+        /* 
+            paramMap에 datecourseFoodTypeList 키가 존재하지 않으면,
+            datecourseFoodTypeList 키에 빈 ArrayList value 셋팅
+        */
+        if(!paramMap.containsKey("datecourseFoodTypeList")) {
+            paramMap.put("datecourseFoodTypeList", new ArrayList<>());
+        }
+        
+        paramMap.put("datecourseDTO", datecourseDTO);
+        paramMap.put("pageable", pageable);
+
+        // 조회결과 리스트
+        List<CamelHashMap> contents = datecourseMapper.getPageCateDatecourseList(paramMap);
+        
+        // 조회결과 개수
+        int count = datecourseMapper.getCateDatecourseListCnt(paramMap);
+
+        return new PageImpl<>(contents, pageable, count);
     }
 }
