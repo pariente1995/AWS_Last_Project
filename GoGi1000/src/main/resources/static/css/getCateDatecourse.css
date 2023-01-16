@@ -29,9 +29,60 @@
       justify-content: center;
       text-align: center;
     }
+    
+    /* 전화 영역 */
+    #InfoTel {
+		display: flex;
+		align-items:center;
+	}
+    
+    /* 메인 검색 영역 */
+    #searchDatecourse {
+		width: 500px;
+	    display: flex;
+	    float: right;
+	    margin-top: -30px;
+	    justify-content: right;
+	}
+	
+	#searchNaver {
+		height: 30px;
+	    background-color: white;
+	    border: 0px;
+	    cursor: pointer;
+	    display: flex;
+	    align-items: center;
+	    font-size: medium;
+	}
+    
+    #searchInputWrapper {
+		width: 180px; height: 30px; 
+		border: 3px solid #03C75A; 
+		float: right;
+		display: flex;
+		align-items: center;
+	}
+    
+    
+    #cateDatecourseSearchInput {
+		width:140px;
+		font-size: 0.7rem;
+		border: none; 
+		padding-left: 5px; 
+		z-index:1; 
+		outline:none;
+		margin-bottom: 5px;
+	}
+	
+	#searchImg {
+		width: 30px;
+		margin-left: 2px;
+	    display: flex;
+	    justify-content: center;
+	}
+    
 
     /* 데이트코스 설명 영역 */
-    
     #datecourse-main-info{
       width: 500px;
       text-align: center;
@@ -45,11 +96,13 @@
       margin-top: 20px;
       width: 900px;
     }
+    
     .datecourse-line{
       width: 900px;
       display: inline-block;
-      margin: 10px;
+      margin-bottom: 10px;
     }
+    
     .sub-img{
       width: 50px;
       height: 50px;
@@ -58,6 +111,7 @@
 	  justify-content: center;
       float: left; 
     }
+    
     .sub-title{
       width: 150px;
       height: 50px;
@@ -66,31 +120,23 @@
       float: left;
       margin-right: 10px;
     }
+    
     .sub-info{
       width: 400px;
-      height: 50px;
       display: inline-block;
       align-items: center;
-      white-space: nowrap;
-      margin-top: 10px;
+      margin-top: 5px;
     }
 
-    
-
     /* 메뉴 이미지 영역 */
+    
     #menu-img-container{
       display: flex;
       width: 100%;
-      margin: 10px;
+      margin-bottom: 10px;
     }
     
-    /* */
-    #menu-img-hidden-container {
-		width:100px;
-		height:100px;
-	}
-	
-
+    
     /* 데이트코스 위치 맵 영역 */
     #datecourse-map-container{
       margin: auto;
@@ -148,6 +194,11 @@
       margin-bottom: 30px;
       text-align: center;
     }
+    
+    .hrLine {
+		 width: 1100px;
+		 margin: 20px auto 40px auto;
+	}
 
   /* 버튼 */
   .btn1 {

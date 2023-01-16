@@ -319,7 +319,7 @@
 	    </div>
 	
 	    <!-- 인기 -->
-	    <h2 id="ranking-h2">인기 랭킹 TOP 10</h2>
+	    <h2 id="ranking-h2">인기 랭킹 TOP 10<img class="rankingImg" src="/images/inkiList.png"><img class="rankingImg" src="/images/inkiList.png"><img class="rankingImg" src="/images/inkiList.png"></h2>
 	    <div id="ranking-wrapper">
 	      <div id="ranking-frame">
 	      <!-- 인기 리스트 -->
@@ -327,13 +327,13 @@
 	          <div class="ranking-div-img">
 	            <a><img class="ranking-image" th:src="@{'/upload/' + ${datecourse.imageNm}}" width="200" height="200" ></a>
 	          </div>
-	          <p style="font-weight:bold; margin-bottom:-5px;" th:text="${datecourse.datecourseNm}"></p>
-	          <p style="font-size:13px;" th:text="${datecourse.datecourseSummary}"></p>
+	          <p style="width:200px; font-weight:bold; margin-bottom:-5px;" th:text="${datecourse.datecourseNm}"></p>
+	          <p style="width:200px; font-size:13px;" th:text="${datecourse.datecourseSummary}"></p>
 	        </div>
 	      </div>
 	    </div>
 	    <!-- 핫딜 리스트 -->
-	    <h2 id="hotdeal-h2">핫딜</h2>
+	    <h2 id="hotdeal-h2">핫딜<img class="rankingImg" src="/images/hotdeal.png"></h2>
 	    <div id="hotdeal-wrapper" >
 	      <div id="hotdeal-frame">
 	      <!-- 핫딜 리스트 -->
@@ -341,8 +341,8 @@
 	          <div class="hotdeal-div-img">
 	          	<a><img class="hotdeal-image" th:src="@{'/upload/' + ${hotdeal.imageNm}}" width="400" height="400"></a>
 	          </div>
-	          <p style="font-weight:bold; margin-bottom:-5px;" th:text="${hotdeal.hotdealNm}"></p>
-	          <p style="font-size:13px;" th:text="${hotdeal.hotdealDesc}"></p>
+	          <p style="width:400px; font-weight:bold; margin-bottom:-5px;" th:text="${hotdeal.hotdealNm}"></p>
+	          <p style="width:400px; font-size:13px;" th:text="${hotdeal.hotdealSummary}"></p>
 	       </div>
 	      </div>
 	    </div>
