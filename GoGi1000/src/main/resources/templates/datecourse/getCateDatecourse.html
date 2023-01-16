@@ -15,7 +15,7 @@
   </th:block>
   
   <th:block layout:fragment="script">
-  	  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h555rYXK/7HAuoJl+0I4" crossorigin="anonymous">
+  	  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous">
   	  	const myModal = document.getElementById('myModal')
 		const myInput = document.getElementById('myInput')
 		
@@ -79,7 +79,7 @@
 		      //$("a[rel^='prettyPhoto']").prettyPhoto();
 		    });
 		    $(function () {
-                    /*global kakao*/
+                    //기본 지도 생성
                     var container = document.getElementById("datecourse-map-container");
                     var options = {
                         center: new kakao.maps.LatLng(33.450701, 126.570667),
@@ -87,33 +87,40 @@
                     }
 
                     var map = new kakao.maps.Map(container, options);
+                    //주소->좌표 변환 지오코더 생성
                     var geocoder = new kakao.maps.services.Geocoder();
-
+                    
+                    //주소를 좌표값으로 변경
                     geocoder.addressSearch($("#datecourseAddr").text(), function (result, status) {
+                        //검색 실패시 실패 메시지
                         if (status != kakao.maps.services.Status.OK) {
                             return alert('Something wrong!');
                         }
+                        //검색 성공 시 지도와 마커,정보창(infoWindow) 표시
                         if (status === kakao.maps.services.Status.OK) {
+                            //좌표 생성
                             var coords = new kakao.maps.LatLng(
                                 result[0].y, result[0].x);
 
-
+							//마커에 생성, 마커 좌표 지정
                             var marker = new kakao.maps.Marker({
                                 map: map,
                                 position: coords
                             })
-                            console.log(result)
-                            console.log(status)
+                            
+                            //정보창(infowindow) 내용
                             var content = '<div style="width:100%; text-align:center;"><b>' + result[0].road_address.building_name + '</b><br> -카카오 지도- </div>'
-
+                            
+                            //정보창(infoWindow) 생성
                             var infoWindow = new kakao.maps.InfoWindow({
                                 content: content,
                                 removable: true
-
                             })
-
+                            
+                            //정보창(infoWindow) 표시
                             infoWindow.open(map, marker)
-
+                            
+                            //지도 중심을 주소 좌표 값으로 이동
                             map.setCenter(coords)
                         }
 
@@ -125,16 +132,16 @@
 		    
 		    
 		    
-		    
+		    //상세 페이지 내 데이트 코스에 추가
 		    $(function(){
+				//(토글버튼)내 데이트 코스에 추가 버튼 클릭시 내 데이트코스 목록에 추가
 	        	$("#datecourseAdd").on("click", function() {
-					console.log("hi")
 	          		if($("#datecourseAdd-text").text() == "데이트 코스에 추가") { 
-						  console.log("hi")
+						  
 	            		const MyDateIns = {
 						  datecourseNo: $("#datecourseAdd").attr('datecourse-no')
 					  	}
-					  	console.log(MyDateIns)
+					  	
 					  	
 	            		$.ajax({
 							url: '/datecourse/insertMyDatecourse',
@@ -142,6 +149,7 @@
 							data: {MyDateIns : JSON.stringify(MyDateIns)},
 							success: function(obj) {
 								alert("내 데이트코스에 추가 하였습니다.");
+								//내 데이트코스 목록에 이미 추가된 데이트 코스에는 데이트 코스에서 제외하는 버튼으로 변경
 								$("#datecourseAdd-text").text("데이트 코스에서 제외")
 							},
 							error: function(e) {
@@ -152,26 +160,29 @@
 	            		
 	          		}
 	          		
+	          		//(토글버튼)내 데이트 코스에서 제외 - 버튼 클릭시 내 데이트 코스 목록에서 제외
 		          	else if($("#datecourseAdd-text").text() == "데이트 코스에서 제외"){
-						  console.log($("#datecourseAdd").attr('datecourse-no'))
+						  
 		            	const MyDateDel = {
 						  datecourseNo: $("#datecourseAdd").attr('datecourse-no')
 					  	}
+					  	
 					  	$.ajax({
 							url: '/datecourse/deleteMyDatecourse',
 							type: 'delete',
 							data: {MyDateDel : JSON.stringify(MyDateDel)},
 							success: function(obj) {
 								alert("내 데이트코스에서 제외되었습니다.");
+								//제외시엔 다시 추가할 수 있도록 변경
+								$("#datecourseAdd-text").text("데이트 코스에 추가")   
 							},
 							error: function(e) {
 								console.log(e);
 							}
 						});
-						$("#datecourseAdd-text").text("데이트 코스에 추가")   
 		          	}
 	      	})
-	      	})
+	     })
 		    
 		</script>
   </th:block>  
@@ -180,277 +191,286 @@
 </head>
 <body>
 	<div layout:fragment="content">
-	  <div id="datecourse-detail-container">
-	    <h1 th:text="${datecourse.datecourseNm}"></h1>
-	  </div>
-	
-	  <!-- 메인 이미지 영역 -->
-	  <div id="datecourse-img-container">
-	    <div id="main-img">
-	      <div th:each="datecourseImageDTOList : ${datecourseImageDTOList}">
-	        <a href="#"><img th:if="${datecourseImageDTOListStat.index == 0}"
-	        				 th:src="@{'/upload/' + ${datecourseImageDTOList.imageNm}}"
-	        			     width="600" height="400" >
-	        </a>
-	      </div>
-	    </div>
-	  </div>
-	
-	  <!-- 데이트코스 설명 부분 -->
-	  <div id="datecourse-main-info">
-	    <div id="main-info">
-	      <h2 th:text="${datecourse.datecourseDesc}"></h2><br>
-	    </div>
-	  </div>
-	
-	  <!-- 구분선 -->
-	  <hr width="1100">
-	
-	  <!-- 데이트코스 서브 정보 -->
-	  <div id="datecourse-sub-info">
-	    <div class="datecourse-line">
-	      <div class="sub-img">
-	        <img th:src="@{/images/address.png}" width="30" height="30">
-	      </div>
-	      <div class="sub-title">
-	        <h5>주소</h5>
-	      </div>
-	      <div class="sub-info" >
-	        <h5 th:text="${datecourse.datecourseAddr}" id="datecourseAddr"></h5>
-	      </div>
-	      <button type="button" class="btn1" id="datecourseAdd" th:datecourse-no="${datecourse.datecourseNo}">
-	        <span class="btn_inner" id="datecourseAdd-text">데이트 코스에 추가</span>
-	      </button>
-	    </div>
-	    <div class="datecourse-line">
-	      <div class="sub-img">
-	        <img th:src="@{/images/tel.png}" width="30" height="30">
-	      </div>
-	      <div class="sub-title">
-	        <h5>전화번호</h5>
-	      </div>
-	      <div class="sub-info">
-	        <h5 th:text="${datecourse.datecourseTel}"></h5>
-	      </div>
-          <!-- 데이트코스 검색 -->
-          <div id="searchDatecourse" style="display: flex; align-items: center; justify-content:right; margin-top: 5px; ">
-            <div>
-              <button type="button" id="searchNaver" style="height: 35px; float: right; background-color: white; border: 0px; cursor: pointer; font-size: medium; font: bold;">
-                <span>검색</span>
-              </button>
-            </div>
-            <div style="width: 150px; height: 30px; 
-            			margin-right: 10px; 
-            			border: 3px solid #03C75A; 
-            			float: right;
-            			display: flex;
-            			align-items: center;">
-              <h6 style="margin: auto; padding-left: 10px;">데이트 코스 명</h6>
-              <img th:src="@{/images/expand.PNG}" style="float: right;">
-            </div>
-            <div style="float: right; margin-right: 10px;">
-              <img th:src="@{/images/search.png}" width="25" height="25">
-            </div>
-          </div>
-	
-	    </div> 
-	    <div class="datecourse-line">
-	      <div class="sub-img">
-	        <img th:src="@{/images/site.png}" width="20" height="20">
-	      </div>
-	      <div class="sub-title">
-	        <h5>웹 사이트</h5>
-	      </div>
-	      <div class="sub-info">
-	        <a href="#"><h5 th:text="${datecourse.datecourseOfficialSite}"></h5></a>
-	      </div>
-	    </div>   
-	    <div class="datecourse-line">
-	      <div class="sub-img">
-	        <img th:src="@{/images/park.png}" width="30" height="30">
-	      </div>
-	      <div class="sub-title">
-	        <h5>주차</h5>
-	      </div>
-	      <div class="sub-info">
-	        <h5 th:text="${datecourse.datecourseParkingYn}"></h5>
-	      </div>
-	    </div>   
-	    <div class="datecourse-line">
-	      <div class="sub-img">
-	        <img th:src="@{/images/time.png}" width="30" height="30">
-	      </div>
-	      <div class="sub-title">
-	        <h5>영업 정보</h5>
-	      </div>
-	      <div class="sub-info">
-             <div style="width:300px; display: flex;" th:each="datecourseHours : ${datecourseHours}">
-                  <h5 th:text="${datecourseHours.datecourseHoursInfo}"></h5><br>
-             </div>
-         </div>
-	    </div>   
-	    <div class="datecourse-line" style="display:inline-block;">
-	      <div class="sub-img">
-	        <img th:src="@{/images/menu.png}" width="30" height="30">
-	      </div>
-	      <div class="sub-title">
-	        <h5>메뉴</h5>
-	      </div>
-	      <div class="sub-info"  >
-	        <div style="display:flex; justify-content: left; align-items: center;" th:each="datecourseMenu : ${datecourseMenu}">
-	        	<div style="width:300px; display: flex; word-break:break-all;">
-			        <h5 style="margin-right:10px;" th:text="${datecourseMenu.datecourseMenuNm}"></h5> 
-			        <h5 th:text="${datecourseMenu.datecourseMenuPrice}"></h5>
-		        </div>
-	        </div>
-	      </div>
-	    </div>
-	    <!-- 메뉴 이미지 영역 -->
-	    <div id="menu-img-container">
-	      <div class="sub-img">
-	        <img th:src="@{/images/image.png}" width="30" height="30">
-	      </div>
-	      <div class="sub-title">
-	        <h5>이미지</h5>
-	      </div>
-	      <div id="menu-img" >
-	        <div th:each="datecourseImageDTOList : ${datecourseImageDTOList}">
-	             <a href="#" data-bs-toggle="modal" data-bs-target="#exampleModal">
-	             	<img th:src="@{'/upload/' + ${datecourseImageDTOList.imageNm}}" 
-		                 th:if="${datecourseImageDTOListStat.index > 0}"
-		          	     width="800" 
-		          	     height="100">
-	          	 </a>
-	        </div>
-	      </div>
-	    </div>
-		<!-- Modal -->
-		<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-		  <div class="modal-dialog">
-		    <div class="modal-content">
-		      <div class="modal-header">
-		        <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
-		        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-		      </div>
-		      <div class="modal-body">
-		        <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
-				  <div class="carousel-inner">
-				    <div class="carousel-item active" th:each="datecourseImageDTOList : ${datecourseImageDTOList}">
-				      <img th:src="@{'/upload/' + ${datecourseImageDTOList.imageNm}}" 
-			               th:if="${datecourseImageDTOListStat.index > 0}"
-			          	   width="800" 
-			          	   height="100" 
-			          	   class="d-block w-100">
-				    </div>
-				  </div>
-				  <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
-				    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-				    <span class="visually-hidden">Previous</span>
-				  </button>
-				  <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
-				    <span class="carousel-control-next-icon" aria-hidden="true"></span>
-				    <span class="visually-hidden">Next</span>
-				  </button>
-				</div>
-		      </div>
-		      <div class="modal-footer">
-		        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-		        <button type="button" class="btn btn-primary">Save changes</button>
-		      </div>
-		    </div>
-		  </div>
+		<div id="datecourse-detail-container">
+			<h1 th:text="${datecourse.datecourseNm}"></h1>
 		</div>
-	  </div>
-	
-	    
-	  
-	  <!-- 맵 영역 -->
-	  <div id="datecourse-map-container">
-	  
-	  </div>
-	  
-	  <!-- 구분선 -->
-	  <hr width="1100">
-	
-	  <!-- 댓글 영역 -->
-	  <div id="datecourse-comment-container"><h2>댓글</h2>
-	    <div class="comment-container">
-	      <div class="comment-left-section">
-	        <div>
-	          <img th:src="@{/images/user.png}">
-	        </div>
-	      </div>
-	      <div class="comment-right-section">
-	        <div class="comment-right-top">
-	          <div class="comment-user">
-	            <a>user0001</a>
-	          </div>
-	          <div class="comment-regdate">
-	            <a>2022-12-23</a>
-	          </div>
-	        </div>
-	        <div class="comment-right-bottom">
-	          <div class="comment-comment">
-	            <p>『훈민정음』(訓民正音, 중세 한국어: 훈민정음)은 한글의 옛 이름(첫 이름)으로 세종대왕이 창제한 문자의 명칭이자 훈민정음의 창제 원리와 사용법 등을 해설해 놓은 책의 제목이기도 하다. 세종 25년(1443년)에 창제 된 후 1446년(세종 28년)에 반포된 훈민정음의 뜻은 '백성(民)을 가르치는(訓) 바른(正) 소리(音)'이며, 28개의 낱자로 구성되어 있다. 소리글자에 속하며, 배우기 쉽고 읽고 쓰기에 편리한 장점을 가지고 있다. 이 훈민정음이 우리가 지금 사용하고 있는 한글이며,</p>
-	          </div>
-	        </div>
-	      </div>
-	    </div>
-	    
-	   
-	    <div id="hide" style="display: none">
-	  
-	      <div class="comment-container">
-	        <div class="comment-left-section">
-	          <div>
-	            <img th:src="@{/images/user.png}">
-	          </div>
-	        </div>
-	        <div class="comment-right-section">
-	          <div class="comment-right-top">
-	            <div class="comment-user">
-	              <a>user0001</a>
-	            </div>
-	            <div class="comment-regdate">
-	              <a>2022-12-23</a>
-	            </div>
-	          </div>
-	          <div class="comment-right-bottom">
-	            <div class="comment-comment">
-	              <p>『훈민정음』(訓民正音, 중세 한국어: 훈민정음)은 한글의 옛 이름(첫 이름)으로 세종대왕이 창제한 문자의 명칭이자 훈민정음의 창제 원리와 사용법 등을 해설해 놓은 책의 제목이기도 하다. 세종 25년(1443년)에 창제 된 후 1446년(세종 28년)에 반포된 훈민정음의 뜻은 '백성(民)을 가르치는(訓) 바른(正) 소리(音)'이며, 28개의 낱자로 구성되어 있다. 소리글자에 속하며, 배우기 쉽고 읽고 쓰기에 편리한 장점을 가지고 있다. 이 훈민정음이 우리가 지금 사용하고 있는 한글이며,</p>
-	            </div>
-	          </div>
-	        </div>
-	      </div>
-	      <div class="comment-container">
-	        <div class="comment-left-section">
-	          <div>
-	            <img th:src="@{/images/user.png}">
-	          </div>
-	        </div>
-	        <div class="comment-right-section">
-	          <div class="comment-right-top">
-	            <div class="comment-user">
-	              <a>user0001</a>
-	            </div>
-	            <div class="comment-regdate">
-	              <a>2022-12-23</a>
-	            </div>
-	          </div>
-	          <div class="comment-right-bottom">
-	            <div class="comment-comment">
-	              <p>『훈민정음』(訓民正音, 중세 한국어: 훈민정음)은 한글의 옛 이름(첫 이름)으로 세종대왕이 창제한 문자의 명칭이자 훈민정음의 창제 원리와 사용법 등을 해설해 놓은 책의 제목이기도 하다. 세종 25년(1443년)에 창제 된 후 1446년(세종 28년)에 반포된 훈민정음의 뜻은 '백성(民)을 가르치는(訓) 바른(正) 소리(音)'이며, 28개의 낱자로 구성되어 있다. 소리글자에 속하며, 배우기 쉽고 읽고 쓰기에 편리한 장점을 가지고 있다. 이 훈민정음이 우리가 지금 사용하고 있는 한글이며,</p>
-	            </div>
-	          </div>
-	        </div>
-	      </div>
-	    </div>
-	    <div class="comment-hide">
-	      <a href=#none id="show" onclick="if(hide.style.display=='none') {hide.style.display='';show.innerText='----- 댓글 접기 -----'} 
-	      else {hide.style.display='none';show.innerText='----- 댓글 더보기 -----'}">----- 댓글 더보기 -----</a>
-	    </div>
-	  </div>
-  </div>
-</body> 
-  
+
+		<!-- 메인 이미지 영역 -->
+		<div id="datecourse-img-container">
+			<div id="main-img">
+				<div th:each="datecourseImageDTOList : ${datecourseImageDTOList}">
+					<a th:href="@{${datecourse.datecourseOfficialSite}}"><img
+							th:if="${datecourseImageDTOListStat.index == 0}"
+							th:src="@{'/upload/' + ${datecourseImageDTOList.imageNm}}" width="600" height="400">
+					</a>
+				</div>
+			</div>
+		</div>
+
+		<!-- 데이트코스 설명 부분 -->
+		<div id="datecourse-main-info">
+			<div id="main-info">
+				<h2 th:text="${datecourse.datecourseDesc}"></h2><br>
+			</div>
+		</div>
+
+		<!-- 구분선 -->
+		<hr class="hrLine">
+
+		<!-- 데이트코스 서브 정보 -->
+		<div id="datecourse-sub-info">
+			<div class="datecourse-line">
+				<div class="sub-img">
+					<img th:src="@{/images/address.png}" width="30" height="30">
+				</div>
+				<div class="sub-title">
+					<h5>주소</h5>
+				</div>
+				<div class="sub-info">
+					<h5 th:text="${datecourse.datecourseAddr}" id="datecourseAddr"></h5>
+				</div>
+				<button type="button" class="btn1" id="datecourseAdd" th:datecourse-no="${datecourse.datecourseNo}">
+					<span class="btn_inner" id="datecourseAdd-text">데이트 코스에 추가</span>
+				</button>
+			</div>
+			<div class="datecourse-line">
+				<div class="sub-img">
+					<img th:src="@{/images/tel.png}" width="30" height="30">
+				</div>
+				<div class="sub-title">
+					<h5>전화번호</h5>
+				</div>
+				<div class="sub-info" id="InfoTel">
+					<h5 th:text="${datecourse.datecourseTel}"></h5>
+				</div>
+				<!-- 데이트코스 검색 -->
+				<div id="searchDatecourse">
+					<div>
+						<button type="button" id="searchNaver">
+							<span>검색</span>
+						</button>
+					</div>
+					<div id="searchInputWrapper">
+						<form action="" method="get" id="cateDatecourseForm" name="cateDatecourseSearchInput">
+							<input id="cateDatecourseSearchInput" name="cateDatecourseSearchInput"
+								placeholder="음식점 또는 지역을 입력해주세요" onfocus="this.placeholder=''"
+								onblur="placeholder='음식점 또는 지역을 입력해주세요'">
+						</form>
+						<img th:src="@{/images/expand.PNG}" style="margin-left: 6px;">
+					</div>
+					<div id="searchImg">
+						<img th:src="@{/images/search.png}" width="27" height="27">
+					</div>
+				</div>
+
+			</div>
+			<div class="datecourse-line">
+				<div class="sub-img">
+					<img th:src="@{/images/site.png}" width="30" height="30">
+				</div>
+				<div class="sub-title">
+					<h5>웹 사이트</h5>
+				</div>
+				<div class="sub-info">
+					<a id="datecourseOfficialSiteA" th:href="@{${datecourse.datecourseOfficialSite}}">
+						<h5 id="datecourseOfficialSite" th:text="${datecourse.datecourseOfficialSite}"></h5>
+					</a>
+				</div>
+			</div>
+			<div class="datecourse-line">
+				<div class="sub-img">
+					<img th:src="@{/images/park.png}" width="30" height="30">
+				</div>
+				<div class="sub-title">
+					<h5>주차</h5>
+				</div>
+				<div class="sub-info">
+					<h5 id="datecourseParkingYn" th:text="${datecourse.datecourseParkingYn}"></h5>
+				</div>
+			</div>
+			<div class="datecourse-line">
+				<div class="sub-img">
+					<img th:src="@{/images/time.png}" width="30" height="30">
+				</div>
+				<div class="sub-title">
+					<h5>영업 정보</h5>
+				</div>
+				<div class="sub-info">
+					<div style="width:300px; display: flex;" th:each="datecourseHours : ${datecourseHours}">
+						<h5 th:text="${datecourseHours.datecourseHoursInfo}" style="margin-bottom:20px;"></h5><br>
+					</div>
+				</div>
+			</div>
+			<div class="datecourse-line" style="display:inline-block;">
+				<div class="sub-img">
+					<img th:src="@{/images/menu.png}" width="30" height="30">
+				</div>
+				<div class="sub-title">
+					<h5>메뉴</h5>
+				</div>
+				<div class="sub-info">
+					<div style="display:flex; justify-content: left; align-items: center;"
+						th:each="datecourseMenu : ${datecourseMenu}">
+						<div style="width:500px; display: flex;">
+							<h5 style="width:200px; display: inline-block; margin:0 30px 20px 0"
+								th:text="${datecourseMenu.datecourseMenuNm}"></h5>
+							<h5 class="datecourseMenuPrice" th:text="${datecourseMenu.datecourseMenuPrice}"></h5>원
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- 메뉴 이미지 영역 -->
+			<div id="menu-img-container">
+				<div class="sub-img">
+					<img th:src="@{/images/image.png}" width="30" height="30">
+				</div>
+				<div class="sub-title">
+					<h5>이미지</h5>
+				</div>
+				<div id="menu-img">
+					<div th:each="datecourseImageDTOList : ${datecourseImageDTOList}" >
+						<a th:href="@{${datecourse.datecourseOfficialSite}}" class="btn btn-primary"
+						data-bs-toggle="modal" data-bs-target="#exampleModal">
+							<img th:src="@{'/upload/' + ${datecourseImageDTOList.imageNm}}"
+								th:if="${datecourseImageDTOListStat.index > 0}" width="800" height="100">
+						</a>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- 맵 영역 -->
+		<div id="datecourse-map-container">
+
+		</div>
+		<!-- 구분선 -->
+		<hr class="hrLine">
+
+		<!-- 댓글 영역 -->
+		<div id="datecourse-comment-container">
+			<h2>댓글</h2>
+			<div class="comment-container">
+				<div class="comment-left-section">
+					<div>
+						<img th:src="@{/images/user.png}">
+					</div>
+				</div>
+				<div class="comment-right-section">
+					<div class="comment-right-top">
+						<div class="comment-user">
+							<a>user0001</a>
+						</div>
+						<div class="comment-regdate">
+							<a>2022-12-23</a>
+						</div>
+					</div>
+					<div class="comment-right-bottom">
+						<div class="comment-comment">
+							<p>『훈민정음』(訓民正音, 중세 한국어: 훈민정음)은 한글의 옛 이름(첫 이름)으로 세종대왕이 창제한 문자의 명칭이자 훈민정음의 창제 원리와 사용법 등을 해설해
+								놓은 책의 제목이기도 하다. 세종 25년(1443년)에 창제 된 후 1446년(세종 28년)에 반포된 훈민정음의 뜻은 '백성(民)을 가르치는(訓) 바른(正)
+								소리(音)'이며, 28개의 낱자로 구성되어 있다. 소리글자에 속하며, 배우기 쉽고 읽고 쓰기에 편리한 장점을 가지고 있다. 이 훈민정음이 우리가 지금 사용하고
+								있는 한글이며,</p>
+						</div>
+					</div>
+				</div>
+			</div>
+
+
+			<div id="hide" style="display: none">
+
+				<div class="comment-container">
+					<div class="comment-left-section">
+						<div>
+							<img th:src="@{/images/user.png}">
+						</div>
+					</div>
+					<div class="comment-right-section">
+						<div class="comment-right-top">
+							<div class="comment-user">
+								<a>user0001</a>
+							</div>
+							<div class="comment-regdate">
+								<a>2022-12-23</a>
+							</div>
+						</div>
+						<div class="comment-right-bottom">
+							<div class="comment-comment">
+								<p>『훈민정음』(訓民正音, 중세 한국어: 훈민정음)은 한글의 옛 이름(첫 이름)으로 세종대왕이 창제한 문자의 명칭이자 훈민정음의 창제 원리와 사용법 등을
+									해설해 놓은 책의 제목이기도 하다. 세종 25년(1443년)에 창제 된 후 1446년(세종 28년)에 반포된 훈민정음의 뜻은 '백성(民)을
+									가르치는(訓) 바른(正) 소리(音)'이며, 28개의 낱자로 구성되어 있다. 소리글자에 속하며, 배우기 쉽고 읽고 쓰기에 편리한 장점을 가지고 있다. 이
+									훈민정음이 우리가 지금 사용하고 있는 한글이며,</p>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="comment-container">
+					<div class="comment-left-section">
+						<div>
+							<img th:src="@{/images/user.png}">
+						</div>
+					</div>
+					<div class="comment-right-section">
+						<div class="comment-right-top">
+							<div class="comment-user">
+								<a>user0001</a>
+							</div>
+							<div class="comment-regdate">
+								<a>2022-12-23</a>
+							</div>
+						</div>
+						<div class="comment-right-bottom">
+							<div class="comment-comment">
+								<p>『훈민정음』(訓民正音, 중세 한국어: 훈민정음)은 한글의 옛 이름(첫 이름)으로 세종대왕이 창제한 문자의 명칭이자 훈민정음의 창제 원리와 사용법 등을
+									해설해 놓은 책의 제목이기도 하다. 세종 25년(1443년)에 창제 된 후 1446년(세종 28년)에 반포된 훈민정음의 뜻은 '백성(民)을
+									가르치는(訓) 바른(正) 소리(音)'이며, 28개의 낱자로 구성되어 있다. 소리글자에 속하며, 배우기 쉽고 읽고 쓰기에 편리한 장점을 가지고 있다. 이
+									훈민정음이 우리가 지금 사용하고 있는 한글이며,</p>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="comment-hide">
+				<a href=#none id="show" onclick="if(hide.style.display=='none') {hide.style.display='';show.innerText='----- 댓글 접기 -----'} 
+         else {hide.style.display='none';show.innerText='----- 댓글 더보기 -----'}">----- 댓글 더보기 -----</a>
+			</div>
+		</div>
+	</div>
+
+	<!-- Modal -->
+	<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
+						<div class="carousel-inner">
+							<div class="carousel-item active"
+								th:each="datecourseImageDTOList : ${datecourseImageDTOList}">
+								<img th:src="@{'/upload/' + ${datecourseImageDTOList.imageNm}}"
+									th:if="${datecourseImageDTOListStat.index > 0}" width="800" height="100"
+									class="d-block w-100">
+							</div>
+						</div>
+						<button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls"
+							data-bs-slide="prev">
+							<span class="carousel-control-prev-icon" aria-hidden="true"></span>
+							<span class="visually-hidden">Previous</span>
+						</button>
+						<button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls"
+							data-bs-slide="next">
+							<span class="carousel-control-next-icon" aria-hidden="true"></span>
+							<span class="visually-hidden">Next</span>
+						</button>
+					</div>
+				</div>
+				<div class="modal-footer">
+
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+
 </html>

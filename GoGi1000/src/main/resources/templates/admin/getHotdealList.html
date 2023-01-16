@@ -12,71 +12,33 @@
 
         <script th:inline="javascript">
                 $(function () {
-                /* $("#btnChkall").click(function () {
-    
-                     if ($("#btnChkall").text() == "전체선택") {
-                         $("input[name=chk]").prop("checked", true);
- 
-                         $("#btnChkall").text("선택해제")
-                     } else if ($("#btnChkall").text() == "선택해제") {
-                         $("input[name=chk]").prop("checked", false);
-                         $("#btnChkall").text("전체선택")
-                     }
-                 });
-       
-                 $("#btnDel").click(function () {
-                     if ($("input[name=chk]").is(":checked")) {
-                         if($("#btnDel").text() == "숨김") {
-                             if(confirm("게시글을 숨깁니다.")) {
-                                 $.ajax({
-                                     url:'/hotdeal/updateUseYnN',
-                                     type:'POST',
-                                     data: { hotdealNo: $("#hotdealNo")
-                                     },
-                                     success: function(data){
-                                     	
-                                     },
-                                     error:function() {
-                                         alert("error");
-                                     }
-                                 }),
-                             	
-                             
-                                 $("#btnDel").text("표시");
-                             }
-                         } else if($("#btnDel").text() == "표시") {
-                             if(confirm("게시글을 표시합니다.")) {
-                                 $.ajax({
-                                     type: 'POST',
-                                     data: { hotdealNo: $("#hotdealNo")}
-                                 })
-                                 $("#btnDel").text("숨김");
-                             }
-                         }
-                     }
-                 })*/
+				//검색 버튼
                 $("#btnSearch").click(function () {
                     $("input[name='page']").val(0);
                     $("#searchForm").submit();
                 });
 
                 //엔터키로 검색
-                $("#searchKeyword").on("keydown", function (e) {
+                $("#hotdealSearchKeyword").on("keydown", function (e) {
                     if (e.keyCode == 13) {
                         $("#btnSearch").click();
                     }
                 });
-
+                
+                //체크박스 배열
                 var chkObj = document.getElementsByName("chk");
+                //체크박스 배열의 길이
                 var rowCnt = chkObj.length;
-
+                
+                //전체선택 배열
                 $("input[name=chkAll]").click(function () {
                     var chkArr = $("input[name=chk]");
                     for (var i = 0; i < chkArr.length; i++) {
                         chkArr[i].checked = this.checked;
                     }
                 });
-
+                
+                //전체 선택 체크박스 클릭 시 선택/선택해제
                 $("input[name=chk]").click(function () {
                     if ($("input[name=chk]:checked").length == rowCnt) {
                         $("input[name=chkAll]")[0].checked = true;
@@ -84,8 +46,24 @@
                         $("input[name=chkAll]")[0].checked = false;
                     }
                 });
-             });
-
+                /*
+                $("input[name=select-menu]").on("change", function() {
+					
+					$.ajax({
+                             	url: "/hotdeal/selectHotdealList",
+                                type: 'GET',
+                                data: {
+                                    searchCondition : $("#searchCondtion option:selected").val(),
+                                    searchKeyword : $("#searchKeyword").val(),
+                                    hotdealuseYn : $(this).val()
+                                },
+                                success: function (data) {
+                                }
+                         	});
+				})*/
+                
+             })
+               //삭제 버튼 클릭시 선택된 UseYn(Y => N)으로 변경
                 function updateUseYn() {
                     var valueArr = new Array();
                     var chkList = $("input[name=chk]");
@@ -142,8 +120,8 @@
                                     <option value="DESC" th:selected="${searchCondition =='DESC'}">내용</option>
                                 </select>
                                 <div id="input-wrap">
-                                    <input type="text" style="border:none;" name="searchKeyword" id="searchKeyword"
-                                        th:value="${searchKeyword}">
+                                    <input type="text" style="border:none;" name="searchKeyword" id="hotdealSearchKeyword"
+                                        th:value="${hotdealSearchKeyword}">
                                     <button type="button" id="btnSearch"><img th:src="@{/images/search.png}" id="searchImg"></button>
                                 </div>
                             </form>
@@ -189,7 +167,7 @@
                             <li class="page-item" th:if="${pageNumber > 0}">
                                 <a class="page-link" aria-label="Previous" th:href="@{/hotdeal/hotdealList(page=${pageNumber -1},
 	               				searchCondition=${searchCondition},
-	               				searchKeyword=${searchKeyword})}">
+	               				searchKeyword=${hotdealSearchKeyword})}">
                                     <span aria-hidden="true">&lt;</span>
                                 </a>
                             </li>
@@ -197,14 +175,14 @@
                             <li class="page-item" th:each="page : ${#numbers.sequence(startPage, endPage)}">
                                 <a class="page-link" th:href="@{/hotdeal/hotdealList(page=${page - 1},
 	            				searchCondition=${searchCondition},
-	            				searchKeyword=${searchKeyword})}" th:text="${page}">
+	            				searchKeyword=${hotdealSearchKeyword})}" th:text="${page}">
                                 </a>
                             </li>
 
                             <li class="page-item" th:if="${pageNumber < totalPages - 1}">
                                 <a class="page-link" aria-label="Next" th:href="@{/hotdeal/hotdealList(page=${pageNumber + 1},
 	              				searchCondition=${searchCondition},
-	              				searchKeyword=${searchKeyword})}">
+	              				searchKeyword=${hotdealSearchKeyword})}">
                                     <span aria-hidden="true">&gt;</span>
                                 </a>
                             </li>

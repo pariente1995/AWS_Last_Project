@@ -17,7 +17,9 @@
             let uploadFiles = [];
 
             $(function () {
-                /*   $("#insertHotdealForm").on("submit", function (e) {
+                   $("#insertHotdealForm").on("submit", function (e) {
+                     
+                    //유효성 검사 
                      if (!$("#hotdealNm").val()) {
                        e.preventDefault();
                        alert("핫딜 상품명을 입력해주세요.");
@@ -52,14 +54,23 @@
                        $("#hotdealSalerate").focus();
                        return;
                      }
-                     
+                     if (!$("#hotdealSeller").val()) {
+                         e.preventDefault();
+                         alert("판매처를 입력해주세요");
+                         $("#hotdealSeller").focus();
+                         return;
+                     }
                      if (!$("#hotdealTel").val()) {
                          e.preventDefault();
                          alert("문의 번호를 입력해주세요.");
                          $("#hotdealTel").focus();
+                         return;
                      }
-                   })*/
-
+                     $("#hotdealSummary").text("");
+                     $("#hotdealDesc").text("");   
+                   })
+                   
+                   //파일 변경이 일어날 때 미리보기
                 $("#uploadFiles").on("change", function (e) {
                     const files = e.target.files;
                     const fileArr = Array.prototype.slice.call(files);
@@ -68,7 +79,8 @@
                         imageLoader(f);
                     }
                 });
-
+                
+                //핫딜 등록시 파일 처리
                 $("#insertHotdealForm").on("submit", function () {
                     dt = new DataTransfer();
 
@@ -94,21 +106,24 @@
                      $(this).val($(this).val().replace(/^(\d{0,3})(\d{0,4})(\d{0,4})$/g, "$1-$2-$3").replace(/\-{1,2}$/g, ""));
                    });*/
             })
-
+            
+            //파일 미리보기
             function imageLoader(file) {
                 uploadFiles.push(file);
-
+                
                 let reader = new FileReader();
 
                 reader.onload = function (e) {
+                    //div안에 넣을 이미지 태그
                     let img = document.createElement("img");
                     img.setAttribute("style", "width: 100%; height: 100%; z-index: none;");
-
+                    
+                    //이미지 파일 형태일때 미리보기에 이미지 표시
                     if (file.name.toLowerCase().match(/(.*?)\.(jpg|jpeg|png|gif|svg|bmp)$/)) {
                         img.src = e.target.result;
                     }
 
-
+					//이미지 미리보기란에 div 추가
                     $("#image-preview-zone").append(makeDiv(img, file));
                 };
 
@@ -116,10 +131,12 @@
             }
 
             function makeDiv(img, file) {
+				//미리보기란에 들어갈 div 생성
                 let div = document.createElement("div");
                 div.setAttribute("style", "display: inline-block; position: relative;"
                     + " width: 150px; height: 120px; margin: 5px; border: 1px solid black; border-radius:3px; z-index: 1;");
-
+                
+                //div안에 들어갈 x버튼 생성    
                 let btn = document.createElement("input");
                 btn.setAttribute("type", "button");
                 btn.setAttribute("value", "x");
@@ -127,11 +144,13 @@
                 btn.setAttribute("style", "width: 30px; height: 30px; position: absolute; border: none;"
                     + " right: 0px; bottom: 0px; z-index: 999; background-color: rgba(255, 255, 255, 0.1);"
                     + " color: red;");
-
+                    
+                   //x버튼 클릭시 이미지 삭제
                 btn.onclick = function (e) {
                     const ele = e.srcElement;
                     const delFile = ele.getAttribute("delFile");
-
+                    
+                    //x버튼 클릭시 배열에서도 삭제
                     for (let i = 0; i < uploadFiles.length; i++) {
                         if (delFile == uploadFiles[i].name) {
                             uploadFiles.splice(i, 1);
@@ -139,26 +158,31 @@
                     }
 
                     dt = new DataTransfer();
-
+                    
+                    
+                    //uploadFiles에 uploadFiles(배열)에 있는 파일들을 담아준다
                     for (f in uploadFiles) {
                         const file = uploadFiles[f];
                         dt.items.add(file);
                     }
-
                     $("#uploadFiles")[0].files = dt.files;
-
+                     
+                     // 해당 img를 담고있는 부모태그인 div 삭제
                     const parentDiv = ele.parentNode;
                     $(parentDiv).remove();
                 }
-
+                
+                //파일이름 표시할 p태그 생성
                 const fName = document.createElement("p");
                 fName.setAttribute("style", "width: 150px; display: inline-block; font-size: 8px; white-space: nowrap; overflow: hidden; text-overflow:ellipsis;")
                 fName.textContent = file.name;
-
+                
+                //div에 이미지, 삭제버튼, p태그 추가
                 div.appendChild(img);
                 div.appendChild(btn);
                 div.appendChild(fName);
-
+                
+                //완성된 div를 리턴
                 return div;
             }
         </script>
@@ -214,14 +238,13 @@
                             </div>
                             <textarea name="hotdealSummary" cols="70" rows="5" id="hotdealSummary"
                                 placeholder="핫딜 요약정보 입력란입니다."></textarea>
+                            <span id="summaryCnt">
                         </div>
-                        
-                        
                         <div id="hotdealDesc-wrapper" class="input_wrapper">
                             <div id="hotdealDesc-text" class="label_wrapper"><label for="hotdealDesc">핫딜 상세설명</label>
                             </div>
                             <textarea name="hotdealDesc" cols="70" rows="10" id="hotdealDesc"
-                                placeholder="핫딜 상세설명 입력란입니다."></textarea>
+                                placeholder="핫딜 상세설명 입력란입니다." onkeypress="TextCount(this, 'descCnt')"></textarea>
                         </div>
                         <div id="hotdealImageFile-wrapper">
                             <div id="hotdealImageFile-text" class="label_wrapper">핫딜 상품<br>이미지 등록</div>

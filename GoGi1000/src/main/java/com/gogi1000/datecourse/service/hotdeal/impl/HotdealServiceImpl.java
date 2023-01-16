@@ -162,4 +162,62 @@ public class HotdealServiceImpl implements HotdealService {
 		
 		return hotdeal;
 	}
+	/* 핫딜 리스트 조회 */
+	/*@Override
+	public Page<Hotdeal> getSelectPageHotdealList(Hotdeal hotdeal, Pageable pageable) {
+		if(hotdeal.getHotdealUseYn() == "A") {
+		if(hotdeal.getSearchKeyword() != null && !hotdeal.getSearchKeyword().equals("")) {	
+			if(hotdeal.getSearchCondition().equals("ALL")) {
+				return hotdealRepository.findByHotdealNmContainingOrHotdealDescContaining
+						(hotdeal.getSearchKeyword(),
+						 hotdeal.getSearchKeyword(),
+						 pageable);
+			} else if(hotdeal.getSearchCondition().equals("NAME")) {
+				return hotdealRepository.findByHotdealNmContaining(hotdeal.getSearchKeyword(), pageable);
+			} else if(hotdeal.getSearchCondition().equals("DESC")) {
+				return hotdealRepository.findByHotdealDescContaining(hotdeal.getSearchKeyword(), pageable);
+			} else {
+				return hotdealRepository.findAll(pageable);
+			}
+			
+		} else {
+			return hotdealRepository.findAll(pageable);
+		}
+	} else if(hotdeal.getHotdealUseYn() == "Y") {
+		if(hotdeal.getSearchKeyword() != null && !hotdeal.getSearchKeyword().equals("")) {	
+			if(hotdeal.getSearchCondition().equals("ALL")) {
+				return hotdealRepository.findByHotdealNmContainingOrHotdealDescContaining
+						(hotdeal.getSearchKeyword(),
+						 hotdeal.getSearchKeyword(),
+						 pageable);
+			} else if(hotdeal.getSearchCondition().equals("NAME")) {
+				return hotdealRepository.findByHotdealNmContaining(hotdeal.getSearchKeyword(), pageable);
+			} else if(hotdeal.getSearchCondition().equals("DESC")) {
+				return hotdealRepository.findByHotdealDescContaining(hotdeal.getSearchKeyword(), pageable);
+			} else {
+				return hotdealRepository.findAll(pageable);
+			}
+			
+		} else {
+			return hotdealRepository.findAll(pageable);
+		}
+	} else if(hotdeal.getHotdealUseYn() == "N") {
+		if(hotdeal.getSearchKeyword() != null && !hotdeal.getSearchKeyword().equals("")) {	
+			if(hotdeal.getSearchCondition().equals("ALL")) {
+				return hotdealRepository.findByHotdealNmContainingOrHotdealDescContaining
+						(hotdeal.getSearchKeyword(),
+						 hotdeal.getSearchKeyword(),
+						 pageable);
+			} else if(hotdeal.getSearchCondition().equals("NAME")) {
+				return hotdealRepository.findByHotdealNmContaining(hotdeal.getSearchKeyword(), pageable);
+			} else if(hotdeal.getSearchCondition().equals("DESC")) {
+				return hotdealRepository.findByHotdealDescContaining(hotdeal.getSearchKeyword(), pageable);
+			} else {
+				return hotdealRepository.findAll(pageable);
+			}
+		} else {
+			return hotdealRepository.findAll(pageable);
+		}
+	}
+}*/
 }

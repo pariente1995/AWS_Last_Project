@@ -1,5 +1,8 @@
 package com.gogi1000.datecourse.entity;
 
+import java.time.LocalDateTime;
+
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.IdClass;
@@ -28,4 +31,7 @@ public class MyDatecourse {
 	private String userId;
 	@Id
 	private int datecourseNo;
+	
+	@Column(nullable=false)
+	private LocalDateTime myDatecourseRgstDate = LocalDateTime.now();
 }

@@ -1,5 +1,6 @@
 package com.gogi1000.datecourse.controller;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -19,7 +20,6 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gogi1000.datecourse.common.CamelHashMap;
-import com.gogi1000.datecourse.dto.DatecourseDTO;
 import com.gogi1000.datecourse.dto.MyDatecourseDTO;
 import com.gogi1000.datecourse.entity.CustomUserDetails;
 import com.gogi1000.datecourse.entity.MyDatecourse;
@@ -32,7 +32,7 @@ public class MyDatecourseController {
 	@Autowired
 	MyDatecourseService myDatecourseService;
 	
-	
+	//마이페이지 내 데이트코스_김도원
 	@GetMapping("/getMyDatecourseList")
 	public ModelAndView myDatecourseView(MyDatecourseDTO myDatecourseDTO,
 			@AuthenticationPrincipal CustomUserDetails customUser) {
@@ -47,11 +47,11 @@ public class MyDatecourseController {
 
 		mv.setViewName("admin/mydatecourse.html");
 		mv.addObject("myDatecourseList", DatecourseList);
-		mv.addObject("myDatecourse", myDatecourse);
 		System.out.println(myDatecourse);
 		return mv;
 				
 	}
+	//데이트코스 상세 페이지 내 데이트코스에 추가(버튼)_김도원
 	@PostMapping("/insertMyDatecourse")
 	public void insertMyDatecourse(@RequestParam("MyDateIns") String  myDateIns,
 			@AuthenticationPrincipal CustomUserDetails customUser) throws JsonMappingException,
@@ -62,11 +62,13 @@ public class MyDatecourseController {
 		MyDatecourse myDatecourse = MyDatecourse.builder()
 											   .datecourseNo(Integer.valueOf(MyDateIns.get("datecourseNo").toString()))
 											   .userId(customUser.getUsername())
+											   .myDatecourseRgstDate(LocalDateTime.now())
 											   .build();
 		
 		myDatecourseService.insertMyDatecourse(myDatecourse);
 	}
 	
+	//데이트코스 상세 페이지 내 데이트코스에서 삭제(버튼)_김도원
 	@DeleteMapping("/deleteMyDatecourse")
 	public void deleteMyDatecourse(@RequestParam("MyDateDel") String myDateDel,
 			@AuthenticationPrincipal CustomUserDetails customUser) throws JsonMappingException,
@@ -84,6 +86,7 @@ public class MyDatecourseController {
 		myDatecourseService.deleteMyDatecourse(myDatecourseId);
 	}
 	
+	//내 데이트코스 페이지에서 체크 박스 선택 후 삭제_김도원
     @DeleteMapping("/deleteMyDatecourseList")
     public void deleteMyDatecourseList(@RequestParam("MyDateDel") String MyDateDel, 
     		MyDatecourseDTO myDatecourseDTO, @AuthenticationPrincipal CustomUserDetails customUser) throws JsonMappingException, JsonProcessingException {

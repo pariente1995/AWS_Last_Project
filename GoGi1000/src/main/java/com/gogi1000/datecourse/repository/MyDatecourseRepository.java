@@ -17,6 +17,7 @@ public interface MyDatecourseRepository extends JpaRepository<MyDatecourse, MyDa
 			+"      LEFT JOIN T_GGC_DATECOURSE D"
 			+"        ON M.DATECOURSE_NO = D.DATECOURSE_NO"
 			+"    WHERE M.DATECOURSE_NO = D.DATECOURSE_NO"
-			+"      AND M.USER_ID = :#{#MyDatecourse.userId}", nativeQuery=true)
+			+"      AND M.USER_ID = :#{#MyDatecourse.userId}"
+			+ "   ORDER BY M.MY_DATECOURSE_RGST_DATE ASC", nativeQuery=true)
 	List<CamelHashMap> getMyDatecourseList(@Param("MyDatecourse") MyDatecourse mydatecourse);
 }

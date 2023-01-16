@@ -28,7 +28,9 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gogi1000.datecourse.common.CamelHashMap;
 import com.gogi1000.datecourse.common.FileUtils;
@@ -36,9 +38,11 @@ import com.gogi1000.datecourse.common.FileUtilsForMap;
 import com.gogi1000.datecourse.dto.DatecourseImageDTO;
 import com.gogi1000.datecourse.dto.HotdealDTO;
 import com.gogi1000.datecourse.dto.ResponseDTO;
+import com.gogi1000.datecourse.dto.ReviewDTO;
 import com.gogi1000.datecourse.entity.CustomUserDetails;
 import com.gogi1000.datecourse.entity.DatecourseImage;
 import com.gogi1000.datecourse.entity.Hotdeal;
+import com.gogi1000.datecourse.entity.Review;
 import com.gogi1000.datecourse.service.hotdeal.HotdealService;
 
 @RestController
@@ -47,7 +51,7 @@ public class HotdealController {
 	@Autowired
 	private HotdealService hotdealService;
     
-	//핫딜 입력
+	//핫딜 입력페이지 이동_김도원
 	@GetMapping("/insertHotdeal")
 	public ModelAndView insertHotdealView(@AuthenticationPrincipal CustomUserDetails customUser) throws IOException {
 		ModelAndView mv = new ModelAndView();
@@ -56,11 +60,12 @@ public class HotdealController {
 		return mv;
 	}
 	
+	//핫딜 입력_김도원
 	@PostMapping("/insertHotdeal")
 	public void insertHotdeal(HotdealDTO hotdealDTO, MultipartFile[] uploadFiles, 
 			HttpServletRequest request, HttpServletResponse response) throws IOException {
 		
-		
+		//핫딜
 		Hotdeal hotdeal = Hotdeal.builder()
 								 .hotdealNm(hotdealDTO.getHotdealNm())
 								 .hotdealEndDate(hotdealDTO.getHotdealEndDate())
@@ -76,13 +81,16 @@ public class HotdealController {
 								 .hotdealUseYn("Y")
 								 .build();
 		
-		
+		//DB에 입력될 이미지파일 데이터 리스트
 		List<DatecourseImage> uploadImageList = new ArrayList<DatecourseImage>();
 		
+		
 		if(uploadFiles.length > 0) {
+			//파일경로
 			String attachPath = request.getSession().getServletContext().getRealPath("/")
 					+ "/upload/";
 			
+			//디렉토리가 없으면 폴더 생성
 			File directory = new File(attachPath);
 			
 			if(!directory.exists()) {
@@ -92,6 +100,7 @@ public class HotdealController {
 			for(int i=0; i < uploadFiles.length; i++) {
 				MultipartFile file = uploadFiles[i];
 				
+				//파일 이름이 있을때만 배열에 담기
 				if(!file.getOriginalFilename().equals("") &&
 				file.getOriginalFilename() != null) {
 					DatecourseImage datecourseImage = new DatecourseImage();
@@ -104,11 +113,11 @@ public class HotdealController {
 		
 		hotdealService.insertHotdeal(hotdeal, uploadImageList);
 		
-		response.sendRedirect("/hotdeal/insertHotdeal");
+		response.sendRedirect("/hotdeal/hotdealList");
 	}
 	
 	
-	
+	//핫딜 리스트 조회화면(관리자)_김도원
     @GetMapping("/hotdealList")
     public ModelAndView getHotdealList(HotdealDTO hotdealDTO,
     		@PageableDefault(page=0, size=15) Pageable pageable) {
@@ -139,28 +148,6 @@ public class HotdealController {
     															  			.hotdealUseYn(pageHotdeal.getHotdealUseYn())
     															  			.build()
     															  			);
-    	
-    	List<HotdealDTO> getHotdealList = new ArrayList<HotdealDTO>();
-    	
-    	for(int i=0; i<hotdealList.size(); i++) {
-    		HotdealDTO returnHotdeal = HotdealDTO.builder()
-    											 .hotdealNo(hotdealList.get(i).getHotdealNo())
-    											 .hotdealNm(hotdealList.get(i).getHotdealNm())
-    											 .hotdealOfficialSite(hotdealList.get(i).getHotdealOfficialSite())
-    											 .hotdealPrice(hotdealList.get(i).getHotdealPrice())
-    											 .hotdealSalerate(hotdealList.get(i).getHotdealSalerate())
-    											 .hotdealTel(hotdealList.get(i).getHotdealTel())
-    											 .hotdealDesc(hotdealList.get(i).getHotdealDesc())
-    											 .hotdealRgstDate(hotdealList.get(i).getHotdealRgstDate() == null ?
-    													 null: hotdealList.get(i).getHotdealRgstDate().toString())
-    											 .hotdealEndDate(hotdealList.get(i).getHotdealEndDate())
-    											 .hotdealModfDate(hotdealList.get(i).getHotdealModfDate() == null ?
-    													 null: hotdealList.get(i).getHotdealModfDate().toString())
-    											 .hotdealUseYn(hotdealList.get(i).getHotdealUseYn())
-    											 .build();
-    		
-    		getHotdealList.add(returnHotdeal);
-    	}
     															  			
     	ModelAndView mv = new ModelAndView();
     	mv.setViewName("admin/getHotdealList.html");
@@ -170,22 +157,22 @@ public class HotdealController {
     		mv.addObject("searchCondition", hotdealDTO.getSearchCondition());
     	}
     	if(hotdealDTO.getSearchKeyword() != null && !hotdealDTO.getSearchKeyword().equals("")) {
-    		mv.addObject("searchKeyword", hotdealDTO.getSearchKeyword());
+    		mv.addObject("hotdealSearchKeyword", hotdealDTO.getSearchKeyword());
     	}
     	return mv;
     	
     }
-    
+    //핫딜 리스트 조회페이지에서 게시글 삭제시 UseYn을 ('Y' => 'N')으로 변경_김도원
     @PostMapping("/updateHotdealUseYn")
     public ResponseEntity<?> updateHotdealUseYn(HotdealDTO hotdealDTO, Pageable pageable, HttpServletRequest request, HttpServletResponse response,
     		@RequestParam("valueArr") String valueArr) throws IOException{
     	
     	ResponseDTO<HotdealDTO> responseDTO = new ResponseDTO<HotdealDTO>();
     	try {
-    
 	    	List<Integer> valueArrList = new ObjectMapper().readValue(valueArr,
 	    									new TypeReference<List<Integer>>() {});
 	    	
+	    	//업데이트
 	    	for(int i=0; i < valueArrList.size(); i++) {
 	    		hotdealService.updateHotdealUseYn(valueArrList.get(i));
 	    	}
@@ -195,6 +182,7 @@ public class HotdealController {
 	    							 .searchKeyword(hotdealDTO.getSearchKeyword())
 	    							 .build();
 	    	
+	    	//변경내용으로 조회
 	    	Page<Hotdeal> pageHotdealList = hotdealService.getPageHotdealList(hotdeal, pageable);
 	    	
 	    	Page<HotdealDTO> pageHotdealDTOList = pageHotdealList.map(pageHotdeal ->
@@ -223,13 +211,15 @@ public class HotdealController {
     		return ResponseEntity.badRequest().body(responseDTO);
     	}
     }
+    //핫딜 상세조회 페이지_김도원
     @GetMapping("getHotdeal/{hotdealNo}")
     public ModelAndView getHotdeal(@PathVariable int hotdealNo ) {
     	
     	
-    	
+    	//핫딜 조회
     	Hotdeal hotdeal = hotdealService.getHotdeal(hotdealNo);
     	
+    	//조회 내용 담아주기
     	HotdealDTO hotdealDTO = HotdealDTO.builder()
     									  .hotdealNo(hotdeal.getHotdealNo())
     									  .hotdealNm(hotdeal.getHotdealNm())
@@ -244,10 +234,12 @@ public class HotdealController {
     									  .hotdealUseYn(hotdeal.getHotdealUseYn())
     									  .build();
     	
+    	//이미지 목록 조회
     	List<DatecourseImage> datecourseImageList = hotdealService.getHotdealImageList(hotdealNo);
     	
     	List<DatecourseImageDTO> datecourseImageDTOList = new ArrayList<>();
-    	  
+    	
+    	//이미지 목록 담아주기
     	for(DatecourseImage datecourseImage : datecourseImageList) {
     		DatecourseImageDTO datecourseImageDTO = DatecourseImageDTO.builder()
     																  .imageGroup(datecourseImage.getImageGroup())
@@ -270,11 +262,11 @@ public class HotdealController {
     	}
     
     
-	
+	//핫딜 조회 및 수정 페이지(관리자) 이동_김도원
 	@GetMapping("updateHotdeal/{hotdealNo}")
 	public ModelAndView updateHotdeal(@PathVariable int hotdealNo) {
 		
-		
+		//핫딜 조회
 		Hotdeal hotdeal = hotdealService.getHotdeal(hotdealNo);
 		
 		HotdealDTO hotdealDTO = HotdealDTO.builder()
@@ -293,11 +285,12 @@ public class HotdealController {
 										  .hotdealUseYn(hotdeal.getHotdealUseYn())
 										  .build();
 		
-	
+		
+		//이미지 목록 조회
         List<DatecourseImage> datecourseImageList = hotdealService.getHotdealImageList(hotdealNo);
     	
     	List<DatecourseImageDTO> datecourseImageDTOList = new ArrayList<>();
-    	  
+    	 
     	for(DatecourseImage datecourseImage : datecourseImageList) {
     		DatecourseImageDTO datecourseImageListDTO = DatecourseImageDTO.builder()
     																  .imageGroup(datecourseImage.getImageGroup())
@@ -324,11 +317,12 @@ public class HotdealController {
 		return mv;
 	}
 	
+	//핫딜 수정(관리자)_김도원
 	@Transactional
 	@PutMapping("/updateHotdeal")
 	public ResponseEntity<?> updateHotdeal(HotdealDTO hotdealDTO, HttpServletResponse response,
 			HttpServletRequest request, MultipartFile[] uploadFiles, MultipartFile[] changedFiles, @RequestParam("originFiles") String originFiles) throws IOException {
-		System.err.println("1111111111111111");
+		
 		ResponseDTO<Map<String, Object>> responseDTO = new ResponseDTO<>();
 		
 		List<Map<String, Object>> originFileList = new ObjectMapper().readValue(originFiles,
@@ -387,6 +381,7 @@ public class HotdealController {
 							uFileList.add(datecourseImageMap);
 						}
 					}
+				
 				//삭제되는 파일 처리
 				} else if(originFileList.get(i).get("imageFileStatus").equals("D")) {
 					CamelHashMap datecourseImageMap = new CamelHashMap();
@@ -427,11 +422,10 @@ public class HotdealController {
 					}
 				}
 			}
-			System.out.println("uFileList" + uFileList);
+
 			hotdealService.updateHotdeal(hotdeal, uFileList);
 			
 			hotdeal = hotdealService.getHotdeal(hotdealDTO.getHotdealNo());
-			System.out.println("hotdeal" + hotdeal);
 			
 			HotdealDTO returnHotdeal = HotdealDTO.builder()
 										   .hotdealNo(hotdeal.getHotdealNo())
@@ -450,7 +444,7 @@ public class HotdealController {
 										   .build();
 			
 			List<DatecourseImage> datecourseImageList = hotdealService.getHotdealImageList(hotdeal.getHotdealNo());
-			//System.out.println(datecourseImageList);
+
 			List<DatecourseImageDTO> datecourseImageDTOList = new ArrayList<DatecourseImageDTO>();
 			
 			for(DatecourseImage datecourseImage : datecourseImageList) {
@@ -483,8 +477,68 @@ public class HotdealController {
 			
 			return ResponseEntity.badRequest().body(responseDTO);	
 		}
-		//re sponse.sendRedirect("/board/board/" + boardDTO.getBoardNo());
 	}
+	/*
+    @GetMapping("/selectHotdealList")
+    public ResponseEntity<?> selectHotdealList(HotdealDTO hotdealDTO,
+    		@PageableDefault(page=0, size=15) Pageable pageable) throws JsonMappingException, JsonProcessingException, IOException {
+    	String MenuOption = new ObjectMapper().readValue(menuOption, 
+				new TypeReference<String>() {});
+    	ResponseDTO<Map<String, Object>> response = new ResponseDTO<>();
+    	System.out.println(menuOption);
+    	
+    	try {
+    		Hotdeal hotdeal = Hotdeal.builder()
+    								 .searchCondition(hotdealDTO.getSearchCondition())
+    							  	 .searchKeyword(hotdealDTO.getSearchKeyword())
+    							  	 .hotdealUseYn
+    							     .build();
+    		
+    		
+    		Page<Hotdeal> selectPageHotdealList = hotdealService.getSelectPageHotdealList(hotdeal, pageable);
+	    	
+	    	Page<HotdealDTO> pageHotdealDTOList = selectPageHotdealList.map(pageHotdeal ->
+																    	HotdealDTO.builder()
+															  			.hotdealNo(pageHotdeal.getHotdealNo())
+															  			.hotdealNm(pageHotdeal.getHotdealNm())
+															  			.hotdealOfficialSite(pageHotdeal.getHotdealOfficialSite())
+															  			.hotdealPrice(pageHotdeal.getHotdealPrice())
+																		.hotdealSalerate(pageHotdeal.getHotdealSalerate())
+															  			.hotdealTel(pageHotdeal.getHotdealTel())
+															  			.hotdealDesc(pageHotdeal.getHotdealDesc())
+															  			.hotdealRgstDate(pageHotdeal.getHotdealRgstDate() == null ?
+															  					null : pageHotdeal.getHotdealRgstDate().toString())
+															  			.hotdealEndDate(pageHotdeal.getHotdealEndDate())
+															  			.hotdealModfDate(pageHotdeal.getHotdealModfDate() == null ?
+															  					null : pageHotdeal.getHotdealModfDate().toString())
+															  			.hotdealUseYn(pageHotdeal.getHotdealUseYn())
+															  			.build()
+															  			);
+    		
+	    	 Map<String, Object> returnMap = new HashMap<String, Object>();
+
+	         returnMap.put("pageHotdealList", pageHotdealDTOList);
+
+	         response.setItem(returnMap);
+
+	         return ResponseEntity.ok().body(response);
+    	}
+    	catch(Exception e) {
+    		response.setErrorMessage(e.getMessage());
+			
+			return ResponseEntity.badRequest().body(response);
+    	}
+    	
+
+    }*/
+
+	
+	
+	
+	
+	
+	
+	
 }
 
 
