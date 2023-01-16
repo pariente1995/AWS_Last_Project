@@ -1,5 +1,7 @@
 package com.gogi1000.datecourse.service.datecourse;
 
+import com.gogi1000.datecourse.common.CamelHashMap;
+import com.gogi1000.datecourse.dto.DatecourseDTO;
 import com.gogi1000.datecourse.entity.Datecourse;
 import com.gogi1000.datecourse.entity.DatecourseHours;
 import com.gogi1000.datecourse.entity.DatecourseImage;
@@ -37,4 +39,7 @@ public interface DatecourseService {
                                 List<DatecourseHours> uDatecourseHoursList,
                                 List<DatecourseMenu> uDatecourseMenuList,
                                 List<DatecourseImage> uImageList);
+
+    // 카테고리 선택에 따른 데이트 코스 조회_세혁
+    Page<CamelHashMap> getPageCateDatecourseList(DatecourseDTO datecourseDTO, Pageable pageable);
 }

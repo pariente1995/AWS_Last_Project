@@ -2,6 +2,7 @@ package com.gogi1000.datecourse.controller;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.gogi1000.datecourse.common.CamelHashMap;
 import com.gogi1000.datecourse.common.FileUtils;
 import com.gogi1000.datecourse.dto.*;
 import com.gogi1000.datecourse.entity.Datecourse;
@@ -24,10 +25,7 @@ import javax.transaction.Transactional;
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @RestController
 @RequestMapping("/datecourse")
@@ -114,7 +112,6 @@ public class DatecourseController {
         List<DatecourseImage> uploadImageList = new ArrayList<DatecourseImage>();
 
         if(realUploadFiles.length > 0) {
-            System.out.println(request.getSession().getServletContext().getRealPath("/"));
             String attachPath = request.getSession().getServletContext().getRealPath("/")
                     + "/upload/";
 
@@ -142,7 +139,7 @@ public class DatecourseController {
         datecourseService.insertDatecourse(datecourse, iDatecourseHoursList, iDatecourseMenuList, uploadImageList);
 
         // 데이트 코스 리스트 화면(관리자)으로 이동
-        //response.sendRedirect("/admin/getDatecourseList");
+        response.sendRedirect("/datecourse/getDatecourseList");
     }
 
     // 데이트 코스 상세 조회_세혁
@@ -585,5 +582,17 @@ public class DatecourseController {
 
             return ResponseEntity.badRequest().body(responseDTO);
         }
+    }
+
+    // 카테고리 선택에 따른 데이트 코스 조회_세혁
+    @GetMapping("getPageCateDatecourseList")
+    public Map<String, Object> getPageCateDatecourseList(DatecourseDTO datecourseDTO, @PageableDefault(page=0, size=12) Pageable pageable) {
+        Map<String,Object> returnMap =new HashMap<String, Object>();
+
+        Page<CamelHashMap> getPageCateDatecourseList = datecourseService.getPageCateDatecourseList(datecourseDTO, pageable);
+
+        returnMap.put("getCateDatecourseList", getPageCateDatecourseList);
+
+        return returnMap;
     }
 }

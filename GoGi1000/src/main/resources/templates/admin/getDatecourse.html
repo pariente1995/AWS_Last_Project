@@ -52,7 +52,7 @@
         // 기존 첨부된 이미지 파일 개수
         let fileCount = /*[[${getDatecourseImageList.size}]]*/;
 
-        console.log(fileCount)
+
         // 기존 영업시간 정보 담기
         for (let i = 0; i < hoursCnt; i++) {
           const originHoursObj = {
@@ -67,8 +67,7 @@
           originDatecourseHoursArr.push(originHoursObj);
         }
 
-        console.log("originDatecourseHoursArr")
-        console.log(originDatecourseHoursArr)
+
         // 기존 메뉴 정보 담기
         for (let i = 0; i < menuCnt; i++) {
           const originMenuObj = {
@@ -84,8 +83,7 @@
 
           originDatecourseMenuArr.push(originMenuObj);
         }
-        console.log("originDatecourseMenuArr")
-        console.log(originDatecourseMenuArr)
+
 
         // 화면 오픈 시 주차 가능여부, 반려동물 가능여부 관련 처리 => 수정 시, 해당 값들을 수정하지 않아도 이중으로 값을 가져가기에
         // 주차 가능여부 체크되었을 시, 주차 가능여부 hidden input disabled 처리
@@ -260,10 +258,6 @@
 
           $("#changedFiles")[0].files = dt2.files;
 
-          console.log(originDatecourseHoursArr)
-          console.log(originDatecourseMenuArr)
-          console.log(iDatecourseHoursArr)
-          console.log(iDatecourseMenusArr)
 
           // 영업시간 / 메뉴 정보 / 이미지 파일 관련 배열을 JSON String 형태로 변환하여 각 input에 셋팅
           $("#originDatecourseHours").val(JSON.stringify(originDatecourseHoursArr));
@@ -271,11 +265,7 @@
           $("#datecourseHoursInfo").val(JSON.stringify(iDatecourseHoursArr));
           $("#datecourseMenuInfo").val(JSON.stringify(iDatecourseMenusArr));
           $("#originFiles").val(JSON.stringify(originFiles));
-          console.log($("#originDatecourseHours").val())
-          console.log($("#originDatecourseMenu").val())
-          console.log($("#datecourseHoursInfo").val())
-          console.log($("#datecourseMenuInfo").val())
-          console.log($("#originFiles").val())
+
 
           // ajax에서 multipart/form-data형식을 전송하기 위해서는
           // new FormData()를 사용하여 직접 폼데이터 객체를 만들어준다.
@@ -855,7 +845,7 @@
         <div id="datecourseDesc-wrapper" class="common common-display">
           <div class="common-text">데이트 코스 설명</div>
           <textarea name="datecourseDesc" id="datecourseDesc"
-                    class="common-margin" cols="60" rows="10"
+                    class="common-margin" cols="63" rows="10"
                     placeholder="데이트 코스에 대한 설명을 작성하세요."
                     th:text="${getDatecourse.datecourseDesc}">
           </textarea>

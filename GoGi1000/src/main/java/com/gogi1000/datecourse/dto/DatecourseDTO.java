@@ -29,5 +29,10 @@ public class DatecourseDTO {
     private String datecourseRgstDate;
     private String datecourseModfDate;
     private String datecourseUseYn;
+
+    /* Datecourse 엔티티 @Transient 관련_세혁 */
     private String searchKeyword;
+    private int datecourseMinPrice;
+    private int datecourseMaxPrice;
+    private String orderCondition;
 }

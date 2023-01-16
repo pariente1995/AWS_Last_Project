@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org/dtd/DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- namespace는 패키지명.인터페이스명까지 지정해주어야 한다. -->
+<mapper namespace="com.gogi1000.datecourse.mapper.DatecourseMapper">
+    <!-- 카테고리 선택에 따른 데이트 코스 리스트 총 개수 조회_세혁 -->
+    <select id="getCateDatecourseListCnt" parameterType="camelHashMap" resultType="int">
+        <![CDATA[
+            SELECT COUNT(A.DATECOURSE_NO)
+              FROM T_GGC_DATECOURSE A
+              JOIN T_GGC_IMAGE B ON A.DATECOURSE_NO = B.REFERENCE_NO
+                                AND B.IMAGE_GROUP   = 'E0001'
+                                AND B.IMAGE_NO      = ( SELECT MIN(AA.IMAGE_NO)
+                                                          FROM T_GGC_IMAGE AA
+                                                         WHERE AA.REFERENCE_NO = B.REFERENCE_NO
+                                                           AND AA.IMAGE_GROUP  = B.IMAGE_GROUP )
+              LEFT OUTER JOIN ( SELECT BB.DATECOURSE_NO, COUNT(BB.DATECOURSE_NO) AS LIKE_CNT
+                                  FROM T_GGC_LIKE BB
+                                 GROUP BY BB.DATECOURSE_NO ) C ON A.DATECOURSE_NO = C.DATECOURSE_NO
+        ]]>
+        WHERE A.DATECOURSE_AREA = #{datecourseDTO.datecourseArea}
+        <choose>
+            <!-- 데이트 코스 분류가 '전체'인 경우 -->
+            <when test="datecourseDTO.datecourseCategory == 'ALL'.toString()">
+                <if test="(datecourseDTO.datecourseInoutYn != null and datecourseDTO.datecourseInoutYn != '')
+                              or (datecourseFoodTypeList.size != 0)
+                              or (datecourseDTO.datecoursePetYn != null and datecourseDTO.datecoursePetYn != '')">
+                    AND ( A.DATECOURSE_INOUT_YN = #{datecourseDTO.datecourseInoutYn}
+                    OR
+                    <if test="datecourseFoodTypeList.size != 0">
+                        A.DATECOURSE_FOOD_TYPE IN
+                        <foreach collection="datecourseFoodTypeList" item="item" index="index" separator="," open="(" close=")">
+                            #{item}
+                        </foreach>
+                        OR
+                    </if>
+                    A.DATECOURSE_PET_YN = #{datecourseDTO.datecoursePetYn}
+                    )
+                </if>
+            </when>
+            <!-- 데이트 코스 분류가 '놀거리'인 경우 -->
+            <when test="datecourseDTO.datecourseCategory == 'B0001'.toString()">
+                AND A.DATECOURSE_CATEGORY = #{datecourseDTO.datecourseCategory}
+                <if test="datecourseDTO.datecourseInoutYn != null and datecourseDTO.datecourseInoutYn != ''">
+                    AND A.DATECOURSE_INOUT_YN = #{datecourseDTO.datecourseInoutYn}
+                </if>
+            </when>
+            <!-- 데이트 코스 분류가 '맛집'인 경우 -->
+            <when test="datecourseDTO.datecourseCategory == 'B0002'.toString()">
+                AND A.DATECOURSE_CATEGORY = #{datecourseDTO.datecourseCategory}
+                <if test="datecourseFoodTypeList.size != 0">
+                    AND A.DATECOURSE_FOOD_TYPE IN
+                    <foreach collection="datecourseFoodTypeList" item="item" index="index" separator="," open="(" close=")">
+                        #{item}
+                    </foreach>
+                </if>
+            </when>
+            <!-- 데이트 코스 분류가 '카페'인 경우 -->
+            <when test="datecourseDTO.datecourseCategory == 'B0003'.toString()">
+                AND A.DATECOURSE_CATEGORY = #{datecourseDTO.datecourseCategory}
+                <if test="datecourseDTO.datecoursePetYn != null and datecourseDTO.datecoursePetYn != ''">
+                    AND A.DATECOURSE_PET_YN = #{datecourseDTO.datecoursePetYn}
+                </if>
+            </when>
+        </choose>
+        <!-- 공통 조건 -->
+        <if test="datecourseDTO.datecourseParkingYn != null and datecourseDTO.datecourseParkingYn != ''">
+            AND A.DATECOURSE_PARKING_YN = #{datecourseDTO.datecourseParkingYn}
+        </if>
+        <choose>
+            <when test="datecourseDTO.datecourseMinPrice != 0 and datecourseDTO.datecourseMaxPrice != 0 ">
+                <![CDATA[
+                AND EXISTS(SELECT 1
+                             FROM T_GGC_DATECOURSE_MENU AS CC
+                            WHERE CC.DATECOURSE_NO = A.DATECOURSE_NO
+                              AND CC.DATECOURSE_MENU_PRICE BETWEEN #{datecourseDTO.datecourseMinPrice}
+                                                               AND #{datecourseDTO.datecourseMaxPrice})
+                ]]>
+            </when>
+            <!-- 최저가 및 최고가 둘 중 하나의 값만 입력될 시 -->
+            <otherwise>
+                <![CDATA[
+                AND EXISTS(SELECT 1
+                             FROM T_GGC_DATECOURSE_MENU AS CC
+                            WHERE CC.DATECOURSE_NO = A.DATECOURSE_NO
+                              AND (CC.DATECOURSE_MENU_PRICE >= #{datecourseDTO.datecourseMinPrice}
+                                       OR CC.DATECOURSE_MENU_PRICE <= #{datecourseDTO.datecourseMaxPrice}))
+                ]]>
+            </otherwise>
+        </choose>
+        AND A.DATECOURSE_USE_YN = 'Y'
+    </select>
+
+    <!-- 카테고리 선택에 따른 데이트 코스 리스트 조회_세혁 -->
+    <select id="getPageCateDatecourseList" parameterType="map" resultType="camelHashMap">
+        <![CDATA[
+            SELECT A.DATECOURSE_NO,
+                   A.DATECOURSE_NM,
+                   A.DATECOURSE_SUMMARY,
+                   A.DATECOURSE_CNT,
+                   B.IMAGE_NM,
+                   IFNULL(C.LIKE_CNT, 0) AS LIKE_CNT
+              FROM T_GGC_DATECOURSE A
+              JOIN T_GGC_IMAGE B ON A.DATECOURSE_NO = B.REFERENCE_NO
+                                AND B.IMAGE_GROUP   = 'E0001'
+                                AND B.IMAGE_NO      = ( SELECT MIN(AA.IMAGE_NO)
+                                                          FROM T_GGC_IMAGE AA
+                                                         WHERE AA.REFERENCE_NO = B.REFERENCE_NO
+                                                           AND AA.IMAGE_GROUP  = B.IMAGE_GROUP )
+              LEFT OUTER JOIN ( SELECT BB.DATECOURSE_NO, COUNT(BB.DATECOURSE_NO) AS LIKE_CNT
+                                  FROM T_GGC_LIKE BB
+                                 GROUP BY BB.DATECOURSE_NO ) C ON A.DATECOURSE_NO = C.DATECOURSE_NO
+        ]]>
+             WHERE A.DATECOURSE_AREA = #{datecourseDTO.datecourseArea}
+        <choose>
+            <!-- 데이트 코스 분류가 '전체'인 경우 -->
+            <when test="datecourseDTO.datecourseCategory == 'ALL'.toString()">
+                <if test="(datecourseDTO.datecourseInoutYn != null and datecourseDTO.datecourseInoutYn != '')
+                              or (datecourseFoodTypeList.size != 0)
+                              or (datecourseDTO.datecoursePetYn != null and datecourseDTO.datecoursePetYn != '')">
+                    AND ( A.DATECOURSE_INOUT_YN = #{datecourseDTO.datecourseInoutYn}
+                          OR
+                          <if test="datecourseFoodTypeList.size != 0">
+                              A.DATECOURSE_FOOD_TYPE IN
+                              <foreach collection="datecourseFoodTypeList" item="item" index="index" separator="," open="(" close=")">
+                                  #{item}
+                              </foreach>
+                              OR
+                          </if>
+                          A.DATECOURSE_PET_YN = #{datecourseDTO.datecoursePetYn}
+                        )
+                </if>
+            </when>
+            <!-- 데이트 코스 분류가 '놀거리'인 경우 -->
+            <when test="datecourseDTO.datecourseCategory == 'B0001'.toString()">
+                AND A.DATECOURSE_CATEGORY = #{datecourseDTO.datecourseCategory}
+                <if test="datecourseDTO.datecourseInoutYn != null and datecourseDTO.datecourseInoutYn != ''">
+                    AND A.DATECOURSE_INOUT_YN = #{datecourseDTO.datecourseInoutYn}
+                </if>
+            </when>
+            <!-- 데이트 코스 분류가 '맛집'인 경우 -->
+            <when test="datecourseDTO.datecourseCategory == 'B0002'.toString()">
+                AND A.DATECOURSE_CATEGORY = #{datecourseDTO.datecourseCategory}
+                <if test="datecourseFoodTypeList.size != 0">
+                    AND A.DATECOURSE_FOOD_TYPE IN
+                    <foreach collection="datecourseFoodTypeList" item="item" index="index" separator="," open="(" close=")">
+                        #{item}
+                    </foreach>
+                </if>
+            </when>
+            <!-- 데이트 코스 분류가 '카페'인 경우 -->
+            <when test="datecourseDTO.datecourseCategory == 'B0003'.toString()">
+                AND A.DATECOURSE_CATEGORY = #{datecourseDTO.datecourseCategory}
+                <if test="datecourseDTO.datecoursePetYn != null and datecourseDTO.datecoursePetYn != ''">
+                    AND A.DATECOURSE_PET_YN = #{datecourseDTO.datecoursePetYn}
+                </if>
+            </when>
+        </choose>
+        <!-- 공통 조건 -->
+        <if test="datecourseDTO.datecourseParkingYn != null and datecourseDTO.datecourseParkingYn != ''">
+            AND A.DATECOURSE_PARKING_YN = #{datecourseDTO.datecourseParkingYn}
+        </if>
+        <choose>
+            <when test="datecourseDTO.datecourseMinPrice != 0 and datecourseDTO.datecourseMaxPrice != 0 ">
+                <![CDATA[
+                AND EXISTS(SELECT 1
+                             FROM T_GGC_DATECOURSE_MENU AS CC
+                            WHERE CC.DATECOURSE_NO = A.DATECOURSE_NO
+                              AND CC.DATECOURSE_MENU_PRICE BETWEEN #{datecourseDTO.datecourseMinPrice}
+                                                               AND #{datecourseDTO.datecourseMaxPrice})
+                ]]>
+            </when>
+            <!-- 최저가 및 최고가 둘 중 하나의 값만 입력될 시 -->
+            <otherwise>
+                <![CDATA[
+                AND EXISTS(SELECT 1
+                             FROM T_GGC_DATECOURSE_MENU AS CC
+                            WHERE CC.DATECOURSE_NO = A.DATECOURSE_NO
+                              AND (CC.DATECOURSE_MENU_PRICE >= #{datecourseDTO.datecourseMinPrice}
+                                       OR CC.DATECOURSE_MENU_PRICE <= #{datecourseDTO.datecourseMaxPrice}))
+                ]]>
+            </otherwise>
+        </choose>
+        AND A.DATECOURSE_USE_YN = 'Y'
+        <!-- 정렬 조건 -->
+        <choose>
+             <when test="datecourseDTO.orderCondition == 'new'.toString()">
+                 ORDER BY A.DATECOURSE_RGST_DATE DESC
+             </when>
+             <when test="datecourseDTO.orderCondition == 'reco'.toString()">
+                 ORDER BY IFNULL(C.LIKE_CNT, 0) DESC
+             </when>
+        </choose>
+        LIMIT ${pageable.getOffset()} , ${pageable.getPageSize()}
+    </select>
+</mapper>

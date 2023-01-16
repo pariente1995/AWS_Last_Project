@@ -71,4 +71,14 @@ public class Datecourse {
 
     @Transient
     private String searchKeyword;
+
+    /* 카테고리 선택에 따른 데이트 코스 조회 화면에서 가격대, 정렬 조회조건_세혁 */
+    @Transient
+    private int datecourseMinPrice;
+
+    @Transient
+    private int datecourseMaxPrice;
+
+    @Transient
+    private String orderCondition;
 }
