@@ -24,9 +24,10 @@ public class UserServiceImpl implements UserService{
 	private MailService mailService;
 
 	@Override
-	public void join(User user) {
+	public User join(User user) {
 		// TODO Auto-generated method stub
-		userRepository.save(user);
+		
+		return userRepository.save(user);
 	}
 	
 	@Override
@@ -36,6 +37,25 @@ public class UserServiceImpl implements UserService{
 			return userRepository.findById(user.getUserId()).get();
 		} else {
 			return null;
+		}
+	}
+	
+	@Override
+	public User nmCheck(User user) {
+		// TODO Auto-generated method stub
+		if(!userRepository.findById(user.getUserNm()).isEmpty()) {
+			return userRepository.findById(user.getUserNm()).get();
+		} else {
+			return null;
+		}
+	}
+	
+	@Override
+	public User findId(User user) {
+		if(userRepository.findByUserNmAndUserMail(user.getUserNm(), user.getUserMail()).isEmpty()) {
+			return null;
+		} else {
+			return userRepository.findByUserNmAndUserMail(user.getUserNm(), user.getUserMail()).get();
 		}
 	}
 
@@ -73,6 +93,7 @@ public class UserServiceImpl implements UserService{
 	      
 	      String mailTitle = user.getUserId() + "님, gogi1000 인증번호 입니다.";
 	      String mailBody = "인증번호 : " + tempLoginPasswd;
+	      // 메일 전송 부분
 	      mailService.send(user.getUserMail(), mailTitle, mailBody);
 
 
@@ -81,7 +102,37 @@ public class UserServiceImpl implements UserService{
 	      
 	      //비밀번호 바꾸기
 	      userRepository.updateTempPw(user.getUserId(), tempLoginPasswd);
-
+	      
 	}
+
+	@Override
+	public User pwCheck(User user) {
+		if(!userRepository.findById(user.getUserId()).isEmpty()) {
+			return userRepository.findById(user.getUserId()).get();
+		} else {
+			return null;
+		}
+	}
+
+	@Override
+	public int getUserNmCnt(User user) {
+		// TODO Auto-generated method stub
+		return userRepository.getUserNmCnt(user.getUserNm());
+	}
+
+	@Override
+	public int updateUserPw(User user) {
+		// TODO Auto-generated method stub
+		return userRepository.updateTempPw(user.getUserId(), user.getUserPw());
+	}
+	
+//	@Override
+//	public User newPwd(User user) {
+//		if(userRepository.newPw(user.getUserId(), user.getUserPw()).isEmpty()) {
+//			return null;
+//		} else {
+//			return userRepository.newPw(user.getUserId(), user.getUserPw()).get();
+//		}
+//	}
 
 }

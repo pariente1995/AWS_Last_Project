@@ -13,15 +13,7 @@
 	</th:block>
     <th:block layout:fragment="script">
     	<script th:inline="javascript">
-    	/*
-	        $(function() {
-				if($("#joinMsg").val() != "" && $("#joinMsg").val() != null) {
-					alert("회원가입이 완료되었습니다. 로그인해주세요.");
-					$("#joinMsg").val('');
-					window.location.herf="/user/login";
-				}
-			});
-			*/
+    	
 		</script>
 		<script th:inline="javascript">
 				$(function() {
@@ -75,7 +67,7 @@
                 <p id="main-logo" href="javascript:history.back();"><a th:href="@{/home/main}" style="color: white; text-decoration-line:none">←</a></p>
             </div>
             <div class="main-logo2" style="position: relative;">
-                <img style="margin-top: -60px;" src="/images/logo.png" alt="">
+                <a th:href="@{/home/main}"><img style="margin-top: -60px;" src="/images/logo.png" alt=""></a>
                 <div
                     style="background-color: white; width: 150px; height: 70px; margin-top: -100px; margin-left: 50px;">
                 </div>

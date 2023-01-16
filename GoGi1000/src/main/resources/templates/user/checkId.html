@@ -8,7 +8,7 @@
 <!-- 개별적으로 사용할 css, js 링크 걸기 위해서 남겨둠 -->
 <head>
 	<th:block layout:fragment="css">
-		<link rel="stylesheet" th:href="@{/css/findId.css}"/>
+		<link rel="stylesheet" th:href="@{/css/checkId.css}"/>
 	</th:block>
     <th:block layout:fragment="script">
         <script th:inline="javascript" src="${pageContext.request.contextPath }/js/jquery-3.6.1.min.js"></script>
@@ -24,73 +24,75 @@
 	<div layout:fragment="content">
 	  	<div class="form-wrapper">
 
-        <!-- ========== 최상단 영역 ========== -->
-        <div class="main-wrap">
-            <div class="main-image">
-                <img src="/images/KakaoTalk_20221216_095545610.png" alt="" />
-            </div>
-            <div>
-                <p id="main-logo" href="javascript:history.back();">←</p>
-            </div>
-            <div class="main-logo2" style="position: relative;">
-                <img style="margin-top: -60px;" src="/images/logo.png" alt="">
-                <div
-                    style="background-color: white; width: 150px; height: 70px; margin-top: -100px; margin-left: 50px;">
-                </div>
-            </div>
-        </div>
-    </div>
+	        <!-- ========== 최상단 영역 ========== -->
+	        <div class="main-wrap">
+	            <div class="main-image">
+	                <img src="/images/KakaoTalk_20221216_095545610.png" alt="" />
+	            </div>
+	            <div>
+	                <p id="main-logo" href="javascript:history.back();"><a th:href="@{/user/login}" style="color: white; text-decoration-line:none">←</a></p>
+	            </div>
+	            <div class="main-logo2" style="position: relative;">
+	                <a th:href="@{/home/main}"><img style="margin-top: -60px;" src="/images/logo.png" alt=""></a>
+	                <div
+	                    style="background-color: white; width: 150px; height: 70px; margin-top: -100px; margin-left: 50px;">
+	                </div>
+	            </div>
+	        </div>
+    	</div>
 
-    <!-- 아이디 확인 영역 -->
-    <div id="container-main-text" style="margin-top: 130px;">
-        <div id="main-text">
-            &ensp;
-            <hr>
-        </div>
-        <div id="main-line">
-            <h1><u>아이디 확인</u></h1>
-        </div>
-    </div>
+	    <!-- 아이디 확인 영역 -->
+	    <div id="container-main-text" style="margin-top: 130px;">
+	        <div id="main-text">
+	            &ensp;
+	            <hr>
+	        </div>
+	        <div id="main-line">
+	            <h1><u>아이디 확인</u></h1>
+	        </div>
+	    </div>
+		
+		<!-- 부제목 -->
+	    <div id="container-sub-text">
+	        <div id="sub-text" style="text-align: left;">
+	            <p>아이디 정보를 아래에서 확인하시기 바랍니다.</p>
+	        </div>
+	    </div>
+	
+	
+	    <!-- 아이디 확인 영역 -->
+	    <div id="container-info-text">
+	        <div id="info-text" style="text-align: center;">
+	            <p>※ 귀하의 가입하신 아이디는 아래와 같습니다.</p>
+	        </div>
+	    </div>
 
-    <div id="container-sub-text">
-        <div id="sub-text" style="text-align: left;">
-            <p>아이디 정보를 아래에서 확인하시기 바랍니다.</p>
-        </div>
-    </div>
+	    <!-- 아이디 정보 -->
+	    <div id="container-check-id">
+	        <table id="check_id">
+	            <tr>
+	                <th>아이디</th>
+	                <th>가입일자</th>
+	            </tr>
+	            <tr>
+	                <td th:text="${user.userId}"></td>
+	                <td th:text="${#strings.replace(user.userRgstDate, 'T', ' ') }"></td>
+	            </tr>
+	        </table>
+	
+	    </div>
 
 
-    <!-- 텍스트 영역 -->
-    <div id="container-info-text">
-        <div class="info-text">
-            <p>※ 귀하의 가입하신 아이디는 아래와 같습니다.</p>
-        </div>
-    </div>
-
-    <!-- 아이디 정보 -->
-    <div id="container-check-id">
-        <table id="check_id">
-            <tr>
-                <th>아이디</th>
-                <th>가입일자</th>
-            </tr>
-            <tr>
-                <td>아이디 영역</td>
-                <td>가입일자 영역</td>
-            </tr>
-        </table>
-
-    </div>
-
-
-    <!-- 아이디 찾기 btn -->
-    <div style="display: flex; justify-content: center; margin-bottom: 5em;">
-        <button type="submit" class="btn2" id="btnLogin" style="margin-right: 50px;">
-            <span class="btn_inner">확인</span>
-        </button>
-        <button type="submit" class="btn2" id="btnFindPw">
-            <span class="btn_inner">비밀번호 찾기</span>
-        </button>
-    </div>
+    	<!-- 아이디 찾기 btn -->
+		    <div style="display: flex; justify-content: center; margin-bottom: 5em;">
+		        <button type="button" onclick="location.href='/user/login'" class="btn2" id="btnLogin" style="margin-right: 50px;">
+		            <span class="btn_inner">확인</span>
+		        </button>
+		        <button type="button" onclick="location.href='/user/findPwd'" class="btn2" id="btnFindPw">
+		            <span class="btn_inner">비밀번호 찾기</span>
+		        </button>
+    		</div>
+	    </div>
 	</div>
 </body>
 </html>

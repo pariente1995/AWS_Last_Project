@@ -20,6 +20,14 @@
 		    });
 		
 		    $("#btnCert").click(function () {
+				if($("#userId").val() == '' || $("#userId").val() == null) {
+					alert("아이디를 입력하세요.");
+					return;
+				}
+				if($("#userMail").val() == '' || $("#userMail").val() == null) {
+					alert("이메일을 입력하세요.");
+					return;
+				}
 		        let userMail = $("#userMail").val();
 		        let userId = $("#userId").val();
 		
@@ -63,7 +71,48 @@
 		                }*/
 		            }
 		        })
-		    })
+		    });
+		    
+		    $("#btnPwd").on("click", function() {
+				if($("#userId").val() == '' || $("#userId").val() == null) {
+					alert("아이디를 입력하세요.");
+					return;
+				}
+				if($("#userMail").val() == '' || $("#userMail").val() == null) {
+					alert("이메일을 입력하세요.");
+					return;
+				}
+				if($("#verifiCode").val() == '' || $("#verifiCode").val() == null) {
+					alert("인증번호를 입력하세요.");
+					return;
+				}
+				
+				let userMail = $("#userMail").val();
+		        let userId = $("#userId").val();
+		        let verifiCode = $("#verifiCode").val();
+		
+		        $.ajax({
+		            type: "post",
+		            url: "/user/pwCheck",
+		            data: {
+		                "userMail": userMail,
+		                "userId": userId,
+		                userPw : verifiCode
+		            },
+		            success: function (res) {
+						console.log(res);
+						if(res.item.msg == "pwOK"){
+							alert("인증번호가 확인되었습니다.");
+							location.href="/user/newPwd?userId=" + userId;
+						}else {
+							alert("잘못된 인증번호 입니다.");
+						}
+					},
+					error: function(e) {
+						console.log(e);
+					}
+				});
+			});
 	    });
         </script>
     </th:block>
@@ -80,10 +129,10 @@
                     <img src="/images/KakaoTalk_20221216_095545610.png" alt="" />
                 </div>
                 <div>
-                    <p id="main-logo" href="javascript:history.back();" >←</p>
+                    <p id="main-logo" href="javascript:history.back();" ><a th:href="@{/user/login}" style="color: white; text-decoration-line:none">←</a></p>
                 </div>
                 <div class="main-logo2" style="position: relative;">
-	                <img style="margin-top: -60px;" src="/images/logo.png" alt="">
+	               <a th:href="@{/home/main}"><img style="margin-top: -60px;" src="/images/logo.png" alt=""></a>
 	                <div
 	                    style="background-color: white; width: 150px; height: 70px; margin-top: -100px; margin-left: 50px;">
 	                </div>
@@ -132,21 +181,25 @@
         </div>
     </div>
 
+	
     <div class="container2">
         <!-- 인증번호 받기 -->
+         <form id="newPwdForm" action="/user/newPwd" method="post">
         <div class="input  label_wrapper3">
             <div class="input_wrapper4">
-                <input type="text" name="" id="" required placeholder="인증번호를 입력하세요.">
+                <input type="text" name="verifiCode" id="verifiCode" required placeholder="인증번호를 입력하세요.">
                 <span class="input_border2" ></span>
            </div>
         </div>
 
         <!-- 비밀번호 찾기 btn -->
+        
       <div  style="display: flex; justify-content: center; margin-bottom: 5em;">
-        <button type="submit" class="btn2" id="btnPwd" >
+        <button type="button" class="btn2" id="btnPwd" >
         <span class="btn_inner">다음</span>
         </button>
     </div> 
+    </form>
 	</div>
 </body>
 </html>

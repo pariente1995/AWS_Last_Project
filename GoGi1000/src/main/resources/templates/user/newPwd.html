@@ -14,7 +14,107 @@
         <script th:inline="javascript" src="${pageContext.request.contextPath }/js/jquery-3.6.1.min.js"></script>
         
         <script th:inline="javascript">
+		$(function() {
 			
+			var pwValidation = false;
+			
+			$("#pwValidation").hide();
+            $("#pwCheckResult").hide();
+            
+			/* ========== userPw1 ========== */
+            //비밀번호 유효성 검사
+            function validatePassword(character) {
+                return /^(?=.*[a-zA-Z])(?=.*[!@#$%^&*+=-])(?=.*[0-9]).{9,}$/.test(character);
+            }
+            
+			//비밀번호 입력될때마다 유효성 검사
+            $("#userPw").on("change", function () {
+                //비밀번호 유효성 처리
+                if (!validatePassword($("#userPw").val())) {
+                    pwValidation = false;
+                    $("#pwValidation").show();
+                    $("#userPw").focus();
+                } else {
+                    pwValidation = true;
+                    $("#pwValidation").hide();
+                }
+
+                /* ========== userPw2 ========== */
+                //비밀번호 확인까지 입력한 후 다시 비밀번호 재설정
+                if ($("#userPw").val() == $("#userPw2").val()) {
+                    pwCheck = true;
+                    $("#pwCheckResult").css("color", "green");
+                    $("#pwCheckResult").text("비밀번호가 일치합니다.");
+                } else {
+                    pwCheck = false;
+                    $("#pwCheckResult").css("color", "red");
+                    $("#pwCheckResult").text("비밀번호가 일치하지 않습니다.");
+                }
+            });
+            
+	            /* ========== userPw2 ========== */
+	            //비밀번호 확인란 입력할 때 일치여부 체크
+	            $("#userPw2").on("change", function () {
+	                $("#pwCheckResult").show();
+	
+	                if ($("#userPw").val() == $("#userPw2").val()) {
+	                    pwCheck = true;
+	                    $("#pwCheckResult").css("color", "green");
+	                    $("#pwCheckResult").text("비밀번호가 일치합니다.");
+	                } else {
+	                    pwCheck = false;
+	                    $("#pwCheckResult").css("color", "red");
+	                    $("#pwCheckResult").text("비밀번호가 일치하지 않습니다.");
+	                }
+	            });
+            
+            $("#btnRePwd").on("click", function() {
+				if($("#userPw").val() == '' || $("#userPw").val() == null) {
+					alert("새로운 비밀번호를 입력하세요.");
+					return;
+				}
+				if($("#userPw2").val() == '' || $("#userPw2").val() == null) {
+					alert("새로운 비밀번호 확인을 입력하세요.");
+					return;
+				}
+				
+				let userPw = $("#userPw").val();
+		        let userPw2 = $("#userPw2").val();
+		        let userId = $("#userId").val();
+				
+				if(pwCheck && pwValidation) {
+			        $.ajax({
+			            type: "post",
+			            url: "/user/chPw",
+			            data: {
+			                "userId": userId,
+			                "userPw": userPw,
+			            },
+			            success: function (res) {
+							console.log(res);
+							if(res.item.msg == "newPwOK"){
+								alert("비밀번호가 변경되었습니다..");
+								location.href="/user/login";
+							}else {
+								alert("알수없는 에러가 발생하였습니다. 관리자한테 문의하세요");
+							}
+						},
+						error: function(e) {
+							console.log(e);
+						}
+					});
+				} else {
+					if(!pwCheck) {
+						alert("입력하신 비밀번호가 불일치합니다.");
+						return;
+					} else {
+						alert("비밀번호 형식이 잘못되었습니다.");
+						return;
+					}
+				}
+			});
+            
+        }); 
         </script>
     </th:block>
 </head>
@@ -23,22 +123,22 @@
 <body>
 	<div layout:fragment="content">
 	  	<div class="form-wrapper">
-
-        <!-- ========== 최상단 영역 ========== -->
-        <div class="main-wrap">
-            <div class="main-image">
-                <img src="/images/KakaoTalk_20221216_095545610.png" alt="" />
-            </div>
-            <div>
-                <p id="main-logo" href="javascript:history.back();">←</p>
-            </div>
-            <div class="main-logo2" style="position: relative;">
-                <img style="margin-top: -60px;" src="/images/logo.png" alt="">
-                <div
-                    style="background-color: white; width: 150px; height: 70px; margin-top: -100px; margin-left: 50px;">
+		<input type="hidden" name="userId" id="userId" th:value="${user.userId}">
+       <!-- ========== 최상단 영역 ========== -->
+            <div class="main-wrap">
+                <div class="main-image">
+                    <img src="/images/KakaoTalk_20221216_095545610.png" alt="" />
                 </div>
+                <div>
+                    <p id="main-logo" href="javascript:history.back();" ><a th:href="@{/user/login}" style="color: white; text-decoration-line:none">←</a></p>
+                </div>
+                <div class="main-logo2" style="position: relative;">
+	                <a th:href="@{/home/main}"><img style="margin-top: -60px;" src="/images/logo.png" alt=""></a>
+	                <div
+	                    style="background-color: white; width: 150px; height: 70px; margin-top: -100px; margin-left: 50px;">
+	                </div>
+            	</div>
             </div>
-        </div>
     </div>
 
     <!-- 비밀번호 설정 타이틀 -->
@@ -63,23 +163,27 @@
         <!-- 이름 -->
         <div class="input  label_wrapper2" style="font-size: 1em; ">새 비밀번호
             <div class="input_wrapper">
-                <input type="text" name="userId" id="userId" required placeholder="새로운 비밀번호를 입력하세요.">
+                <input type="password" name="userPw" id="userPw" required placeholder="새로운 비밀번호를 입력하세요.">
                 <div class="input_border"></div>
             </div>
         </div>
-
+		<p id="pwValidation" style="color: red; font-size: 0.8rem; margin-top: -0.2em;">
+                비밀번호는 영문자, 숫자, 특수문자 조합의 9자리 이상으로 설정해주세요.
+            </p>
+            
         <!-- 이메일 -->
         <div class="input  label_wrapper2" style="font-size: 1em;">새 비밀번호 확인
             <div class="input_wrapper">
-                <input type="text" name="userEmail" id="userEmail" required placeholder="새로운 비밀번호 확인">
+                <input type="password" name="userPw2" id="userPw2" required placeholder="새로운 비밀번호 확인">
                 <span class="input_border"></span>
             </div>
         </div>
+        <p id="pwCheckResult" style="font-size: 0.8rem;"></p>
     </div>
 
     <!-- 비밀번호 재설정 btn -->
     <div style="display: flex; justify-content: center; margin-bottom: 5em;">
-        <button type="submit" class="btn2" id="btnRePwd">
+        <button type="button" class="btn2" id="btnRePwd">
             <span class="btn_inner">변경하기</span>
         </button>
     </div>

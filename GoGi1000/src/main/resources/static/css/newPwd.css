@@ -63,14 +63,6 @@
 
     }
 
-    .main-logo2{
-        position: absolute;
-        top: 55%;
-        left: 50%;
-        width: 20%;
-        transform: translate( -50%, -50% );
-        color: white;
-    }
 
     /* 비밀번호 찾기 영역 */
     .container{

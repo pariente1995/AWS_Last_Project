@@ -64,7 +64,6 @@
         }
 
         #sub-text {
-            text-align: center;
             margin-top: -0.5em;
             margin-bottom: 3em;
 
@@ -73,10 +72,11 @@
         /* 아이디 확인 영역 */
         #container-info-text {
             width: 600px;
-            margin: auto;
+            margin: 0 auto;
         }
 
         #info-text {
+			text-align: center;
             font-size: 1.2em;
             margin-bottom: 30px;
         }
@@ -110,8 +110,7 @@
         }
 
 
-
-        /* 버튼 */
+ 		/* 버튼 */
 
         .btn2 {
             width: 150px;
