@@ -61,9 +61,14 @@
 							</ul>
 						</div>
 						<div class="header-login" sec:authorize="isAuthenticated()" th:remove="tag">
-							<ul class="header-login-ul">
+							<ul class="header-login-ul" sec:authorize="hasRole('ROLE_USER')">
 								<li>
-									<a th:href="@{/like/mypageLikeList}"><span  sec:authentication="principal.username"></span><span> 님 환영합니다.</span></a>
+									<a th:href="@{/datecourse/getMyDatecourseList}"><span  sec:authentication="principal.username"></span><span> 님 환영합니다.</span></a>
+								</li>
+							</ul>
+							<ul class="header-login-ul" sec:authorize="hasRole('ROLE_ADMIN')">
+								<li>
+									<a th:href="@{/datecourse/getDatecourseList}"><span  sec:authentication="principal.username"></span><span> 님 환영합니다.</span></a>
 								</li>
 							</ul>
 							<ul class="header-login-ul">
@@ -84,7 +89,7 @@
 								</div>
 								<!-- sec:authorize="isAuthenticated()" th:remove="tag"  sec:authorize="hasRole('ROLE_ADMIN')-->
 								<div id="nav-div-li">
-									<li sec:authorize="hasRole('ROLE_USER')"><a th:href="@{/like/mypageLikeList}" class="nav-list-link">마이페이지</a></li>
+									<li sec:authorize="hasRole('ROLE_USER')"><a th:href="@{/datecourse/getMyDatecourseList}" class="nav-list-link">마이페이지</a></li>
 									<li sec:authorize="hasRole('ROLE_ADMIN')"><a th:href="@{/datecourse/getDatecourseList}" class="nav-list-link">관리자페이지</a></li>
 								</div>
 							</div>

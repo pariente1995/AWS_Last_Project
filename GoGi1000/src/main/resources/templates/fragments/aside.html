@@ -12,14 +12,17 @@
 	<aside th:fragment="aside">
     	<!-- left -->
 	    <div id="side">
-	      <div class="sideList">
-	        <a href="#">데이트 코스 리스트</a>
+	      <div class="sideList" sec:authorize="hasRole('ROLE_ADMIN')">
+	        <a th:href="@{/datecourse/getDatecourseList}">관리자 리스트</a>
+	      </div>
+	      <div class="sideList" sec:authorize="hasRole('ROLE_USER')">
+	        <a th:href="@{/datecourse/getMyDatecourseList}">데이트 코스 리스트</a>
+	      </div>
+	      <div class="sideList" sec:authorize="hasRole('ROLE_USER')">
+	        <a th:href="@{/like/mypageLikeList}">좋아요 리스트</a>
 	      </div>
 	      <div class="sideList">
-	        <a href="#">데이트 코스 수정</a>
-	      </div>
-	      <div class="sideList">
-	        <a href="#">데이트 코스 등록</a>
+	        <a th:href="@{/datecourse/insertDatecourse}">데이트 코스 등록</a>
 	      </div>
 	      <div id="sideImgWrapper">
 	        <img id="sideImg" th:src="@{/images/img5.png}">
