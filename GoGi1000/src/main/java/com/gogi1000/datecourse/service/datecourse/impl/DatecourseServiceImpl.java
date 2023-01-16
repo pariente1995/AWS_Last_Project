@@ -187,7 +187,6 @@ public class DatecourseServiceImpl implements DatecourseService {
         if(uDatecourseHoursList.size() > 0) {
             for(int i=0; i < uDatecourseHoursList.size(); i++) {
                 if(uDatecourseHoursList.get(i).getDatecourseHoursStatus().equals("U")) {
-                    System.out.println(i + ": " + uDatecourseHoursList.get(i));
                     datecourseHoursRepository.save(uDatecourseHoursList.get(i));
                 } else if(uDatecourseHoursList.get(i).getDatecourseHoursStatus().equals("D")) {
                     datecourseHoursRepository.delete(uDatecourseHoursList.get(i));

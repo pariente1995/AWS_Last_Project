@@ -225,12 +225,8 @@ public class DatecourseController {
             getDatecourseImageList.add(datecourseImageDTO);
         }
 
-        System.out.println(getDatecourse);
-        System.out.println(getDatecourseHoursList);
-        System.out.println(getDatecourseMenuList);
-        System.out.println(getDatecourseImageList);
-
         ModelAndView mv = new ModelAndView();
+
         mv.setViewName("admin/getDatecourse.html");
         mv.addObject("getDatecourse", getDatecourse);
         mv.addObject("getDatecourseHoursList", getDatecourseHoursList);
