@@ -18,13 +18,9 @@
         <script th:inline="javascript">
         
 		$(function() {
-            //회원가입 실패 시 메시지 출력
-            //     if($("#joinMsg").val() != "" && $("#joinMsg").val() != null) {
-            //     alert($("#joinMsg").val());
-            //  }
-
             //회원가입 성공 시 메시지 출력
-
+			
+			
             var checkId = false;
             var pwValidation = false;
             var pwCheck = false;
@@ -46,7 +42,6 @@
 					type: "post",
 					data: {userId: $("#userId").val()},
 					success: function(obj) {
-						
 						if (obj.item.msg == 'duplicatedId') {
                             alert("중복된 아이디입니다.");
                             $("#userId").focus();
@@ -121,12 +116,11 @@
 
             /* ========== join_submit ========== */
             //회원가입 진행
-            $("#joinForm").on("submit", function (e) {
+            $("#btnJoin").on("click", function (e) {
                 //아이디 중복체크가 안됐거나 중복된 아이디를 사용했을 때
                 if (!checkId) {
                     alert("아이디 중복체크를 진행하세요.");
                     $("#userId").focus();
-                    e.preventDefault();
                     return;
                 }
 
@@ -134,7 +128,6 @@
                 if (!pwValidation) {
                     alert("비밀번호는 영문자, 숫자, 특수문자 조합의 9자리 이상으로 설정하세요.");
                     $("#userPw").focus();
-                    e.preventDefault();
                     return;
                 }
 
@@ -142,14 +135,28 @@
                 if (!pwCheck) {
                     alert("비밀번호가 일치하지 않습니다.");
                     $("#userPw2").focus();
-                    e.preventDefault();
                     return;
                 }
                 
                 $("#userMail").val($("#userMail").val() + "@" + $("#domain").val());
                 
-                
-                
+                $.ajax({
+					url: "/user/join",
+					type: "post",
+					data: $("#joinForm").serialize(),
+					success: function(obj) {
+						console.log(obj.item);
+						if(obj.item.msg == "ok") {
+							alert("회원가입이 성공했습니다. 로그인 페이지로 이동합니다.")
+							window.location.href = "/user/login";
+						} else {
+							alert("실패")
+						}
+					},
+					error: function(e) {
+						console.log(e);
+					}
+				});
             });
             
             //  // 지역 선택 alert
@@ -160,6 +167,7 @@
                 }
 
         });
+        
 
 
 
@@ -192,6 +200,7 @@
                     document.getElementById("userAddr1").value = roadAddr;
                 }
             }).open();
+            
         }		
         </script>
     </th:block>
@@ -210,7 +219,7 @@
                 <p id="main-logo" href="javascript:history.back();"><a th:href="@{/user/login}" style="color: white; text-decoration-line:none">←</a></p>
             </div>
             <div class="main-logo2" style="position: relative;">
-                <img style="margin-top: -60px;" src="/images/logo.png" alt="">
+                <a th:href="@{/home/main}"><img style="margin-top: -60px;" src="/images/logo.png" alt=""></a>
                 <div
                     style="background-color: white; width: 150px; height: 70px; margin-top: -100px; margin-left: 50px;">
                 </div>
@@ -380,7 +389,7 @@
 
                     <!-- 회원가입 btn -->
                     <div style="display: flex; justify-content: center; margin-bottom: 5em;">
-                        <button type="submit" class="btn2" id="btnJoin">
+                        <button type="button" class="btn2" id="btnJoin">
                             <span class="btn_inner">회원가입</span>
                         </button>
                     </div>

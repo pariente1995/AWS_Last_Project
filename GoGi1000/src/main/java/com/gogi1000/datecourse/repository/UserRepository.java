@@ -16,7 +16,11 @@ public interface UserRepository extends JpaRepository<User, String> {
 		//SELECT * FROM T_GGC_USER
 		//	WHERE USER_ID = :userId
 		//	  AND USER_PW = :userPw
-		User findByUserIdAndUserPw(
+		Optional<User> findByUserNmAndUserMail(
+				@Param("userNm") String userNm,
+				@Param("userMail") String userMail);
+	
+		Optional<User> findByUserIdAndUserPw(
 				@Param("userId") String userId, 
 				@Param("userPw") String userPw);
 		
@@ -26,5 +30,16 @@ public interface UserRepository extends JpaRepository<User, String> {
 		@Query(value="UPDATE T_GGC_USER"
 				+ "		SET USER_PW = :userPw"
 				+ "		WHERE USER_ID = :userId", nativeQuery=true)
-		void updateTempPw(@Param("userId") String userId, @Param("userPw") String userPw);
+		int updateTempPw(@Param("userId") String userId, @Param("userPw") String userPw);
+		
+		//Optional<User> newPw(String userId, String userPw);
+		
+//		@Modifying
+//		@Query(value="UPDATE T_GGC_USER"
+//				+ "		SET USER_PW = :userPw"
+//				+ "		WHERE USER_ID = :userId", nativeQuery=true)
+//		void updatenewPw(@Param("userId") String userId, @Param("userPw") String userPw);
+
+		@Query(value="SELECT COUNT(*) FROM T_GGC_USER WHERE USER_NM = :userNm", nativeQuery=true)
+		int getUserNmCnt(@Param("userNm") String userNm);
 }

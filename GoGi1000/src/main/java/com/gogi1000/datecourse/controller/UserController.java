@@ -36,8 +36,10 @@ public class UserController {
 	}
 	
 	@PostMapping("/join")
-	public ModelAndView join(UserDTO userDTO) {
-		ModelAndView mv = new ModelAndView();
+	public ResponseEntity<?> join(UserDTO userDTO) {
+		System.out.println("userDTO " + userDTO);
+		ResponseDTO<Map<String, String>> responseDTO = new ResponseDTO<>();
+		Map<String, String> returnMap = new HashMap<String, String>();
 		
 		try {			
 			User user = User.builder()
@@ -50,23 +52,26 @@ public class UserController {
 							.userArea(userDTO.getUserArea())
 							.userAddr1(userDTO.getUserAddr1())
 							.userAddr2(userDTO.getUserAddr2())
-							.userType(userDTO.getUserType())
+							.userType("ROLE_USER")
 							.userRgstDate(LocalDateTime.now())
 							.userModfDate(LocalDateTime.now())
-							.userUseYn(userDTO.getUserUseYn())
+							.userUseYn("Y")
 							.build();
 			
-			userService.join(user);
+			User returnUser = userService.join(user);
 			
-			mv.addObject("joinMsg", "joinSuccess");
-			mv.setViewName("user/login.html");
+			if(returnUser != null) {
+				returnMap.put("msg", "ok");
+			} else {
+				returnMap.put("msg", "fail");
+			}
 			
-			return mv;
+			responseDTO.setItem(returnMap);
+
+			return ResponseEntity.ok().body(responseDTO);
 		} catch(Exception e) {
-			mv.addObject("joinMsg", "joinFail");
-			mv.setViewName("user/join.html");
-			
-			return mv;
+			responseDTO.setErrorMessage(e.getMessage());
+			return ResponseEntity.badRequest().body(responseDTO);
 		}
 	}
 	
@@ -163,6 +168,53 @@ public class UserController {
 		return mv;
 	}
 	
+	@PostMapping("/findId")
+	public ResponseEntity<?> checkId(UserDTO userDTO) {
+		ResponseDTO<Map<String, String>> response = new ResponseDTO<>();
+		
+		try {
+			User user = User.builder()
+							.userNm(userDTO.getUserNm())
+							.userMail(userDTO.getUserMail())
+							.build();
+			int userNmCnt = userService.getUserNmCnt(user);
+			
+			Map<String, String> returnMap = new HashMap<String, String>();
+			
+			if(userNmCnt <= 0) {
+				returnMap.put("findIdMsg", "wrongNm");
+			}  else {
+				User chkUser = userService.findId(user);
+				
+				if(chkUser != null) {
+					returnMap.put("findIdMsg", "infoOK");
+					returnMap.put("userId", chkUser.getUserId());
+					returnMap.put("userRgstDate", chkUser.getUserRgstDate().toString());
+				} else {
+					returnMap.put("findIdMsg", "wrongMail");
+				}
+			}
+			
+			response.setItem(returnMap);
+			
+			return ResponseEntity.ok().body(response);
+		} catch(Exception e) {
+			response.setErrorMessage(e.getMessage());
+			return ResponseEntity.badRequest().body(response);
+		}
+	}
+	
+	@PostMapping("/checkId")
+	public ModelAndView checkIdView(UserDTO userDTO) {
+		ModelAndView mv = new ModelAndView();
+		
+		mv.setViewName("user/checkId.html");
+		mv.addObject("user", userDTO);
+		return mv;
+	}
+	
+	
+	
 	@GetMapping("/findPwd")
 	public ModelAndView findPwdView() {
 		ModelAndView mv = new ModelAndView();
@@ -190,8 +242,8 @@ public class UserController {
 			} else if(chkUser == null) {
 				returnMap.put("findPwdMsg", "wrongMail");
 			} else {
-				userService.sendCert(user);
-				returnMap.put("findPwdMsg", "sendCert");
+				userService.sendCert(user); // 인증번호 생성 부분 + 메일 전송
+				returnMap.put("findPwdMsg", "sendCefrt");
 			}
 			
 			response.setItem(returnMap);
@@ -204,4 +256,70 @@ public class UserController {
 	}
 	
 	//입력한 인증번호랑 비밀번호랑 비교(passwordEncoder.matches(1: 입력한 비밀번호(암호화 되지않은 비밀번호), 2: db 저장된 암호(암호화된 비밀번호))
+	
+	@PostMapping("/pwCheck")
+	public ResponseEntity<?> newPwd(UserDTO userDTO) {
+		ResponseDTO<Map<String, String>> responseDTO = new ResponseDTO<>();
+		Map<String, String> returnMap = new HashMap<String, String>();
+		
+		try {
+			User user = User.builder()
+							.userId(userDTO.getUserId())
+							.build();
+			
+			User checkedUser = userService.pwCheck(user);
+			
+			if(!passwordEncoder.matches(userDTO.getUserPw(), checkedUser.getUserPw())) {
+				returnMap.put("msg", "pwFail");
+			} else {
+				returnMap.put("msg", "pwOK");
+			}
+			
+			responseDTO.setItem(returnMap);
+			
+			return ResponseEntity.ok().body(responseDTO);
+		} catch(Exception e) {
+			responseDTO.setErrorMessage(e.getMessage());
+			return ResponseEntity.badRequest().body(responseDTO);
+		}
+	}
+	
+	@GetMapping("/newPwd")
+	public ModelAndView newPwdView(UserDTO userDTO) {
+		ModelAndView mv = new ModelAndView();
+		
+		mv.setViewName("user/newPwd.html");
+		mv.addObject("user", userDTO);
+		return mv;
+	}
+	
+	@PostMapping("/chPw")
+	public ResponseEntity<?> chPw(UserDTO userDTO) {
+		ResponseDTO<Map<String, String>> responseDTO = new ResponseDTO<>();
+		Map<String, String> returnMap = new HashMap<String, String>();
+		
+		try {
+			User user = User.builder()
+							.userId(userDTO.getUserId())
+							.userPw(passwordEncoder.encode(userDTO.getUserPw()))
+							.build();
+			
+			//User checkedUser = userService.pwCheck(user);
+			
+			int chPw = userService.updateUserPw(user);
+			
+			if(chPw == 0) {
+				returnMap.put("msg", "newPwFail");
+			} else {
+				returnMap.put("msg", "newPwOK");
+			}
+			
+			responseDTO.setItem(returnMap);
+			
+			return ResponseEntity.ok().body(responseDTO);
+		} catch(Exception e) {
+			responseDTO.setErrorMessage(e.getMessage());
+			return ResponseEntity.badRequest().body(responseDTO);
+		}
+	}
 }

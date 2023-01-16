@@ -14,12 +14,119 @@
         
         <script th:inline="javascript">
 			
+			$(function() {
+				
+			$('.modal').on('hidden.bs.modal', function (e) {
+		        console.log('modal close');
+		        $(this).find('form')[0].reset()
+		    });
+		
+		    $("#btnIdCheck").click(function () {
+				if($("#userNm").val() == '' || $("#userNm").val() == null) {
+					alert("이름를 입력하세요.");
+					return;
+				}
+				if($("#userMail").val() == '' || $("#userMail").val() == null) {
+					alert("이메일을 입력하세요.");
+					return;
+				}
+		        let userMail = $("#userMail").val();
+		        let userNm = $("#userNm").val();
+		        
+		        if(/^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i.test(userMail)) {
+			        $.ajax({
+			            type: "post",
+			            url: "/user/findId",
+			            data: {
+			                "userMail": userMail,
+			                "userNm": userNm
+			            },
+			            success: function (res) {
+							console.log(res);
+							if(res.item.findIdMsg == "infoOK"){
+								$("#userId").val(res.item.userId);
+								$("#userRgstDate").val(res.item.userRgstDate);
+								$("#findIdForm").submit();
+								//location.href="/user/checkId";
+								
+							} else if(res.item.findIdMsg == "wrongNm") {
+								alert("존재하지 않는 이름 입니다.");
+							} else if(res.item.findIdMsg == "wrongMail") {
+								alert("이메일이 일치하지 않습니다.");
+							}
+			            },
+			            error: function(e) {
+							console.log(e);
+						}
+			        })
+		        } else {
+					alert("이메일 형식");
+					return;
+				}
+		    })
+	    });
+			
+			/*
+			var path = "${pageContext.request.contextPath }";	 
+					 
+					function fnSubmit() {
+					 
+						var email_rule =  /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i;
+						 
+						if ($("#userId").val() == null || $("#userId").val() == "") {
+						alert("이름을 입력해주세요.");
+						$("#userId").focus();
+						 
+						return false;
+						}
+						 
+						if ($("#userMail").val() == null || $("#userMail").val() == "") {
+						alert("이메일을 입력해주세요.");
+						$("#userMail").focus();
+						 
+						return false;
+						}
+						 
+						if(!email_rule.test($("#userMail").val())){
+						alert("이메일 형식에 맞게 입력해주세요.");
+						return false;
+						}
+						 
+						 
+						if (confirm("아이디를 찾으시겠습니까?")) {
+						 
+						$("#createForm").submit();
+						 
+						return false;
+						}
+					};
+				
+				
+				$("#userNm").focusout(function(){
+	  			
+				     if($('#userNm').val() == ""){
+				   		$('#check').text('이름을 입력해주세요.');
+				   	  	$('#check').css('color', 'red');				   
+				     }else{
+				    	 $('#check').hide();
+				     }
+			     });
+			     
+		  		$("#userMail").focusout(function(){
+			     if($('#userMail').val() == ""){
+				   		$('#check').text('이메일을 입력해주세요');
+				   	  	$('#check').css('color', 'red');
+				     }else{
+				    	 $('#check').hide();
+				     }
+			     });
+			     */
         </script>
     </th:block>
 </head>
 <!-- head 영역 끝 -->
-
 <body>
+
 	<div layout:fragment="content">
 	  	<div class="form-wrapper">
 
@@ -29,10 +136,10 @@
                     <img src="/images/KakaoTalk_20221216_095545610.png" alt="" />
                 </div>
                 <div>
-                    <p id="main-logo" href="javascript:history.back();" >←</p>
+                    <p id="main-logo" href="javascript:history.back();" ><a th:href="@{/user/login}" style="color: white; text-decoration-line:none">←</a></p>
                 </div>
                 <div class="main-logo2" style="position: relative;">
-	                <img style="margin-top: -60px;" src="/images/logo.png" alt="">
+	                <a th:href="@{/home/main}"><img style="margin-top: -60px;" src="/images/logo.png" alt=""></a>
 	                <div
 	                    style="background-color: white; width: 150px; height: 70px; margin-top: -100px; margin-left: 50px;">
 	                </div>
@@ -55,49 +162,44 @@
             <p>본인확인 이메일로 인증</p>
         </div>
     </div>
-
-
-
+    
+    <form id="findIdForm" action="/user/checkId" method="post">
+    	<input type="hidden" name="userId" id="userId">
+    	<input type="hidden" name="userRgstDate" id="userRgstDate">
+    </form>
     <!-- 아이디 찾기 영역 -->
-   
+   <form id="joinForm" action="/user/checkId" method="post">
     <div id="container-info">
 
+		
          <!-- 이름 -->
-        <div class="input  label_wrapper2" style="font-size: 1em; ">이름&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;
+        <div class="input  label_wrapper2" style="font-size: 1em; " >이름&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;
             <div class="input_wrapper">
-                <input type="text" name="userId" id="userId" required placeholder="이름을 입력하세요.">
+                <input type="text" name="userNm" id="userNm" required placeholder="이름을 입력하세요.">
                 <div class="input_border" ></div>
            </div>
-           <span class="square"></span>
         </div>
 
         <!-- 이메일 -->
         <div class="input  label_wrapper2" style="font-size: 1em;">이메일 주소
             <div class="input_wrapper">
-                <input type="text" name="userEmail" id="userEmail" required placeholder="이메일을 입력하세요.">
+                <input type="email" name="userMail" id="userMail" required placeholder="이메일을 입력하세요.">
                 <span class="input_border" ></span>
            </div>
-           <button type="button" class="btn1" id="btnCert">
-            <span class="btn_inner">인증번호 받기</span>
-            </button>
+        </div>
+        <div>
+        	<p class="check" id="check"></p>
         </div>
     </div>
 
     <div class="container2">
-        <!-- 인증번호 받기 -->
-        <div class="input  label_wrapper3">
-            <div class="input_wrapper4">
-                <input type="text" name="" id="" required placeholder="인증번호를 입력하세요.">
-                <span class="input_border2" ></span>
-           </div>
-        </div>
-
         <!-- 아이디 찾기 btn -->
-      <div  style="display: flex; justify-content: center; margin-bottom: 5em;">
-        <button type="submit" class="btn2" id="btnIdCheck" >
+      <div  style="display: flex; justify-content: center; margin-bottom: 5em;" >
+        <button type="button" class="btn2" id="btnIdCheck">
         <span class="btn_inner">다음</span>
         </button>
     </div> 
 	</div>
+	</form>
 </body>
 </html>
