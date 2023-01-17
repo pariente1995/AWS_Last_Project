@@ -322,4 +322,12 @@ public class UserController {
 			return ResponseEntity.badRequest().body(responseDTO);
 		}
 	}
+	
+	@GetMapping("/editMyinfo")
+	public ModelAndView editMyinfoView() {
+		ModelAndView mv = new ModelAndView();
+		
+		mv.setViewName("user/editMyinfo.html");
+		return mv;
+	}
 }
