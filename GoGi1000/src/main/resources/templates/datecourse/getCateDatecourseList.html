@@ -44,7 +44,7 @@
             $(this).css("background-color", "#ee2d7a");
             $(this).css("color", "white");
 
-            // 적용된 모든 옵션 초기화
+            // 적용된 모든 옵션 초기화 및 데이트 코스 리스트 조회
             fnFilterClear();
 
             // 데이트 코스 분류 선택에 따른 카테고리 항목 표출
@@ -240,8 +240,8 @@
           $("#datecourseMaxPriceView").val("");
 
           // back 단으로 보낼 실제 가격 value도 초기화
-          $("#datecourseMinPrice").val("");
-          $("#datecourseMaxPrice").val("");
+          $("#datecourseMinPrice").val(0);
+          $("#datecourseMaxPrice").val(0);
 
           // 선택된 체크박스 카테고리 상세 옵션에 따라 선택 초기화 버튼 표출
           if($("input[type='checkbox']:checked").length > 0) {
@@ -328,7 +328,7 @@
         return htmlStr;
       }
 
-      // 적용된 모든 옵션 초기화
+      // 적용된 모든 옵션 초기화 및 데이트 코스 리스트 조회
       function fnFilterClear() {
         // 모든 체크박스 해제
         $("input:checkbox").prop("checked", false);
@@ -341,8 +341,8 @@
         $("#datecourseMaxPriceView").val("");
 
         // back 단으로 보낼 실제 가격 value도 초기화
-        $("#datecourseMinPrice").val("");
-        $("#datecourseMaxPrice").val("");
+        $("#datecourseMinPrice").val(0);
+        $("#datecourseMaxPrice").val(0);
 
         // 선택 초기화 버튼 없애기
         $("#btnFilterClear").css("display", "none");
@@ -350,6 +350,9 @@
         // 정렬 조회조건 초기화
         $(".datecourse-list-option-common").css("background-color", "white");
         $("#datecourse-list-option-latest").css("background-color", "#f1c40f");
+
+        // 데이트 코스 리스트 조회
+        fnGetCateDatecourseList(0);
       }
 
 
@@ -650,7 +653,7 @@
 
               </div>
               <!-- 선택 초기화 버튼 -->
-              <button id="btnFilterClear" onclick="fnFilterClear();">선택 초기화</button>
+              <button id="btnFilterClear" onclick="fnFilterClear(); return false;">선택 초기화</button>
             </div>
             <hr>
           </div>
