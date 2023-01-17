@@ -30,39 +30,39 @@ public class User {
 	@Id
 	private String userId;
 	
-	@Column(nullable = false)
+//	@Column(nullable = false)
 	private String userPw;
 	
-	@Column(nullable = false)
+//	@Column(nullable = false)
 	private String userNm;
 	
-	@Column(nullable = false)
+//	@Column(nullable = false)
 	private int userAge;
 	
-	@Column(nullable = false)
+//	@Column(nullable = false)
 	private String userTel;
 	
-	@Column(nullable = false)
+//	@Column(nullable = false)
 	private String userMail;
 	
-	@Column(nullable = false)
+//	@Column(nullable = false)
 	private String userArea;
 	
-	@Column(nullable = false)
+//	@Column(nullable = false)
 	private String userAddr1;
 	
-	@Column(nullable = false)
+//	@Column(nullable = false)
 	private String userAddr2;
 	
-	@Column(nullable = false)
+//	@Column(nullable = false)
 	private String userType;
 	
-	@Column(nullable = false)
+//	@Column(nullable = false)
 	private LocalDateTime userRgstDate = LocalDateTime.now();
 	
-	@Column(nullable = false)
+//	@Column(nullable = false)
 	private LocalDateTime userModfDate = LocalDateTime.now();
 	
-	@Column(nullable = false)
+//	@Column(nullable = false)
 	private String userUseYn;
 }

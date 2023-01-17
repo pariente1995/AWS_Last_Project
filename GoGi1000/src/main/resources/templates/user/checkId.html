@@ -74,7 +74,7 @@
 	                <th>아이디</th>
 	                <th>가입일자</th>
 	            </tr>
-	            <tr>
+	            <tr th:each="">
 	                <td th:text="${user.userId}"></td>
 	                <td th:text="${#strings.replace(user.userRgstDate, 'T', ' ') }"></td>
 	            </tr>

@@ -66,6 +66,7 @@ public class Oauth2UserService extends DefaultOAuth2UserService {
 		String password = passwordEncoder.encode(oAuth2UserInfo.getName());
 		String email = oAuth2UserInfo.getEmail();
 		String type = "ROLE_USER";
+		String useYn = "Y";
 		
 		//사용자가 이미 소셜로그인한 기록이 있는지 검사할 객체
 		User user;
@@ -88,6 +89,7 @@ public class Oauth2UserService extends DefaultOAuth2UserService {
 					   .userNm(userName)
 					   .userMail(email)
 					   .userType(type)
+					   .userUseYn(useYn)
 					   .build();
 			
 			//추가 입력사항이 있으면 User 엔티티를 가지고
