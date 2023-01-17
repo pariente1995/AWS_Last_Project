@@ -3,6 +3,8 @@ package com.gogi1000.datecourse.service.main.Impl;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.gogi1000.datecourse.common.CamelHashMap;
@@ -32,21 +34,27 @@ public class MainServiceImpl implements MainService{
 	
 	// 검색창에서 지역명, 코스명, 내용으로 검색 후 조회
 	@Override
-	public List<Datecourse> getSearchDatecourseList(Datecourse datecourse) {
-		String searchKeyword = datecourse.getSearchKeyword();
-		if(searchKeyword != null && !searchKeyword.equals("")) {
-			return datecourseRepository.findByDatecourseAddrContainingOrDatecourseNmContainingOrDatecourseDescContaining(searchKeyword, searchKeyword, searchKeyword);
+	public Page<CamelHashMap> getSearchMapDatecourseList(Datecourse datecourse, Pageable pageable) {
+		if(datecourse.getSearchKeyword() != null && !datecourse.getSearchKeyword().equals("")) {
+			return datecourseRepository.getSearchDatecourseList(
+				datecourse.getSearchKeyword(), 
+				datecourse.getSearchKeyword(), 
+				datecourse.getSearchKeyword(), 
+				pageable);
+		} else if (datecourse.getDatecourseArea() != null && !datecourse.getDatecourseArea().equals("")) {
+			System.out.println(datecourseRepository.getMapDatecourseList(datecourse.getDatecourseArea(), pageable));
+			return datecourseRepository.getMapDatecourseList(datecourse.getDatecourseArea(), pageable);
 		} else {
-			return datecourseRepository.findAll();
+			return null;
 		}
 	}
 	
 
 	// 지도에서 지역 선택 후 조회
-	@Override
-	public List<CamelHashMap> getMapDatecourseList(String datecourseArea) {
-		return datecourseRepository.findBySelectedDatecourseArea(datecourseArea);
-	}
+//	@Override
+//	public List<CamelHashMap> getMapDatecourseList(String datecourseArea, Pageable pageable) {
+//		return datecourseRepository.getSearchMap(datecourseArea, pageable);
+//	}
 	
 	// 메인에서 인기 랭킹 리스트 조회
 	@Override
@@ -104,6 +112,5 @@ public class MainServiceImpl implements MainService{
 		
 		return datecourseImageRepository.findByHotdeal(hotdeal);
 	}
-	
 	
 }

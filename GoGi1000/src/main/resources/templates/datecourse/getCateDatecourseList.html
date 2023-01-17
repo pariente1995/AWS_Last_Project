@@ -13,6 +13,16 @@
   <th:block layout:fragment="script">
     <script th:inline="javascript">
       $(function() {
+		  
+		  let test1 = /*[[${searchMapDatecourseList}]]*/;
+		  
+		  console.log(test1);
+		  
+		  // 화면단에 뿌려줄 리스트 조회
+		  let test2 = /*[[${searchMapDatecourseList.content}]]*/;
+		  
+		  
+		  console.log(test2);
         // 가격대 적용 여부 flag
         let btnPriceFlag = false;
 
@@ -43,6 +53,9 @@
             $(this).attr('class','isSelect');
             $(this).css("background-color", "#ee2d7a");
             $(this).css("color", "white");
+
+            // 적용된 모든 옵션 초기화
+            fnFilterClear();
 
             // 데이트 코스 분류 선택에 따른 카테고리 항목 표출
             // 데이트 코스 분류가 전체일 경우, 모든 카테고리 항목 표출
@@ -77,8 +90,8 @@
             // 정렬 조회조건 초기값으로 셋팅
             $("#orderCondition").val($("#datecourse-list-option-latest").data("ordercondition"));
 
-            /* 적용된 모든 옵션 초기화 및 데이트 코스 리스트 조회 */
-            fnFilterClear();
+            /* 데이트 코스 분류 선택 시, 데이트 코스 리스트 조회 */
+            fnGetCateDatecourseList(0);
           }
         });
 
@@ -237,8 +250,8 @@
           $("#datecourseMaxPriceView").val("");
 
           // back 단으로 보낼 실제 가격 value도 초기화
-          $("#datecourseMinPrice").val(0);
-          $("#datecourseMaxPrice").val(0);
+          $("#datecourseMinPrice").val("");
+          $("#datecourseMaxPrice").val("");
 
           // 선택된 체크박스 카테고리 상세 옵션에 따라 선택 초기화 버튼 표출
           if($("input[type='checkbox']:checked").length > 0) {
@@ -332,8 +345,8 @@
         $("#datecourseMaxPriceView").val("");
 
         // back 단으로 보낼 실제 가격 value도 초기화
-        $("#datecourseMinPrice").val(0);
-        $("#datecourseMaxPrice").val(0);
+        $("#datecourseMinPrice").val("");
+        $("#datecourseMaxPrice").val("");
 
         // 선택 초기화 버튼 없애기
         $("#btnFilterClear").css("display", "none");
@@ -341,9 +354,6 @@
         // 정렬 조회조건 초기화
         $(".datecourse-list-option-common").css("background-color", "white");
         $("#datecourse-list-option-latest").css("background-color", "#f1c40f");
-
-        // 데이트 코스 리스트 조회
-        fnGetCateDatecourseList(0);
       }
 
 
@@ -432,7 +442,7 @@
                         </div>
                         <div class="datecourse-list-items-detail">
                           <div class="datecourse-list-items-count">
-                            <p>조회 ${obj.getCateDatecourseList.content[i].datecourseCnt}</p>
+                            <p>조회수 ${obj.getCateDatecourseList.content[i].datecourseCnt}</p>
                             <p>좋아요 ${obj.getCateDatecourseList.content[i].likeCnt}</p>
                           </div>
                           <div class="datecourese-list-like">
@@ -512,7 +522,7 @@
         let datecourseInoutYn = $("input[name='datecourseInoutYn']");
 
         for (let i=0; i<datecourseInoutYn.length; i++) {
-            if(datecourseInoutYn[i] != chk) {
+          if(datecourseInoutYn[i] != chk) {
             datecourseInoutYn[i].checked = false;
           }
         }
@@ -545,7 +555,7 @@
 
       <!-- 데이트 코스 카테고리 영역 -->
       <form id="datecourseCateForm">
-        <input type="hidden" name="datecourseArea" id="datecourseArea" value="A0001">
+        <input type="hidden" name="datecourseArea" id="datecourseArea" th:value="${datecourseArea}">
         <input type="hidden" name="page" value="">
         <div id="datecourse-detail-cate-wrapper">
           <div id="datecourse-detail-cate-title">
@@ -644,7 +654,7 @@
 
               </div>
               <!-- 선택 초기화 버튼 -->
-              <button type="button" id="btnFilterClear" onclick="fnFilterClear();">선택 초기화</button>
+              <button id="btnFilterClear" onclick="fnFilterClear();">선택 초기화</button>
             </div>
             <hr>
           </div>
@@ -654,7 +664,12 @@
       <!-- 데이트 코스 리스트 영역 -->
       <div id="datecourse-list-wrapper">
         <!-- 조회결과 출력 영역 -->
-        <p id="searchCount"></p>
+        <p id="searchCount" th:if="${searchMapDatecourseList.totalElements == 0}" style="color: lightgray;">
+        	조회된 결과가 없습니다.
+        </p>
+        <p id="searchCount" th:unless="${searchMapDatecourseList.totalElements == 0}">
+        	총 <span id="datecourseListCnt" th:text="${searchMapDatecourseList.totalElements}"></span>개의 알콩달콩한 데이트 코스가 있습니다.
+        </p>
         <div id="datecourse-list-option-wrapper">
           <div id="datecourse-list-option">
             <input type="hidden" id="orderCondition" value="new">
@@ -668,19 +683,51 @@
         </div>
         <div id="datecourse-list">
         <!-- 데이트 코스 리스트 추가 영역 -->
+        	<div class="datecourese-list-items" th:each="searchMapDatecourseList : ${searchMapDatecourseList}">
+	            <div class="mainImg-wrapper">
+	              <img th:src="@{'/upload' + ${searchMapDatecourseList.imageNm}}" class="mainImg">
+	            </div>
+	            <div class="datecourese-list-items-info">
+	              <p class="datecourese-list-items-name" th:text="${searchMapDatecourseList.datecourseNm}"></p>
+	              <p class="datecourese-list-items-summary" th:text="${searchMapDatecourseList.datecourseSummary}"></p>
+	            </div>
+	            <div class="datecourse-list-items-detail">
+	              <div class="datecourse-list-items-count">
+	                <span class="datecourseLikeCount">조회수&nbsp; <p th:text="${searchMapDatecourseList.datecourseCnt}"></p></span>
+	                <span class="datecourseLikeCount">좋아요&nbsp; <p th:text="${searchMapDatecourseList.likeCnt}"></p></span>
+	              </div>
+	              <div class="datecourese-list-like">
+	                <img src="/images/emptystar.png" class="likeImg">
+	              </div>
+	            </div>
+	        </div>
         </div>
       </div>
 
       <!-- page 번호 영역 -->
       <div id="datecourese-list-page-wrapper">
-        <ul class="datecourese-list-pagination">
-          <li class="datecourese-list-pagination-button">&lt</li>
-          <li class="datecourese-list-pagination-button">1</li>
-          <li class="datecourese-list-pagination-button">2</li>
-          <li class="datecourese-list-pagination-button">3</li>
-          <li class="datecourese-list-pagination-button">4</li>
-          <li class="datecourese-list-pagination-button">5</li>
-          <li class="datecourese-list-pagination-button">&gt</li>
+        <ul class="datecourese-list-pagination" th:if="${searchMapDatecourseList.totalElements > 0}"
+												th:with="pageNumber = ${searchMapDatecourseList.pageable.pageNumber},
+												 pageSize = ${searchMapDatecourseList.pageable.pageSize},
+												 totalPages = ${searchMapDatecourseList.totalPages},
+												 startPage = ${T(java.lang.Math).floor(pageNumber / pageSize) * pageSize + 1},
+												 tempEndPage = ${startPage + pageSize - 1},
+												 endPage = ${tempEndPage > totalPages ? totalPages : tempEndPage}">
+          <li class="datecourese-list-pagination-button" th:if="${pageNumber > 0}">
+	          	<a th:href="@{/main/getSearchDatecourseList(
+							page=${pageNumber - 1}, 
+							searchKeyword=${searchKeyword})}">&lt</a>
+		  </li>
+          <li class="datecourese-list-pagination-button" th:each="page : ${#numbers.sequence(startPage, endPage)}">
+	          	<a th:href="@{/main/getSearchDatecourseList(
+							page=${page - 1},
+							searchKeyword=${searchKeyword})}" th:text="${page}"></a>
+          </li>
+          <li class="datecourese-list-pagination-button" th:if="${pageNumber < totalPages - 1}">
+          		<a th:href="@{/main/getSearchDatecourseList(
+								page=${pageNumber + 1},
+								searchKeyword=${searchKeyword})}">&gt</a>
+          </li>
         </ul>
       </div>
     </div>

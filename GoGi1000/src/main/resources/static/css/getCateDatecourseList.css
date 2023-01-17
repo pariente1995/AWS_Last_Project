@@ -312,3 +312,9 @@
 .datecourese-list-pagination-button a:hover {
   color: #ee2d7a;
 }
+
+.datecourseLikeCount {
+	display: flex;
+    align-items: center;
+    font-size: 0.8rem;
+}
