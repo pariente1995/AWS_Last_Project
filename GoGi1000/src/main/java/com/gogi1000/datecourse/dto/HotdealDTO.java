@@ -25,4 +25,5 @@ public class HotdealDTO {
 	private String hotdealUseYn;
 	private String searchCondition;
 	private String searchKeyword;
+	private String selectOption;
 }

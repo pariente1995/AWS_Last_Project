@@ -28,9 +28,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gogi1000.datecourse.common.CamelHashMap;
 import com.gogi1000.datecourse.common.FileUtils;
@@ -38,11 +36,9 @@ import com.gogi1000.datecourse.common.FileUtilsForMap;
 import com.gogi1000.datecourse.dto.DatecourseImageDTO;
 import com.gogi1000.datecourse.dto.HotdealDTO;
 import com.gogi1000.datecourse.dto.ResponseDTO;
-import com.gogi1000.datecourse.dto.ReviewDTO;
 import com.gogi1000.datecourse.entity.CustomUserDetails;
 import com.gogi1000.datecourse.entity.DatecourseImage;
 import com.gogi1000.datecourse.entity.Hotdeal;
-import com.gogi1000.datecourse.entity.Review;
 import com.gogi1000.datecourse.service.hotdeal.HotdealService;
 
 @RestController
@@ -127,7 +123,7 @@ public class HotdealController {
     							 .searchKeyword(hotdealDTO.getSearchKeyword())
     							 .build();
     	
-    	List<Hotdeal> hotdealList = hotdealService.getHotdealList(hotdeal);
+    	//List<Hotdeal> hotdealList = hotdealService.getHotdealList(hotdeal);
     	
     	Page<Hotdeal> pageHotdealList = hotdealService.getPageHotdealList(hotdeal, pageable);
     	
@@ -158,6 +154,9 @@ public class HotdealController {
     	}
     	if(hotdealDTO.getSearchKeyword() != null && !hotdealDTO.getSearchKeyword().equals("")) {
     		mv.addObject("hotdealSearchKeyword", hotdealDTO.getSearchKeyword());
+    	}
+    	if(hotdealDTO.getSelectOption() != null && !hotdealDTO.getSelectOption().equals("")) {
+    		mv.addObject("selectOption", hotdealDTO.getSelectOption());
     	}
     	return mv;
     	
@@ -478,20 +477,20 @@ public class HotdealController {
 			return ResponseEntity.badRequest().body(responseDTO);	
 		}
 	}
-	/*
+	
     @GetMapping("/selectHotdealList")
-    public ResponseEntity<?> selectHotdealList(HotdealDTO hotdealDTO,
-    		@PageableDefault(page=0, size=15) Pageable pageable) throws JsonMappingException, JsonProcessingException, IOException {
-    	String MenuOption = new ObjectMapper().readValue(menuOption, 
-				new TypeReference<String>() {});
+    public ResponseEntity<?> selectHotdealList(HotdealDTO hotdealDTO, 
+    		@PageableDefault(page=0, size=15) Pageable pageable) throws IOException {
+    	
     	ResponseDTO<Map<String, Object>> response = new ResponseDTO<>();
-    	System.out.println(menuOption);
+    	
+    	System.out.println(hotdealDTO);
     	
     	try {
     		Hotdeal hotdeal = Hotdeal.builder()
     								 .searchCondition(hotdealDTO.getSearchCondition())
     							  	 .searchKeyword(hotdealDTO.getSearchKeyword())
-    							  	 .hotdealUseYn
+    							  	 .selectOption(hotdealDTO.getSelectOption())
     							     .build();
     		
     		
@@ -517,20 +516,20 @@ public class HotdealController {
     		
 	    	 Map<String, Object> returnMap = new HashMap<String, Object>();
 
-	         returnMap.put("pageHotdealList", pageHotdealDTOList);
+	         returnMap.put("selectHotdealList", pageHotdealDTOList);
 
 	         response.setItem(returnMap);
-
+	         System.out.println(response);
 	         return ResponseEntity.ok().body(response);
     	}
     	catch(Exception e) {
     		response.setErrorMessage(e.getMessage());
-			
+			System.out.println(response);
 			return ResponseEntity.badRequest().body(response);
     	}
     	
 
-    }*/
+    }
 
 	
 	

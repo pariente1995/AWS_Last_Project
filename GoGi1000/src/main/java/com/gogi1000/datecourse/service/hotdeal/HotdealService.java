@@ -18,7 +18,7 @@ public interface HotdealService {
 	
 	Page<Hotdeal> getPageHotdealList(Hotdeal hotdeal, Pageable pageable);
 	
-	/*Page<Hotdeal> getSelectPageHotdealList(Hotdeal hotdeal, Pageable pageable);*/
+	public Page<Hotdeal> getSelectPageHotdealList(Hotdeal hotdeal, Pageable pageable);
 	
 	void insertHotdeal(Hotdeal hotdeal, List<DatecourseImage> uploadImageList);
 	

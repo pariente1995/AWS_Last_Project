@@ -46,22 +46,94 @@
                         $("input[name=chkAll]")[0].checked = false;
                     }
                 });
-                /*
-                $("input[name=select-menu]").on("change", function() {
-					
-					$.ajax({
-                             	url: "/hotdeal/selectHotdealList",
-                                type: 'GET',
-                                data: {
-                                    searchCondition : $("#searchCondtion option:selected").val(),
-                                    searchKeyword : $("#searchKeyword").val(),
-                                    hotdealuseYn : $(this).val()
-                                },
-                                success: function (data) {
-                                }
-                         	});
-				})*/
                 
+                $("input[name='selectOption']").on("change", function() {
+					$.ajax({
+                    	url: "/hotdeal/selectHotdealList",
+                        type: 'GET',
+                        data: $("#searchForm").serialize(),
+                        success: function (obj) {
+							console.log(obj)
+							
+							htmlStr="";
+							
+							for(let i=0; i< obj.item.selectHotdealList.content.length; i++) {
+								htmlStr += `
+									<tr>
+										<td><input type="checkbox" name="chk" id="'chk' + ${obj.item.selectHotdealList.content[i].hotdealNo}" th:value="${obj.item.selectHotdealList.content[i].hotdealNo}"></td>
+										<td>${obj.item.selectHotdealList.content[i].hotdealNo}</td>
+										<td>
+											<a href="/hotdeal/getHotdeal/${obj.item.selectHotdealList.content[i].hotdealNo}">
+											${obj.item.selectHotdealList.content[i].hotdealNm}
+											</a>
+										</td>
+										<td>${obj.item.selectHotdealList.content[i].hotdealRgstDate.substr(0,10)}</td>
+										<td>${obj.item.selectHotdealList.content[i].hotdealEndDate}</td>
+										<td>${obj.item.selectHotdealList.content[i].hotdealUseYn}</td>
+										<td><button type="button" id="btnUpdate">수정</button></td>
+									</tr>
+								`;
+							}
+							$("#hotdealtable").children(":first").children().not(":first").remove();
+							$("#hotdealtable").children(":first").append(htmlStr);
+							
+							
+							
+							/*
+							// 페이지네이션 리스트 영역 삭제
+            				$(".page-item").remove();
+				
+				            // 페이지네이션 관련 셋팅
+				            const pageNumber = obj.item.selectHotdealList.pageable.pageNumber;
+				            const pageSize = obj.item.selectHotdealList.pageable.pageSize;
+				            const totalPages = obj.item.selectHotdealList.totalPages;
+				            const startPage = Math.floor(pageNumber / pageSize) * pageSize + 1;
+				            const tempEndPage = startPage + pageSize - 1;
+				            const endPage = tempEndPage > totalPages ? totalPages : tempEndPage;
+				
+				            htmlStr = "";
+				
+				            // 데이트 코스 리스트가 있을 때만 페이지네이션 영역 표시
+				            if(obj.item.selectHotdealList.totalElements > 0) {
+				              htmlStr += `
+				                    <ul class="pagination">
+				              `;
+				
+				              // 이전 버튼
+				              if(pageNumber > 0) {
+				                htmlStr += `
+				                    <li class="page-item">
+				                        <a href="${pageNumber - 1}">&lt</a>
+				                    </li>
+				              `;
+				              }
+				
+				              for(let i=startPage-1; i < startPage + endPage -1; i++) {
+				                htmlStr += `
+				                    <li class="page-item">
+				                        <a href="${i}">${startPage + i}</a>
+				                    </li>
+				              `;
+				              }
+				
+				              // 다음 버튼
+				              if(pageNumber < totalPages - 1) {
+				                htmlStr += `
+				                    <li class="page-item">
+				                        <a href="${pageNumber + 1}">&gt</a>
+				                    </li>
+				              `;
+				              }
+				
+				              htmlStr += `</ul>`;
+				            }
+				
+				            // 페이지네이션 리스트 추가
+				            $("#hotdeal-page-wrapper").html(htmlStr);*/
+				          },
+                        
+                    });
+				})
              })
                //삭제 버튼 클릭시 선택된 UseYn(Y => N)으로 변경
                 function updateUseYn() {
@@ -114,7 +186,15 @@
                         <div id="searchForm-wrapper">
                             <form id="searchForm" action="/hotdeal/hotdealList" method="get">
                                 <input type="hidden" name="page" value="">
-                                <select name="searchCondition" id="searchCondtion">
+                               	<div id="select-option-wrapper" style="margin:10px 10px; display:flex; justify-content:right; align-items:center;">
+	                            	<input type="radio" name="selectOption" id="selectOption-all" value="ALL" th:checked="${selectOption eq 'ALL'}">
+	                            	<label for="selectOption-all">전체</label>
+	                              	<input type="radio" name="selectOption" id="selectOption-y" value="Y" th:checked="${selectOption eq 'Y'}">
+	                            	<label for="selectOption-y">판매중</label>
+	                            	<input type="radio" name="selectOption" id="selectOption-n" value="N" th:checked="${selectOption eq 'N'}">
+	                            	<label for="selectOption-n">기간만료</label>
+                            	</div>
+                                <select name="searchCondition" id="searchCondition">
                                     <option value="ALL" th:selected="${searchCondition == 'ALL'}">전체</option>
                                     <option value="NAME" th:selected="${searchCondtion == 'NAME'}">핫딜명</option>
                                     <option value="DESC" th:selected="${searchCondition =='DESC'}">내용</option>
@@ -124,6 +204,7 @@
                                         th:value="${hotdealSearchKeyword}">
                                     <button type="button" id="btnSearch"><img th:src="@{/images/search.png}" id="searchImg"></button>
                                 </div>
+
                             </form>
                         </div>
                     </div>
@@ -156,7 +237,7 @@
                             </td>
                         </tr>
                     </table>
-                    <nav aria-label="Page navigation example">
+                    <div id="hotdeal-page-wrapper">
                         <ul class="pagination" th:if="${getHotdealList.totalElements > 0}" th:with="pageNumber = ${getHotdealList.pageable.pageNumber},
 	          						 		  pageSize = ${getHotdealList.pageable.pageSize},
 	          						 		  totalPages = ${getHotdealList.totalPages},
@@ -166,6 +247,7 @@
 
                             <li class="page-item" th:if="${pageNumber > 0}">
                                 <a class="page-link" aria-label="Previous" th:href="@{/hotdeal/hotdealList(page=${pageNumber -1},
+	               				selectOption=${selectOption},
 	               				searchCondition=${searchCondition},
 	               				searchKeyword=${hotdealSearchKeyword})}">
                                     <span aria-hidden="true">&lt;</span>
@@ -174,6 +256,7 @@
 
                             <li class="page-item" th:each="page : ${#numbers.sequence(startPage, endPage)}">
                                 <a class="page-link" th:href="@{/hotdeal/hotdealList(page=${page - 1},
+                                selectOption=${selectOption},
 	            				searchCondition=${searchCondition},
 	            				searchKeyword=${hotdealSearchKeyword})}" th:text="${page}">
                                 </a>
@@ -181,13 +264,14 @@
 
                             <li class="page-item" th:if="${pageNumber < totalPages - 1}">
                                 <a class="page-link" aria-label="Next" th:href="@{/hotdeal/hotdealList(page=${pageNumber + 1},
+	              				selectOption=${selectOption},
 	              				searchCondition=${searchCondition},
 	              				searchKeyword=${hotdealSearchKeyword})}">
                                     <span aria-hidden="true">&gt;</span>
                                 </a>
                             </li>
                         </ul>
-                    </nav>
+                    </div>
                 </div>
             </div>
         </div>

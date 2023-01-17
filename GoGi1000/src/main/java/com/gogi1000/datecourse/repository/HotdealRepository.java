@@ -43,20 +43,126 @@ public interface HotdealRepository extends JpaRepository<Hotdeal, Integer> {
 			nativeQuery=true)
 	List<CamelHashMap> getHotdealDatecourseList();
 	
-	// 메인에서 핫딜 상세 페이지 조회
+	
+		// 메인에서 핫딜 상세 페이지 조회
 	@Modifying
 	@Query(value = "SELECT *"
-			+"		  FROM T_GGC_HOTDEAL"
-			+"		 WHERE HOTDEAL_NO = :hotdealNo",
-			nativeQuery=true)
+			+ "		  FROM T_GGC_HOTDEAL"
+			+ "		 WHERE HOTDEAL_NO = :hotdealNo", nativeQuery=true)
 	Hotdeal getHotdeal(@Param("hotdealNo") int hotdealNo);
 
 	
+	@Query(value="SELECT * "
+			+ "	    FROM T_GGC_HOTDEAL"
+			+ "   WHERE HOTDEAL_USE_YN = 'Y'",
+			countQuery=" SELECT COUNT(*)"
+					+ "    FROM ("
+					+ "          SELECT * FROM T_GGC_HOTDEAL"
+					+ "           WHERE HOTDEAL_USE_YN = 'Y') A", nativeQuery=true) 
+	Page<Hotdeal> getYList(Pageable pageable);
 	
 	
+	@Query(value="SELECT * "
+			+ "	   FROM T_GGC_HOTDEAL"
+			+ "   WHERE 1=0"
+			+ "      OR HOTDEAL_NM LIKE CONCAT('%', :#{#hotdeal.searchKeyword}, '%')"
+			+ "		 OR HOTDEAL_DESC LIKE CONCAT('%', :#{#hotdeal.searchKeyword}, '%')"
+			+ "      OR HOTDEAL_SUMMARY LIKE CONCAT('%', :#{#hotdeal.searchKeyword}, '%')"
+			+ "     AND HOTDEAL_USE_YN = 'Y'",
+			countQuery=" SELECT COUNT(*) "
+					+ "    FROM ("
+					+ "			SELECT * "
+					+ "           FROM T_GGC_HOTDEAL"
+					+ "          WHERE 1=0"
+					+ "             OR HOTDEAL_NM LIKE CONCAT('%', :#{#hotdeal.searchKeyword}, '%')"
+					+ "		 	    OR HOTDEAL_DESC LIKE CONCAT('%', :#{#hotdeal.searchKeyword}, '%')"
+					+ "      		OR HOTDEAL_SUMMARY LIKE CONCAT('%', :#{#hotdeal.searchKeyword}, '%')"
+					+ "			   AND HOTDEAL_USE_YN = 'Y') A", nativeQuery=true)
+	Page<Hotdeal> getYListAll(@Param("hotdeal") Hotdeal hotdeal, Pageable pageable);
 	
 	
+	@Query (value="SELECT *"
+			+ "		 FROM T_GGC_HOTDEAL"
+			+ "    WHERE HOTDEAL_NM LIKE CONCAT('%', :#{#hotdeal.searchKeyword}, '%')"
+			+ "      AND HOTDEAL_USE_YN = 'Y'",
+			countQuery="  SELECT COUNT(*)"
+					+ "     FROM ("
+					+ "          SELECT *"
+					+ "            FROM T_GGC_HOTDEAL"
+					+ "           WHERE HOTDEAL_NM LIKE CONCAT('%', :#{#hotdeal.searchKeyword}, '%')"
+					+ "             AND HOTDEAL_USE_YN = 'Y') A", nativeQuery=true)
+	Page<Hotdeal> getYListName(@Param("hotdeal") Hotdeal hotdeal, Pageable pageable);
 	
 	
+	@Query (value="SELECT *"
+			+ "      FROM T_GGC_HOTDEAL"
+			+ "     WHERE HOTDEAL_DESC LIKE CONCAT('%', :#{#hotdeal.searchKeyword}, '%')"
+			+ "         OR HOTDEAL_SUMMARY LIKE CONCAT('%', :#{#hotdeal.searchKeyword}, '%')"
+			+ "       AND HOTDEAL_USE_YN = 'Y'",
+			countQuery="   SELECT COUNT(*)"
+					+ "      FROM ("
+					+ "            SELECT *"
+					+ "              FROM T_GGC_HOTDEAL"
+					+ "             WHERE HOTDEAL_DESC LIKE CONCAT('%', :#{#hotdeal.searchKeyword}, '%')"
+					+ "                OR HOTDEAL_SUMMARY LIKE CONCAT('%', :#{#hotdeal.searchKeyword}, '%')"
+					+ "               AND HOTDEAL_USE_YN = 'Y') A", nativeQuery=true)
+	Page<Hotdeal> getYListContent(@Param("hotdeal") Hotdeal hotdeal, Pageable pageable);
+	
+	
+	@Query(value="SELECT * "
+			+ "		FROM T_GGC_HOTDEAL"
+			+ "   WHERE HOTDEAL_USE_YN = 'N'",
+			countQuery=" SELECT COUNT(*)"
+					+ "    FROM ("
+					+ "          SELECT * FROM T_GGC_HOTDEAL"
+					+ "           WHERE HOTDEAL_USE_YN = 'N') A",nativeQuery=true)
+	Page<Hotdeal> getNList(Pageable pageable);
+	
+	
+	@Query(value=" SELECT * "
+			+ "		 FROM T_GGC_HOTDEAL"
+			+ "     WHERE 1=0"
+			+ "		   OR HOTDEAL_NM LIKE CONCAT('%', :#{#hotdeal.searchKeyword}, '%')"
+			+ "        OR HOTDEAL_DESC LIKE CONCAT('%', :#{#hotdeal.searchKeyword}, '%')"
+			+ "        OR HOTDEAL_SUMMARY LIKE CONCAT('%', :#{#hotdeal.searchKeyword}, '%')"
+			+ "       AND HOTDEAL_USE_YN = 'N'",
+			countQuery=" SELECT COUNT(*) "
+					+ "    FROM ("
+					+ "		     SELECT * "
+					+ "            FROM T_GGC_HOTDEAL"
+					+ "           WHERE 1=0"
+					+ "              OR HOTDEAL_NM LIKE CONCAT('%', :#{#hotdeal.searchKeyword}, '%') "
+					+ "		 	     OR HOTDEAL_DESC LIKE CONCAT('%', :#{#hotdeal.searchKeyword}, '%')"
+					+ "      	     OR HOTDEAL_SUMMARY LIKE CONCAT('%', :#{#hotdeal.searchKeyword}, '%')"
+					+ "				AND HOTDEAL_USE_YN = 'N') A", nativeQuery=true)
+	Page<Hotdeal> getNListAll(@Param("hotdeal") Hotdeal hotdeal, Pageable pageable);
+	
+	
+	@Query (value="SELECT *"
+			+ "		 FROM T_GGC_HOTDEAL"
+			+ "     WHERE HOTDEAL_NM LIKE CONCAT('%', :#{#hotdeal.searchKeyword}, '%')"
+			+ "       AND HOTDEAL_USE_YN = 'N'",
+			countQuery="  SELECT COUNT(*)"
+					+ "     FROM ("
+					+ "	          SELECT *"
+					+ "             FROM T_GGC_HOTDEAL"
+					+ "            WHERE HOTDEAL_NM LIKE CONCAT('%', :#{#hotdeal.searchKeyword}, '%')"
+					+ "              AND HOTDEAL_USE_YN = 'N') A", nativeQuery=true)
+	Page<Hotdeal> getNListName(@Param("hotdeal") Hotdeal hotdeal, Pageable pageable);
+	
+	
+	@Query (value=" SELECT *"
+			+ "       FROM T_GGC_HOTDEAL"
+			+ "      WHERE HOTDEAL_DESC LIKE CONCAT('%', :#{#hotdeal.searchKeyword}, '%')"
+			+ "         OR HOTDEAL_SUMMARY LIKE CONCAT('%', :#{#hotdeal.searchKeyword}, '%')"
+			+ "        AND HOTDAL_USE_YN = 'N'",
+			countQuery="   SELECT COUNT(*)"
+					+ "      FROM("
+					+ "           SELECT * "
+					+ "             FROM T_GGC_HOTDEAL"
+					+ "            WHERE HOTDEAL_DESC LIKE CONCAT('%', :#{#hotdeal.searchKeyword}, '%')"
+					+ "               OR HOTDEAL_SUMMARY LIKE CONCAT('%', :#{#hotdeal.searchKeyword}, '%')"
+					+ "              AND HOTDEAL_USE_YN = 'N') A", nativeQuery=true)
+	Page<Hotdeal> getNListContent(@Param("hotdeal") Hotdeal hotdeal, Pageable pageable);
 	
 }
