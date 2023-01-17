@@ -161,7 +161,116 @@
                         }
 
                     })
-                })
+                    
+                    // 댓글 입력 500자 제한_장찬영
+                    $("#comment-text").on("keyup", function() {
+				        if($("#comment-text").val().length > 500) {
+				          	$("#comment-text").val($("#comment-text").val().substring(0, 500));
+				          	alert("글자수는 500자까지 입력 가능합니다.");
+				        }
+				    });
+					
+					// 댓글 등록 및 출력_장찬영
+					$("#comment-button").on("click", function() {
+						const requestComment = {
+							datecourseNo: $("#comment-button").attr('datecourse-no'),
+							reviewComment: $("#comment-text").val()						
+						}					
+						console.log(requestComment);
+						
+						$.ajax({
+								url: '/review/insertReview',
+								type: 'post',
+								data: {requestComment : JSON.stringify(requestComment)},
+								success: function(obj) {
+									console.log(obj)
+									let htmlStr = "";					
+									htmlStr = `
+										<div class="comment-container">
+									      <div class="comment-left-section">
+									        <div>
+									          <img src="/images/user.png">
+									        </div>
+									      </div>
+									      <div class="comment-right-section">
+									        <div class="comment-right-top">
+									          <div class="comment-user">
+									            <a>${obj.item.review.reviewerId}</a>
+									          </div>
+									          <div class="comment-regdate">
+									            <a>${obj.item.review.reviewModfDate.split('T')[0]}</a>
+									          </div>
+									          <div class="comment-update">
+								            	<a datecourse-no="${obj.item.review.datecourseNo}" review-no="${obj.item.review.reviewNo}">수정</a>
+								              </div>&ensp;
+								              <div class="comment-delete">
+								            	<a datecourse-no="${obj.item.review.datecourseNo}" review-no="${obj.item.review.reviewNo}">삭제</a>
+								              </div>
+									        </div>
+									        <div class="comment-right-bottom">
+									          <div class="comment-comment">
+									            <p>${obj.item.review.reviewComment}</p>
+									          </div>
+									        </div>
+									      </div>
+									    </div>
+									`;
+									
+									$("#datecourse-comment-container").children().eq(1).append(htmlStr);
+									
+								},
+								error: function(e) {
+									console.log(e);
+								}
+							});
+					});
+					
+					// 댓글 삭제_장찬영
+					$(".comment-delete-click").on("click", function() {
+						const result = {
+							datecourseNo: $(this).attr('datecourse-no'),
+							reviewNo: $(this).attr('review-no')
+						}						
+						const datecourseNo = $(this).attr('datecourse-no')
+						
+						console.log(result);
+						
+						$.ajax({
+								url: '/review/deleteReview',
+								type: 'delete',
+								data: {result : JSON.stringify(result)},
+								success: function(obj) {
+									window.location.href="/main/getCateDatecourse/" + datecourseNo
+								},
+								error: function(e) {
+									console.log(e);
+								}
+						});
+					});
+					
+					// 댓글 수정_장찬영
+					$(".comment-update-click").on("click", function() {
+						const updateReview = {
+							datecourseNo: $(this).attr('datecourse-no'),
+							reviewNo: $(this).attr('review-no'),
+							reviewComment: $(this).parent("div").parent("div").parent("div").children("div:last-child").children("div").children("p").text()
+						}						
+						console.log(updateReview);
+						
+						$.ajax({
+							url: '/review/updateReview',
+							type: 'put',
+							data: {updateReview : JSON.stringify(updateReview)},
+							success: function(obj) {
+									
+								},
+								error: function(e) {
+									console.log(e);
+								}
+						})
+						
+					});
+                });
 		</script>
   </th:block>  
   
@@ -326,34 +435,55 @@
 	  <hr class="hrLine">
 	
 	  <!-- 댓글 영역 -->
-	  <div id="datecourse-comment-container"><h2>댓글</h2>
-	    <div class="comment-container">
-	      <div class="comment-left-section">
-	        <div>
-	          <img th:src="@{/images/user.png}">
+	  <div id="datecourse-comment-container">
+	  	<!-- 댓글 입력_장찬영 -->
+	    <div id="comment-wrapper">
+			<div id="comment-write">
+				<textarea name="comment-text" id="comment-text" cols="80" rows="5" 
+						placeholder="명예훼손, 개인정보 유출, 허위사실 유포 등의 글은 법률에 의해 처벌 받을 수 있습니다."></textarea>
+				<button id="comment-button" th:datecourse-no="${datecourse.datecourseNo}">등록</button>      
+			</div>
+		</div>	  
+	  
+	  	<h4 style="margin-bottom: 20px;">댓글
+	  		<span>(</span>
+	  		<span style="color:#ee2d7a">??</span>
+	  		<span>)</span>
+	  	</h4>
+	    <div class="comment-container" th:each="review : ${review}" th:if="${reviewStat.index < 5}"}>
+	        <div class="comment-left-section">
+	          <div>
+	            <img th:src="@{/images/user.png}">
+	          </div>
 	        </div>
+	        <div class="comment-right-section">
+	          <div class="comment-right-top">
+	            <div class="comment-user">
+	              <a th:text="${review.reviewerId}"></a>
+	            </div>
+	            <div class="comment-regdate">
+	              <a th:text="${#strings.substring(review.reviewModfDate, 0, 10)}"></a>
+	            </div>
+	            <div class="comment-update">
+	            	<a class="comment-update-click" th:datecourse-no="${review.datecourseNo}" th:review-no="${review.reviewNo}">수정</a>
+	            </div>&ensp;
+	            <div class="comment-delete">
+	            	<a class="comment-delete-click" th:datecourse-no="${review.datecourseNo}" th:review-no="${review.reviewNo}">삭제</a>
+	            </div>
+	          </div>
+	          <div class="comment-right-bottom">
+	            <div class="comment-comment">
+	              <p th:text="${review.reviewComment}"></p>
+	            </div>
+	          </div>
+	        </div>
+	        <hr>
 	      </div>
-	      <div class="comment-right-section">
-	        <div class="comment-right-top">
-	          <div class="comment-user">
-	            <a>user0001</a>
-	          </div>
-	          <div class="comment-regdate">
-	            <a>2022-12-23</a>
-	          </div>
-	        </div>
-	        <div class="comment-right-bottom">
-	          <div class="comment-comment">
-	            <p>『훈민정음』(訓民正音, 중세 한국어: 훈민정음)은 한글의 옛 이름(첫 이름)으로 세종대왕이 창제한 문자의 명칭이자 훈민정음의 창제 원리와 사용법 등을 해설해 놓은 책의 제목이기도 하다. 세종 25년(1443년)에 창제 된 후 1446년(세종 28년)에 반포된 훈민정음의 뜻은 '백성(民)을 가르치는(訓) 바른(正) 소리(音)'이며, 28개의 낱자로 구성되어 있다. 소리글자에 속하며, 배우기 쉽고 읽고 쓰기에 편리한 장점을 가지고 있다. 이 훈민정음이 우리가 지금 사용하고 있는 한글이며,</p>
-	          </div>
-	        </div>
-	      </div>
-	    </div>
 	    
 	   
 	    <div id="hide" style="display: none">
-	  
-	      <div class="comment-container">
+			
+	  	  <div class="comment-container" th:each="review : ${review}" th:if="${reviewStat.index > 4}"}>
 	        <div class="comment-left-section">
 	          <div>
 	            <img th:src="@{/images/user.png}">
@@ -362,45 +492,31 @@
 	        <div class="comment-right-section">
 	          <div class="comment-right-top">
 	            <div class="comment-user">
-	              <a>user0001</a>
+	              <a th:text="${review.reviewerId}"></a>
 	            </div>
 	            <div class="comment-regdate">
-	              <a>2022-12-23</a>
+	              <a th:text="${#strings.substring(review.reviewModfDate, 0, 10)}"></a>
+	            </div>
+	            <div class="comment-update">
+	            	<a class="comment-update-click" th:datecourse-no="${review.datecourseNo}" th:review-no="${review.reviewNo}">수정</a>
+	            </div>&ensp;
+	            <div class="comment-delete">
+	            	<a class="comment-delete-click" th:datecourse-no="${review.datecourseNo}" th:review-no="${review.reviewNo}">삭제</a>
 	            </div>
 	          </div>
 	          <div class="comment-right-bottom">
 	            <div class="comment-comment">
-	              <p>『훈민정음』(訓民正音, 중세 한국어: 훈민정음)은 한글의 옛 이름(첫 이름)으로 세종대왕이 창제한 문자의 명칭이자 훈민정음의 창제 원리와 사용법 등을 해설해 놓은 책의 제목이기도 하다. 세종 25년(1443년)에 창제 된 후 1446년(세종 28년)에 반포된 훈민정음의 뜻은 '백성(民)을 가르치는(訓) 바른(正) 소리(音)'이며, 28개의 낱자로 구성되어 있다. 소리글자에 속하며, 배우기 쉽고 읽고 쓰기에 편리한 장점을 가지고 있다. 이 훈민정음이 우리가 지금 사용하고 있는 한글이며,</p>
+	              <p th:text="${review.reviewComment}"></p>
 	            </div>
 	          </div>
 	        </div>
+	        <hr>
 	      </div>
-	      <div class="comment-container">
-	        <div class="comment-left-section">
-	          <div>
-	            <img th:src="@{/images/user.png}">
-	          </div>
-	        </div>
-	        <div class="comment-right-section">
-	          <div class="comment-right-top">
-	            <div class="comment-user">
-	              <a>user0001</a>
-	            </div>
-	            <div class="comment-regdate">
-	              <a>2022-12-23</a>
-	            </div>
-	          </div>
-	          <div class="comment-right-bottom">
-	            <div class="comment-comment">
-	              <p>『훈민정음』(訓民正音, 중세 한국어: 훈민정음)은 한글의 옛 이름(첫 이름)으로 세종대왕이 창제한 문자의 명칭이자 훈민정음의 창제 원리와 사용법 등을 해설해 놓은 책의 제목이기도 하다. 세종 25년(1443년)에 창제 된 후 1446년(세종 28년)에 반포된 훈민정음의 뜻은 '백성(民)을 가르치는(訓) 바른(正) 소리(音)'이며, 28개의 낱자로 구성되어 있다. 소리글자에 속하며, 배우기 쉽고 읽고 쓰기에 편리한 장점을 가지고 있다. 이 훈민정음이 우리가 지금 사용하고 있는 한글이며,</p>
-	            </div>
-	          </div>
-	        </div>
-	      </div>
-	    </div>
+	        
+	     </div>	    
 	    <div class="comment-hide">
 	      <a href=#none id="show" onclick="if(hide.style.display=='none') {hide.style.display='';show.innerText='----- 댓글 접기 -----'} 
-	      else {hide.style.display='none';show.innerText='----- 댓글 더보기 -----'}">----- 댓글 더보기 -----</a>
+	      else {hide.style.display='none';show.innerText='----- 댓글 더보기 -----'}">----- 댓글 전체보기 -----</a>
 	    </div>
 	  </div>
 	  

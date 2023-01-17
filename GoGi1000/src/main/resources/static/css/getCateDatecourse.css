@@ -148,31 +148,34 @@
 
     /*데이트코스 댓글 영역 */
     #datecourse-comment-container{
-      margin: auto;
-      text-align: left;
+      margin-left: auto;
+      margin-right: auto;
+      margin-bottom: 150px;
       width: 1000px;
     }
     .comment-container{
       display: flex;
-      margin: auto;
+      min-height: 120px;
+      margin: 10px auto;
       width: 800px;
     }
+    
+    .comment-right-section {
+		width: 700px;
+		border-bottom: 1px solid lightgray;
+	}
+	
     .comment-user{
-       width: 20%;
       border: 1px solid white;
       width: 100px;
       height: 30px;
-      text-align: center;
     }
     .comment-regdate{
-       width: 20%;
       border: 1px solid white;
       width: 100px;
       height: 30px;
-      text-align: center;
     }
     .comment-comment{
-       width: 80%;
       border: 1px solid white;
       width: 700px;
       height: auto;
@@ -197,7 +200,7 @@
     
     .hrLine {
 		 width: 1100px;
-		 margin: 20px auto 40px auto;
+		 margin: 20px auto;
 	}
 
   /* 버튼 */
@@ -222,3 +225,62 @@
         text-align: center;
         display: block;
     }
+    
+    /* 댓글 작성_장찬영 */
+    #comment-wrapper {
+		width: 800px; 
+		height: 150px; 
+		margin: auto;
+		display: flex; align-items: center;     
+      	justify-content: center; 
+	}
+    #comment-write {
+	  width: 700px; margin: auto;
+      display: flex; align-items: center;     
+      justify-content: center; 
+    }
+    #comment-text {
+      white-space:pre-line; resize: none;
+      font-size: 0.8rem; margin-right: 10px;
+      padding: 5px;
+      outline: none;
+    }
+    #comment-button {
+      width: 80px; height: 80px; 
+      margin-left: 10px; border-radius: 5px;
+      border: 1px solid #ee2d7a;
+      font-weight: bold; font-size: 1.0rem;
+      background-color: #ee2d7a; color: white;
+    }
+    
+    .comment-updDel {
+		margin-left: 440px;
+	}
+    
+    .comment-update-click {
+		color: black; text-decoration: none;
+		font-size: 0.8rem; opacity: 0.7;
+	}
+	
+	.comment-update-click:hover {
+		color: black; 
+		opacity: 1.0; cursor: pointer;
+	}
+	
+	.comment-update-click:active {
+		text-decoration: underline;
+	}
+	
+	.comment-delete-click {
+		color: black; text-decoration: none;
+		font-size: 0.8rem; opacity: 0.7;
+	}
+	
+	.comment-delete-click:hover {
+		color: black;
+		opacity: 1.0; cursor: pointer;
+	}
+	
+	.comment-delete-click:active {
+		text-decoration: underline;
+	}

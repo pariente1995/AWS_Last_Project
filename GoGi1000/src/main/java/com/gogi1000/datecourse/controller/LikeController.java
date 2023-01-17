@@ -20,10 +20,10 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gogi1000.datecourse.common.CamelHashMap;
-import com.gogi1000.datecourse.dto.ReviewDTO;
 import com.gogi1000.datecourse.entity.CustomUserDetails;
 import com.gogi1000.datecourse.entity.Like;
 import com.gogi1000.datecourse.entity.LikeId;
+import com.gogi1000.datecourse.entity.Review;
 import com.gogi1000.datecourse.service.like.LikeService;
 
 @RestController
@@ -38,11 +38,11 @@ public class LikeController {
     		@AuthenticationPrincipal CustomUserDetails customUser) {
         ModelAndView mv = new ModelAndView();
         
-        ReviewDTO reviewDTO = ReviewDTO.builder()
-										.reviewerId(customUser.getUsername())
-										.build();
+        Review review = Review.builder()
+								.reviewerId(customUser.getUsername())
+								.build();
         
-        Page<CamelHashMap> likeList = likeService.mypageLikeList(reviewDTO, pageable);
+        Page<CamelHashMap> likeList = likeService.mypageLikeList(review, pageable);
         
         System.out.println(likeList.getPageable().toString());
         System.out.println("=======================================");
