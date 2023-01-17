@@ -10,7 +10,7 @@ body {
 
 main {
     width: 1350px;
-    min-height: 1200px;
+    min-height: 1000px;
     display: flex;
     margin-bottom: 40px;
 }

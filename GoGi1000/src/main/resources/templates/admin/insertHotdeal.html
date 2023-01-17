@@ -17,6 +17,13 @@
             let uploadFiles = [];
 
             $(function () {
+				   // 사이드 바 선택 시, 해당 리스트 항목 선택_인겸
+				   $("#side").children().children().eq(2).attr('class','isSelect');
+				   $("#side").children().children().eq(2).css("background-color", "white");
+				   $("#side").children().children().eq(2).css("color", "#ee2d7a");
+				   $("#side").children().children().eq(2).css("border-top-left-radius", "40%")
+				   $("#side").children().children().eq(2).css("border-bottom-left-radius", "40%");
+				
                    $("#insertHotdealForm").on("submit", function (e) {
                      
                     //유효성 검사 
