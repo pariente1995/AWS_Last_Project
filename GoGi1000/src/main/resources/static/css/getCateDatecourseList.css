@@ -233,6 +233,7 @@
 .datecourese-list-items .mainImg {
   width: 265px;
   height: 250px;
+  cursor:pointer;
 }
 
 .datecourese-list-items .datecourse-list-items-detail {

@@ -287,8 +287,14 @@
           // 데이트 코스 리스트 조회
           fnGetCateDatecourseList(page);
         });
-      });
 
+        // 데이트 코스 이미지 클릭 시, 데이트 코스 상세 페이지로 이동
+        $(document).on("click", ".mainImg", function() {
+          let datecourseNo = $(this).data("datecourse-no");
+
+          window.location.href = "/main/updateCateDatecourseCnt/" + datecourseNo;
+        });
+      });
 
       /***********************************
        메소드 영역
@@ -498,7 +504,7 @@
               htmlStr += `</ul>`;
             }
 
-            // 페이지네이션 리스트 추가
+            //페이지네이션 리스트 추가
             $("#datecourese-list-page-wrapper").html(htmlStr);
           },
           error: function(e) {
@@ -660,7 +666,7 @@
         <p id="searchCount" th:unless="${searchMapDatecourseList.totalElements == 0}">
         	총 <span id="datecourseListCnt" th:text="${searchMapDatecourseList.totalElements}"></span>개의 알콩달콩한 데이트 코스가 있습니다.
         </p>
-        <div id="datecourse-list-option-wrapper">
+        <div id="datecourse-list-option-wrapper" th:if="${searchMapDatecourseList.totalElements > 0}">
           <div id="datecourse-list-option">
             <input type="hidden" id="orderCondition" value="new">
             <div id="datecourse-list-option-latest" class="datecourse-list-option-common"
@@ -675,7 +681,8 @@
         <!-- 데이트 코스 리스트 추가 영역 -->
         	<div class="datecourese-list-items" th:each="searchMapDatecourseList : ${searchMapDatecourseList}">
 	            <div class="mainImg-wrapper">
-	              <img th:src="@{'/upload' + ${searchMapDatecourseList.imageNm}}" class="mainImg">
+	              <img th:src="@{'/upload' + ${searchMapDatecourseList.imageNm}}" class="mainImg"
+                       th:data-datecourse-no="${searchMapDatecourseList.datecourseNo}">
 	            </div>
 	            <div class="datecourese-list-items-info">
 	              <p class="datecourese-list-items-name" th:text="${searchMapDatecourseList.datecourseNm}"></p>
@@ -704,19 +711,13 @@
 												 tempEndPage = ${startPage + pageSize - 1},
 												 endPage = ${tempEndPage > totalPages ? totalPages : tempEndPage}">
           <li class="datecourese-list-pagination-button" th:if="${pageNumber > 0}">
-	          	<a th:href="@{/main/getSearchDatecourseList(
-							page=${pageNumber - 1}, 
-							searchKeyword=${searchKeyword})}">&lt</a>
-		  </li>
+            <a th:href="${pageNumber - 1}">&lt</a>
+          </li>
           <li class="datecourese-list-pagination-button" th:each="page : ${#numbers.sequence(startPage, endPage)}">
-	          	<a th:href="@{/main/getSearchDatecourseList(
-							page=${page - 1},
-							searchKeyword=${searchKeyword})}" th:text="${page}"></a>
+            <a th:href="${page - 1}" th:text="${page}"></a>
           </li>
           <li class="datecourese-list-pagination-button" th:if="${pageNumber < totalPages - 1}">
-          		<a th:href="@{/main/getSearchDatecourseList(
-								page=${pageNumber + 1},
-								searchKeyword=${searchKeyword})}">&gt</a>
+            <a th:href="${pageNumber + 1}">&gt</a>
           </li>
         </ul>
       </div>

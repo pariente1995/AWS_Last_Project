@@ -583,6 +583,7 @@ public class DatecourseController {
     // 카테고리 선택에 따른 데이트 코스 조회_세혁
     @GetMapping("getPageCateDatecourseList")
     public Map<String, Object> getPageCateDatecourseList(DatecourseDTO datecourseDTO, @PageableDefault(page=0, size=12) Pageable pageable) {
+
         Map<String,Object> returnMap =new HashMap<String, Object>();
 
         Page<CamelHashMap> getPageCateDatecourseList = datecourseService.getPageCateDatecourseList(datecourseDTO, pageable);
