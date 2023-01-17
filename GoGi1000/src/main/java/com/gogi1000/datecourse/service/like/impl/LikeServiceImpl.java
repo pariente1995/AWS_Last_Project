@@ -6,9 +6,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.gogi1000.datecourse.common.CamelHashMap;
-import com.gogi1000.datecourse.dto.ReviewDTO;
 import com.gogi1000.datecourse.entity.Like;
 import com.gogi1000.datecourse.entity.LikeId;
+import com.gogi1000.datecourse.entity.Review;
 import com.gogi1000.datecourse.repository.LikeRepository;
 import com.gogi1000.datecourse.service.like.LikeService;
 
@@ -20,8 +20,8 @@ public class LikeServiceImpl implements LikeService {
 	
 	// 좋아요 리스트 출력_장찬영
 	@Override
-	public Page<CamelHashMap> mypageLikeList(ReviewDTO reviewDTO, Pageable pageable) {
-		return likeRepository.mypageLikeList(reviewDTO, pageable);
+	public Page<CamelHashMap> mypageLikeList(Review review, Pageable pageable) {
+		return likeRepository.mypageLikeList(review, pageable);
 	}
 	
 	// 좋아요 삭제_장찬영
@@ -37,4 +37,5 @@ public class LikeServiceImpl implements LikeService {
 	public void insertLike(Like like) {
 		likeRepository.save(like);
 	}
+	
 }

@@ -9,9 +9,9 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import com.gogi1000.datecourse.common.CamelHashMap;
-import com.gogi1000.datecourse.dto.ReviewDTO;
 import com.gogi1000.datecourse.entity.Like;
 import com.gogi1000.datecourse.entity.LikeId;
+import com.gogi1000.datecourse.entity.Review;
 
 @Transactional
 public interface LikeRepository extends JpaRepository<Like, LikeId> {
@@ -36,7 +36,7 @@ public interface LikeRepository extends JpaRepository<Like, LikeId> {
 	         + " ) D"
 	         + " WHERE A.DATECOURSE_NO = B.DATECOURSE_NO"
 	         + " AND A.DATECOURSE_NO = D.DATECOURSE_NO"
-	         + " AND A.USER_ID = :#{#reviewDTO.reviewerId}"
+	         + " AND A.USER_ID = :#{#review.reviewerId}"
 	         + " GROUP BY DATECOURSE_NO",
 	         countQuery="SELECT COUNT(*)"
 	         + "   FROM ("
@@ -59,10 +59,10 @@ public interface LikeRepository extends JpaRepository<Like, LikeId> {
 	         + " 			) D"
 	         + " 			WHERE A.DATECOURSE_NO = B.DATECOURSE_NO"
 	         + " 			AND A.DATECOURSE_NO = D.DATECOURSE_NO"
-	         + " 			AND A.USER_ID = :#{#reviewDTO.reviewerId}"
+	         + " 			AND A.USER_ID = :#{#review.reviewerId}"
 	         + " 			GROUP BY DATECOURSE_NO"
 	         + ") E"
 	         , nativeQuery=true)
-	   Page<CamelHashMap> mypageLikeList(@Param("reviewDTO") ReviewDTO reviewDTO, Pageable pageable);
-
+	   Page<CamelHashMap> mypageLikeList(@Param("review") Review review, Pageable pageable);
+	   
 }

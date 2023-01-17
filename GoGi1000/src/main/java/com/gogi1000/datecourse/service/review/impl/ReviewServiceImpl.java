@@ -45,21 +45,27 @@ public class ReviewServiceImpl implements ReviewService {
 		}		
 	}
 	
-	// 리뷰 등록(완전하지 않음)
+	// 리뷰 등록_장찬영
 	@Override
-	public void insertReview(Review review) {
+	public Review insertReview(Review review) {
 		// 리뷰 넘버 부여
-		int reviewNo = reviewRepository.getNextReviewNo(review.getDatecourseNo());
-		
+		int reviewNo = reviewRepository.getNextReviewNo(review.getDatecourseNo());		
+				
 		review.setReviewNo(reviewNo);
 		
-		reviewRepository.save(review);
+		reviewRepository.save(review);	
+		reviewRepository.flush();
+		
+		return review;
 	}
 	
 	// 리뷰 수정(완전하지 않음)
 	@Override
-	public void updateReview(Review review) {
+	public Review updateReview(Review review) {
 		reviewRepository.save(review);
+		reviewRepository.flush();
+		
+		return review;
 	}
 	
 	// 리뷰 삭제
@@ -78,5 +84,11 @@ public class ReviewServiceImpl implements ReviewService {
 	@Override
 	public Review reviewModel(Review review) {
 		return reviewRepository.selectModal(review);
+	}
+	
+	// 상세 게시글 리뷰리스트 출력_장찬영
+	@Override
+	public List<Review> getCommentList(int datecourseNo) {
+		return reviewRepository.getCommentList(datecourseNo);
 	}
 }

@@ -1,5 +1,7 @@
 package com.gogi1000.datecourse.repository;
 
+import java.util.List;
+
 import javax.transaction.Transactional;
 
 import org.springframework.data.domain.Page;
@@ -122,5 +124,14 @@ public interface ReviewRepository extends JpaRepository<Review, ReviewId> {
 			+ " 			   ) C",
 			nativeQuery=true)
 	Page<CamelHashMap> getReviewListComment(@Param("review") Review review, Pageable pageable);
+	
+	
+	// 상세 게시글 리뷰리스트 출력_장찬영
+	@Query(value="SELECT A.*"
+			+ "		FROM T_GGC_REVIEW A"
+			+ "	   WHERE A.DATECOURSE_NO = :datecourseNo"
+			+ " ORDER BY A.REVIEW_RGST_DATE DESC",
+			nativeQuery = true)
+	List<Review> getCommentList(@Param("datecourseNo") int datecourseNo);
 
 }

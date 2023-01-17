@@ -1,22 +1,19 @@
 package com.gogi1000.datecourse.controller;
 
-import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.http.HttpServletResponse;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -31,6 +28,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gogi1000.datecourse.common.CamelHashMap;
 import com.gogi1000.datecourse.dto.ResponseDTO;
 import com.gogi1000.datecourse.dto.ReviewDTO;
+import com.gogi1000.datecourse.entity.CustomUserDetails;
 import com.gogi1000.datecourse.entity.Review;
 import com.gogi1000.datecourse.entity.ReviewId;
 import com.gogi1000.datecourse.service.review.ReviewService;
@@ -71,38 +69,78 @@ public class ReviewController {
     
     // 리뷰 등록_장찬영
     @PostMapping("/insertReview") 
-    public void insertReview(ReviewDTO reviewDTO /*@AuthenticationPrincipal CustomUserDetails customUser*/) {
-    	Review reivew = Review.builder()
-    							.datecourseNo(reviewDTO.getDatecourseNo())
-    							.reviewComment(reviewDTO.getReviewComment())
-    							.reviewerId("aa")
-    							.reviewRgstDate(LocalDateTime.now())
-    							.reviewModfDate(LocalDateTime.now())
-    							.build();
+    public ResponseEntity<?> insertReview(@RequestParam("requestComment") String requestComment, 
+    		@AuthenticationPrincipal CustomUserDetails customUser) throws JsonMappingException, JsonProcessingException {
+    	Map<String, Object> Result = new ObjectMapper().readValue(requestComment, 
+				new TypeReference<Map<String, Object>>() {});	
+    	ResponseDTO<Map<String, Object>> response = new ResponseDTO<>();
     	
-    	reviewService.insertReview(reivew);
+    	try {
+    		Review reivew = Review.builder()
+				    				.datecourseNo(Integer.valueOf((String)Result.get("datecourseNo")))
+									.reviewComment(String.valueOf(Result.get("reviewComment")))
+									.reviewerId(customUser.getUsername())
+									.reviewRgstDate(LocalDateTime.now())
+									.reviewModfDate(LocalDateTime.now())
+									.build();
+
+    		Review reviewResult = reviewService.insertReview(reivew);
+    		
+    		ReviewDTO returnReivew = ReviewDTO.builder()
+    										.datecourseNo(reviewResult.getDatecourseNo())
+    										.reviewNo(reviewResult.getReviewNo())
+    										.reviewComment(reviewResult.getReviewComment())
+    										.reviewerId(reviewResult.getReviewerId())
+    										.reviewModfDate(reviewResult.getReviewModfDate().toString())
+    										.build();
+    		
+    		Map<String, Object> returnMap = new HashMap<String, Object>(); 		
+    		
+    		returnMap.put("review", returnReivew);    		
+    		response.setItem(returnMap);
+			
+			return ResponseEntity.ok().body(response);
+    	}
+    	catch(Exception e) {
+    		response.setErrorMessage(e.getMessage());
+			
+			return ResponseEntity.badRequest().body(response);
+    	}
     }
     
     // 리뷰 수정_장찬영
-    @PutMapping("/updateReview/{reviewNo}")
-    public void updateReview(@PathVariable int reviewNo, 
-    		ReviewDTO reviewDTO, HttpServletResponse response) throws IOException {
-    	Review review = Review.builder()
-    							.reviewNo(reviewNo)
-    							.reviewComment(reviewDTO.getReviewComment())
-    							.reviewModfDate(LocalDateTime.now())
-    							.build();
-    	int datecourseNo = reviewDTO.getDatecourseNo();
+    @PutMapping("/updateReview")
+    public /*ResponseEntity<?>*/ void updateReview(@RequestParam("updateReview") String updateReview, 
+    		@AuthenticationPrincipal CustomUserDetails customUser) throws JsonMappingException, JsonProcessingException  {
+    	Map<String, Object> update = new ObjectMapper().readValue(updateReview, 
+				new TypeReference<Map<String, Object>>() {});
+    	ResponseDTO<Map<String, Object>> response = new ResponseDTO<>();
     	
-    	reviewService.updateReview(review);
-    	response.sendRedirect("/datecourse/" + datecourseNo);
+    	/*
+    	try {
+    		 Review review = Review.builder()
+    				 				.datecourseNo(update.get("datecourseNo"))
+    				 				.reviewNo(update.get("reviewNo"))
+    				 				.reviewComment(update.get("reviewComment"))
+    		 						.build();
+
+    	}
+    	catch(Exception e) {
+    		response.setErrorMessage(e.getMessage());
+			
+			return ResponseEntity.badRequest().body(response);
+    	}
+    	*/
+    	
     }
     
-    // 관리자페이지 - 리뷰 삭제_장찬영
+    // 관리자페이지 - 모달에서 리뷰 삭제 및 댓글 삭제_장찬영
     @DeleteMapping("/deleteReview")
     public void deleteReview(@RequestParam("result") String result) throws JsonMappingException, JsonProcessingException {
     	Map<String, Integer> resultById = new ObjectMapper().readValue(result, 
 				new TypeReference<Map<String, Integer>>() {});
+    	
+    	System.out.println(resultById);
     	
     	ReviewId reviewId = new ReviewId();
     	reviewId.setDatecourseNo(resultById.get("datecourseNo"));
@@ -114,7 +152,7 @@ public class ReviewController {
     
     // 관리자페이지 - 리뷰 리스트 삭제_장찬영
     @DeleteMapping("/deleteReviewList")
-    public void deleteReviewList(@RequestParam("result") String result, ReviewDTO reviewDTO) throws JsonMappingException, JsonProcessingException {
+    public void deleteReviewList(@RequestParam("result") String result) throws JsonMappingException, JsonProcessingException {
     	List<Map<String, Integer>> resultList = new ObjectMapper().readValue(result, 
 				new TypeReference<List<Map<String, Integer>>>() {});    	
     	List<Review> reviewListDel = new ArrayList<Review>(); 	

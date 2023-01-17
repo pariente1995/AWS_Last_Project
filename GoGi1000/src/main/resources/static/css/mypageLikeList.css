@@ -4,9 +4,10 @@
       font-family: 'Noto Sans KR', sans-serif;
     }
 
+body { margin: 8px;}
+
 /* 페이지 전체 */
 #likelist-container { width: 1000px; margin: auto; min-height: 800px;}
-
 
 /* 메인 화면 */
 #div-wrapper-main {width: 90%; text-align: center; margin-top: 10px;}
