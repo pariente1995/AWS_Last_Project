@@ -163,51 +163,15 @@ public class HotdealServiceImpl implements HotdealService {
 		return hotdeal;
 	}
 	/* 핫딜 리스트 조회 */
-	/*@Override
+	@Override
 	public Page<Hotdeal> getSelectPageHotdealList(Hotdeal hotdeal, Pageable pageable) {
-		if(hotdeal.getHotdealUseYn() == "A") {
-		if(hotdeal.getSearchKeyword() != null && !hotdeal.getSearchKeyword().equals("")) {	
+		if(hotdeal.getSelectOption().equals("ALL")) {
+		if(hotdeal.getSearchKeyword() != null && !hotdeal.getSearchKeyword().equals("")) {	 
 			if(hotdeal.getSearchCondition().equals("ALL")) {
 				return hotdealRepository.findByHotdealNmContainingOrHotdealDescContaining
-						(hotdeal.getSearchKeyword(),
-						 hotdeal.getSearchKeyword(),
-						 pageable);
-			} else if(hotdeal.getSearchCondition().equals("NAME")) {
-				return hotdealRepository.findByHotdealNmContaining(hotdeal.getSearchKeyword(), pageable);
-			} else if(hotdeal.getSearchCondition().equals("DESC")) {
-				return hotdealRepository.findByHotdealDescContaining(hotdeal.getSearchKeyword(), pageable);
-			} else {
-				return hotdealRepository.findAll(pageable);
-			}
-			
-		} else {
-			return hotdealRepository.findAll(pageable);
-		}
-	} else if(hotdeal.getHotdealUseYn() == "Y") {
-		if(hotdeal.getSearchKeyword() != null && !hotdeal.getSearchKeyword().equals("")) {	
-			if(hotdeal.getSearchCondition().equals("ALL")) {
-				return hotdealRepository.findByHotdealNmContainingOrHotdealDescContaining
-						(hotdeal.getSearchKeyword(),
-						 hotdeal.getSearchKeyword(),
-						 pageable);
-			} else if(hotdeal.getSearchCondition().equals("NAME")) {
-				return hotdealRepository.findByHotdealNmContaining(hotdeal.getSearchKeyword(), pageable);
-			} else if(hotdeal.getSearchCondition().equals("DESC")) {
-				return hotdealRepository.findByHotdealDescContaining(hotdeal.getSearchKeyword(), pageable);
-			} else {
-				return hotdealRepository.findAll(pageable);
-			}
-			
-		} else {
-			return hotdealRepository.findAll(pageable);
-		}
-	} else if(hotdeal.getHotdealUseYn() == "N") {
-		if(hotdeal.getSearchKeyword() != null && !hotdeal.getSearchKeyword().equals("")) {	
-			if(hotdeal.getSearchCondition().equals("ALL")) {
-				return hotdealRepository.findByHotdealNmContainingOrHotdealDescContaining
-						(hotdeal.getSearchKeyword(),
-						 hotdeal.getSearchKeyword(),
-						 pageable);
+											(hotdeal.getSearchKeyword(),
+											hotdeal.getSearchKeyword(),
+										    pageable);
 			} else if(hotdeal.getSearchCondition().equals("NAME")) {
 				return hotdealRepository.findByHotdealNmContaining(hotdeal.getSearchKeyword(), pageable);
 			} else if(hotdeal.getSearchCondition().equals("DESC")) {
@@ -218,6 +182,36 @@ public class HotdealServiceImpl implements HotdealService {
 		} else {
 			return hotdealRepository.findAll(pageable);
 		}
+	} else if(hotdeal.getSelectOption().equals("Y")) {
+		if(hotdeal.getSearchKeyword() != null && !hotdeal.getSearchKeyword().equals("")) {	
+			if(hotdeal.getSearchCondition().equals("ALL")) {
+				return hotdealRepository.getYListAll(hotdeal,pageable);
+			} else if(hotdeal.getSearchCondition().equals("NAME")) {
+				return hotdealRepository.getYListName(hotdeal, pageable);
+			} else if(hotdeal.getSearchCondition().equals("DESC")) {
+				return hotdealRepository.getYListContent(hotdeal, pageable);
+			} else {
+				return hotdealRepository.getYList(pageable);
+			}
+		} else {
+			return hotdealRepository.getYList(pageable);
+		}
+	} else if(hotdeal.getSelectOption().equals("N")) {
+		if(hotdeal.getSearchKeyword() != null && !hotdeal.getSearchKeyword().equals("")) {	
+			if(hotdeal.getSearchCondition().equals("ALL")) {
+			return	hotdealRepository.getNListAll(hotdeal, pageable);
+			} else if(hotdeal.getSearchCondition().equals("NAME")) {
+			return	hotdealRepository.getNListName(hotdeal, pageable);
+			} else if(hotdeal.getSearchCondition().equals("DESC")) {
+			return	hotdealRepository.getNListContent(hotdeal, pageable);
+			} else {
+			return 	hotdealRepository.getNList(pageable);
+			}
+		} else {
+			return hotdealRepository.getNList(pageable);
+		}
+	} else {
+		 return hotdealRepository.findAll(pageable);
 	}
-}*/
+  }
 }

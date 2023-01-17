@@ -80,4 +80,7 @@ public class Hotdeal {
 	
 	@Transient
 	private String searchKeyword;
+	
+	@Transient
+	private String selectOption;
 }

@@ -10,6 +10,7 @@
     display: flex;
     justify-content: space-between;
     margin-bottom: 5px;
+    align-items: center;
 }
 
 /* 전체선택 버튼*/
@@ -43,14 +44,16 @@
 
 /* 우측 상단 검색창 */
 #searchForm {
-    display: flex;
+	display:flex;
     justify-content: right;
+    align-items: center;
 }
 
-#searchForm #searchCondtion {
+#searchForm #searchCondition {
     margin-right: 4px;
     border-radius: 5px;
     outline: none;
+    height: 28px;
 }
 
 #searchForm-wrapper {
