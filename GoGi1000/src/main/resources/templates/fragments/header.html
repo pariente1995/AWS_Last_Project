@@ -40,11 +40,11 @@
 							</a>
 						</div>
 						<div id="header-search-wrapper">
-							<form action="/main/getSearchDatecourseList" method="get" id="header-searchForm" name="header-searchForm">
+							<form action="/main/getSearchMapDatecourseList" method="get" id="header-searchForm" name="header-searchForm">
 								<div id="header-search">
-									<a id="searchA" th:href="@{/main/getSearchDatecourseList}"><img id="header-search-img" th:src="@{/images/search.png}"></a>   
-									<!--<button type="submit" id="header-search-button"><img id="header-search-img" th:src="@{/images/search.png}"></button>--> 
-									<input type="text" name="searchKeyword" th:value="${searchKeyword}" id="header-search-input" placeholder="지역, 코스명, 음식점 또는 카페"
+									<a id="searchA" th:href="@{/main/getSearchDatecourseList}"><img id="header-search-img" th:src="@{/images/search.png}"></a>
+									<!-- value는 입력하면 알아서 들어감. 지워도 상관없음--> 
+									<input type="text" name="searchKeyword" id="header-search-input" placeholder="지역, 코스명, 음식점 또는 카페"
 										   onfocus="this.placeholder=''" onblur="placeholder='지역, 코스명, 음식점 또는 카페'">
 								</div>
 							</form>

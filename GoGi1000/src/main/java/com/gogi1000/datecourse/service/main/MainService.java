@@ -2,6 +2,9 @@ package com.gogi1000.datecourse.service.main;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
 import com.gogi1000.datecourse.common.CamelHashMap;
 import com.gogi1000.datecourse.entity.Datecourse;
 import com.gogi1000.datecourse.entity.DatecourseImage;
@@ -9,10 +12,10 @@ import com.gogi1000.datecourse.entity.Hotdeal;
 
 public interface MainService {
 	// 검색창에서 지역명, 코스명, 내용으로 검색 후 조회_인겸
-	List<Datecourse> getSearchDatecourseList(Datecourse datecourse);
+	Page<CamelHashMap> getSearchMapDatecourseList(Datecourse datecourse,Pageable pageable);
 
 	// 지도에서 선택 후 조회_인겸
-	List<CamelHashMap> getMapDatecourseList(String datecourseArea);
+//	List<CamelHashMap> getMapDatecourseList(String datecourseArea,Pageable pageable);
 	
 	// 메인에서 인기 리스트 조회_인겸
 	List<CamelHashMap> getRankDatecourseList();

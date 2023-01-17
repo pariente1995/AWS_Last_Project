@@ -3,7 +3,9 @@ package com.gogi1000.datecourse.controller;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -11,19 +13,28 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gogi1000.datecourse.common.CamelHashMap;
 import com.gogi1000.datecourse.dto.DatecourseDTO;
 import com.gogi1000.datecourse.dto.DatecourseImageDTO;
 import com.gogi1000.datecourse.dto.HotdealDTO;
+import com.gogi1000.datecourse.dto.ResponseDTO;
+import com.gogi1000.datecourse.dto.ReviewDTO;
 import com.gogi1000.datecourse.entity.Datecourse;
 import com.gogi1000.datecourse.entity.DatecourseImage;
 import com.gogi1000.datecourse.entity.Hotdeal;
+import com.gogi1000.datecourse.entity.Review;
 import com.gogi1000.datecourse.service.main.MainService;
 
 @RestController
@@ -34,50 +45,66 @@ public class MainController {
 	
 	
 	// 검색창에서 지역명, 코스명, 내용으로 검색 후 조회
-	@GetMapping("/getSearchDatecourseList")
-	public ModelAndView getSearchDatecourseList(DatecourseDTO datecourseDTO, HttpServletResponse response)  throws IOException  {
+	@GetMapping("/getSearchMapDatecourseList")
+	public ModelAndView getSearchMapDatecourseList(
+			DatecourseDTO datecourseDTO,
+		@PageableDefault(page=0, size=12) Pageable pageable)  throws IOException  {
+		Datecourse datecourse = Datecourse.builder()
+									   .datecourseArea(datecourseDTO.getDatecourseArea())
+									   .searchKeyword(datecourseDTO.getSearchKeyword())
+									   .build();
 		
-			Datecourse datecourse = Datecourse.builder()
-										   .searchKeyword(datecourseDTO.getSearchKeyword())
-										   .build();
-			
-			List<Datecourse> searchDatecourseList = mainService.getSearchDatecourseList(datecourse);
-			
-			ModelAndView mv = new ModelAndView();
-			
-			// 뷰의 위치
-			mv.setViewName("datecourse/getCateDatecourseList.html");
-			
-			if (datecourseDTO.getSearchKeyword() != null && !datecourseDTO.getSearchKeyword().equals("")) {
-				mv.addObject("searchKeyword", datecourseDTO.getSearchKeyword());
-			} 
-			mv.addObject("searchDatecourseList", searchDatecourseList);
-			
-			
-			return mv;
-			
-	}
-	
-	
-	// 지도에서 지역 선택 후 조회
-	@GetMapping("/getMapDatecourseList/{datecourseArea}")
-	// key값 없이 value값만 던질때는 @PathVariable
-	public ModelAndView getMapDatecourseList(@PathVariable String datecourseArea) throws IOException {	 
-					
-		// Map 받는 이유: 키와 값을 받아와야하기 때문에.
-		// DB에서는 이름(컬럼)이 있고 값을 받아와야 하기 때문이고, 화면단에 NAME이 있고 KEY를 받아서 효과적으로 처리하기위해 map을 사용 
-		List<CamelHashMap> mapDatecourseList = mainService.getMapDatecourseList(datecourseArea);
+		Page<CamelHashMap> searchMapDatecourseList = mainService.getSearchMapDatecourseList(datecourse, pageable);
+		
+		System.out.println(searchMapDatecourseList.getPageable().toString());
+        System.out.println("=======================================");
+        System.out.println(searchMapDatecourseList.getContent().toString());
+        System.out.println("=======================================");
+        System.out.println(searchMapDatecourseList.getTotalElements());
 		
 		ModelAndView mv = new ModelAndView();
 		
+		// 뷰의 위치
 		mv.setViewName("datecourse/getCateDatecourseList.html");
-		mv.addObject("getMapDatecourseList", mapDatecourseList);
 		
-		System.out.println(mapDatecourseList);
+		if(datecourseDTO.getSearchKeyword() != null && !datecourseDTO.getSearchKeyword().equals("")) {
+			mv.addObject("searchKeyword", datecourseDTO.getSearchKeyword());
+		} 
+		
+		if(datecourseDTO.getDatecourseArea() != null && !datecourseDTO.getDatecourseArea().equals("")) {
+			mv.addObject("datecourseArea", datecourseDTO.getDatecourseArea());
+		}
+		
+		mv.addObject("searchMapDatecourseList", searchMapDatecourseList);
+		System.out.println("test");
+		// 화면에 뿌려줄 데이터 조회
+		System.out.println(searchMapDatecourseList.getContent());
 		
 		return mv;
-		
+			
 	}
+	
+	
+//	// 지도에서 지역 선택 후 조회
+//	@GetMapping("/getMapDatecourseList/{datecourseArea}")
+//	// key값 없이 value값만 던질때는 @PathVariable
+//	public ModelAndView getMapDatecourseList(@PathVariable String datecourseArea, 
+//			@PageableDefault(page=0, size=12) Pageable pageable) throws IOException {	 
+//					
+//		// Map 받는 이유: 키와 값을 받아와야하기 때문에.
+//		// DB에서는 이름(컬럼)이 있고 값을 받아와야 하기 때문이고, 화면단에 NAME이 있고 KEY를 받아서 효과적으로 처리하기위해 map을 사용 
+//		List<CamelHashMap> searchMapDatecourseList = mainService.getMapDatecourseList(datecourseArea, pageable);
+//		
+//		ModelAndView mv = new ModelAndView();
+//		
+//		mv.setViewName("datecourse/getCateDatecourseList.html");
+//		mv.addObject("searchMapDatecourseList", searchMapDatecourseList);
+//		
+//		System.out.println(searchMapDatecourseList);
+//		
+//		return mv;
+//		
+//	}
 	
 	// 메인에서 관리자 페이지 이동
 	@GetMapping("/getDatecourseList")
@@ -88,24 +115,6 @@ public class MainController {
 	
 		return mv;
 	}
-	
-//	@GetMapping("/mypageLikeList")
-//    public ModelAndView mypageLikeListView(@PageableDefault(page=0, size=7) Pageable pageable) {
-//        ModelAndView mv = new ModelAndView();
-//        
-//        Page<CamelHashMap> likeList = mainService.mypageLikeList(pageable);
-//        
-//        System.out.println(likeList.getPageable().toString());
-//        System.out.println("=======================================");
-//        System.out.println(likeList.getContent().toString());
-//        System.out.println("=======================================");
-//        System.out.println(likeList.getTotalElements());
-//        
-//        mv.setViewName("like/mypageLikeList.html");
-//        mv.addObject("likeList", likeList);
-//
-//        return mv;
-//    }
 	
 	// 메인에서 인기 상세 페이지 조회 시, 조회수 증가_인겸
 	@GetMapping("/updateCateDatecourseCnt/{datecourseNo}")
@@ -119,6 +128,16 @@ public class MainController {
 	@GetMapping("/getCateDatecourse/{datecourseNo}")
 	public ModelAndView getCateDatecourse(@PathVariable int datecourseNo) {
 		Datecourse datecourse = mainService.getCateDatecourse(datecourseNo);
+		
+		DatecourseDTO datecourseDTO = DatecourseDTO.builder()
+													.datecourseNo(datecourse.getDatecourseNo())
+													.datecourseNm(datecourse.getDatecourseNm())
+													.datecourseDesc(datecourse.getDatecourseDesc())
+													.datecourseAddr(datecourse.getDatecourseAddr())
+													.datecourseTel(datecourse.getDatecourseTel())
+													.datecourseOfficialSite(datecourse.getDatecourseOfficialSite())
+													.datecourseParkingYn(datecourse.getDatecourseParkingYn())
+													.build();
 				
 		List<CamelHashMap> datecourseHours = mainService.getCateDatecourseHours(datecourseNo);
 		
@@ -148,7 +167,7 @@ public class MainController {
 		ModelAndView mv = new ModelAndView();
 		mv.setViewName("datecourse/getCateDatecourse.html");
 		System.out.println(datecourse);
-		mv.addObject("datecourse", datecourse);
+		mv.addObject("datecourse", datecourseDTO);
 		
 		mv.addObject("datecourseImageDTOList", datecourseImageDTOList);
 		
@@ -214,6 +233,7 @@ public class MainController {
 		
 		return mv;
 		
-	}			
+	}		
+	
 	
 }
