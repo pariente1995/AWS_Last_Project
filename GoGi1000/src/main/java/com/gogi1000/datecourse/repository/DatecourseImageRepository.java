@@ -20,17 +20,17 @@ public interface DatecourseImageRepository extends JpaRepository<DatecourseImage
     // 매퍼나 리포지토리에 여러 개의 파라미터를 보낼 때 @Param 어노테이션 사용!
     int getMaxImageNo(@Param("imageGroup") String imageGroup, @Param("referenceNo") int referenceNo);
     
-    
-    @Query(value="SELECT A.*, B.HOTDEAL_NO"
-    		+ " 	FROM T_GGC_IMAGE A"
-    		+ "			LEFT JOIN T_GGC_HOTDEAL B"
-    		+ "			ON A.REFERENCE_NO = B.HOTDEAL_NO"
-    		+ "		WHERE A.IMAGE_GROUP = 'E0002' "
-    		+ "		  AND A.IMAGE_NO = 1 ",
+    // 핫딜 상세 페이지 이미지 조회_인겸
+    @Query(value="	  SELECT A.*, B.HOTDEAL_NO"
+    		+ " 		FROM T_GGC_IMAGE A"
+    		+ "	   		JOIN T_GGC_HOTDEAL B"
+    		+ "			  ON A.REFERENCE_NO = B.HOTDEAL_NO"
+    		+ "		   WHERE A.IMAGE_GROUP = 'E0002'"
+    		+ "		  	 AND B.HOTDEAL_NO = :#{#hotdeal.hotdealNo}",
     		nativeQuery=true)
-    List<DatecourseImage>  findByHotdeal(Hotdeal hotdeal);
+    List<DatecourseImage>  findByHotdeal(@Param("hotdeal") Hotdeal hotdeal);
     
-    
+    // 핫딜 리스트에서 핫딜 상세 페이지 조회_인겸
     @Query(value="SELECT *"
     		+ "	    FROM T_GGC_IMAGE  "
     		+ "	   WHERE IMAGE_GROUP = 'E0002' "

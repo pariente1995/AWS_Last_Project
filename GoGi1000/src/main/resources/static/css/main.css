@@ -63,14 +63,15 @@
 
 .ranking {
 	cursor: pointer;
+	z-index: 999;
 }
 
-/* 이미지 화면 확대 */
 .rankingImg {
 	width:25px;	
 	height:25px;
 }
 
+/* 이미지 화면 확대 */
 #hotdealImg {
 	width: 45px;
 	height: 40px;
