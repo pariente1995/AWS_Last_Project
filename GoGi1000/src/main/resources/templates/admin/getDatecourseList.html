@@ -11,6 +11,13 @@
 	<th:block layout:fragment="script">
 		<script th:inline="javascript">
 			$(function() {
+			  // 사이드 바 선택 시, 해당 리스트 항목 선택_인겸
+			  $("#side").children().children(":first").attr('class','isSelect');
+			  $("#side").children().children(":first").css("background-color", "white");
+			  $("#side").children().children(":first").css("color", "#ee2d7a");
+			  $("#side").children().children(":first").css("border-top-left-radius", "40%")
+			  $("#side").children().children(":first").css("border-bottom-left-radius", "40%");	
+				
 		      // tr 총 개수
 		      $("#board-count").text($("#tbody tr").length);
 		

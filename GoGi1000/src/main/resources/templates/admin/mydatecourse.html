@@ -155,6 +155,13 @@
                         
 
                 $(function () {
+					// 사이드 바 선택 시, 해당 리스트 항목 선택_인겸
+					$("#side").children().children(":first").attr('class','isSelect');
+				    $("#side").children().children(":first").css("background-color", "white");
+				    $("#side").children().children(":first").css("color", "#ee2d7a");
+				    $("#side").children().children(":first").css("border-top-left-radius", "40%")
+				    $("#side").children().children(":first").css("border-bottom-left-radius", "40%");
+					
                     let isAllSelected = false;
                     //체크박스의 배열
                     const checkboxes
@@ -231,7 +238,7 @@
     <main>
         <div layout:fragment="content">
             <div id="md-content">
-                <h1 style="margin:0;">나만의 데이트코스</h1>
+                <h1 style="margin:0;">나만의 데이트 코스</h1>
                 <hr>
                 <div id="md-content-table">
                     <div id="datecourse-userInfo">

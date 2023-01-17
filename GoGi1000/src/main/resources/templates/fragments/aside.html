@@ -5,7 +5,7 @@
 
 <head>
 	<th:block layout:fragment="css">
-		<link rel="stylesheet" th:href="@{/css/aside.css}"/>
+		<link rel="stylesheet" href="/css/aside.css"/>
 	</th:block>
 </head>      
 <body>
@@ -13,22 +13,28 @@
     	<!-- left -->
 	    <div id="side">
 	      <div class="sideList" sec:authorize="hasRole('ROLE_ADMIN')">
-	        <a th:href="@{/datecourse/getDatecourseList}">관리자 리스트</a>
+	      <!-- /datecourse/getDatecourseList -->
+	        <a href="/datecourse/getDatecourseList">데이트 코스 리스트</a>
 	      </div>
 	      <div class="sideList" sec:authorize="hasRole('ROLE_ADMIN')">
-	        <a th:href="@{/datecourse/insertDatecourse}">데이트 코스 등록</a>
+	      <!-- /datecourse/insertDatecourse -->
+	        <a href="/datecourse/insertDatecourse">데이트 코스 등록</a>
 	      </div>
 	      <div class="sideList" sec:authorize="hasRole('ROLE_ADMIN')">
-	        <a th:href="@{/datecourse/insertHotdeal}">핫딜 등록</a>
+	      <!-- /datecourse/insertHotdeal -->
+	        <a href="/hotdeal/insertHotdeal">핫딜 등록</a>
 	      </div>
 	      <div class="sideList" sec:authorize="hasRole('ROLE_USER')">
-	        <a th:href="@{/datecourse/getMyDatecourseList}">데이트 코스 리스트</a>
+	      <!-- /datecourse/getMyDatecourseList -->
+	        <a href="/datecourse/getMyDatecourseList">MY 데이트 코스</a>
 	      </div>
 	      <div class="sideList" sec:authorize="hasRole('ROLE_USER')">
-	        <a th:href="@{/user/editMyinfo}">회원정보 수정</a>
+	      <!-- /like/mypageLikeList -->
+	        <a href="/like/mypageLikeList">좋아요 리스트</a>
 	      </div>
 	      <div class="sideList" sec:authorize="hasRole('ROLE_USER')">
-	        <a th:href="@{/like/mypageLikeList}">좋아요 리스트</a>
+	      <!-- /user/editMyinfo -->
+	        <a href="/user/editMyinfo">회원정보 수정</a>
 	      </div>
 	      <div id="sideImgWrapper">
 	        <img id="sideImg" th:src="@{/images/img5.png}">
