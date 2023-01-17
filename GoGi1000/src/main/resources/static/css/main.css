@@ -71,6 +71,11 @@
 	height:25px;
 }
 
+#hotdealImg {
+	width: 45px;
+	height: 40px;
+}
+
 .ranking a img {
   transition: all 0.2s linear;
 }

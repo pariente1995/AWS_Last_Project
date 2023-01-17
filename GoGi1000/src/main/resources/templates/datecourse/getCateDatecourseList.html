@@ -388,7 +388,7 @@
 
             // 조회된 결과가 없을 경우
             if(obj.getCateDatecourseList.content.length == 0) {
-              // 조회정렬 조건 영역 보이기
+              // 조회정렬 조건 영역 숨기기
               $("#datecourse-list-option-wrapper").css("display", "none");
 
               // datecourse-list-wrapper div의 첫번째 자식 삭제
@@ -415,7 +415,7 @@
               $("#datecourse-list-wrapper").prepend(htmlStr);
 
               // 조회정렬 조건 영역 보이기
-              $("#datecourse-list-option-wrapper").css("display", "block");
+              $("#datecourse-list-option-wrapper").css("display", "flex");
 
               htmlStr = "";
 
@@ -546,7 +546,7 @@
       <!-- 데이트 코스 카테고리 영역 -->
       <form id="datecourseCateForm">
         <input type="hidden" name="datecourseArea" id="datecourseArea" th:value="${datecourseArea}">
-        <input type="hidden" name="page" value="">
+        <input type="hidden" name="searchKeyword" th:value="${searchKeyword}">
         <div id="datecourse-detail-cate-wrapper">
           <div id="datecourse-detail-cate-title">
             <h2>카테고리</h2>
