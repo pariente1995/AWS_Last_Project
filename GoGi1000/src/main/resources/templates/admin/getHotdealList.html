@@ -40,14 +40,17 @@
                 
                 //전체 선택 체크박스 클릭 시 선택/선택해제
                 $("input[name=chk]").click(function () {
-                    if ($("input[name=chk]:checked").length == rowCnt) {
-                        $("input[name=chkAll]")[0].checked = true;
+                    if ($("input[name='chk']:checked").length == rowCnt) {
+                        $("input[name='chkAll']")[0].checked = true;
                     } else {
-                        $("input[name=chkAll]")[0].checked = false;
+                        $("input[name='chkAll']")[0].checked = false;
                     }
                 });
                 
                 $("input[name='selectOption']").on("change", function() {
+					$("#searchCondition").val("ALL");
+					$("#hotdealSearchKeyword").val("");
+					
 					$.ajax({
                     	url: "/hotdeal/selectHotdealList",
                         type: 'GET',
@@ -60,7 +63,7 @@
 							for(let i=0; i< obj.item.selectHotdealList.content.length; i++) {
 								htmlStr += `
 									<tr>
-										<td><input type="checkbox" name="chk" id="'chk' + ${obj.item.selectHotdealList.content[i].hotdealNo}" th:value="${obj.item.selectHotdealList.content[i].hotdealNo}"></td>
+										<td><input type="checkbox" name="chk" id="'chk' + ${obj.item.selectHotdealList.content[i].hotdealNo}" value="${obj.item.selectHotdealList.content[i].hotdealNo}"></td>
 										<td>${obj.item.selectHotdealList.content[i].hotdealNo}</td>
 										<td>
 											<a href="/hotdeal/getHotdeal/${obj.item.selectHotdealList.content[i].hotdealNo}">
@@ -70,7 +73,11 @@
 										<td>${obj.item.selectHotdealList.content[i].hotdealRgstDate.substr(0,10)}</td>
 										<td>${obj.item.selectHotdealList.content[i].hotdealEndDate}</td>
 										<td>${obj.item.selectHotdealList.content[i].hotdealUseYn}</td>
-										<td><button type="button" id="btnUpdate">수정</button></td>
+										<td>
+											<a href="/hotdeal/updateHotdeal/${obj.item.selectHotdealList.content[i].hotdealNo}">
+												<button type="button" id="btnUpdate">수정</button>
+											</a>	
+										</td>
 									</tr>
 								`;
 							}
@@ -78,8 +85,6 @@
 							$("#hotdealtable").children(":first").append(htmlStr);
 							
 							
-							
-							/*
 							// 페이지네이션 리스트 영역 삭제
             				$(".page-item").remove();
 				
@@ -93,7 +98,7 @@
 				
 				            htmlStr = "";
 				
-				            // 데이트 코스 리스트가 있을 때만 페이지네이션 영역 표시
+				            
 				            if(obj.item.selectHotdealList.totalElements > 0) {
 				              htmlStr += `
 				                    <ul class="pagination">
@@ -103,15 +108,17 @@
 				              if(pageNumber > 0) {
 				                htmlStr += `
 				                    <li class="page-item">
-				                        <a href="${pageNumber - 1}">&lt</a>
+				                        <a class="page-link"
+				                        href="/hotdeal/hotdealList?page=${pageNumber - 1},selectOption=${obj.item.selectHotdeal.selectOption},searchCondition=${obj.item.selectHotdeal.searchCondition},searchKeyword=${obj.item.selectHotdeal.searchKeyWord}">&lt</a>
 				                    </li>
 				              `;
 				              }
 				
-				              for(let i=startPage-1; i < startPage + endPage -1; i++) {
+				              for(var i = startPage; i <= endPage ; i++) {
 				                htmlStr += `
 				                    <li class="page-item">
-				                        <a href="${i}">${startPage + i}</a>
+				                        <a class="page-link"
+				                        href="/hotdeal/hotdealList?page=${i-1},selectOption=${obj.item.selectHotdeal.selectOption},searchCondition=${obj.item.selectHotdeal.searchCondition},searchKeyword=${obj.item.selectHotdeal.searchKeyWord}">${i}</a>
 				                    </li>
 				              `;
 				              }
@@ -120,7 +127,8 @@
 				              if(pageNumber < totalPages - 1) {
 				                htmlStr += `
 				                    <li class="page-item">
-				                        <a href="${pageNumber + 1}">&gt</a>
+				                        <a class="page-link"
+				                        href="/hotdeal/hotdealList?page=${pageNumber + 1},selectOption=${obj.item.selectHotdeal.selectOption},searchCondition=${obj.item.selectHotdeal.searchCondition},searchKeyword=${obj.item.selectHotdeal.searchKeyWord}">&gt</a>
 				                    </li>
 				              `;
 				              }
@@ -129,16 +137,18 @@
 				            }
 				
 				            // 페이지네이션 리스트 추가
-				            $("#hotdeal-page-wrapper").html(htmlStr);*/
+				            $("#hotdeal-page-wrapper").html(htmlStr);
 				          },
-                        
+				          error: function(e){
+							  console.log(e);
+						  }
                     });
 				})
              })
                //삭제 버튼 클릭시 선택된 UseYn(Y => N)으로 변경
                 function updateUseYn() {
                     var valueArr = new Array();
-                    var chkList = $("input[name=chk]");
+                    var chkList = $("input[name='chk']");
                     for (var i = 0; i < chkList.length; i++) {
                         if (chkList[i].checked) {
                             valueArr.push(chkList[i].value);
@@ -187,7 +197,7 @@
                             <form id="searchForm" action="/hotdeal/hotdealList" method="get">
                                 <input type="hidden" name="page" value="">
                                	<div id="select-option-wrapper" style="margin:10px 10px; display:flex; justify-content:right; align-items:center;">
-	                            	<input type="radio" name="selectOption" id="selectOption-all" value="ALL" th:checked="${selectOption eq 'ALL'}">
+	                            	<input type="radio" name="selectOption" id="selectOption-all" value="ALL" checked>
 	                            	<label for="selectOption-all">전체</label>
 	                              	<input type="radio" name="selectOption" id="selectOption-y" value="Y" th:checked="${selectOption eq 'Y'}">
 	                            	<label for="selectOption-y">판매중</label>

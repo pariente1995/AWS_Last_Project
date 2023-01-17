@@ -27,7 +27,10 @@
                 });
             });
             $(function() {
-				
+				var saleprice1 = $("#salePrice").text()
+				var saleprice2 = saleprice1.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + "원"
+				$("#salePrice").text(saleprice2)
+				 
 			})
         </script>
     </th:block>
@@ -47,7 +50,7 @@
                     </div>
                 </div>
             </div>
-
+            
             <!-- 핫딜 요약설명 부분 -->
             <div id="hotdeal-summary">
                 <h2 th:text="${getHotdeal.hotdealSummary}"></h2>
@@ -70,13 +73,13 @@
                     </div>
                 </div>
                 <div id="hotdealPrice-wrapper">
-                    <span id="hotdeal-price" th:text="${#numbers.formatInteger({getHotdeal.hotdealPrice}, 3,'COMMA')} + '원'">60000원</span>
+                    <span id="hotdeal-price" th:text="${#numbers.formatInteger({getHotdeal.hotdealPrice}, 3,'COMMA')} + '원'"></span>
                 </div>
                 <div class="hotdeal-line" style="justify-content: right;">
                     <div class="hotdeal-maininfo">
                         <span class="hotdeal-maininfo-text" th:text="${getHotdeal.hotdealSalerate} + '%'"></span>
-                        <span
-                            th:text="${getHotdeal.hotdealPrice}*(100 - ${getHotdeal.hotdealSalerate})/100 + '원'"></span>
+                        <span id="salePrice"
+                            th:text="${getHotdeal.hotdealPrice}*(100 - ${getHotdeal.hotdealSalerate})/100"></span>
                     </div>
                 </div>
                 <div id="hotdeal-sub-wrapper">
@@ -100,8 +103,7 @@
                             <span class="hotdeal-sub-text">구매페이지로 이동</span>
                         </div>
                         <div class="hotdeal-sub-text">
-                            <a style="font-weight:bold; text-shadow: 3px 3px yellow;"
-                                th:href="@{${getHotdeal.hotdealOfficialSite}}" th:text="${getHotdeal.hotdealOfficialSite}"></a>
+                            <a th:href="@{${getHotdeal.hotdealOfficialSite}}"<h5 th:text="${getHotdeal.hotdealOfficialSite}" style="text-decoration:none;"></h5></a>
                         </div>
                     </div>
                     <!-- 핫딜 상세 정보 -->
