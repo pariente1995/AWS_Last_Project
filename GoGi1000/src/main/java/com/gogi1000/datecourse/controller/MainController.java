@@ -3,7 +3,9 @@ package com.gogi1000.datecourse.controller;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -11,31 +13,35 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gogi1000.datecourse.common.CamelHashMap;
 import com.gogi1000.datecourse.dto.DatecourseDTO;
 import com.gogi1000.datecourse.dto.DatecourseImageDTO;
 import com.gogi1000.datecourse.dto.HotdealDTO;
+import com.gogi1000.datecourse.dto.ResponseDTO;
 import com.gogi1000.datecourse.dto.ReviewDTO;
 import com.gogi1000.datecourse.entity.Datecourse;
 import com.gogi1000.datecourse.entity.DatecourseImage;
 import com.gogi1000.datecourse.entity.Hotdeal;
 import com.gogi1000.datecourse.entity.Review;
 import com.gogi1000.datecourse.service.main.MainService;
-import com.gogi1000.datecourse.service.review.ReviewService;
 
 @RestController
 @RequestMapping("/main")
 public class MainController {
 	@Autowired
 	private MainService mainService;
-	@Autowired
-	private ReviewService reviewService;
 	
 	
 	// 검색창에서 지역명, 코스명, 내용으로 검색 후 조회
@@ -128,22 +134,6 @@ public class MainController {
 			datecourseImageDTOList.add(datecourseImageDTO);
 		}
 		
-		List<Review> getCommentList = reviewService.getCommentList(datecourseNo); 
-		
-		List<ReviewDTO> returnComment = new ArrayList<ReviewDTO>();
-		
-		for(Review getComment : getCommentList) {
-			ReviewDTO returnCommentDTO = ReviewDTO.builder()
-													.datecourseNo(getComment.getDatecourseNo())
-													.reviewerId(getComment.getReviewerId())
-													.reviewNo(getComment.getReviewNo())
-													.reviewComment(getComment.getReviewComment())
-													.reviewModfDate(getComment.getReviewModfDate().toString())
-													.build();
-			
-			returnComment.add(returnCommentDTO);
-		}
-		
 		ModelAndView mv = new ModelAndView();
 		mv.setViewName("datecourse/getCateDatecourse.html");
 		
@@ -154,8 +144,6 @@ public class MainController {
 		mv.addObject("datecourseMenu", datecourseMenu);
 		
 		mv.addObject("datecourseHours", datecourseHours);
-		
-		mv.addObject("review", returnComment);
 		
 		return mv;
 				
@@ -184,7 +172,7 @@ public class MainController {
 		// 이미지 조회하기
 		List<DatecourseImage> datecourseImageList = mainService.getDatecourseHotdealImageList(hotdealNo);
 		
-		List<DatecourseImageDTO> datecourseImageDTOList = new ArrayList<DatecourseImageDTO>();
+		List<DatecourseImageDTO> getDatecourseImageList = new ArrayList<DatecourseImageDTO>();
 		
 		// DTO에 담아서 다시 던져줌
 		for (DatecourseImage datecourseImage : datecourseImageList) {
@@ -198,14 +186,14 @@ public class MainController {
 													.imageGroup(datecourseImage.getImageGroup())
 													.build();
 			
-			datecourseImageDTOList.add(datecourseImageDTO);
+			getDatecourseImageList.add(datecourseImageDTO);
 		}
 				
 		
 		ModelAndView mv = new ModelAndView();
 		mv.setViewName("admin/getHotdealDetail.html");
 		mv.addObject("getHotdeal", hodealDTO);	
-		mv.addObject("datecourseImageDTOList", datecourseImageDTOList);
+		mv.addObject("getDatecourseImageList", getDatecourseImageList);
 		
 		
 		return mv;
