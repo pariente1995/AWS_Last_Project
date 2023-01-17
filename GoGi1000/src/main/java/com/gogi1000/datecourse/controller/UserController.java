@@ -1,11 +1,13 @@
 package com.gogi1000.datecourse.controller;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,6 +17,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.gogi1000.datecourse.dto.ResponseDTO;
 import com.gogi1000.datecourse.dto.UserDTO;
+import com.gogi1000.datecourse.entity.CustomUserDetails;
 import com.gogi1000.datecourse.entity.User;
 import com.gogi1000.datecourse.service.user.UserService;
 
@@ -324,10 +327,56 @@ public class UserController {
 	}
 	
 	@GetMapping("/editMyinfo")
-	public ModelAndView editMyinfoView() {
-		ModelAndView mv = new ModelAndView();
+	public ModelAndView editMyinfoView(UserDTO userDTO) throws IOException {
 		
+		User user = User.builder()
+						.userId(userDTO.getUserId())
+						.build();
+		
+		userService.getEditMypage(user);
+		
+		
+		
+		UserDTO userId = UserDTO.builder()
+				    .userId(user.getUserId())
+					.userPw(passwordEncoder.encode(user.getUserPw()))
+					.userNm(user.getUserNm())
+					.userAge(user.getUserAge())
+					.userTel(user.getUserTel())
+					.userMail(user.getUserMail())
+					.userArea(user.getUserArea())
+					.userAddr1(user.getUserAddr1())
+					.userAddr2(user.getUserAddr2())
+					.userModfDate(user.getUserModfDate()== null ?
+							null : user.getUserModfDate().toString())
+					.build();
+		
+				
+		ModelAndView mv = new ModelAndView();
 		mv.setViewName("user/editMyinfo.html");
+		mv.addObject("userDTO", userId);
 		return mv;
 	}
+	
+	// 회원정보 수정_변재흥
+//    @PostMapping("/editMyinfo/{userId}")
+//    public void updateMyinfo(@PathVariable int userId, 
+//    		UserDTO userDTO, HttpServletResponse response) throws IOException {
+//    	User user = User.builder()
+//						.userPw(passwordEncoder.encode(userDTO.getUserPw()))
+//						.userNm(userDTO.getUserNm())
+//						.userAge(userDTO.getUserAge())
+//						.userTel(userDTO.getUserTel())
+//						.userMail(userDTO.getUserMail())
+//						.userArea(userDTO.getUserArea())
+//						.userAddr1(userDTO.getUserAddr1())
+//						.userAddr2(userDTO.getUserAddr2())
+//						.userModfDate(LocalDateTime.now())
+//						.build();
+//    	
+//    	int userIdCnt = userService.getUserIdCnt(user);
+//    	
+//    	userService.updateMyinfo(user);
+//    	response.sendRedirect("/user/editMyinfo" + userIdCnt);
+//    }
 }

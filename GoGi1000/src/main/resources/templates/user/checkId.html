@@ -27,7 +27,7 @@
 	        <!-- ========== 최상단 영역 ========== -->
 	        <div class="main-wrap">
 	            <div class="main-image">
-	                <img src="/images/KakaoTalk_20221216_095545610.png" alt="" />
+	                <img src="/images/navstyle.png" alt="" />
 	            </div>
 	            <div>
 	                <p id="main-logo" href="javascript:history.back();"><a th:href="@{/user/login}" style="color: white; text-decoration-line:none">←</a></p>
@@ -74,7 +74,7 @@
 	                <th>아이디</th>
 	                <th>가입일자</th>
 	            </tr>
-	            <tr th:each="">
+	            <tr>
 	                <td th:text="${user.userId}"></td>
 	                <td th:text="${#strings.replace(user.userRgstDate, 'T', ' ') }"></td>
 	            </tr>

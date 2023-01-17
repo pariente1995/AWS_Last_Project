@@ -16,8 +16,84 @@
         <script th:inline="javascript" src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
         
         <script th:inline="javascript">
-		/* ========== 유저addr API 연동 ========== */
-    function daumPostcode() {
+			$(function() {
+			
+				var pwValidation = false;
+	            var pwCheck = false;
+	
+	            $("#pwValidation").hide();
+	            $("#pwCheckResult").hide();
+	            
+		    		/* ========== userPw1 ========== */
+		            //비밀번호 유효성 검사
+		            function validatePassword(character) {
+		                return /^(?=.*[a-zA-Z])(?=.*[!@#$%^&*+=-])(?=.*[0-9]).{9,}$/.test(character);
+		            }
+		
+		            //비밀번호 입력될때마다 유효성 검사
+		            	$("#userPw").on("change", function () {
+			                //비밀번호 유효성 처리
+			                if (!validatePassword($("#userPw").val())) {
+			                    pwValidation = false;
+			                    $("#pwValidation").show();
+			                    $("#userPw").focus();
+			                } else {
+			                    pwValidation = true;
+			                    $("#pwValidation").hide();
+			                }
+			
+			                /* ========== userPw2 ========== */
+			                //비밀번호 확인까지 입력한 후 다시 비밀번호 재설정
+			                if ($("#userPw").val() == $("#userPw2").val()) {
+			                    pwCheck = true;
+			                    $("#pwCheckResult").css("color", "green");
+			                    $("#pwCheckResult").text("비밀번호가 일치합니다.");
+			                } else {
+			                    pwCheck = false;
+			                    $("#pwCheckResult").css("color", "red");
+			                    $("#pwCheckResult").text("비밀번호가 일치하지 않습니다.");
+		                }
+	           		 });
+	           		 
+		           		 /* ========== myinfo_submit ========== */
+			             //회원정보 수정 진행
+			             $("#btnJoin").on("click", function (e) {
+						 
+							 //비밀번호 유효성 검사가 틀렸을 때
+			                 if (!pwValidation) {
+			                    alert("비밀번호는 영문자, 숫자, 특수문자 조합의 9자리 이상으로 설정하세요.");
+			                    $("#userPw").focus();
+			                    return;
+			                 }
+			
+			                 //비밀번호와 비밀번호 확인이 일치하지 않을 때
+			                 if (!pwCheck) {
+			                    alert("비밀번호가 일치하지 않습니다.");
+			                    $("#userPw2").focus();
+			                    return;
+			                 }
+	                 	});
+            });
+
+
+            /* ========== userPw2 ========== */
+            //비밀번호 확인란 입력할 때 일치여부 체크
+            $("#userPw2").on("change", function () {
+                $("#pwCheckResult").show();
+
+                if ($("#userPw").val() == $("#userPw2").val()) {
+                    pwCheck = true;
+                    $("#pwCheckResult").css("color", "green");
+                    $("#pwCheckResult").text("비밀번호가 일치합니다.");
+                } else {
+                    pwCheck = false;
+                    $("#pwCheckResult").css("color", "red");
+                    $("#pwCheckResult").text("비밀번호가 일치하지 않습니다.");
+                }
+            });
+		
+			/* ========== 유저addr API 연동 ========== */    		
+    		function daumPostcode() {
                 new daum.Postcode({
                     oncomplete: function(data) {
                         // 팝업에서 검색결과 항목을 클릭했을때 실행할 코드를 작성하는 부분.
@@ -53,6 +129,67 @@
 			    $("#side").children().children().eq(2).css("color", "#ee2d7a");
 			    $("#side").children().children().eq(2).css("border-top-left-radius", "40%")
 			    $("#side").children().children().eq(2).css("border-bottom-left-radius", "40%");
+			    
+			    // 정보 수정 submit_인겸(재흥)
+			    /*
+			    $("#updateForm").on("submit", function(e) {
+					if ($("#userPw").val() == '') {
+						e.preventDefault();
+						
+						alert("비밀번호를 입력해 주세요.");
+						$(this).focus();
+						return;
+					}
+					
+					if ($("#userPw2").val() == '') {
+						e.preventDefault();
+						
+						alert("비밀번호를 확인해 주세요.")
+						$(this).focus();
+						return;
+					}
+					
+					if ($("#userNm").val() == '') {
+						e.preventDefault();
+						
+						alert("이름을 입력해 주세요.")
+						$(this).focus();
+						return;
+					}
+					
+					if ($("#userArea").val() == '') {
+						e.preventDefault();
+						
+						alert("지역을 선택해 주세요.");
+						$(this).focus();
+						return;
+					}
+					
+					if ($("#userAddr1").val() == '') {
+						e.preventDefault();
+						
+						alert("주소를 입력해 주세요.");
+						$(this).focus();
+						return;
+					}
+					
+					// 정보 수정
+					$.ajax({
+							url: "/editMyinfo/{userId}",
+							type: "post",
+							data: $("#updateForm").serialize(),
+							success: function(obj) {
+								ㅑ
+								
+							},
+							error: function(e) {
+								console.log(e);
+							}
+					})
+					
+					
+				})
+				*/
 			})
         </script>
     </th:block>
@@ -68,164 +205,171 @@
                
             </div>
             <div class="main-text" style="margin-top: -40px; float:left">
-                <p>개인정보 수정</p>
+                <p>회원정보 수정</p>
                 <hr style="margin-top: -23px;">
             </div>
             
-    </div>
+    	</div>
     <!-- 사용자 작성 부분 -->
     <!-- 사용자 id -->
     <div class="container">
-        <div class="label_wrapper1"><label for="userId">아이디</label></div>
-        <div class="input  label_wrapper2" >
-            <div class="input_wrapper" >
-                <input type="text" name="userId" id="userId" style="background-color: gray;" required placeholder="아이디를 입력하세요." disabled>
-                <span class="input_border" ></span>
-            </div>
-        </div> 
+    	<form action="" method="post" id="updateForm" name="updateForm">
+	        <div class="label_wrapper1"><label for="userId">아이디</label></div>
+	        <div class="input  label_wrapper2" >
+	            <div class="input_wrapper" >
+	                <input type="text" name="userId" id="userId" style="background-color: gray;" required placeholder="아이디를 입력하세요." disabled 
+	                 th:value="${userDTO.userId}"}>
+	                <span class="input_border" ></span>
+	            </div>
+	        </div> 
 
-    <!-- 사용자 pw1 -->
-    <div>
-        <div class="label_wrapper1"><label for="userPw">비밀번호</label></div>
-        <div class="input  label_wrapper2">
-            <div class="input_wrapper">
-                <input type="password"  name="userPw" id="userPw" required placeholder="비밀번호를 입력하세요.">
-                <span class="input_border"></span>
-            </div>
-        </div>
-    </div>
-    <p id="pwValidation" style="color: red; font-size: 0.8rem; margin-top: -0.2em;">
-        비밀번호는 영문자, 숫자, 특수문자 조합의 9자리 이상으로 설정해주세요.
-    </p>
+		    <!-- 사용자 pw1 -->
+		    <div>
+		        <div class="label_wrapper1"><label for="userPw">비밀번호</label></div>
+		        <div class="input  label_wrapper2">
+		            <div class="input_wrapper">
+		                <input type="password"  name="userPw" id="userPw" required placeholder="비밀번호를 입력하세요.">
+		                <span class="input_border"></span>
+		            </div>
+		        </div>
+		    </div>
+		    <p id="pwValidation" style="color: red; font-size: 0.8rem; margin-top: -0.2em;">
+		        비밀번호는 영문자, 숫자, 특수문자 조합의 9자리 이상으로 설정해주세요.
+		    </p>
 
-    <!-- 사용자 pw2 -->
-    <div>
-        <div class="label_wrapper1"><label for="userPw2">비밀번호 재확인</label></div>
-        <div class="input  label_wrapper2">
-            <div class="input_wrapper">
-                <input type="password"  name="userPw2" id="userPw2" required placeholder="비밀번호를 한 번 더 입력하세요.">
-                <span class="input_border"></span>
-            </div>
-        </div>
-    </div>
-    <p id="pwCheckResult" style="font-size: 0.8rem;"></p>
+		    <!-- 사용자 pw2 -->
+		    <div>
+		        <div class="label_wrapper1"><label for="userPw2">비밀번호 재확인</label></div>
+		        <div class="input  label_wrapper2">
+		            <div class="input_wrapper">
+		                <input type="password"  name="userPw2" id="userPw2" required placeholder="비밀번호를 한 번 더 입력하세요.">
+		                <span class="input_border"></span>
+		            </div>
+		        </div>
+		    </div>
+		    <p id="pwCheckResult" style="font-size: 0.8rem;"></p>
 
-     <!-- 사용자 nm -->
-     <div>
-        <div class="label_wrapper1"><label for="userNm">이름</label></div>
-        <div class="input  label_wrapper2">
-            <div class="input_wrapper">
-                <input type="text"  name="userNm" id="userNm" required placeholder="이름을 입력하세요.">
-                <span class="input_border"></span>
-            </div>
-        </div>
-    </div>
+		     <!-- 사용자 nm -->
+		     <div>
+		        <div class="label_wrapper1"><label for="userNm">이름</label></div>
+		        <div class="input  label_wrapper2">
+		            <div class="input_wrapper">
+		                <input type="text"  name="userNm" id="userNm" required placeholder="이름을 입력하세요." th:value="${userDTO.userNm}"}>
+		                <span class="input_border"></span>
+		            </div>
+		        </div>
+		    </div>
 
-   <!-- 사용자 age -->
-   <div>
-      <div class="label_wrapper1"><label for="userAge">나이</label></div>
-      <div class="input  label_wrapper2">
-          <div class="input_wrapper">
-              <input type="text"  name="userAge" id="userAge" required placeholder="나이를 입력하세요.">
-              <span class="input_border"></span>
-          </div>
-      </div>
-   </div>
+		   <!-- 사용자 age -->
+		   <div>
+		      <div class="label_wrapper1"><label for="userAge">나이</label></div>
+		      <div class="input  label_wrapper2">
+		          <div class="input_wrapper">
+		              <input type="text"  name="userAge" id="userAge" required placeholder="나이를 입력하세요." th:value="${userDTO.userAge}"}>
+		              <span class="input_border"></span>
+		          </div>
+		      </div>
+		   </div>
    
-   <!-- 사용자 area -->
-   <div>
-    <div class="label_wrapper1"><label for="userArea">지역</label></div>
-    <div class="input  label_wrapper2">
-        <div>
-          <form>
-              <select name="userArea" class="dropdown" >
-                <option value="none" hidden>=== 선택 ===</option>
-                <option value="A1">서울</option>
-                <option value="A2">부산</option>
-                <option value="A3">대구</option>
-                <option value="A4">인천</option>
-                <option value="A5">광주</option>
-                <option value="A6">대전</option>
-                <option value="A7">울산</option>
-                <option value="A8">세종</option>
-                <option value="A9">경기도</option>
-                <option value="A10">강원도</option>
-                <option value="A11">충청북도</option>
-                <option value="A12">충청남도</option>
-                <option value="A13">전라북도</option>
-                <option value="A14">전라남도</option>
-                <option value="A15">경상북도</option>
-                <option value="A16">경상남도</option>
-                <option value="A17">제주도</option>
-              </select>
-            </form>
-      </div> 
-    </div>
-
-    <!-- 사용자 add1 -->
-    <div>
-        <div class="label_wrapper1"><label for="userAddr2">주소</label></div>
-        <div class="input  label_wrapper2">
-            <div class="input_wrapper">
-                <input type="text"  name="userAddr1" id="userAddr1"  placeholder="도로명주소" style="position: relative; z-index: 1; background-color:transparent;" readonly>
-                <span class="input_border" style="background-color: #cfcfcf;"></span>
-            </div>&emsp;
-
-            <div>
-                <button type="button" class="btn1" id="btnAddrCheck" onclick="daumPostcode()" value="우편번호 찾기">
-                <span class="btn_inner">주소찾기</span>
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <!-- 사용자 add2 -->
-    <div>
-        <div class="label_wrapper1"></div>
-        <div class="input  label_wrapper2">
-            <div class="input_wrapper">
-                <input type="text"  name="userAddr2" id="userAddr2" required placeholder=" 상세주소를 입력하세요.">
-                <span class="input_border"></span>
-            </div>
-        </div>
-    </div>
-
-    <!-- 사용자 tel -->
-    <div>
-        <div class="label_wrapper1"><label for="userTel">휴대전화</label></div>
-        <div class="input  label_wrapper2">
-            <div class="input_wrapper">
-                <input type="text"  name="userTel" id="userTel" placeholder="숫자만 입력하세요.">
-                <span class="input_border"></span>
-            </div>
-        </div>
-    </div>
-    
-     <!-- 사용자 email -->
-     <div>
-        <div class="label_wrapper1" ><label for="userEmail">이메일</label></div>
-        <div class="input_email" >
-            <input type="text" style="margin-right: 10px; width: 210px; height: 40px;"  name="userEmail" id="userEmail" required placeholder="이메일을 입력하세요.">@
-            <div>
-                <form>
-                    <select name="domain" class="dropdown" style="margin-left: 10px;">
-                      <option value="none" hidden>=== 선택 ===</option>
-                      <option value="naver">naver.com</option>
-                      <option value="daum">daum.net</option>
-                      <option value="kakao">kakao.com</option>
-                      <option value="google">gmail.com</option>
-                    </select>
-                  </form>
-            </div> 
-       </div>
-
-      <!-- 회원가입 btn -->
-      <div  style="display: flex; justify-content: center; margin-bottom: 5em;">
-        <button type="submit" class="btn2" id="btnReg" >
-        <span class="btn_inner">수정하기</span>
-        </button>
-    </div> 
-   </div>
+		   <!-- 사용자 area -->
+		   <div>
+			    <div class="label_wrapper1"><label for="userArea">지역</label></div>
+			    <div class="input  label_wrapper2">
+			        <div>
+			          <form>
+			              <select id="userArea" name="userArea" class="dropdown" 
+			              th:value="${userDTO.userArea}"}>
+			                <option value="none" hidden>=== 선택 ===</option>
+			                <option value="A1">서울</option>
+			                <option value="A2">부산</option>
+			                <option value="A3">대구</option>
+			                <option value="A4">인천</option>
+			                <option value="A5">광주</option>
+			                <option value="A6">대전</option>
+			                <option value="A7">울산</option>
+			                <option value="A8">세종</option>
+			                <option value="A9">경기도</option>
+			                <option value="A10">강원도</option>
+			                <option value="A11">충청북도</option>
+			                <option value="A12">충청남도</option>
+			                <option value="A13">전라북도</option>
+			                <option value="A14">전라남도</option>
+			                <option value="A15">경상북도</option>
+			                <option value="A16">경상남도</option>
+			                <option value="A17">제주도</option>
+			              </select>
+			            </form>
+			      </div> 
+			    </div>
+			
+			    <!-- 사용자 add1 -->
+			    <div>
+			        <div class="label_wrapper1"><label for="userAddr2">주소</label></div>
+			        <div class="input  label_wrapper2">
+			            <div class="input_wrapper">
+			                <input type="text"  name="userAddr1" id="userAddr1"  placeholder="도로명주소" style="position: relative; z-index: 1; background-color:transparent;" readonly
+			                 th:value="${userDTO.userAddr1}"}>
+			                <span class="input_border" style="background-color: #cfcfcf;"></span>
+			            </div>&emsp;
+			
+			            <div>
+			                <button type="button" class="btn1" id="btnAddrCheck" onclick="daumPostcode()" value="우편번호 찾기">
+			                <span class="btn_inner">주소찾기</span>
+			                </button>
+			            </div>
+			        </div>
+			    </div>
+			
+			    <!-- 사용자 add2 -->
+			    <div>
+			        <div class="label_wrapper1"></div>
+			        <div class="input  label_wrapper2">
+			            <div class="input_wrapper">
+			                <input type="text"  name="userAddr2" id="userAddr2" required placeholder=" 상세주소를 입력하세요."
+			                 th:value="${userDTO.userAddr2}"}>
+			                <span class="input_border"></span>
+			            </div>
+			        </div>
+			    </div>
+			
+			    <!-- 사용자 tel -->
+			    <div>
+			        <div class="label_wrapper1"><label for="userTel">휴대전화</label></div>
+			        <div class="input  label_wrapper2">
+			            <div class="input_wrapper">
+			                <input type="text"  name="userTel" id="userTel" placeholder="숫자만 입력하세요." th:value="${userDTO.userTel}"}>
+			                <span class="input_border"></span>
+			            </div>
+			        </div>
+			    </div>
+			    
+			     <!-- 사용자 email -->
+			     <div>
+			        <div class="label_wrapper1" ><label for="userEmail">이메일</label></div>
+			        <div class="input_email" >
+			            <input type="text" style="margin-right: 10px; width: 210px; height: 40px;"  name="userEmail" id="userEmail" required placeholder="이메일을 입력하세요.">@
+			            <div>
+			                <form>
+			                    <select name="domain" class="dropdown" style="margin-left: 10px;">
+			                      <option value="none" hidden>=== 선택 ===</option>
+			                      <option value="naver">naver.com</option>
+			                      <option value="daum">daum.net</option>
+			                      <option value="kakao">kakao.com</option>
+			                      <option value="google">gmail.com</option>
+			                    </select>
+			                  </form>
+			            </div> 
+			       </div>
+			
+			      <!-- 회원가입 btn -->
+			      <div  style="display: flex; justify-content: center; margin-bottom: 5em;">
+			        <button type="submit" class="btn2" id="btnReg" >
+			        <span class="btn_inner">수정하기</span>
+			        </button>
+			    </div> 
+			   </div>
+			</div>
+		</form>
 	</div>
 </body>
 </html>

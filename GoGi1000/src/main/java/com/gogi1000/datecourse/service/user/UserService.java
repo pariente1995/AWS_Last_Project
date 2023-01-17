@@ -1,5 +1,6 @@
 package com.gogi1000.datecourse.service.user;
 
+import com.gogi1000.datecourse.entity.CustomUserDetails;
 import com.gogi1000.datecourse.entity.User;
 
 public interface UserService {
@@ -20,6 +21,12 @@ public interface UserService {
 	int getUserNmCnt(User user);
 
 	int updateUserPw(User user);
+
+	void getEditMypage(User user);
+
+//	int getUserIdCnt(User user);
+
+//	void updateMyinfo(User user);
 
 //	User newPwd(User user);
 	
