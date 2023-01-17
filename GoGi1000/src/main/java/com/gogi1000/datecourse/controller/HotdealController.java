@@ -253,7 +253,7 @@ public class HotdealController {
     		System.out.println(datecourseImageDTOList);
     	}
     	ModelAndView mv = new ModelAndView();
-    	mv.setViewName("admin/getHotdealDetail.html");
+    	mv.setViewName("hotdeal/getHotdealDetail.html");
     	mv.addObject("getHotdeal", hotdealDTO);
     	mv.addObject("getDatecourseImageList", datecourseImageDTOList);
     	System.out.println(mv);

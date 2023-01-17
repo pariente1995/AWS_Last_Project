@@ -45,32 +45,36 @@ public class SecurityConfiguration {
 									.antMatchers("/images/**").permitAll()
 									.antMatchers("/upload/**").permitAll()
 									// 누구든 접근 가능하게 함.
-									.antMatchers("/user/join").permitAll()
-									.antMatchers("/user/login").permitAll()
-									.antMatchers("/user/loginProc").permitAll()
-									.antMatchers("/user/idCheck").permitAll()
-									.antMatchers("/user/findId").permitAll()
-									.antMatchers("/user/findPwd").permitAll()
-									.antMatchers("/user/checkId").permitAll()
-									.antMatchers("/user/pwCheck").permitAll()
-									.antMatchers("/user/newPwd").permitAll()
-									.antMatchers("/user/chPw").permitAll()
-									.antMatchers("/user/editMyinfo").permitAll()
+									.antMatchers("/user/**").permitAll()
+//									.antMatchers("/user/login").permitAll()
+//									.antMatchers("/user/loginProc").permitAll()
+//									.antMatchers("/user/idCheck").permitAll()
+//									.antMatchers("/user/findId").permitAll()
+//									.antMatchers("/user/findPwd").permitAll()
+//									.antMatchers("/user/checkId").permitAll()
+//									.antMatchers("/user/pwCheck").permitAll()
+//									.antMatchers("/user/newPwd").permitAll()
+//									.antMatchers("/user/chPw").permitAll()
+//									.antMatchers("/user/editMyinfo").permitAll()
+									
 									// 권한을 가지고 있는 유저들만 접근할 수 있는 요청리소스 설정
 									// Authentication 객체를 만든 후에 가져올 수 있는 권한들
 									.antMatchers("/admin/**").access("hasRole('ROLE_ADMIN')")
 
 									// main
+									.antMatchers("/main/admin").access("hasRole('ROLE_ADMIN')")
 									.antMatchers("/main/**").permitAll()
+									
 				
 									// Datecourse
+									.antMatchers("/datecourse/getCateDatecourse").access("hasRole('ROLE_ADMIN')")
 									.antMatchers("/datecourse/**").permitAll()
 
 									// Hotdeal
 									.antMatchers("/hotdeal/**").permitAll()
 
 									// Review
-									.antMatchers("/review/**").permitAll()
+									.antMatchers("/review/**").access("hasRole('ROLE_ADMIN')")
 
 									// Like
 									.antMatchers("/like/**").permitAll()
@@ -101,7 +105,7 @@ public class SecurityConfiguration {
 			.and()
 			.oauth2Login()
 			.loginPage("/user/login")
-			.defaultSuccessUrl("/main/getHotdeal/1")
+//			.defaultSuccessUrl("/main/getHotdeal/1")
 			// 토큰 발행 후 처리
 			// 토큰이 발행되면 사용자 정보를 받아서 처리 가능해지는 데
 			// 사용자 정보를 웹 사이트에 맞도록 변경해주는 작업 필요

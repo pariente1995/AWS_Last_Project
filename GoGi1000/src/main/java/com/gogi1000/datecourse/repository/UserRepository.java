@@ -42,4 +42,10 @@ public interface UserRepository extends JpaRepository<User, String> {
 
 		@Query(value="SELECT COUNT(*) FROM T_GGC_USER WHERE USER_NM = :userNm", nativeQuery=true)
 		int getUserNmCnt(@Param("userNm") String userNm);
+
+		@Query(value="SELECT *"
+				+ "		FROM T_GGC_USER"
+				+ "	   WHERE USER_ID = :#{#user.userId}",
+				nativeQuery=true)
+		void getEditMypage(@Param("user") User user);
 }

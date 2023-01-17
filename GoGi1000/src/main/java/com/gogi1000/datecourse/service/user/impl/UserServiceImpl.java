@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.gogi1000.datecourse.entity.CustomUserDetails;
+import com.gogi1000.datecourse.entity.Review;
 import com.gogi1000.datecourse.entity.User;
 import com.gogi1000.datecourse.repository.UserRepository;
 import com.gogi1000.datecourse.service.mail.MailService;
@@ -125,7 +127,24 @@ public class UserServiceImpl implements UserService{
 		// TODO Auto-generated method stub
 		return userRepository.updateTempPw(user.getUserId(), user.getUserPw());
 	}
+
+	@Override
+	public void getEditMypage(User user) {
+		userRepository.getEditMypage(user);
+	}
 	
+//	// 회원정보 수정
+//	@Override
+//	public void updateMyinfo(User user) {
+//		userRepository.save(user);
+//	}
+
+//	@Override
+//	public int getUserIdCnt(User user) {
+//		// TODO Auto-generated method stub
+//		return userRepository.getUserIdCnt(user.getUserId());
+//	}
+		
 //	@Override
 //	public User newPwd(User user) {
 //		if(userRepository.newPw(user.getUserId(), user.getUserPw()).isEmpty()) {

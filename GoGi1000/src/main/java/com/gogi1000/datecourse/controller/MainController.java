@@ -191,7 +191,7 @@ public class MainController {
 				
 		
 		ModelAndView mv = new ModelAndView();
-		mv.setViewName("admin/getHotdealDetail.html");
+		mv.setViewName("hotdeal/getHotdealDetail.html");
 		mv.addObject("getHotdeal", hodealDTO);	
 		mv.addObject("getDatecourseImageList", getDatecourseImageList);
 		
