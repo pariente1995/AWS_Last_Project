@@ -5,7 +5,7 @@
  <head>
 
         <th:block layout:fragment="css">
-            <link rel="stylesheet" th:href="@{/css/mydatecourse.css}" />
+            <link rel="stylesheet" th:href="@{/css/getMydatecourseList.css}" />
         </th:block>
         <th:block layout:fragment="script">
             <script th:inline="javascript" src="https://code.jquery.com/jquery-3.6.1.js"></script>
@@ -96,7 +96,7 @@
                                 })
                                
                                	/* 마우스 오버, 마우스 아웃 이벤트에 사용할 infoWindow(정보창) 생성*/
-                               	var content = '<div style="width:100%; text-align:center;"><b>' + result[0].address_name + '</b><br> -카카오 지도- </div>'
+                               	var content = '<div style="width:200px; text-align:center;"><b>' + result[0].address_name + '</b></div>'
                                 var infowindow = new kakao.maps.InfoWindow({
 									content: content
 								});

@@ -517,7 +517,8 @@ public class HotdealController {
 	    	 Map<String, Object> returnMap = new HashMap<String, Object>();
 
 	         returnMap.put("selectHotdealList", pageHotdealDTOList);
-
+	         returnMap.put("selectHotdeal", hotdeal);
+	         System.out.println(returnMap);
 	         response.setItem(returnMap);
 	         System.out.println(response);
 	         return ResponseEntity.ok().body(response);

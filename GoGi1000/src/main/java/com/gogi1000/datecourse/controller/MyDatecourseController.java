@@ -45,7 +45,7 @@ public class MyDatecourseController {
 													  
 		List<CamelHashMap> DatecourseList = myDatecourseService.getMyDatecourseList(myDatecourse);
 
-		mv.setViewName("admin/mydatecourse.html");
+		mv.setViewName("datecourse/getMydatecourseList.html");
 		mv.addObject("myDatecourseList", DatecourseList);
 		System.out.println(myDatecourse);
 		return mv;
