@@ -42,19 +42,11 @@ public class MainServiceImpl implements MainService{
 				datecourse.getSearchKeyword(), 
 				pageable);
 		} else if (datecourse.getDatecourseArea() != null && !datecourse.getDatecourseArea().equals("")) {
-			System.out.println(datecourseRepository.getMapDatecourseList(datecourse.getDatecourseArea(), pageable));
 			return datecourseRepository.getMapDatecourseList(datecourse.getDatecourseArea(), pageable);
 		} else {
 			return null;
 		}
 	}
-	
-
-	// 지도에서 지역 선택 후 조회
-//	@Override
-//	public List<CamelHashMap> getMapDatecourseList(String datecourseArea, Pageable pageable) {
-//		return datecourseRepository.getSearchMap(datecourseArea, pageable);
-//	}
 	
 	// 메인에서 인기 랭킹 리스트 조회
 	@Override

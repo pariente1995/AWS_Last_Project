@@ -56,11 +56,6 @@ public class MainController {
 		
 		Page<CamelHashMap> searchMapDatecourseList = mainService.getSearchMapDatecourseList(datecourse, pageable);
 		
-		System.out.println(searchMapDatecourseList.getPageable().toString());
-        System.out.println("=======================================");
-        System.out.println(searchMapDatecourseList.getContent().toString());
-        System.out.println("=======================================");
-        System.out.println(searchMapDatecourseList.getTotalElements());
 		
 		ModelAndView mv = new ModelAndView();
 		
@@ -76,35 +71,10 @@ public class MainController {
 		}
 		
 		mv.addObject("searchMapDatecourseList", searchMapDatecourseList);
-		System.out.println("test");
-		// 화면에 뿌려줄 데이터 조회
-		System.out.println(searchMapDatecourseList.getContent());
 		
 		return mv;
 			
 	}
-	
-	
-//	// 지도에서 지역 선택 후 조회
-//	@GetMapping("/getMapDatecourseList/{datecourseArea}")
-//	// key값 없이 value값만 던질때는 @PathVariable
-//	public ModelAndView getMapDatecourseList(@PathVariable String datecourseArea, 
-//			@PageableDefault(page=0, size=12) Pageable pageable) throws IOException {	 
-//					
-//		// Map 받는 이유: 키와 값을 받아와야하기 때문에.
-//		// DB에서는 이름(컬럼)이 있고 값을 받아와야 하기 때문이고, 화면단에 NAME이 있고 KEY를 받아서 효과적으로 처리하기위해 map을 사용 
-//		List<CamelHashMap> searchMapDatecourseList = mainService.getMapDatecourseList(datecourseArea, pageable);
-//		
-//		ModelAndView mv = new ModelAndView();
-//		
-//		mv.setViewName("datecourse/getCateDatecourseList.html");
-//		mv.addObject("searchMapDatecourseList", searchMapDatecourseList);
-//		
-//		System.out.println(searchMapDatecourseList);
-//		
-//		return mv;
-//		
-//	}
 	
 	// 메인에서 관리자 페이지 이동
 	@GetMapping("/getDatecourseList")
@@ -166,7 +136,7 @@ public class MainController {
 		
 		ModelAndView mv = new ModelAndView();
 		mv.setViewName("datecourse/getCateDatecourse.html");
-		System.out.println(datecourse);
+		
 		mv.addObject("datecourse", datecourseDTO);
 		
 		mv.addObject("datecourseImageDTOList", datecourseImageDTOList);
@@ -174,9 +144,6 @@ public class MainController {
 		mv.addObject("datecourseMenu", datecourseMenu);
 		
 		mv.addObject("datecourseHours", datecourseHours);
-		
-		System.out.println(datecourseImageDTOList);
-		
 		
 		return mv;
 				
@@ -227,8 +194,6 @@ public class MainController {
 		mv.setViewName("admin/getHotdealDetail.html");
 		mv.addObject("getHotdeal", hodealDTO);	
 		mv.addObject("datecourseImageDTOList", datecourseImageDTOList);
-		
-		System.out.println(hodealDTO);
 		
 		
 		return mv;
