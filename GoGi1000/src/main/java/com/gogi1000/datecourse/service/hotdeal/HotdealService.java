@@ -12,8 +12,6 @@ import com.gogi1000.datecourse.entity.Hotdeal;
 public interface HotdealService {
 	Hotdeal getHotdeal(int HotdealNo);
 	
-	List<Hotdeal> getHotdealList(Hotdeal hotdeal);
-	
 	List<DatecourseImage> getHotdealImageList(int hotdealNo);
 	
 	Page<Hotdeal> getPageHotdealList(Hotdeal hotdeal, Pageable pageable);

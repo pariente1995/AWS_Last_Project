@@ -104,6 +104,11 @@ hr {
     font-size: 20px;
   }
   
+  #site-text {
+	  color: #0D98FE;
+	  text-decoration:none;
+  }
+  
 
   #hotdeal-desc {
     font-size:20px; 

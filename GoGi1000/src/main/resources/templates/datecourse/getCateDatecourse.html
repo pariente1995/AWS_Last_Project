@@ -163,6 +163,7 @@
                             })
                             map.setCenter(coords)
 
+							infowindow.open(map, marker);
 
                             kakao.maps.event.addListener(marker, "click", function() {
 								map.setCenter(marker.getPosition())
@@ -170,14 +171,7 @@
 							/* 마커 마우스 오버 이벤트 -> 마커 위에 마우스를 올리면 infoWindow open*/
 							kakao.maps.event.addListener(marker, "mouseover", function() {
         						map.setCenter(marker.getPosition())
-        						infowindow.open(map, marker);
-							})
-							/* 마커 마우스 아웃 이벤트 -> 올려둔 마우스를 내렸을 때 infoWindow close*/
-							kakao.maps.event.addListener(marker, "mouseout", function() {
-								infowindow.close();
-							})
-
-                            
+							})                            
                         }
 
                     })

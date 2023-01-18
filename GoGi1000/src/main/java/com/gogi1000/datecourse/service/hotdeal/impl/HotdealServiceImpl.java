@@ -23,14 +23,6 @@ public class HotdealServiceImpl implements HotdealService {
 	@Autowired
 	private DatecourseImageRepository datecourseImageRepository;
 	
-	
-	
-	@Override
-	public List<Hotdeal> getHotdealList(Hotdeal hotdeal) {
-		return hotdealRepository.findAll();
-	}
-	
-	
 	@Override
 	public void insertHotdeal(Hotdeal hotdeal, List<DatecourseImage> uploadImageList) {
 		hotdealRepository.save(hotdeal);
