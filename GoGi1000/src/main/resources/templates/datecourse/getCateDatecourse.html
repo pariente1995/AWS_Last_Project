@@ -45,8 +45,15 @@
 		      })
 		    
 		    $(function(){
-	        	$("#datecourseAdd").on("click", function() {
-					console.log("hi")
+				const loginUserId = /*[[${#authentication.principal}]]*/;
+				console.log(loginUserId);
+
+	        	$("#datecourseAdd").on("click", function(e) {
+					if(loginUserId == 'anonymousUser') {
+						e.preventDefault();
+						alert("로그인 후에 이용하실 수  있습니다.")
+						window.location.href="/user/login"
+					}
 	          		if($("#datecourseAdd-text").text() == "데이트 코스에 추가") { 
 						  console.log("hi")
 	            		const MyDateIns = {
@@ -139,25 +146,38 @@
                         if (status === kakao.maps.services.Status.OK) {
                             var coords = new kakao.maps.LatLng(
                                 result[0].y, result[0].x);
-
-
+				
                             var marker = new kakao.maps.Marker({
                                 map: map,
                                 position: coords
                             })
+                            
                             console.log(result)
                             console.log(status)
-                            var content = '<div style="width:100%; text-align:center;"><b>' + result[0].road_address.building_name + '</b><br> -카카오 지도- </div>'
+                            var content = '<div style="min-width: 100px; height:40px; line-height:40px; text-align:center;"><b>' + $("#datecourseNm").text() + '</b></div>'
 
-                            var infoWindow = new kakao.maps.InfoWindow({
+                            var infowindow = new kakao.maps.InfoWindow({
                                 content: content,
                                 removable: true
 
                             })
-
-                            infoWindow.open(map, marker)
-
                             map.setCenter(coords)
+
+
+                            kakao.maps.event.addListener(marker, "click", function() {
+								map.setCenter(marker.getPosition())
+							})
+							/* 마커 마우스 오버 이벤트 -> 마커 위에 마우스를 올리면 infoWindow open*/
+							kakao.maps.event.addListener(marker, "mouseover", function() {
+        						map.setCenter(marker.getPosition())
+        						infowindow.open(map, marker);
+							})
+							/* 마커 마우스 아웃 이벤트 -> 올려둔 마우스를 내렸을 때 infoWindow close*/
+							kakao.maps.event.addListener(marker, "mouseout", function() {
+								infowindow.close();
+							})
+
+                            
                         }
 
                     })
@@ -279,7 +299,7 @@
 <body>
 	<div layout:fragment="content">
 	  <div id="datecourse-detail-container">
-	    <h1 th:text="${datecourse.datecourseNm}"></h1>
+	    <h1 th:text="${datecourse.datecourseNm}" id="datecourseNm"></h1>
 	  </div>
 	
 	  <!-- 메인 이미지 영역 -->
