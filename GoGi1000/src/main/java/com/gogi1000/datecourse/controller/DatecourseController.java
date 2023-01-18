@@ -583,7 +583,6 @@ public class DatecourseController {
     // 카테고리 선택에 따른 데이트 코스 조회_세혁
     @GetMapping("getPageCateDatecourseList")
     public Map<String, Object> getPageCateDatecourseList(DatecourseDTO datecourseDTO, @PageableDefault(page=0, size=12) Pageable pageable) {
-
         Map<String,Object> returnMap =new HashMap<String, Object>();
 
         Page<CamelHashMap> getPageCateDatecourseList = datecourseService.getPageCateDatecourseList(datecourseDTO, pageable);
@@ -591,5 +590,16 @@ public class DatecourseController {
         returnMap.put("getCateDatecourseList", getPageCateDatecourseList);
 
         return returnMap;
+    }
+
+    /*
+        데이트 코스 삭제_세혁
+        - 데이트 코스, 데이트 코스 영업시간, 데이트 코스 메뉴, 데이트 코스 이미지 삭제
+        - 데이트 코스 좋아요, MY 데이트 코스, 데이트 코스 리뷰 삭제
+    */
+    @Transactional // 쿼리가 실행된 후 바로 트랜잭션을 호출
+    @PostMapping("deleteDatecourse")
+    public void deleteDatecourse(@RequestParam("datecourseNo") int datecourseNo) {
+        datecourseService.deleteDatecourse(datecourseNo);
     }
 }

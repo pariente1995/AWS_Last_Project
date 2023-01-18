@@ -4,6 +4,7 @@ import com.gogi1000.datecourse.common.CamelHashMap;
 import com.gogi1000.datecourse.entity.DatecourseHours;
 import com.gogi1000.datecourse.entity.DatecourseHoursId;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -29,4 +30,11 @@ public interface DatecourseHoursRepository extends JpaRepository<DatecourseHours
  			+ "	   WHERE A.DATECOURSE_NO = :datecourseNo",
  			nativeQuery = true)
  	List<CamelHashMap> getCateDatecourseHours(@Param("datecourseNo") int datecourseNo);
+
+    // 데이트 코스 영업시간 삭제_세혁
+    @Modifying
+    @Query(value="DELETE FROM T_GGC_DATECOURSE_HOURS"
+            + "    WHERE DATECOURSE_NO = :datecourseNo"
+            , nativeQuery = true)
+    void deleteByDatecourseNo(@Param("datecourseNo") int datecourseNo);
 }

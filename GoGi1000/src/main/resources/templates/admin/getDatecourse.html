@@ -162,7 +162,7 @@
 
 
         /*******************************
-          유효성 검사 && 게시글 수정
+          유효성 검사 && 데이트 코스 수정
         ********************************/
         $("#btnUpdate").on("click", function () {
           let hourFlag = true;
@@ -292,6 +292,29 @@
               console.log(e);
             }
           });
+        });
+
+        /* 데이트 코스 삭제 */
+        $("#btnDelete").on("click", function () {
+          let answer = confirm("정말 삭제하시겠습니까?");
+
+          if(answer) {
+            $.ajax({
+              url: '/datecourse/deleteDatecourse',
+              type: 'post',
+              data: {datecourseNo: $("#datecourseNo").val()},
+              success: function() {
+                alert("삭제되었습니다.");
+
+                window.location.href="/datecourse/getDatecourseList";
+              },
+              error: function(e) {
+                console.log(e);
+              }
+            });
+          } else {
+            return;
+          }
         });
 
         // 영업시간 영역 부분 '+'이미지 클릭 시, 입력칸 추가

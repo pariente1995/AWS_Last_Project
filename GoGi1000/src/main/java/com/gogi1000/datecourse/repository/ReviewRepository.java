@@ -7,6 +7,7 @@ import javax.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -134,4 +135,10 @@ public interface ReviewRepository extends JpaRepository<Review, ReviewId> {
 			nativeQuery = true)
 	List<Review> getCommentList(@Param("datecourseNo") int datecourseNo);
 
+	// 데이트 코스 리뷰 삭제_세혁
+	@Modifying
+	@Query(value="DELETE FROM T_GGC_REVIEW"
+			+ "    WHERE DATECOURSE_NO = :datecourseNo"
+			, nativeQuery = true)
+	void deleteByDatecourseNo(@Param("datecourseNo") int datecourseNo);
 }

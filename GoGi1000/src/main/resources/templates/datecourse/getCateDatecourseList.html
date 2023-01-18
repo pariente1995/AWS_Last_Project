@@ -44,9 +44,6 @@
             $(this).css("background-color", "#ee2d7a");
             $(this).css("color", "white");
 
-            // 적용된 모든 옵션 초기화 및 데이트 코스 리스트 조회
-            fnFilterClear();
-
             // 데이트 코스 분류 선택에 따른 카테고리 항목 표출
             // 데이트 코스 분류가 전체일 경우, 모든 카테고리 항목 표출
             if($(this).text() == "전체") {
@@ -80,8 +77,8 @@
             // 정렬 조회조건 초기값으로 셋팅
             $("#orderCondition").val($("#datecourse-list-option-latest").data("ordercondition"));
 
-            /* 데이트 코스 분류 선택 시, 데이트 코스 리스트 조회 */
-            fnGetCateDatecourseList(0);
+            // 적용된 모든 옵션 초기화 및 데이트 코스 리스트 조회
+            fnFilterClear();
           }
         });
 
@@ -684,7 +681,7 @@
         <!-- 데이트 코스 리스트 추가 영역 -->
         	<div class="datecourese-list-items" th:each="searchMapDatecourseList : ${searchMapDatecourseList}">
 	            <div class="mainImg-wrapper">
-	              <img th:src="@{'/upload' + ${searchMapDatecourseList.imageNm}}" class="mainImg"
+	              <img th:src="@{'/upload/' + ${searchMapDatecourseList.imageNm}}" class="mainImg"
                        th:data-datecourse-no="${searchMapDatecourseList.datecourseNo}">
 	            </div>
 	            <div class="datecourese-list-items-info">
