@@ -158,6 +158,7 @@ public class MainController {
 		HotdealDTO hodealDTO = HotdealDTO.builder()
 							.hotdealNo(hotdeal.getHotdealNo())
 							.hotdealNm(hotdeal.getHotdealNm())
+							.hotdealSummary(hotdeal.getHotdealSummary())
 							.hotdealDesc(hotdeal.getHotdealDesc())
 							.hotdealPrice(hotdeal.getHotdealPrice())
 							.hotdealOfficialSite(hotdeal.getHotdealOfficialSite())
