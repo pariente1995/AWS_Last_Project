@@ -531,14 +531,6 @@ public class HotdealController {
     	
 
     }
-
-	
-	
-	
-	
-	
-	
-	
 }
 
 
