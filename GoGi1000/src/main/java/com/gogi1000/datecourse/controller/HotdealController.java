@@ -49,7 +49,7 @@ public class HotdealController {
     
 	//핫딜 입력페이지 이동_김도원
 	@GetMapping("/insertHotdeal")
-	public ModelAndView insertHotdealView(@AuthenticationPrincipal CustomUserDetails customUser) throws IOException {
+	public ModelAndView insertHotdealView() {
 		ModelAndView mv = new ModelAndView();
 		mv.setViewName("admin/insertHotdeal.html");
 		
@@ -116,7 +116,7 @@ public class HotdealController {
 	//핫딜 리스트 조회화면(관리자)_김도원
     @GetMapping("/hotdealList")
     public ModelAndView getHotdealList(HotdealDTO hotdealDTO,
-    		@PageableDefault(page=0, size=15) Pageable pageable) {
+    		@PageableDefault(page=0, size=13) Pageable pageable) {
     	
     	Hotdeal hotdeal = Hotdeal.builder()
     							 .searchCondition(hotdealDTO.getSearchCondition())
@@ -480,7 +480,7 @@ public class HotdealController {
 	
     @GetMapping("/selectHotdealList")
     public ResponseEntity<?> selectHotdealList(HotdealDTO hotdealDTO, 
-    		@PageableDefault(page=0, size=15) Pageable pageable) throws IOException {
+    		@PageableDefault(page=0, size=13) Pageable pageable) throws IOException {
     	
     	ResponseDTO<Map<String, Object>> response = new ResponseDTO<>();
     	

@@ -18,7 +18,8 @@ public interface MyDatecourseRepository extends JpaRepository<MyDatecourse, MyDa
 			+"        ON M.DATECOURSE_NO = D.DATECOURSE_NO"
 			+"    WHERE M.DATECOURSE_NO = D.DATECOURSE_NO"
 			+"      AND M.USER_ID = :#{#MyDatecourse.userId}"
-			+ "   ORDER BY M.MY_DATECOURSE_RGST_DATE ASC", nativeQuery=true)
+			+ "   ORDER BY M.MY_DATECOURSE_RGST_DATE ASC"
+			+ "	  LIMIT 10", nativeQuery=true)
 	List<CamelHashMap> getMyDatecourseList(@Param("MyDatecourse") MyDatecourse mydatecourse);
 
 	// MY 데이트 코스 삭제_세혁

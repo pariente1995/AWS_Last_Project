@@ -16,16 +16,16 @@ import com.gogi1000.datecourse.entity.Hotdeal;
 
 @Transactional
 public interface HotdealRepository extends JpaRepository<Hotdeal, Integer> {
-	Page<Hotdeal> findByHotdealNmContaining(String searchKeyword, Pageable pageable);
-	Page<Hotdeal> findByHotdealDescContaining(String searchKeyword, Pageable pageable);
-	Page<Hotdeal> findByHotdealNmContainingOrHotdealDescContaining(String searchKeyword1, String searchKeyword2, Pageable pageable);
-	
-	
+
+	//핫딜 리스트 삭제버튼 클릭시 UseYn('Y' => 'N')으로 변경_도원
 	@Modifying
 	@Query(value="UPDATE T_GGC_HOTDEAL SET HOTDEAL_USE_YN = 'N' WHERE HOTDEAL_NO = :hotdealNo", nativeQuery=true)
 	void updateHotdealUseYn(@Param("hotdealNo") int hotdealNo);
 	
-	
+	//조회 조건 ALL일 때 검색어 검색_도원
+	Page<Hotdeal> findByHotdealNmContaining(String searchKeyword, Pageable pageable);
+	Page<Hotdeal> findByHotdealDescContaining(String searchKeyword, Pageable pageable);
+	Page<Hotdeal> findByHotdealNmContainingOrHotdealDescContaining(String searchKeyword1, String searchKeyword2, Pageable pageable);
 	  /* 
 	   	메인에서 핫딜리스트 조회
 	   	JOIN T_GGC_IMAGE 하여, B.IMAGE_NM으로 이미지 받아옴
@@ -44,7 +44,7 @@ public interface HotdealRepository extends JpaRepository<Hotdeal, Integer> {
 	List<CamelHashMap> getHotdealDatecourseList();
 	
 	
-		// 메인에서 핫딜 상세 페이지 조회
+	// 메인에서 핫딜 상세 페이지 조회
 	@Modifying
 	@Query(value = "SELECT *"
 			+ "		  FROM T_GGC_HOTDEAL"
