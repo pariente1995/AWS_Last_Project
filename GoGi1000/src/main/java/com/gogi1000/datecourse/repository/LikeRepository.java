@@ -1,17 +1,17 @@
 package com.gogi1000.datecourse.repository;
 
-import javax.transaction.Transactional;
-
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
-
 import com.gogi1000.datecourse.common.CamelHashMap;
 import com.gogi1000.datecourse.entity.Like;
 import com.gogi1000.datecourse.entity.LikeId;
 import com.gogi1000.datecourse.entity.Review;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+
+import javax.transaction.Transactional;
 
 @Transactional
 public interface LikeRepository extends JpaRepository<Like, LikeId> {
@@ -64,5 +64,11 @@ public interface LikeRepository extends JpaRepository<Like, LikeId> {
 	         + ") E"
 	         , nativeQuery=true)
 	   Page<CamelHashMap> mypageLikeList(@Param("review") Review review, Pageable pageable);
-	   
+
+	// 데이트 코스 좋아요 삭제_세혁
+	@Modifying
+	@Query(value="DELETE FROM T_GGC_LIKE"
+			+ "    WHERE DATECOURSE_NO = :datecourseNo"
+			, nativeQuery = true)
+	void deleteByDatecourseNo(@Param("datecourseNo") int datecourseNo);
 }

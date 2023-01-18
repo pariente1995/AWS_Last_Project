@@ -1,14 +1,14 @@
 package com.gogi1000.datecourse.repository;
 
-import java.util.List;
-
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
-
 import com.gogi1000.datecourse.common.CamelHashMap;
 import com.gogi1000.datecourse.entity.MyDatecourse;
 import com.gogi1000.datecourse.entity.MyDatecourseId;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+
+import java.util.List;
 
 
 public interface MyDatecourseRepository extends JpaRepository<MyDatecourse, MyDatecourseId> {
@@ -20,4 +20,11 @@ public interface MyDatecourseRepository extends JpaRepository<MyDatecourse, MyDa
 			+"      AND M.USER_ID = :#{#MyDatecourse.userId}"
 			+ "   ORDER BY M.MY_DATECOURSE_RGST_DATE ASC", nativeQuery=true)
 	List<CamelHashMap> getMyDatecourseList(@Param("MyDatecourse") MyDatecourse mydatecourse);
+
+	// MY 데이트 코스 삭제_세혁
+	@Modifying
+	@Query(value="DELETE FROM T_GGC_MYDATECOURSE"
+			+ "    WHERE DATECOURSE_NO = :datecourseNo"
+			, nativeQuery = true)
+	void deleteByDatecourseNo(@Param("datecourseNo") int datecourseNo);
 }

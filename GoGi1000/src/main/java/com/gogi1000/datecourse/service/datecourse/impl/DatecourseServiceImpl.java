@@ -7,10 +7,7 @@ import com.gogi1000.datecourse.entity.DatecourseHours;
 import com.gogi1000.datecourse.entity.DatecourseImage;
 import com.gogi1000.datecourse.entity.DatecourseMenu;
 import com.gogi1000.datecourse.mapper.DatecourseMapper;
-import com.gogi1000.datecourse.repository.DatecourseHoursRepository;
-import com.gogi1000.datecourse.repository.DatecourseImageRepository;
-import com.gogi1000.datecourse.repository.DatecourseMenuRepository;
-import com.gogi1000.datecourse.repository.DatecourseRepository;
+import com.gogi1000.datecourse.repository.*;
 import com.gogi1000.datecourse.service.datecourse.DatecourseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -33,6 +30,15 @@ public class DatecourseServiceImpl implements DatecourseService {
 
     @Autowired
     private DatecourseMenuRepository datecourseMenuRepository;
+
+    @Autowired
+    private LikeRepository likeRepository;
+
+    @Autowired
+    private MyDatecourseRepository myDatecourseRepository;
+
+    @Autowired
+    private ReviewRepository reviewRepository;
 
     // 데이트 코스 Mapper 추가_세혁
     @Autowired
@@ -290,5 +296,30 @@ public class DatecourseServiceImpl implements DatecourseService {
         int count = datecourseMapper.getCateDatecourseListCnt(paramMap);
 
         return new PageImpl<>(contents, pageable, count);
+    }
+
+    // 데이트 코스 관련 데이터 삭제_세혁
+    @Override
+    public void deleteDatecourse(int datecourseNo) {
+        // 데이트 코스 삭제
+        datecourseRepository.deleteById(datecourseNo);
+
+        // 데이트 코스 영업시간 삭제
+        datecourseHoursRepository.deleteByDatecourseNo(datecourseNo);
+
+        // 데이트 코스 메뉴 삭제
+        datecourseMenuRepository.deleteByDatecourseNo(datecourseNo);
+
+        // 데이트 코스 이미지 삭제
+        datecourseImageRepository.deleteByDatecourseNo(datecourseNo);
+
+        // 데이트 코스 좋아요 삭제
+        likeRepository.deleteByDatecourseNo(datecourseNo);
+
+        // MY 데이트 코스 삭제
+        myDatecourseRepository.deleteByDatecourseNo(datecourseNo);
+
+        // 데이트 코스 리뷰 삭제
+        reviewRepository.deleteByDatecourseNo(datecourseNo);
     }
 }

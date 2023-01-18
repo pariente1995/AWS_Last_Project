@@ -190,7 +190,10 @@
 						</td>
 						<td th:text="${datecourseStat.count}"></td>
 						<td th:text="${datecourse.datecourseNo}"></td>
-						<td th:text="${datecourse.datecourseNm}" class="table-title"><a href="#"></a></td>
+						<td class="table-title">
+							<a th:href="@{/main/updateCateDatecourseCnt/{datecourseNo} (datecourseNo=${datecourse.datecourseNo})}"
+							   th:text="${datecourse.datecourseNm}"></a>
+						</td>
 						<td th:text="${#strings.substring(datecourse.datecourseModfDate, 0, 10)}"></td>
 						<td th:text="${datecourse.datecourseUseYn}" th:id="'datecourseUseYn' + ${datecourse.datecourseNo}" class="useYN"></td>
 						<td>

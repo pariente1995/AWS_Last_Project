@@ -3,6 +3,7 @@ package com.gogi1000.datecourse.repository;
 import com.gogi1000.datecourse.entity.DatecourseMenu;
 import com.gogi1000.datecourse.entity.DatecourseMenuId;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -21,4 +22,11 @@ public interface DatecourseMenuRepository extends JpaRepository<DatecourseMenu, 
 
     // 데이트 코스 메뉴 리스트 조회_세혁
     List<DatecourseMenu> findByDatecourseNo(int datecourseNo);
+
+    // 데이트 코스 메뉴 삭제_세혁
+    @Modifying
+    @Query(value="DELETE FROM T_GGC_DATECOURSE_MENU"
+            + "    WHERE DATECOURSE_NO = :datecourseNo"
+            , nativeQuery=true)
+    void deleteByDatecourseNo(@Param("datecourseNo") int datecourseNo);
 }

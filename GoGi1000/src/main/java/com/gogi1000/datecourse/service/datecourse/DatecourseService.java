@@ -42,4 +42,7 @@ public interface DatecourseService {
 
     // 카테고리 선택에 따른 데이트 코스 조회_세혁
     Page<CamelHashMap> getPageCateDatecourseList(DatecourseDTO datecourseDTO, Pageable pageable);
+
+    // 데이트 코스 관련 데이터 삭제_세혁
+    void deleteDatecourse(int datecourseNo);
 }
