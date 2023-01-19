@@ -2,10 +2,7 @@ package com.gogi1000.datecourse.service.datecourse.impl;
 
 import com.gogi1000.datecourse.common.CamelHashMap;
 import com.gogi1000.datecourse.dto.DatecourseDTO;
-import com.gogi1000.datecourse.entity.Datecourse;
-import com.gogi1000.datecourse.entity.DatecourseHours;
-import com.gogi1000.datecourse.entity.DatecourseImage;
-import com.gogi1000.datecourse.entity.DatecourseMenu;
+import com.gogi1000.datecourse.entity.*;
 import com.gogi1000.datecourse.mapper.DatecourseMapper;
 import com.gogi1000.datecourse.repository.*;
 import com.gogi1000.datecourse.service.datecourse.DatecourseService;
@@ -255,7 +252,7 @@ public class DatecourseServiceImpl implements DatecourseService {
 
     // 카테고리 선택에 따른 데이트 코스 조회_세혁
     @Override
-    public Page<CamelHashMap> getPageCateDatecourseList(DatecourseDTO datecourseDTO, Pageable pageable) {
+    public Page<CamelHashMap> getPageCateDatecourseList(DatecourseDTO datecourseDTO, Pageable pageable, CustomUserDetails customUser) {
         Map<String, Object> paramMap = new HashMap<String, Object>();
 
         // 실내/외 여부 값을 ','를 기준으로 List 형태로 생성
@@ -284,6 +281,13 @@ public class DatecourseServiceImpl implements DatecourseService {
         */
         if(!paramMap.containsKey("datecourseFoodTypeList")) {
             paramMap.put("datecourseFoodTypeList", new ArrayList<>());
+        }
+
+        /* 로그인 유저가 아닐 시, userId null 셋팅 */
+        if(customUser != null) {
+            paramMap.put("userId", customUser.getUsername());
+        } else {
+            paramMap.put("userId", null);
         }
         
         paramMap.put("datecourseDTO", datecourseDTO);

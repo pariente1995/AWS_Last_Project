@@ -5,16 +5,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gogi1000.datecourse.common.CamelHashMap;
 import com.gogi1000.datecourse.common.FileUtils;
 import com.gogi1000.datecourse.dto.*;
-import com.gogi1000.datecourse.entity.Datecourse;
-import com.gogi1000.datecourse.entity.DatecourseHours;
-import com.gogi1000.datecourse.entity.DatecourseImage;
-import com.gogi1000.datecourse.entity.DatecourseMenu;
+import com.gogi1000.datecourse.entity.*;
 import com.gogi1000.datecourse.service.datecourse.DatecourseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
@@ -582,10 +580,12 @@ public class DatecourseController {
 
     // 카테고리 선택에 따른 데이트 코스 조회_세혁
     @GetMapping("getPageCateDatecourseList")
-    public Map<String, Object> getPageCateDatecourseList(DatecourseDTO datecourseDTO, @PageableDefault(page=0, size=12) Pageable pageable) {
+    public Map<String, Object> getPageCateDatecourseList(DatecourseDTO datecourseDTO,
+                                                         @PageableDefault(page=0, size=12) Pageable pageable,
+                                                         @AuthenticationPrincipal CustomUserDetails customUser) {
         Map<String,Object> returnMap =new HashMap<String, Object>();
 
-        Page<CamelHashMap> getPageCateDatecourseList = datecourseService.getPageCateDatecourseList(datecourseDTO, pageable);
+        Page<CamelHashMap> getPageCateDatecourseList = datecourseService.getPageCateDatecourseList(datecourseDTO, pageable, customUser);
 
         returnMap.put("getCateDatecourseList", getPageCateDatecourseList);
 

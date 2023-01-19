@@ -7,19 +7,23 @@
 <mapper namespace="com.gogi1000.datecourse.mapper.DatecourseMapper">
     <!-- 카테고리 선택에 따른 데이트 코스 리스트 총 개수 조회_세혁 -->
     <select id="getCateDatecourseListCnt" parameterType="camelHashMap" resultType="int">
-        <![CDATA[
-            SELECT COUNT(A.DATECOURSE_NO)
-              FROM T_GGC_DATECOURSE A
-              JOIN T_GGC_IMAGE B ON A.DATECOURSE_NO = B.REFERENCE_NO
-                                AND B.IMAGE_GROUP   = 'E0001'
-                                AND B.IMAGE_NO      = ( SELECT MIN(AA.IMAGE_NO)
-                                                          FROM T_GGC_IMAGE AA
-                                                         WHERE AA.REFERENCE_NO = B.REFERENCE_NO
-                                                           AND AA.IMAGE_GROUP  = B.IMAGE_GROUP )
-              LEFT OUTER JOIN ( SELECT BB.DATECOURSE_NO, COUNT(BB.DATECOURSE_NO) AS LIKE_CNT
-                                  FROM T_GGC_LIKE BB
-                                 GROUP BY BB.DATECOURSE_NO ) C ON A.DATECOURSE_NO = C.DATECOURSE_NO
-        ]]>
+      SELECT COUNT(A.DATECOURSE_NO)
+        FROM T_GGC_DATECOURSE A
+        JOIN T_GGC_IMAGE B ON A.DATECOURSE_NO = B.REFERENCE_NO
+                          AND B.IMAGE_GROUP   = 'E0001'
+                          AND B.IMAGE_NO      = ( SELECT MIN(AA.IMAGE_NO)
+                                                    FROM T_GGC_IMAGE AA
+                                                   WHERE AA.REFERENCE_NO = B.REFERENCE_NO
+                                                     AND AA.IMAGE_GROUP  = B.IMAGE_GROUP )
+        LEFT OUTER JOIN ( SELECT BB.DATECOURSE_NO, COUNT(BB.DATECOURSE_NO) AS LIKE_CNT
+                            FROM T_GGC_LIKE BB
+                           GROUP BY BB.DATECOURSE_NO ) C ON A.DATECOURSE_NO = C.DATECOURSE_NO
+        <if test="userId != null">
+            LEFT OUTER JOIN ( SELECT CC.DATECOURSE_NO, CC.LIKE_YN
+                                FROM T_GGC_LIKE CC
+                               WHERE CC.USER_ID = #{userId}
+                             ) D ON A.DATECOURSE_NO = D.DATECOURSE_NO
+        </if>
         <where>
             <if test="datecourseDTO.searchKeyword != null and datecourseDTO.searchKeyword != ''">
                 (A.DATECOURSE_ADDR LIKE CONCAT('%', #{datecourseDTO.searchKeyword}, '%')
@@ -105,24 +109,36 @@
 
     <!-- 카테고리 선택에 따른 데이트 코스 리스트 조회_세혁 -->
     <select id="getPageCateDatecourseList" parameterType="map" resultType="camelHashMap">
-        <![CDATA[
-            SELECT A.DATECOURSE_NO,
-                   A.DATECOURSE_NM,
-                   A.DATECOURSE_SUMMARY,
-                   A.DATECOURSE_CNT,
-                   B.IMAGE_NM,
-                   IFNULL(C.LIKE_CNT, 0) AS LIKE_CNT
-              FROM T_GGC_DATECOURSE A
-              JOIN T_GGC_IMAGE B ON A.DATECOURSE_NO = B.REFERENCE_NO
-                                AND B.IMAGE_GROUP   = 'E0001'
-                                AND B.IMAGE_NO      = ( SELECT MIN(AA.IMAGE_NO)
-                                                          FROM T_GGC_IMAGE AA
-                                                         WHERE AA.REFERENCE_NO = B.REFERENCE_NO
-                                                           AND AA.IMAGE_GROUP  = B.IMAGE_GROUP )
-              LEFT OUTER JOIN ( SELECT BB.DATECOURSE_NO, COUNT(BB.DATECOURSE_NO) AS LIKE_CNT
-                                  FROM T_GGC_LIKE BB
-                                 GROUP BY BB.DATECOURSE_NO ) C ON A.DATECOURSE_NO = C.DATECOURSE_NO
-        ]]>
+      SELECT A.DATECOURSE_NO,
+             A.DATECOURSE_NM,
+             A.DATECOURSE_SUMMARY,
+             A.DATECOURSE_CNT,
+             B.IMAGE_NM,
+             IFNULL(C.LIKE_CNT, 0) AS LIKE_CNT
+             <choose>
+                 <when test="userId != null">
+                     , IFNULL(D.LIKE_YN, 'N') AS LIKE_YN
+                 </when>
+                 <otherwise>
+                     , 'N' AS LIKE_YN
+                 </otherwise>
+             </choose>
+        FROM T_GGC_DATECOURSE A
+        JOIN T_GGC_IMAGE B ON A.DATECOURSE_NO = B.REFERENCE_NO
+                          AND B.IMAGE_GROUP   = 'E0001'
+                          AND B.IMAGE_NO      = ( SELECT MIN(AA.IMAGE_NO)
+                                                    FROM T_GGC_IMAGE AA
+                                                   WHERE AA.REFERENCE_NO = B.REFERENCE_NO
+                                                     AND AA.IMAGE_GROUP  = B.IMAGE_GROUP )
+        LEFT OUTER JOIN ( SELECT BB.DATECOURSE_NO, COUNT(BB.DATECOURSE_NO) AS LIKE_CNT
+                            FROM T_GGC_LIKE BB
+                           GROUP BY BB.DATECOURSE_NO ) C ON A.DATECOURSE_NO = C.DATECOURSE_NO
+        <if test="userId != null">
+            LEFT OUTER JOIN ( SELECT CC.DATECOURSE_NO, CC.LIKE_YN
+                                FROM T_GGC_LIKE CC
+                               WHERE CC.USER_ID = #{userId}
+                             ) D ON A.DATECOURSE_NO = D.DATECOURSE_NO
+        </if>
         <where>
             <if test="datecourseDTO.searchKeyword != null and datecourseDTO.searchKeyword != ''">
                 (A.DATECOURSE_ADDR LIKE CONCAT('%', #{datecourseDTO.searchKeyword}, '%')
