@@ -2,10 +2,7 @@ package com.gogi1000.datecourse.service.datecourse;
 
 import com.gogi1000.datecourse.common.CamelHashMap;
 import com.gogi1000.datecourse.dto.DatecourseDTO;
-import com.gogi1000.datecourse.entity.Datecourse;
-import com.gogi1000.datecourse.entity.DatecourseHours;
-import com.gogi1000.datecourse.entity.DatecourseImage;
-import com.gogi1000.datecourse.entity.DatecourseMenu;
+import com.gogi1000.datecourse.entity.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -41,7 +38,7 @@ public interface DatecourseService {
                                 List<DatecourseImage> uImageList);
 
     // 카테고리 선택에 따른 데이트 코스 조회_세혁
-    Page<CamelHashMap> getPageCateDatecourseList(DatecourseDTO datecourseDTO, Pageable pageable);
+    Page<CamelHashMap> getPageCateDatecourseList(DatecourseDTO datecourseDTO, Pageable pageable, CustomUserDetails customUser);
 
     // 데이트 코스 관련 데이터 삭제_세혁
     void deleteDatecourse(int datecourseNo);

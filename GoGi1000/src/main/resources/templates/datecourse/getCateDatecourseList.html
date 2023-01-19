@@ -282,39 +282,33 @@
 		  }
 		  else {
 			  if($(this).attr("src") == "/images/emptystar.png") {
-			  	
-			$.ajax({
-				url: '/like/InsertLike',
-				type: 'post',
-				data: {datecourseNo : $(this).attr('datecourse-no')},
-				success: function(obj) {
-					alert("'좋아요' 하였습니다.");
-					selectLikeImg.attr("src", "/images/yellowstar.png");
-				},
-				error: function(e) {
-					console.log(e);
-				}
-			});
-          } else {
-
-            	            		
-	        $.ajax({
-				url: '/like/deleteLike',
-				type: 'delete',
-				data: {datecourseNo : $(this).attr('datecourse-no')},
-				success: function(obj) {
-					alert("삭제되었습니다.");
-					selectLikeImg.attr("src", "/images/emptystar.png");
-				},
-				error: function(e) {
-					console.log(e);
-				}
-			});   
-            
-          }
+                $.ajax({
+                    url: '/like/InsertLike',
+                    type: 'post',
+                    data: {datecourseNo : $(this).attr('data-datecourse-no')},
+                    success: function(obj) {
+                        alert("'좋아요' 하였습니다.");
+                        selectLikeImg.attr("src", "/images/yellowstar.png");
+                    },
+                    error: function(e) {
+                        console.log(e);
+                    }
+                });
+              } else {
+                $.ajax({
+                	url: '/like/deleteLike',
+                	type: 'delete',
+                	data: {datecourseNo : $(this).attr('data-datecourse-no')},
+                	success: function(obj) {
+                		alert("삭제되었습니다.");
+                		selectLikeImg.attr("src", "/images/emptystar.png");
+                	},
+                	error: function(e) {
+                		console.log(e);
+                	}
+                });
+              }
 		  }
-		  
-          
         });
 
         // 페이지 번호 클릭 관련 ajax 처리
@@ -469,10 +463,19 @@
 
               // 추가할 데이트 코스 리스트 관련 div 생성
               for(let i=0; i<obj.getCateDatecourseList.content.length; i++) {
+                let likeImgSrc = "";
+
+                if(obj.getCateDatecourseList.content[i].likeYn != "Y") {
+                  likeImgSrc = "emptystar.png";
+                } else {
+                  likeImgSrc = "yellowStar.png";
+                }
+
                 htmlStr += `
                       <div class="datecourese-list-items">
                         <div class="mainImg-wrapper">
-                          <img src="/upload/${obj.getCateDatecourseList.content[i].imageNm}" class="mainImg">
+                          <img src="/upload/${obj.getCateDatecourseList.content[i].imageNm}" class="mainImg"
+                               data-datecourse-no="${obj.getCateDatecourseList.content[i].datecourseNo}">
                         </div>
                         <div class="datecourese-list-items-info">
                           <p class="datecourese-list-items-name">${obj.getCateDatecourseList.content[i].datecourseNm}</p>
@@ -484,7 +487,8 @@
                             <p>좋아요 ${obj.getCateDatecourseList.content[i].likeCnt}</p>
                           </div>
                           <div class="datecourese-list-like">
-                            <img src="/images/emptystar.png" class="likeImg">
+                            <img src="/images/${likeImgSrc}" class="likeImg"
+                                 data-datecourse-no="${obj.getCateDatecourseList.content[i].datecourseNo}">
                           </div>
                         </div>
                       </div>
@@ -737,7 +741,7 @@
 	              </div>
 	              <div class="datecourese-list-like">
 	                <img th:src="${searchMapDatecourseList.likeYn} eq 'Y' ? @{/images/yellowStar.png} : @{/images/emptystar.png}" 
-	                		class="likeImg" th:datecourse-no="${searchMapDatecourseList.datecourseNo}">
+	                		class="likeImg" th:data-datecourse-no="${searchMapDatecourseList.datecourseNo}">
 	              </div>
 	            </div>
 	        </div>

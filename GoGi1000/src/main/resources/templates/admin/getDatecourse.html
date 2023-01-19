@@ -42,16 +42,15 @@
       // 기존 메뉴 정보 배열
       let originDatecourseMenuArr = [];
 
+      // 기존 첨부된 이미지 파일 개수
+      let fileCount = /*[[${getDatecourseImageList.size}]]*/;
+
       $(function() {
         // 영업시간 영역 부분 '+'이미지 클릭 시, 입력칸 추가 개수 => 즉, 영업시간 정보 개수
         let hoursCnt = /*[[${getDatecourseHoursList.size}]]*/;
 
         // 메뉴 영역 부분 '+'이미지 클릭 시, 입력칸 추가 개수 => 즉, 메뉴 정보 개수
         let menuCnt = /*[[${getDatecourseMenuList.size}]]*/;
-
-        // 기존 첨부된 이미지 파일 개수
-        let fileCount = /*[[${getDatecourseImageList.size}]]*/;
-
 
         // 기존 영업시간 정보 담기
         for (let i = 0; i < hoursCnt; i++) {
@@ -752,6 +751,9 @@
         // 부모 요소인 div 삭제
         let div = ele.parentNode;
         $(div).remove();
+
+        // 기존 첨부된 파일 개수 -1
+        fileCount--;
       }
 
       // 주차 가능여부 체크되었을 시, 주차 가능여부 hidden input disabled 처리
