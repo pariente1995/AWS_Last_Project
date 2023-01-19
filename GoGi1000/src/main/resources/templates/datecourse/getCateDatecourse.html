@@ -316,7 +316,6 @@
 							</div>
 						`;
 						$("#datecourse-comment-container").append(htmlStr);
-						console.log("너 누구? : " + this);
 					}
 					
 					$("#show").on("click", function() {
@@ -326,6 +325,15 @@
 						else if($("#show").text() === " 댓글 접기 ") {
 							$(".comment-img").attr("src", "/images/upload.png")
 						}
+					});
+					
+					// textarea 크기조절_장찬영
+					$('.comment-textarea').each(function () {
+						this.setAttribute('style', 'height:' + (this.scrollHeight) + 'px;overflow-y:hidden;');
+						console.log(this.scrollHeight);
+					}).on('input', function () {
+						this.style.height = 'auto';
+						this.style.height = (this.scrollHeight) + 'px';
 					});
 					
         });
@@ -538,7 +546,6 @@
 	  		<span style="color:#ee2d7a; font-weight: bold;" id="comment-cnt"></span>
 	  		<span>)</span>
 	  	</h4>
-	    <div class="comment-container" th:each="review : ${review}" th:if="${reviewStat.index < 5}"}>
       
 	  <!-- 댓글 영역 -->
 	  <div class="comment-container" th:each="review : ${review}" th:if="${reviewStat.index < 5}"}>
@@ -567,7 +574,9 @@
 	          </div>
 	          <div class="comment-right-bottom">
 	            <div class="comment-comment">
-	              <textarea class="comment-textarea" th:text="${review.reviewComment}" th:datecourse-no="${review.datecourseNo}" th:review-no="${review.reviewNo}" readonly></textarea>
+	              <textarea class="comment-textarea" th:text="${review.reviewComment}" 
+	              			th:datecourse-no="${review.datecourseNo}" th:review-no="${review.reviewNo}" 
+	              			readonly></textarea>
 	            </div>
 	          </div>
 	        </div>
@@ -604,7 +613,9 @@
 	          </div>
 	          <div class="comment-right-bottom">
 	            <div class="comment-comment">
-	              <textarea class="comment-textarea" th:text="${review.reviewComment}" th:datecourse-no="${review.datecourseNo}" th:review-no="${review.reviewNo}" readonly></textarea>
+	              <textarea class="comment-textarea" th:text="${review.reviewComment}" 
+	              			th:datecourse-no="${review.datecourseNo}" th:review-no="${review.reviewNo}" 
+	              			readonly></textarea>
 	            </div>
 	          </div>
 	        </div>
@@ -648,6 +659,5 @@
 		  </div>
 		</div>
     </div>
-  </div>
 </body>
 </html>
