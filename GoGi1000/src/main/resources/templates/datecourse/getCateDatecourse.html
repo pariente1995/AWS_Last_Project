@@ -367,16 +367,27 @@
 					$("#show").on("click", function() {
 						if($("#show").text() === " 댓글 전체보기 ") {
 							$(".comment-img").attr("src", "/images/down.png")
+							
 						}
 						else if($("#show").text() === " 댓글 접기 ") {
 							$(".comment-img").attr("src", "/images/upload.png")
+							$('.comment-textarea').each(function () {
+								if($(this).is(':visible') != false) {
+									this.setAttribute('style', 'height:' + (this.scrollHeight) + 'px;overflow-y:hidden;');
+								}												
+							}).on('input', function () {
+								this.style.height = 'auto';
+								this.style.height = (this.scrollHeight) + 'px';
+							});
 						}
 					});
 					
 					// textarea 크기조절_장찬영
 					$('.comment-textarea').each(function () {
-						this.setAttribute('style', 'height:' + (this.scrollHeight) + 'px;overflow-y:hidden;');
-						console.log(this.scrollHeight);
+						if($(this).is(':visible') != false) {
+							this.setAttribute('style', 'height:' + (this.scrollHeight) + 'px;overflow-y:hidden;');
+						}						
+						
 					}).on('input', function () {
 						this.style.height = 'auto';
 						this.style.height = (this.scrollHeight) + 'px';

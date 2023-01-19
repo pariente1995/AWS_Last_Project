@@ -103,3 +103,10 @@ table tr:hover a { text-decoration: underline }
 p {
 	margin-top: 15px;
 }
+
+#like-desc {
+	display: -webkit-box; 
+	-webkit-line-clamp: 2;
+    -webkit-box-orient: vertical; 
+    overflow: hidden;
+}
