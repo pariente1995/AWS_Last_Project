@@ -1,17 +1,16 @@
 package com.gogi1000.datecourse.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.gogi1000.datecourse.common.CamelHashMap;
-import com.gogi1000.datecourse.dto.DatecourseDTO;
-import com.gogi1000.datecourse.dto.HotdealDTO;
-import com.gogi1000.datecourse.entity.Hotdeal;
+import com.gogi1000.datecourse.entity.CustomUserDetails;
+import com.gogi1000.datecourse.entity.User;
 import com.gogi1000.datecourse.service.main.MainService;
 
 @RestController
@@ -32,7 +31,8 @@ public class HomeController {
     	List<CamelHashMap> rankDatecourseList = mainService.getRankDatecourseList();
 		
     	// 메인 화면에서 핫딜 리스트 조회
-		List<CamelHashMap> hotdealDatecourseList = mainService.getHotdealDatecourseList();
+		List<CamelHashMap> hotdealDatecourseList = mainService.getHotdealDatecourseList();	
+		
 		
     	
         ModelAndView mv = new ModelAndView();
