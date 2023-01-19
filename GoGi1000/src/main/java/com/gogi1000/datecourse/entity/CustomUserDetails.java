@@ -87,6 +87,6 @@ private User user;
 	@Override
 	public String getName() {
 		// TODO Auto-generated method stub
-		return null;
+		return user.getUserNm();
 	}
 }

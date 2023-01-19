@@ -63,7 +63,7 @@
 						<div class="header-login" sec:authorize="isAuthenticated()" th:remove="tag">
 							<ul class="header-login-ul" sec:authorize="hasRole('ROLE_USER')">
 								<li>
-									<a th:href="@{/datecourse/getMyDatecourseList}"><span  sec:authentication="principal.username"></span><span> 님 환영합니다.</span></a>
+									<a th:href="@{/datecourse/getMyDatecourseList}"><span sec:authentication="principal.username"></span><span> 님 환영합니다.</span></a>
 								</li>
 							</ul>
 							<ul class="header-login-ul" sec:authorize="hasRole('ROLE_ADMIN')">
