@@ -226,12 +226,20 @@
 
     .comment-right-top {
       display: flex;
+      padding-right: 5px;
     }
 
     .comment-hide{
       margin-bottom: 30px;
-      text-align: center;
+      display: flex; 
+      align-items: center; 
+      justify-content: center;
     }
+    
+    #show {
+		text-decoration: none;
+		color: black;
+	}
     
     .hrLine {
 		 width: 1100px;
@@ -313,6 +321,7 @@
     .comment-update-click {
 		color: black; text-decoration: none;
 		font-size: 0.8rem; opacity: 0.5;
+		margin-left : 435px;
 	}
 	
 	.comment-update-click:hover {
@@ -389,4 +398,8 @@
 	
 	.comment-textarea {
 		height: 300px;
+	}
+	
+	p {
+		margin-top: 15px;
 	}

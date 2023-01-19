@@ -13,6 +13,11 @@
   <th:block layout:fragment="script">
     <script th:inline="javascript">
       $(function() {
+		// 아이디 유무
+		const loginUserId = /*[[${#authentication.principal}]]*/;
+		
+		console.log(loginUserId);
+		
         // 가격대 적용 여부 flag
         let btnPriceFlag = false;
 
@@ -270,7 +275,13 @@
          $(document).on("click", ".likeImg", function() {
 		  const selectLikeImg = $(this);
 		  
-          if($(this).attr("src") == "/images/emptystar.png") {
+		  
+		  if(loginUserId == 'anonymousUser') {
+			  alert("로그인 후 사용하시길 바랍니다.")
+			  window.location.href="/user/login";
+		  }
+		  else {
+			  if($(this).attr("src") == "/images/emptystar.png") {
 			  	
 			$.ajax({
 				url: '/like/InsertLike',
@@ -301,6 +312,9 @@
 			});   
             
           }
+		  }
+		  
+          
         });
 
         // 페이지 번호 클릭 관련 ajax 처리

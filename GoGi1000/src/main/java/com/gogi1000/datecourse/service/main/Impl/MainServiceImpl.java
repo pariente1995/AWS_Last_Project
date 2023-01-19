@@ -38,13 +38,25 @@ public class MainServiceImpl implements MainService{
 	public Page<CamelHashMap> getSearchMapDatecourseList(Datecourse datecourse, Pageable pageable,
 			CustomUserDetails customUser) {
 		if(datecourse.getSearchKeyword() != null && !datecourse.getSearchKeyword().equals("")) {
-			return datecourseRepository.getSearchDatecourseList(
-				datecourse.getSearchKeyword(), 
-				datecourse.getSearchKeyword(), 
-				datecourse.getSearchKeyword(), 
-				pageable, customUser);
+			if(customUser != null) {
+				return datecourseRepository.getSearchDatecourseList(
+						datecourse.getSearchKeyword(), 
+						datecourse.getSearchKeyword(), 
+						datecourse.getSearchKeyword(), 
+						pageable, customUser);
+			} else {
+				System.out.println("test");
+				return datecourseRepository.getSearchDatecourseList(datecourse.getSearchKeyword(), 
+																	datecourse.getSearchKeyword(), 
+																	datecourse.getSearchKeyword(), 
+																	pageable);
+			}
 		} else if (datecourse.getDatecourseArea() != null && !datecourse.getDatecourseArea().equals("")) {
-			return datecourseRepository.getMapDatecourseList(datecourse.getDatecourseArea(), pageable, customUser);
+			if(customUser != null) {
+				return datecourseRepository.getMapDatecourseList(datecourse.getDatecourseArea(), pageable, customUser);
+			} else {
+				return datecourseRepository.getMapDatecourseList(datecourse.getDatecourseArea(), pageable);
+			}
 		} else {
 			return null;
 		}

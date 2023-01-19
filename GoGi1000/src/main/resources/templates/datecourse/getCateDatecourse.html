@@ -50,7 +50,7 @@
 	        	$("#datecourseAdd").on("click", function(e) {
 					if(loginUserId == 'anonymousUser') {
 						e.preventDefault();
-						alert("로그인 후에 이용하실 수  있습니다.")
+						alert("로그인 후에 이용하실 수 있습니다.")
 						window.location.href="/user/login"
 					}
 	          		if($("#datecourseAdd-text").text() == "데이트 코스에 추가") { 
@@ -555,11 +555,14 @@
 	            <div class="comment-regdate">
 	              <a th:text="${#strings.substring(review.reviewModfDate, 0, 10)}"></a>
 	            </div>
-	            <div class="comment-update" th:if="${#authentication.principal.username} == ${review.reviewerId}">
-	            	<a class="comment-update-click">수정</a>
+	            <div class="comment-update" th:if="${#authentication.principal} != 'anonymousUser'">
+	            	<a class="comment-update-click" th:if="${#authentication.principal.username} == ${review.reviewerId}">수정</a>
 	            </div>&ensp;
-	            <div class="comment-delete" th:if="${#authentication.principal.username} == ${review.reviewerId}">
-	            	<a class="comment-delete-click" th:datecourse-no="${review.datecourseNo}" th:review-no="${review.reviewNo}">삭제</a>
+	            <div class="comment-delete" th:if="${#authentication.principal} != 'anonymousUser'">
+	            	<a class="comment-delete-click" 
+	            	   th:datecourse-no="${review.datecourseNo}" 
+	            	   th:review-no="${review.reviewNo}"
+	            	   th:if="${#authentication.principal.username} == ${review.reviewerId}">삭제</a>
 	            </div>
 	          </div>
 	          <div class="comment-right-bottom">
@@ -589,11 +592,14 @@
 	            <div class="comment-regdate">
 	              <a th:text="${#strings.substring(review.reviewModfDate, 0, 10)}"></a>
 	            </div>
-	            <div class="comment-update">
-	            	<a class="comment-update-click">수정</a>
+	            <div class="comment-update" th:if="${#authentication.principal} != 'anonymousUser'">
+	            	<a class="comment-update-click" th:if="${#authentication.principal.username} == ${review.reviewerId}">수정</a>
 	            </div>&ensp;
-	            <div class="comment-delete">
-	            	<a class="comment-delete-click" th:datecourse-no="${review.datecourseNo}" th:review-no="${review.reviewNo}">삭제</a>
+	            <div class="comment-delete" th:if="${#authentication.principal} != 'anonymousUser'">
+	            	<a class="comment-delete-click" 
+	            	   th:datecourse-no="${review.datecourseNo}" 
+	            	   th:review-no="${review.reviewNo}"
+	            	   th:if="${#authentication.principal.username} == ${review.reviewerId}">삭제</a>
 	            </div>
 	          </div>
 	          <div class="comment-right-bottom">
@@ -642,5 +648,6 @@
 		  </div>
 		</div>
     </div>
+  </div>
 </body>
 </html>
