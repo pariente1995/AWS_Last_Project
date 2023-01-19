@@ -39,7 +39,7 @@
 
     /* 회원가입 영역 */
     .container{
-		padding-top: 100px;
+		padding-top: 80px;
         width: 600px;
         margin: auto;
     }
@@ -111,7 +111,6 @@
     /* 드롭다운 메뉴 */
     .dropdown {
         position: relative;
-        display: flex;
         width: 250px;
         height: 48px;
         font-size: 1em;

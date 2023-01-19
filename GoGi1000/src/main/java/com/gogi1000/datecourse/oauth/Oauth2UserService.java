@@ -1,5 +1,6 @@
 package com.gogi1000.datecourse.oauth;
 
+import java.time.LocalDateTime;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -68,6 +69,7 @@ public class Oauth2UserService extends DefaultOAuth2UserService {
 		String type = "ROLE_USER";
 		String useYn = "Y";
 		
+		
 		//사용자가 이미 소셜로그인한 기록이 있는지 검사할 객체
 		User user;
 		
@@ -78,16 +80,13 @@ public class Oauth2UserService extends DefaultOAuth2UserService {
 		} else {
 			//소셜 로그인한 기록이 없으면
 			//null로 리턴하여 회원가입 처리
-			user = null;
-		}
-		
-		//회원가입 처리
-		if(user == null) {
 			user = User.builder()
 					   .userId(userId)
 					   .userPw(password)
 					   .userNm(userName)
 					   .userMail(email)
+					   .userRgstDate(LocalDateTime.now())
+					   .userModfDate(LocalDateTime.now())
 					   .userType(type)
 					   .userUseYn(useYn)
 					   .build();
@@ -98,6 +97,23 @@ public class Oauth2UserService extends DefaultOAuth2UserService {
 			userRepository.save(user);
 		}
 		
+//		//회원가입 처리
+//		if(user == null) {
+//			user = User.builder()
+//					   .userId(userId)
+//					   .userPw(password)
+//					   .userNm(userName)
+//					   .userMail(email)
+//					   .userType(type)
+//					   .userUseYn(useYn)
+//					   .build();
+//			
+//			//추가 입력사항이 있으면 User 엔티티를 가지고
+//			//추가 입력 페이지로 이동
+//			//추가 입력 사항이 입력된 후 회원가입 처리
+//			userRepository.save(user);
+//		}
+//		
 		
 		//SecurityContext에 인증 정보 저장
 		return CustomUserDetails.builder()

@@ -34,7 +34,7 @@
 	      </div>
 	      <div class="sideList" sec:authorize="hasRole('ROLE_USER')">
 	      <!-- /user/editMyinfo -->
-	        <a href="/user/editMyinfo">회원정보 수정</a>
+	        <a th:href="@{/user/editMyinfo/{userId} (userId=${#authentication.principal.username})}">회원정보 수정</a>
 	      </div>
 	      <div id="sideImgWrapper">
 	        <img id="sideImg" th:src="@{/images/img5.png}">
