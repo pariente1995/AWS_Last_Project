@@ -49,7 +49,7 @@ public class MainController {
 									   .datecourseArea(datecourseDTO.getDatecourseArea())
 									   .searchKeyword(datecourseDTO.getSearchKeyword())
 									   .build();
-		
+		System.out.println(customUser);
 		Page<CamelHashMap> searchMapDatecourseList = mainService.getSearchMapDatecourseList(datecourse, pageable, customUser);
 		
 		

@@ -66,3 +66,7 @@
     }
     .page-link span { color: black; font-weight: bold}
     .page-link:hover span { color: #ee2d7a;}
+    
+    p {
+		margin-top: 15px;
+	}
