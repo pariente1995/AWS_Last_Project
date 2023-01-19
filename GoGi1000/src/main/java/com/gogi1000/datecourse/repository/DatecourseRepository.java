@@ -1,6 +1,7 @@
 package com.gogi1000.datecourse.repository;
 
 import com.gogi1000.datecourse.common.CamelHashMap;
+import com.gogi1000.datecourse.entity.CustomUserDetails;
 import com.gogi1000.datecourse.entity.Datecourse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -20,7 +21,7 @@ public interface DatecourseRepository extends JpaRepository<Datecourse, Integer>
 	// OR DATECOURSE_DESC LIKE '%searchKeyword3%'
 	
 	// 메인에서 검색창에 '데이트 코스 주소, 데이트 코스명, 데이트 코스 설명'을 쓰고 검색 시, 관련 검색 내용 조회_인겸
-	@Query(value="SELECT A.DATECOURSE_NO, A.DATECOURSE_NM, A.DATECOURSE_SUMMARY, A.DATECOURSE_CNT, B.IMAGE_NM, IFNULL(C.LIKE_CNT, 0) AS LIKE_CNT"
+	@Query(value="SELECT A.DATECOURSE_NO, A.DATECOURSE_NM, A.DATECOURSE_SUMMARY, A.DATECOURSE_CNT, B.IMAGE_NM, IFNULL(C.LIKE_CNT, 0) AS LIKE_CNT, IFNULL(C.LIKE_YN, 'N') AS LIKE_YN"
 			+ "     FROM T_GGC_DATECOURSE A"
 			+ "     JOIN T_GGC_IMAGE B ON A.DATECOURSE_NO = B.REFERENCE_NO"
 			+ "					      AND B.IMAGE_GROUP = 'E0001'"
@@ -28,15 +29,16 @@ public interface DatecourseRepository extends JpaRepository<Datecourse, Integer>
 			+ "                                           FROM T_GGC_IMAGE AA"
 			+ "									         WHERE AA.IMAGE_GROUP = B.IMAGE_GROUP"
 			+ "										       AND AA.REFERENCE_NO = B.REFERENCE_NO)"
-			+ "     LEFT OUTER JOIN (SELECT BB.DATECOURSE_NO, COUNT(BB.DATECOURSE_NO) AS LIKE_CNT"
+			+ "     LEFT OUTER JOIN (SELECT BB.DATECOURSE_NO, COUNT(BB.DATECOURSE_NO) AS LIKE_CNT, BB.LIKE_YN"
 			+ "                        FROM T_GGC_LIKE BB"
+			+ "						  WHERE USER_ID = :#{#customUser.getUsername}"					
 			+ "				          GROUP BY BB.DATECOURSE_NO) C ON A.DATECOURSE_NO = C.DATECOURSE_NO"
 			+ "    WHERE A.DATECOURSE_ADDR LIKE CONCAT('%', :datecourseAddr, '%')"
 			+ "       OR A.DATECOURSE_NM LIKE CONCAT('%', :datecourseNm, '%')"
 			+ "       OR A.DATECOURSE_DESC LIKE CONCAT('%', :datecourseDesc, '%')",
 		   countQuery="SELECT COUNT(*)"
 		   		+ "      FROM ("
-		   		+ "     SELECT A.DATECOURSE_NO, A.DATECOURSE_NM, A.DATECOURSE_SUMMARY, A.DATECOURSE_CNT, B.IMAGE_NM, IFNULL(C.LIKE_CNT, 0) AS LIKE_CNT"
+		   		+ "     SELECT A.DATECOURSE_NO, A.DATECOURSE_NM, A.DATECOURSE_SUMMARY, A.DATECOURSE_CNT, B.IMAGE_NM, IFNULL(C.LIKE_CNT, 0) AS LIKE_CNT, IFNULL(C.LIKE_YN, 'N') AS LIKE_YN"
 		   		+ "		  FROM T_GGC_DATECOURSE A"
 		   		+ "		  JOIN T_GGC_IMAGE B ON A.DATECOURSE_NO = B.REFERENCE_NO"
 		   		+ "					        AND B.IMAGE_GROUP = 'E0001'"
@@ -44,8 +46,9 @@ public interface DatecourseRepository extends JpaRepository<Datecourse, Integer>
 		   		+ "			                                    FROM T_GGC_IMAGE AA"
 		   		+ "											   WHERE AA.IMAGE_GROUP = B.IMAGE_GROUP"
 		   		+ "											     AND AA.REFERENCE_NO = B.REFERENCE_NO)"
-		   		+ "	      LEFT OUTER JOIN (SELECT BB.DATECOURSE_NO, COUNT(BB.DATECOURSE_NO) AS LIKE_CNT"
+		   		+ "	      LEFT OUTER JOIN (SELECT BB.DATECOURSE_NO, COUNT(BB.DATECOURSE_NO) AS LIKE_CNT, BB.LIKE_YN"
 		   		+ "			                 FROM T_GGC_LIKE BB"
+		   		+ "							WHERE USER_ID = :#{#customUser.getUsername}"			
 		   		+ "							GROUP BY BB.DATECOURSE_NO) C ON A.DATECOURSE_NO = C.DATECOURSE_NO"
 		   		+ "			    WHERE A.DATECOURSE_ADDR LIKE CONCAT('%', :datecourseAddr, '%')"
 		   		+ "			       OR A.DATECOURSE_NM LIKE CONCAT('%', :datecourseNm, '%')"
@@ -55,7 +58,8 @@ public interface DatecourseRepository extends JpaRepository<Datecourse, Integer>
 	Page<CamelHashMap> getSearchDatecourseList( @Param("datecourseAddr") String datecourseAddr, 
 												@Param("datecourseNm")String datecourseNm, 
 												@Param("datecourseDesc") String datecourseDesc,
-												Pageable pageable);
+												Pageable pageable,
+												@Param("customUser") CustomUserDetails customUser);
 	
 	
 	// \r: 커서를 가장 왼쪽으로 이동
@@ -64,12 +68,13 @@ public interface DatecourseRepository extends JpaRepository<Datecourse, Integer>
 	
 	// 해당 지역 클릭 시 '지역' 관련 리스트들 조회_인겸
 	// 데이터의 변경이 일어나는 @Query을 사용할 떄는 @Modifying 어노테이션을 사용해야한다.
-	@Query(value = "SELECT A.DATECOURSE_NO, A.DATECOURSE_NM, A.DATECOURSE_SUMMARY, A.DATECOURSE_CNT, IFNULL(B.LIKE_CNT, 0) AS LIKE_CNT, C.IMAGE_NM"
+	@Query(value = "SELECT A.DATECOURSE_NO, A.DATECOURSE_NM, A.DATECOURSE_SUMMARY, A.DATECOURSE_CNT, IFNULL(B.LIKE_CNT, 0) AS LIKE_CNT, IFNULL(B.LIKE_YN, 'N') AS LIKE_YN, C.IMAGE_NM"
 		+ "			  FROM T_GGC_DATECOURSE A"
 		+ "			  LEFT OUTER JOIN ("
 		+ "								SELECT D.DATECOURSE_NO"
-		+ "									 , COUNT(D.DATECOURSE_NO) AS LIKE_CNT"
+		+ "									 , COUNT(D.DATECOURSE_NO) AS LIKE_CNT, D.LIKE_YN"
 		+ "								  FROM T_GGC_LIKE D"
+		+ "							     WHERE USER_ID = :#{#customUser.getUsername}"
 		+ "								 GROUP BY D.DATECOURSE_NO"
 		+ "								) B ON A.DATECOURSE_NO = B.DATECOURSE_NO"
 		+ "			  JOIN T_GGC_IMAGE C ON A.DATECOURSE_NO = C.REFERENCE_NO"
@@ -83,12 +88,13 @@ public interface DatecourseRepository extends JpaRepository<Datecourse, Integer>
 		+ "			 WHERE A.DATECOURSE_AREA = :datecourseArea",
 		countQuery="SELECT COUNT(*)"
 		+ "			  FROM ("
-		+ "					SELECT A.DATECOURSE_NO, A.DATECOURSE_NM, A.DATECOURSE_SUMMARY, A.DATECOURSE_CNT, IFNULL(B.LIKE_CNT, 0) AS LIKE_CNT, C.IMAGE_NM"
+		+ "					SELECT A.DATECOURSE_NO, A.DATECOURSE_NM, A.DATECOURSE_SUMMARY, A.DATECOURSE_CNT, IFNULL(B.LIKE_CNT, 0) AS LIKE_CNT, IFNULL(B.LIKE_YN, 'N') AS LIKE_YN, C.IMAGE_NM"
 		+ "					  FROM T_GGC_DATECOURSE A"
 		+ "					  LEFT OUTER JOIN ("
 		+ "										SELECT D.DATECOURSE_NO"
-		+ "											 , COUNT(D.DATECOURSE_NO) AS LIKE_CNT"
+		+ "											 , COUNT(D.DATECOURSE_NO) AS LIKE_CNT, D.LIKE_YN"
 		+ "										  FROM T_GGC_LIKE D"
+		+ "							             WHERE USER_ID = :#{#customUser.getUsername}"
 		+ "									  	 GROUP BY D.DATECOURSE_NO"
 		+ "									    ) B ON A.DATECOURSE_NO = B.DATECOURSE_NO"
 		+ "					  JOIN T_GGC_IMAGE C ON A.DATECOURSE_NO = C.REFERENCE_NO"
@@ -103,7 +109,8 @@ public interface DatecourseRepository extends JpaRepository<Datecourse, Integer>
 		+ "				) E",
 	    //Page<T>로 리턴할 때 사용 countQuery = "",
 	    nativeQuery = true)
-	Page<CamelHashMap> getMapDatecourseList(@Param("datecourseArea") String datecourseArea, Pageable pageable);
+	Page<CamelHashMap> getMapDatecourseList(@Param("datecourseArea") String datecourseArea, Pageable pageable,
+											@Param("customUser") CustomUserDetails customUser);
 	
 	// A.*하면 전체 컬럼 가져와버림. 필요한 것만 가져오는 것이 좋음
 	// B 테이블의 IMAGE_NM 컬럼으로 이미지를 가지고 온다.

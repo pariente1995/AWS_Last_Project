@@ -208,6 +208,7 @@
       border: 1px solid white;
       width: 100px;
       height: 30px;
+      margin-left : 440px;
     }
     .comment-comment{
       border: 1px solid white;
@@ -229,12 +230,19 @@
 
     .comment-hide{
       margin-bottom: 30px;
-      text-align: center;
+      display: flex; 
+      align-items: center; 
+      justify-content: center;
     }
     
     .hrLine {
 		 width: 1100px;
 		 margin: 20px auto;
+	}
+	
+	#show {
+		text-decoration: none;
+		color: black;
 	}
 
   /* 버튼 */
@@ -287,13 +295,9 @@
       background-color: #ee2d7a; color: white;
     }
     
-    .comment-updDel {
-		margin-left: 440px;
-	}
-    
     .comment-update-click {
 		color: black; text-decoration: none;
-		font-size: 0.8rem; opacity: 0.7;
+		font-size: 0.8rem; opacity: 0.5;
 	}
 	
 	.comment-update-click:hover {
@@ -307,7 +311,7 @@
 	
 	.comment-delete-click {
 		color: black; text-decoration: none;
-		font-size: 0.8rem; opacity: 0.7;
+		font-size: 0.8rem; opacity: 0.5;
 	}
 	
 	.comment-delete-click:hover {
@@ -319,6 +323,19 @@
 		text-decoration: underline;
 	}
 	
+	.comment-comment textarea {
+		width: 100%; border-radius: 5px;
+		border: none; resize: none;
+		white-space:pre-line; outline: none;
+		padding: 5px;
+	}
+	
+	#updateBtn {
+		border: 1px solid #ee2d7a; border-radius: 5px;
+		background-color: #ee2d7a; color: white;
+		float: right; margin-bottom: 5px;
+	}
+
 	/* bxslider css 오버라이드 */
 	.bx-wrapper {
 		z-index: 0;
@@ -341,6 +358,20 @@
 	    padding: 15px;
 	}	
 	
+	#comment-none-wrapper {
+		width: 600px; 
+		margin: auto;
+		display:flex;
+		align-items: center;
+		justify-content: center;
+	}
 
+	#comment-none {
+		color: #ee2d7a;
+		opacity: 0.7;
+		font-size: 1.2em;
+	}
 	
-	
+	.comment-textarea {
+		height: 300px;
+	}

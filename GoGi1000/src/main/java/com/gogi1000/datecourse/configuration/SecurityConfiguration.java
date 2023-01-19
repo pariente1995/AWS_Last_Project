@@ -74,7 +74,7 @@ public class SecurityConfiguration {
 									.antMatchers("/hotdeal/**").permitAll()
 
 									// Review
-									.antMatchers("/review/**").access("hasRole('ROLE_ADMIN')")
+									.antMatchers("/review/**").access("hasAnyRole('ROLE_ADMIN', 'ROLE_USER')")
 
 									// Like
 									.antMatchers("/like/**").permitAll()

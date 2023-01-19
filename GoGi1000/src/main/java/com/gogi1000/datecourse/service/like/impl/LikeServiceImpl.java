@@ -16,7 +16,7 @@ import com.gogi1000.datecourse.service.like.LikeService;
 public class LikeServiceImpl implements LikeService {
 	
 	@Autowired
-	LikeRepository likeRepository;
+	private LikeRepository likeRepository;
 	
 	// 좋아요 리스트 출력_장찬영
 	@Override
@@ -26,10 +26,10 @@ public class LikeServiceImpl implements LikeService {
 	
 	// 좋아요 삭제_장찬영
 	@Override
-	public void deleteLike(LikeId likeId) {
-		System.out.println(likeId);
+	public void deleteLike(Like like) {
+		System.out.println(like);
 		
-		likeRepository.deleteById(likeId);
+		likeRepository.delete(like);
 	}
 	
 	// 좋아요 등록_장찬영

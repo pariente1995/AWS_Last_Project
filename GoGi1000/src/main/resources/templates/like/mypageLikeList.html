@@ -33,17 +33,12 @@
 	     	$(".btnLike").each(function() {
 	        	$(this).on('click', function() {
 	          		if($(this).children('img').attr('src') === "/images/yellowStar.png") {
-	            		$(this).find("img").attr("src", "/images/star.png");  
-	            		 
-	            		const likeDel = {
-						  datecourseNo: $(this).attr('datecourse-no')
-					  	}
-					  	console.log(likeDel);
+	            		$(this).find("img").attr("src", "/images/emptystar.png");  
 	            		
 	            		$.ajax({
 							url: '/like/deleteLike',
 							type: 'delete',
-							data: {likeDel : JSON.stringify(likeDel)},
+							data: {datecourseNo : $(this).attr('datecourse-no')},
 							success: function(obj) {
 								alert("삭제되었습니다.");
 							},
@@ -55,15 +50,12 @@
 	          		// '좋아요'가 아닌 상태에서 클릭 시 좋아요 등록_장찬영
 		          	else {
 		            	$(this).find("img").attr("src", "/images/yellowStar.png");
-		            	
-		            	const likeIns = {
-						  datecourseNo: $(this).attr('datecourse-no')
-					  	}
+		            			            	
 					  	
 					  	$.ajax({
 							url: '/like/InsertLike',
 							type: 'post',
-							data: {likeIns : JSON.stringify(likeIns)},
+							data: {datecourseNo : $(this).attr('datecourse-no')},
 							success: function(obj) {
 								alert("'좋아요' 하였습니다.");
 							},
@@ -89,12 +81,12 @@
           <div id="main-title">
             <h1 style="margin: 0; float: left;">좋아요 리스트</h1>
           </div>
-          <hr style="width: 80%;">
+          <hr style="width: 100%;">
           <!-- 메인 내용 -->
             <!-- 좋아요 리스트 출력 --> 
             <div style="text-align: center; min-height: 480px;">
-              <table>
-                <tr th:each="like : ${likeList}">
+              <table style="min-height: 150px;">
+                <tr th:each="like : ${likeList}" th:if="${likeList.getTotalElements != 0}">
                   <!-- 해당 게시글 이미지 출력 -->
                   <td style="width:15%;"><img th:src="@{'/upload/' + ${like.imageNm}}" alt="" class="mainImg"></td>
                   <td style="width:65%;">
@@ -103,7 +95,7 @@
         				<div class="col-sm-5">
           					<div class="row row-cols-auto">
             					<div class="col">
-              						<a href="@{/main/getCateDatecourse/{datecourseNo} (datecourseNo = ${like.datecourseNo})}" class="linkMain" th:text="${like.datecourseNm}" style="font-size: 1.3rem;"></a>
+              						<a th:href="@{/main/getCateDatecourse/{datecourseNo} (datecourseNo = ${like.datecourseNo})}" class="linkMain" th:text="${like.datecourseNm}" style="font-size: 1.3rem;"></a>
             					</div>
           					</div>
           					<br />
@@ -125,15 +117,19 @@
                   <!-- 버튼으로 취소/추가 구현 -->
                   <td style="width:20%;">
                     <button type="button" class="btnLike" th:datecourse-no="${like.datecourseNo}">
-                      <img th:src="${like.likeYn} eq 'Y' ? @{/images/yellowStar.png} : @{/images/star.png}" alt="" class="likeImg">
+                      <img th:src="${like.likeYn} eq 'Y' ? @{/images/yellowStar.png} : @{/images/emptystar.png}" alt="" class="likeImg">
                     </button>
                   </td>                
-                </tr>         
+                </tr>
+                <div id="none-like-list" th:if="${likeList.getTotalElements == 0}">
+                	<p>등록된 '좋아요'가 없습니다.</p>
+                	<div><a id="none-like-a" th:href="@{/home/main}">홈으로</a></div>
+                </div>         
               </table>
               <!-- 갯수 출력 -->
-              <div style="width: 80%;">
-            	<span style="font-size: small; float: right; margin-top: 10px">총 좋아요 갯수 : 
-            		<span style="font-weight: bold; color: red;" th:text="${likeList.getTotalElements}"></span>개
+              <div style="width: 100%;">
+            	<span style="font-size: small; float: right; margin-top: 10px">전체 갯수 : 
+            		<span style="font-weight: bold; color: #ee2d7a;" th:text="${likeList.getTotalElements}"></span>개
             	</span>
           	  </div> 
             </div>

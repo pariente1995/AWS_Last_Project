@@ -20,6 +20,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gogi1000.datecourse.common.CamelHashMap;
+import com.gogi1000.datecourse.dto.LikeDTO;
 import com.gogi1000.datecourse.entity.CustomUserDetails;
 import com.gogi1000.datecourse.entity.Like;
 import com.gogi1000.datecourse.entity.LikeId;
@@ -58,28 +59,24 @@ public class LikeController {
     
     // 좋아요 삭제_장찬영
     @DeleteMapping("/deleteLike")
-    public void deleteLike(@RequestParam("likeDel") String likeDel,
+    public void deleteLike(LikeDTO likeDTO,
     		@AuthenticationPrincipal CustomUserDetails customUser) throws JsonMappingException, JsonProcessingException {
-    	Map<String, Object> like = new ObjectMapper().readValue(likeDel, 
-				new TypeReference<Map<String, Object>>() {});
     	
-    	LikeId likeId = new LikeId();
-    	
-    	likeId.setDatecourseNo(Integer.valueOf((String)like.get("datecourseNo")));
-    	likeId.setUserId(customUser.getUsername());
-        
-    	likeService.deleteLike(likeId);       
+    	Like like = Like.builder()
+				.datecourseNo(likeDTO.getDatecourseNo())
+				.userId(customUser.getUsername())
+				.build();
+    	       
+    	likeService.deleteLike(like);       
     }
     
     // 좋아요 등록_장찬영
     @PostMapping("/InsertLike")
-    public void InsertLike(@RequestParam("likeIns") String likeIns,
-    		@AuthenticationPrincipal CustomUserDetails customUser) throws JsonMappingException, JsonProcessingException {
-    	Map<String, Object> likeInt = new ObjectMapper().readValue(likeIns, 
-				new TypeReference<Map<String, Object>>() {});
+    public void InsertLike(LikeDTO likeDTO,
+    		@AuthenticationPrincipal CustomUserDetails customUser) throws JsonMappingException, JsonProcessingException {   		
     	
     	Like like = Like.builder()
-    					.datecourseNo(Integer.valueOf((String)likeInt.get("datecourseNo")))
+    					.datecourseNo(likeDTO.getDatecourseNo())
     					.userId(customUser.getUsername())
     					.likeYn("Y")
     					.build();

@@ -19,7 +19,7 @@ public class ReviewServiceImpl implements ReviewService {
 	@Autowired
 	private ReviewRepository reviewRepository;
 	
-	// 리뷰리스트 출력 및 검색 기능 구현
+	// 리뷰리스트 출력 및 검색 기능 구현_장찬영
 	@Override
 	public Page<CamelHashMap> getReviewList(Review review, Pageable pageable) {
 		System.out.println("getReviewList Impl :" + review);
@@ -62,7 +62,9 @@ public class ReviewServiceImpl implements ReviewService {
 	// 리뷰 수정(완전하지 않음)
 	@Override
 	public Review updateReview(Review review) {
-		reviewRepository.save(review);
+		System.out.println(review);
+		
+		reviewRepository.updateReview(review);
 		reviewRepository.flush();
 		
 		return review;

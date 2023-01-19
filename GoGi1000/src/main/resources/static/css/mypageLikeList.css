@@ -1,10 +1,21 @@
 /* 폰트 */
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap');
+
     body {
       font-family: 'Noto Sans KR', sans-serif;
+      margin: 8px;
     }
 
-body { margin: 8px;}
+h1 {
+	
+    display: block;
+    font-size: 2em;
+    margin-block-start: 0.67em;
+    margin-block-end: 0.67em;
+    margin-inline-start: 0px;
+    margin-inline-end: 0px;
+    font-weight: bold;
+}
 
 /* 페이지 전체 */
 #likelist-container { width: 1000px; margin: auto; min-height: 800px;}
@@ -14,7 +25,7 @@ body { margin: 8px;}
 /* 메인 제목 */
 #main-title { 
   position: relative; justify-content: right;
-  width: 80%;
+  width: 100%;
 }
 #main-title-img {
   position: absolute; top: -22px; right: 450px;
@@ -22,7 +33,7 @@ body { margin: 8px;}
 }
 /* table 태그 */
 table {
-  width: 80%;
+  width: 100%;
   margin-top: 50px;
   text-align: center; 
   background-color: white; 
@@ -62,3 +73,29 @@ table tr:hover a { text-decoration: underline }
 .page-link span { color: black; font-weight: bold}
 .page-link:hover span { color: #ee2d7a;}
 
+#none-like-list {
+	width: 100%;
+	margin-top: 50px;
+}
+
+#none-like-list p {
+	font-size: 1.3rem; 
+	font-weight: bold; 
+	color:lightgray
+}
+
+#none-like-list div {
+	width: 100px; height: 40px;
+	border: 1px solid #ee2d7a;
+	margin: 80px auto;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+#none-like-list a {
+	color: #ee2d7a;
+  	font-weight: bold;
+  	text-decoration: none;
+  	font-size: 1.1em;
+}
