@@ -105,7 +105,7 @@ public class SecurityConfiguration {
 			.and()
 			.oauth2Login()
 			.loginPage("/user/login")
-//			.defaultSuccessUrl("/main/getHotdeal/1")
+//			.defaultSuccessUrl("/u")
 			// 토큰 발행 후 처리
 			// 토큰이 발행되면 사용자 정보를 받아서 처리 가능해지는 데
 			// 사용자 정보를 웹 사이트에 맞도록 변경해주는 작업 필요

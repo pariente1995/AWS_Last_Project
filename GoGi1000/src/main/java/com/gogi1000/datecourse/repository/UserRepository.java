@@ -48,4 +48,21 @@ public interface UserRepository extends JpaRepository<User, String> {
 				+ "	   WHERE USER_ID = :#{#user.userId}",
 				nativeQuery=true)
 		void getEditMypage(@Param("user") User user);
+
+		@Modifying
+		@Query(value="UPDATE T_GGC_USER"
+				+ "SET USER_PW = :#{#user.userPw},"
+				+ "    USER_NM = :#{#user.userNm},"
+				+ "    USER_AGE = :#{#user.userAge},"
+				+ "    USER_AREA = :#{#user.userArea},"
+				+ "    USER_RGST_DATE = :#{#user.userRgstDate},"
+				+ "    USER_ADDR1 = :#{#user.userAddr1},"
+				+ "    USER_ADDR2 = :#{#user.userAddr2},"
+				+ "    USER_TYPE = :#{#user.userType},"
+				+ "    USER_TEL = :#{#user.userTel},"
+				+ "    USER_MODF_DATE = :#{#user.userModfDate},"
+				+ "    USER_USE_YN = :#{#user.userUseYn}"
+				+ "	   WHERE USER_ID = :#{#user.userId}", nativeQuery=true)
+		void updateUserInfo(@Param("user") User user);
+		
 }

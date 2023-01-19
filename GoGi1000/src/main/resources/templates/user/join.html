@@ -138,6 +138,72 @@
                     return;
                 }
                 
+                
+                //이름이 빈칸일 때
+                if (!$("#userNm").val()){
+					e.preventDefault();
+                    alert("이름을 입력하세요.");
+                    $("#userNm").focus();
+                    return;
+                }
+                
+                //나이가 빈칸일 때
+                if (!$("#userAge").val()){
+					e.preventDefault();
+                    alert("나이를 입력하세요.");
+                    $("#userAge").focus();
+                    return;
+                }
+                
+                //지역이 빈칸일 때
+                if ($("#userArea").val() == "") {
+					e.preventDefault();
+                    alert("지역을 선택하세요.");
+                    $("#useArea").focus();
+                    return false;
+                }
+                
+                //주소가 빈칸일 때
+                if (!$("#userAddr1").val()){
+					e.preventDefault();
+                    alert("주소찾기를 해주세요.");
+                    $("#userAddr1").focus();
+                    return;
+                }
+                
+                //상세주소가 빈칸일 때
+                if (!$("#userAddr2").val()){
+					e.preventDefault();
+                    alert("상세주소를 입력하세요");
+                    $("#userAddr2").focus();
+                    return;
+                }
+                
+                //휴대전화가 빈칸일 때
+                if (!$("#userTel").val()){
+					e.preventDefault();
+                    alert("핸드폰 번호를 입력하세요.");
+                    $("#userTel").focus();
+                    return;
+                }
+                
+                //이메일 아이디가 빈칸일 때
+                if (!$("#userMail").val()){
+					e.preventDefault();
+                    alert("이메일 아이디를 입력하세요.");
+                    $("#userMail").focus();
+                    return;
+                }
+                
+                //도메인이 빈칸일 때
+                if (!$("#domain").val()){
+					e.preventDefault();
+                    alert("이메일 도메인을 선택하세요.");
+                    $("#domain").focus();
+                    return;
+                }
+                
+                
                 $("#userMail").val($("#userMail").val() + "@" + $("#domain").val());
                 
                 $.ajax({
@@ -303,7 +369,7 @@
                 <div class="input  label_wrapper2">
                     <div>
                         <form id="ua">
-                            <select name="userArea" class="dropdown" required>
+                            <select name="userArea" id="userArea" class="dropdown" required>
                                 <option value="" hidden>=== 선택 ===</option>
                                 <option value="A0001">서울</option>
                                 <option value="A0016">부산</option>

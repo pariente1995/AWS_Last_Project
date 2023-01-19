@@ -7,8 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.gogi1000.datecourse.entity.CustomUserDetails;
-import com.gogi1000.datecourse.entity.Review;
 import com.gogi1000.datecourse.entity.User;
 import com.gogi1000.datecourse.repository.UserRepository;
 import com.gogi1000.datecourse.service.mail.MailService;
@@ -42,15 +40,15 @@ public class UserServiceImpl implements UserService{
 		}
 	}
 	
-	@Override
-	public User nmCheck(User user) {
-		// TODO Auto-generated method stub
-		if(!userRepository.findById(user.getUserNm()).isEmpty()) {
-			return userRepository.findById(user.getUserNm()).get();
-		} else {
-			return null;
-		}
-	}
+//	@Override
+//	public User nmCheck(User user) {
+//		// TODO Auto-generated method stub
+//		if(!userRepository.findById(user.getUserNm()).isEmpty()) {
+//			return userRepository.findById(user.getUserNm()).get();
+//		} else {
+//			return null;
+//		}
+//	}
 	
 	@Override
 	public User findId(User user) {
@@ -129,9 +127,19 @@ public class UserServiceImpl implements UserService{
 	}
 
 	@Override
-	public void getEditMypage(User user) {
-		userRepository.getEditMypage(user);
+	public User getUser(String userId) {
+		return userRepository.findById(userId).get();
 	}
+
+	@Override
+	public void updateUserInfo(User user) {
+		// TODO Auto-generated method stub
+		userRepository.save(user);
+	}
+
+	
+	
+
 	
 //	// 회원정보 수정
 //	@Override

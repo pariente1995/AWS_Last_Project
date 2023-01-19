@@ -5,9 +5,19 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,6 +29,7 @@ import com.gogi1000.datecourse.dto.ResponseDTO;
 import com.gogi1000.datecourse.dto.UserDTO;
 import com.gogi1000.datecourse.entity.CustomUserDetails;
 import com.gogi1000.datecourse.entity.User;
+import com.gogi1000.datecourse.repository.UserRepository;
 import com.gogi1000.datecourse.service.user.UserService;
 
 @RestController
@@ -30,6 +41,9 @@ public class UserController {
 	@Autowired
 	private PasswordEncoder passwordEncoder;
 	
+	@Autowired
+	private UserDetailsService userDetailsService;
+	
 	@GetMapping("/join")
 	public ModelAndView joinView() {
 		ModelAndView mv = new ModelAndView();
@@ -38,9 +52,11 @@ public class UserController {
 		return mv;
 	}
 	
+	// 회원가입_변재흥
+	
 	@PostMapping("/join")
 	public ResponseEntity<?> join(UserDTO userDTO) {
-		System.out.println("userDTO " + userDTO);
+//		System.out.println("userDTO " + userDTO);
 		ResponseDTO<Map<String, String>> responseDTO = new ResponseDTO<>();
 		Map<String, String> returnMap = new HashMap<String, String>();
 		
@@ -78,6 +94,7 @@ public class UserController {
 		}
 	}
 	
+	// 로그인 뷰_변재흥
 	@GetMapping("/login")
 	public ModelAndView loginView() {
 		ModelAndView mv = new ModelAndView();
@@ -86,6 +103,7 @@ public class UserController {
 		return mv;
 	}
 	
+	// 로그인 아이디 체크_변재흥
 	@PostMapping("/idCheck")
 	public ResponseEntity<?> idCheck(UserDTO userDTO) {
 		ResponseDTO<Map<String, String>> responseDTO = new ResponseDTO<>();
@@ -113,6 +131,7 @@ public class UserController {
 		}
 	}
 	
+	// 로그인_변재흥
 	@PostMapping("/login")
 	public ResponseEntity<?> login(UserDTO userDTO) {
 		ResponseDTO<Map<String, String>> responseDTO = new ResponseDTO<>();
@@ -162,7 +181,7 @@ public class UserController {
 			return ResponseEntity.badRequest().body(responseDTO);
 		}
 	}
-	
+	 // 아이디 찾기 뷰_변재흥
 	@GetMapping("/findId")
 	public ModelAndView findIdView() {
 		ModelAndView mv = new ModelAndView();
@@ -171,6 +190,7 @@ public class UserController {
 		return mv;
 	}
 	
+	// 아이디 찾기_변재흥
 	@PostMapping("/findId")
 	public ResponseEntity<?> checkId(UserDTO userDTO) {
 		ResponseDTO<Map<String, String>> response = new ResponseDTO<>();
@@ -207,6 +227,7 @@ public class UserController {
 		}
 	}
 	
+	// 아이디 확인_변재흥
 	@PostMapping("/checkId")
 	public ModelAndView checkIdView(UserDTO userDTO) {
 		ModelAndView mv = new ModelAndView();
@@ -217,7 +238,7 @@ public class UserController {
 	}
 	
 	
-	
+	// 비밀번호 찾기 뷰_변재흥
 	@GetMapping("/findPwd")
 	public ModelAndView findPwdView() {
 		ModelAndView mv = new ModelAndView();
@@ -226,6 +247,7 @@ public class UserController {
 		return mv;
 	}
 	
+	// 비밀번호 찾기_변재흥
 	@PostMapping("/findPwd")
 	public ResponseEntity<?> findPwd(UserDTO userDTO) {
 		ResponseDTO<Map<String, String>> response = new ResponseDTO<>();
@@ -326,57 +348,72 @@ public class UserController {
 		}
 	}
 	
-	@GetMapping("/editMyinfo")
-	public ModelAndView editMyinfoView(UserDTO userDTO) throws IOException {
+	// 마이페이지 회원정보_변재흥
+	@GetMapping("/editMyinfo/{userId}")
+	public ModelAndView getUser(@AuthenticationPrincipal CustomUserDetails customUser) {
+		String userId = customUser.getUsername();		
 		
-		User user = User.builder()
-						.userId(userDTO.getUserId())
-						.build();
+		User user = userService.getUser(userId);
 		
-		userService.getEditMypage(user);
+		UserDTO userDTO = UserDTO.builder()
+								.userId(user.getUserId())
+								.userNm(user.getUserNm())
+								.userAge(user.getUserAge())
+								.userTel(user.getUserTel())
+								.userMail(user.getUserMail())
+								.userArea(user.getUserArea())
+								.userAddr1(user.getUserAddr1())
+								.userType("ROLE_USER")
+								.userRgstDate(user.getUserRgstDate().toString())
+								.userAddr2(user.getUserAddr2())
+								.userModfDate(user.getUserModfDate().toString())
+								.userUseYn("Y")
+								.build();
 		
 		
-		
-		UserDTO userId = UserDTO.builder()
-				    .userId(user.getUserId())
-					.userPw(passwordEncoder.encode(user.getUserPw()))
-					.userNm(user.getUserNm())
-					.userAge(user.getUserAge())
-					.userTel(user.getUserTel())
-					.userMail(user.getUserMail())
-					.userArea(user.getUserArea())
-					.userAddr1(user.getUserAddr1())
-					.userAddr2(user.getUserAddr2())
-					.userModfDate(user.getUserModfDate()== null ?
-							null : user.getUserModfDate().toString())
-					.build();
-		
-				
 		ModelAndView mv = new ModelAndView();
 		mv.setViewName("user/editMyinfo.html");
-		mv.addObject("userDTO", userId);
+		mv.addObject("userInfo", userDTO);
+		//mv.addObject("boardNo", boardNo);
+		
 		return mv;
 	}
 	
-	// 회원정보 수정_변재흥
-//    @PostMapping("/editMyinfo/{userId}")
-//    public void updateMyinfo(@PathVariable int userId, 
-//    		UserDTO userDTO, HttpServletResponse response) throws IOException {
-//    	User user = User.builder()
-//						.userPw(passwordEncoder.encode(userDTO.getUserPw()))
-//						.userNm(userDTO.getUserNm())
-//						.userAge(userDTO.getUserAge())
-//						.userTel(userDTO.getUserTel())
-//						.userMail(userDTO.getUserMail())
-//						.userArea(userDTO.getUserArea())
-//						.userAddr1(userDTO.getUserAddr1())
-//						.userAddr2(userDTO.getUserAddr2())
-//						.userModfDate(LocalDateTime.now())
-//						.build();
-//    	
-//    	int userIdCnt = userService.getUserIdCnt(user);
-//    	
-//    	userService.updateMyinfo(user);
-//    	response.sendRedirect("/user/editMyinfo" + userIdCnt);
-//    }
+	// 마이페이지 회원정보 수정_변재흥
+	@Transactional
+	@PostMapping("/editMyinfo")
+	public void updateUserInfo(UserDTO userDTO, @AuthenticationPrincipal CustomUserDetails customUser,
+			HttpSession session, HttpServletResponse response) throws IOException {
+			User loginUser = customUser.getUser();
+			System.out.println(userDTO);
+			
+			
+			User user = User.builder()
+							.userId(userDTO.getUserId())
+							.userNm(userDTO.getUserNm())
+							.userPw(userDTO.getUserPw() != null && !userDTO.getUserPw().equals("") ?
+									passwordEncoder.encode(userDTO.getUserPw()) : loginUser.getUserPw())
+							.userAge(userDTO.getUserAge())
+							.userTel(userDTO.getUserTel())
+							.userMail(userDTO.getUserMail())
+							.userType("ROLE_USER")
+							.userRgstDate(LocalDateTime.parse(userDTO.getUserRgstDate()))
+							.userArea(userDTO.getUserArea())
+							.userAddr1(userDTO.getUserAddr1())
+							.userAddr2(userDTO.getUserAddr2())
+							.userModfDate(LocalDateTime.now())
+							.userUseYn("Y")
+							.build();
+			
+			userService.updateUserInfo(user);	
+			
+			UserDetails userDetails = userDetailsService.loadUserByUsername(userDTO.getUserId());
+			Authentication authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+			SecurityContext securityContext = SecurityContextHolder.getContext();
+			securityContext.setAuthentication(authentication);
+			session.setAttribute("SPRING_SECURITY_CONTEXT", securityContext);
+			
+			response.sendRedirect("/home/main");
+	}
+	
 }
