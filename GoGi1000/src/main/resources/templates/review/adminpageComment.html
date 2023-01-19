@@ -176,7 +176,7 @@
               <h1 style="margin: 0; float: left;" >댓글 리스트</h1>
                  
             </div>
-            <hr style="width: 80%;">
+            <hr style="width: 100%;">
 
           <!-- 전체 선택 및 검색 기능 구현 -->
           <div id="searchChkForm">
@@ -235,15 +235,15 @@
               </tr>         
             </table>
             <!-- 리뷰 갯수 -->
-            <div style="width: 80%;">
+            <div style="width: 100%;">
               <span style="font-size: small; float: right;">총 리뷰 갯수 : 
-                 <span style="font-weight: bold; color: red;" th:text="${reviewList.getTotalElements}"></span>개
+                 <span style="font-weight: bold; color: #ee2d7a;" th:text="${reviewList.getTotalElements}"></span>개
               </span>
             </div> 
           </div>
           <!-- 페이징 -->
           <br>
-          <nav aria-label="Page navigation example" style="width: 80%;" >
+          <nav aria-label="Page navigation example" style="width: 100%;" >
             <ul class="pagination justify-content-center"
                th:if="${reviewList.totalElements > 0}"
             th:with="pageNumber = ${reviewList.pageable.pageNumber},

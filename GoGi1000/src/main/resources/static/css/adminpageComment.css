@@ -12,11 +12,11 @@
     /* 메인 제목 */
     #main-title { 
       position: relative; justify-content: right;
-      width: 80%; 
+      width: 100%; 
     }
 
     /* 폼 */
-    #searchChkForm { text-align: center; width: 80%; margin-top: 30px;}
+    #searchChkForm { text-align: center; width: 100%; margin-top: 30px;}
     #searchCondition { 
       height: 30px; width: 30%; font-size: 0.9rem; 
       border-radius: 5px; padding-left: 5px;}
@@ -27,7 +27,7 @@
     #searchInput { border: none;  padding: 0px; margin-top: 2px; width: 80%;}
     #searchInput, select:focus  { outline: none;}
     /* table 태그 */
-    .table-bordered { text-align: center; width: 80%;}    
+    .table-bordered { text-align: center; width: 100%;}    
     table { 
       border-bottom: 1px solid black;
     }
