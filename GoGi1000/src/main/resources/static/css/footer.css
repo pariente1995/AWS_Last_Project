@@ -1,7 +1,9 @@
 #footer-container { width:100%; margin:0 auto;}
 /* footer */
 #footer {
-    width:100%; position:relative;
+    width:100%; 
+    position:relative;
+    margin-top:60px; 
 }
 #footer-image-wrapper {
     width:100%;
@@ -9,15 +11,19 @@
 
 /* footer 전체 이미지 */
 #footer-image {
-    width:100%; height:110px;
+    width:100%; height:150px;
 }
 
 #footer-p-wrapper {
     position:absolute;
-    top:17%; left:2%;
+    top:15%; left:2%;
     font-size:0.7rem;
     color:white;
     /* transform: translate( -50%, -40%); */
+}
+
+#footer-p {
+	font-size:0.9rem;
 }
 
 /* footer-logo */
@@ -42,7 +48,7 @@
 }
 
 #footer-logo-wrapper a {
-    width: 50%; height:50%;
+    height:50%;
     display:flex;
 }
 

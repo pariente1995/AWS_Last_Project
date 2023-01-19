@@ -32,6 +32,7 @@
     /* 게시글 설명 영역 */
     #datecourseDesc-text {
 		font-size: 1.2rem;
+		white-space:pre-line;
 	}
 
     /* 메인 이미지 영역 */
@@ -51,7 +52,7 @@
     
     /* 메인 검색 영역 */
     #searchDatecourse {
-		width: 500px;
+		width: 600px;
 	    display: flex;
 	    float: right;
 	    margin-top: -42.4px;
@@ -208,7 +209,6 @@
       border: 1px solid white;
       width: 100px;
       height: 30px;
-      margin-left : 440px;
     }
     .comment-comment{
       border: 1px solid white;
@@ -230,19 +230,12 @@
 
     .comment-hide{
       margin-bottom: 30px;
-      display: flex; 
-      align-items: center; 
-      justify-content: center;
+      text-align: center;
     }
     
     .hrLine {
 		 width: 1100px;
 		 margin: 20px auto;
-	}
-	
-	#show {
-		text-decoration: none;
-		color: black;
 	}
 
   /* 버튼 */
@@ -267,6 +260,28 @@
         text-align: center;
         display: block;
     }
+    
+    /* bxslider css 오버라이드 */
+	.bx-wrapper {
+		z-index: 0;
+	}
+	
+	/* modal css 오버라이드 */
+	#exampleModal {
+		z-index: 9999;
+	}
+	
+	.carousel-control-prev-icon {
+	    background-color: black;
+	    border-radius: 35%;	
+	    padding: 15px;
+	}
+	
+	.carousel-control-next-icon {
+	    background-color: black;
+	    border-radius: 35%;
+	    padding: 15px;
+	}	
     
     /* 댓글 작성_장찬영 */
     #comment-wrapper {

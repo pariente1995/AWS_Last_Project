@@ -38,7 +38,7 @@
 			        moveSlides : 1,         // 이미지의 이동 개수
 			        slideMargin: 20,        // 이미지 사이의 마진
 			        pager:false,            // 블릿의 유무, 기본값: true
-			        infiniteLoop:true,     // 슬라이더 무한루프 여부
+			        infiniteLoop:false,     // 슬라이더 무한루프 여부
 			        hideControlOnEnd: true, // 슬라이더 첫번재 마지막 버튼 감추기
 			        controls:  true,        // 화살표 버튼 유무, 기본값: false
 			      })     
@@ -486,7 +486,7 @@
 	      <div class="sub-info"  >
 	        <div style="display:flex; justify-content: left; align-items: center;" th:each="datecourseMenu : ${datecourseMenu}">
 	        	<div style="width:500px; display: flex;">
-			        <p class="p" style="width:190px; display: inline-block; margin:0 10px 20px 0" th:text="${datecourseMenu.datecourseMenuNm}"></p> 
+			        <p class="p" style="width:150px; display: inline-block; margin:0 10px 20px 0" th:text="${datecourseMenu.datecourseMenuNm}"></p> 
 			        <p class="datecourseMenuPrice p" th:text="${datecourseMenu.datecourseMenuPrice} + '원'"></p>
 		        </div>
 	        </div>
