@@ -101,7 +101,10 @@ public class MainController {
 													.datecourseDesc(datecourse.getDatecourseDesc())
 													.datecourseAddr(datecourse.getDatecourseAddr())
 													.datecourseTel(datecourse.getDatecourseTel())
-													.datecourseOfficialSite(datecourse.getDatecourseOfficialSite())
+													.datecourseFoodType(datecourse.getDatecourseFoodType())
+													.datecourseInoutYn(datecourse.getDatecourseInoutYn())
+													.datecourseCategory(datecourse.getDatecourseCategory())
+													.datecoursePetYn(datecourse.getDatecoursePetYn())													.datecourseOfficialSite(datecourse.getDatecourseOfficialSite())
 													.datecourseParkingYn(datecourse.getDatecourseParkingYn())
 													.build();
 				

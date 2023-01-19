@@ -6,6 +6,7 @@
 	
 	.p {
 		font-size:1.1rem;
+		margin-top: -1px;
 	}
   	
     body {
@@ -55,7 +56,7 @@
 		width: 600px;
 	    display: flex;
 	    float: right;
-	    margin-top: -42.4px;
+	    margin-top: -40px;
 	    justify-content: right;
 	}
 	

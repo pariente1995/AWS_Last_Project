@@ -117,8 +117,54 @@
 				// 이미지 클릭 시 모달 우선순위 맨앞으로_인겸
 				$(".getModalImageList").on("click", function() {
 					$(".modal").css("z-index", 9999);
-					
 				})
+				
+				// '맛집 카테고리': 데이트 코스 음식 타입 분류_인겸
+				$(".datecourse-food-type").css("display", "none");
+				if ($("#datecourseCate").val() == 'B0002') {
+					$(".datecourse-food-type").css("display", "block");
+					if ($("#datecourseFoodType").text() == 'C0001') {
+						$("#datecourseFoodType").text("한식");
+					} else if ($("#datecourseFoodType").text() == 'C0002') {
+						$("#datecourseFoodType").text("양식");
+					} else if ($("#datecourseFoodType").text() == 'C0003') {
+						$("#datecourseFoodType").text("중식");
+					} else if ($("#datecourseFoodType").text() == 'C0004') {
+						$("#datecourseFoodType").text("일식");
+					} else if ($("#datecourseFoodType").text() == 'C0005') {
+						$("#datecourseFoodType").text("분식");
+					} else if ($("#datecourseFoodType").text() == 'C0006') {
+						$("#datecourseFoodType").text("기타");
+					}
+				} else {
+					$(".datecourse-food-type").css("display", "none");
+				}
+				
+				// 데이트 코스 실내외 유무_인겸
+				$(".datecourse-inout-yn").css("display", "none");
+				if ($("#datecourseCate").val() == 'B0001') {
+					$(".datecourse-inout-yn").css("display", "block");
+					if ($("#datecourseInoutYn").text() == 'Y') {
+						$("#datecourseInoutYn").text("실내");
+					} else if ($("#datecourseInoutYn").text() == 'N') {
+						$("#datecourseInoutYn").text("실외");
+					}
+				} else {
+					$(".datecourse-inout-yn").css("display", "none");
+				}
+				
+				// 반려동물 가능유무_인겸
+				$(".datecourse-pet-yn").css("display", "none");
+				if ($("#datecourseCate").val() == 'B0003') {
+					$(".datecourse-pet-yn").css("display", "block");
+					if ($("#datecoursePetYn").text() == 'Y') {
+						$("#datecoursePetYn").text("동반가능");
+					} else if ($("#datecoursePetYn").text() == 'N') {
+						$("#datecoursePetYn").text("동반불가");
+					}
+				} else {
+					$(".datecourse-pet-yn").css("display", "none");
+				}
 				
 				
 		      		
@@ -379,6 +425,7 @@
 	<div layout:fragment="content">
 	  <div id="datecourse-detail-container">
 	    <h1 th:text="${datecourse.datecourseNm}"></h1>
+	    <input id="datecourseCate" type="hidden" th:value="${datecourse.datecourseCategory}">
 	  </div>
 	
 	  <!-- 메인 이미지 영역 -->
@@ -447,6 +494,17 @@
 	      </div>
 	
 	    </div> 
+	    <div class="datecourse-line datecourse-food-type">
+	      <div class="sub-img">
+	        <img th:src="@{/images/fork.png}" width="25" height="25">
+	      </div>
+	      <div class="sub-title">
+	        <p class="p">음식종류</p>
+	      </div>
+	      <div class="sub-info">
+	        <p id="datecourseFoodType" class="p" th:text="${datecourse.datecourseFoodType}"></p>
+	      </div>
+	    </div> 
 	    <div class="datecourse-line">
 	      <div class="sub-img">
 	        <img th:src="@{/images/site.png}" width="25" height="25">
@@ -460,7 +518,7 @@
 	        </a>
 	      </div>
 	    </div>   
-	    <div class="datecourse-line">
+	    <div class="datecourse-line datecourse-parking">
 	      <div class="sub-img">
 	        <img th:src="@{/images/park.png}" width="25" height="25">
 	      </div>
@@ -470,7 +528,29 @@
 	      <div class="sub-info">
 	        <p id="datecourseParkingYn" class="p" th:text="${datecourse.datecourseParkingYn}" ></p>
 	      </div>
-	    </div>   
+	    </div>
+	    <div class="datecourse-line datecourse-inout-yn">
+	      <div class="sub-img">
+	        <img th:src="@{/images/door.png}" width="25" height="25">
+	      </div>
+	      <div class="sub-title">
+	        <p class="p">실/내외</p>
+	      </div>
+	      <div class="sub-info">
+	        <p id="datecourseInoutYn" class="p" th:text="${datecourse.datecourseInoutYn}"></p>
+	      </div>
+	    </div>
+	    <div class="datecourse-line datecourse-pet-yn">
+	      <div class="sub-img">
+	        <img th:src="@{/images/dog.png}" width="25" height="25">
+	      </div>
+	      <div class="sub-title">
+	        <p class="p">반려동물 가능여부</p>
+	      </div>
+	      <div class="sub-info">
+	        <p id="datecoursePetYn" class="p" th:text="${datecourse.datecoursePetYn}"></p>
+	      </div>
+	    </div>    
 	    <div class="datecourse-line">
 	      <div class="sub-img">
 	        <img th:src="@{/images/time.png}" width="25" height="25">
@@ -506,7 +586,7 @@
 	        <img th:src="@{/images/image.png}" width="25" height="25">
 	      </div>
 	      <div class="sub-title">
-	        <h5>이미지</h5>
+	        <p class="p">이미지</p>
 	      </div>
 	      <div id="menu-img" >
 	        <div th:each="datecourseImageDTOList : ${datecourseImageDTOList}" th:if="${datecourseImageDTOListStat.index > 0}">
@@ -634,12 +714,12 @@
 	  
 	  	<!-- Modal -->
 		<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-		  <div class="modal-dialog modal-fullscreen-sm-down">
+		  <div class="modal-dialog modal-lg">
 		    <div class="modal-content">
 		      <div class="modal-body">
 		        <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
 				  <div class="carousel-inner">
-				    <div class="carousel-item" th:each="datecourseImageDTOList : ${datecourseImageDTOList}" th:if="${datecourseImageDTOListStat.index > 0}">
+				    <div class="carousel-item" data-bs-interval="4000" th:each="datecourseImageDTOList : ${datecourseImageDTOList}" th:if="${datecourseImageDTOListStat.index > 0}">
 				      <img th:src="@{'/upload/' + ${datecourseImageDTOList.imageNm}}" 
 			          	   class="d-block w-100 carouselImgList"
 			          	   height="400px">
