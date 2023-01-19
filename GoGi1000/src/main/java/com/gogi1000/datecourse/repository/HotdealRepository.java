@@ -29,7 +29,7 @@ public interface HotdealRepository extends JpaRepository<Hotdeal, Integer> {
 	  /* 
 	   	메인에서 핫딜리스트 조회
 	   	JOIN T_GGC_IMAGE 하여, B.IMAGE_NM으로 이미지 받아옴
-	   	HOTDEAL_NO로 오름차순 정렬
+	   	HOTDEAL_NO로 오름차순 정렬_인겸
 	 */
 	@Modifying
 	@Query(value = "SELECT A.*, "
@@ -44,7 +44,7 @@ public interface HotdealRepository extends JpaRepository<Hotdeal, Integer> {
 	List<CamelHashMap> getHotdealDatecourseList();
 	
 	
-		// 메인에서 핫딜 상세 페이지 조회
+	// 메인에서 핫딜 상세 페이지 조회_인겸
 	@Modifying
 	@Query(value = "SELECT *"
 			+ "		  FROM T_GGC_HOTDEAL"

@@ -84,6 +84,11 @@
     border: none;
 }
 
+#mycoursetable a {
+	text-decoration: none;
+	color: black;
+}
+
 #mycoursetable tr:not(first-of-type):hover {
     background-color: #F9FAFB;
     font-weight: bold;

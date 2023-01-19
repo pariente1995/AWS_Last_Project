@@ -45,9 +45,6 @@
 		      })
 		    
 		    $(function(){
-				const loginUserId = /*[[${#authentication.principal}]]*/;
-				console.log(loginUserId);
-
 	        	$("#datecourseAdd").on("click", function(e) {
 					if(loginUserId == 'anonymousUser') {
 						e.preventDefault();
@@ -123,11 +120,14 @@
 					
 				})
 				
-				function showModal(e) {
-					
-				}
+				
 		      		
 	      	})
+	      	
+	      	function showModal(index) {
+				$(".carousel-item").removeClass('active');
+				$($(".carousel-item")[index - 1]).addClass('active');
+			}
 	      	$(function () {
                     /*global kakao*/
                     var container = document.getElementById("datecourse-map-container");
@@ -146,43 +146,46 @@
                         if (status === kakao.maps.services.Status.OK) {
                             var coords = new kakao.maps.LatLng(
                                 result[0].y, result[0].x);
-				
+
+
                             var marker = new kakao.maps.Marker({
                                 map: map,
                                 position: coords
                             })
-                            
                             console.log(result)
                             console.log(status)
-                            var content = '<div style="min-width: 100px; height:40px; line-height:40px; text-align:center;"><b>' + $("#datecourseNm").text() + '</b></div>'
+                            var content = '<div style="width:100%; text-align:center;"><b>' + result[0].road_address.building_name + '</b><br> -카카오 지도- </div>'
 
-                            var infowindow = new kakao.maps.InfoWindow({
+                            var infoWindow = new kakao.maps.InfoWindow({
                                 content: content,
                                 removable: true
 
                             })
+
+                            infoWindow.open(map, marker)
+
                             map.setCenter(coords)
-
-
-                            kakao.maps.event.addListener(marker, "click", function() {
-								map.setCenter(marker.getPosition())
-							})
-							/* 마커 마우스 오버 이벤트 -> 마커 위에 마우스를 올리면 infoWindow open*/
-							kakao.maps.event.addListener(marker, "mouseover", function() {
-        						map.setCenter(marker.getPosition())
-        						infowindow.open(map, marker);
-							})
-							/* 마커 마우스 아웃 이벤트 -> 올려둔 마우스를 내렸을 때 infoWindow close*/
-							kakao.maps.event.addListener(marker, "mouseout", function() {
-								infowindow.close();
-							})
-
-                            
                         }
 
                     })
-                    
-                    // 댓글 입력 500자 제한_장찬영
+					
+					// 엔터 시 네이버 검색 엔진_세혁인겸
+					$("#cateDatecourseSearchInput").on("keyup", function(e) {
+						
+						if (e.keyCode == 13) {
+							console.log($("#cateDatecourseSearchInput").val());
+							let naverQueryUrl = "https://search.naver.com/search.naver?query=";
+							let searchKeyword = $(this).val();
+							
+							let lastQueryUrl = naverQueryUrl + searchKeyword;
+							
+							$("#naverSearch").attr("href", lastQueryUrl);
+							
+							$("#naverSearch").get(0).click();
+						}
+					})
+					
+					// 댓글 입력 500자 제한_장찬영
                     $("#comment-text").on("keyup", function() {
 				        if($("#comment-text").val().length > 500) {
 				          	$("#comment-text").val($("#comment-text").val().substring(0, 500));
@@ -197,52 +200,25 @@
 							reviewComment: $("#comment-text").val()						
 						}					
 						console.log(requestComment);
-						
-						$.ajax({
+						if($("#comment-text").val() == null || $("#comment-text").val() == "") {
+							alert("댓글을 입력하세요");
+						}
+						else {
+							
+							$.ajax({
 								url: '/review/insertReview',
 								type: 'post',
 								data: {requestComment : JSON.stringify(requestComment)},
 								success: function(obj) {
-									console.log(obj)
-									let htmlStr = "";					
-									htmlStr = `
-										<div class="comment-container">
-									      <div class="comment-left-section">
-									        <div>
-									          <img src="/images/user.png">
-									        </div>
-									      </div>
-									      <div class="comment-right-section">
-									        <div class="comment-right-top">
-									          <div class="comment-user">
-									            <a>${obj.item.review.reviewerId}</a>
-									          </div>
-									          <div class="comment-regdate">
-									            <a>${obj.item.review.reviewModfDate.split('T')[0]}</a>
-									          </div>
-									          <div class="comment-update">
-								            	<a datecourse-no="${obj.item.review.datecourseNo}" review-no="${obj.item.review.reviewNo}">수정</a>
-								              </div>&ensp;
-								              <div class="comment-delete">
-								            	<a datecourse-no="${obj.item.review.datecourseNo}" review-no="${obj.item.review.reviewNo}">삭제</a>
-								              </div>
-									        </div>
-									        <div class="comment-right-bottom">
-									          <div class="comment-comment">
-									            <p>${obj.item.review.reviewComment}</p>
-									          </div>
-									        </div>
-									      </div>
-									    </div>
-									`;
-									
-									$("#datecourse-comment-container").children().eq(1).append(htmlStr);
-									
+									alert("댓글이 등록되었습니다.")														
+									location.reload();
 								},
 								error: function(e) {
 									console.log(e);
 								}
 							});
+						}
+						
 					});
 					
 					// 댓글 삭제_장찬영
@@ -260,6 +236,7 @@
 								type: 'delete',
 								data: {result : JSON.stringify(result)},
 								success: function(obj) {
+									alert("댓글이 삭제되었습니다.")
 									window.location.href="/main/getCateDatecourse/" + datecourseNo
 								},
 								error: function(e) {
@@ -267,30 +244,100 @@
 								}
 						});
 					});
+					let btnFlag = true;
 					
 					// 댓글 수정_장찬영
-					$(".comment-update-click").on("click", function() {
-						const updateReview = {
-							datecourseNo: $(this).attr('datecourse-no'),
-							reviewNo: $(this).attr('review-no'),
-							reviewComment: $(this).parent("div").parent("div").parent("div").children("div:last-child").children("div").children("p").text()
-						}						
-						console.log(updateReview);
+					// 수정 글 클릭 시 수정 가능 상태로 변경_장찬영
+					$(".comment-update-click").on("click", function() {				
 						
+						const cmtContainer = $(this).parent("div").parent("div").parent("div");
+						
+						if(btnFlag == true) {
+							cmtContainer.children("div:last-child").children("div").children("textarea").attr('readonly', false);
+							cmtContainer.children("div:last-child").children("div").children("textarea").css('border', '1px solid black');						
+							cmtContainer.children("div:last-child").children("div").append('<button type="button" id="updateBtn">등록</button>');
+							btnFlag = false;	
+						}
+																	
+						console.log(btnFlag);
+					});					
+					
+					// 생성된 버튼을 클릭 시 수정_장찬영
+					$(document).on("click", "#updateBtn", function() {
+						const cmtContainer = $(this).parent("div").parent("div").parent("div");
+						const cmtTextarea = $(this).parent("div").children("textarea");
+						const updateReview = {
+							datecourseNo: cmtTextarea.attr('datecourse-no'),
+							reviewNo: cmtTextarea.attr('review-no'),
+							reviewComment: cmtTextarea.val()
+						}
+						console.log(updateReview);
+						console.log($(this));
+						const btn = $(this);
 						$.ajax({
 							url: '/review/updateReview',
 							type: 'put',
 							data: {updateReview : JSON.stringify(updateReview)},
 							success: function(obj) {
-									
-								},
-								error: function(e) {
-									console.log(e);
-								}
-						})
-						
+								console.log(obj);
+								alert("댓글이 수정되었습니다.")
+								console.log($(this));
+								cmtTextarea.text(obj.item.updateReview.reviewComment)
+								cmtTextarea.attr('readonly', true);
+								cmtTextarea.css('border', 'none')
+								cmtContainer.children(".comment-right-top").children("comment-regdate").children("a").text(obj.item.updateReview.reviewComment.split('T')[0])
+								
+								//$(this).parent("div").parent("div").remove("button");
+								$(btn).remove();
+								btnFlag = true;
+							},
+							error: function(e) {
+								console.log(e);
+							}
+						});
+						console.log(btnFlag)
+					});					
+					// 댓글 갯수_장찬영
+					console.log($(".review-cnt").val());
+					$("#comment-cnt").text($(".review-cnt").val());
+					
+					if($(".review-cnt").val() < 6) {
+						$(".comment-hide").hide();
+					}
+					else if($(".review-cnt").val() == null) {
+						$(".comment-hide").hide();
+						$("#comment-cnt").text(0);
+						let htmlStr = "";
+						htmlStr = `
+							<div id="comment-none-wrapper">
+								<p id="comment-none">첫번째 댓글의 주인이 되어보세요.</p>
+							</div>
+						`;
+						$("#datecourse-comment-container").append(htmlStr);
+						console.log("너 누구? : " + this);
+					}
+					
+					$("#show").on("click", function() {
+						if($("#show").text() === " 댓글 전체보기 ") {
+							$(".comment-img").attr("src", "/images/down.png")
+						}
+						else if($("#show").text() === " 댓글 접기 ") {
+							$(".comment-img").attr("src", "/images/upload.png")
+						}
 					});
+                
+
                 });
+                
+                // 네이버 검색 엔진_세혁인겸
+                function fnSearchNaver() {
+					let naverQueryUrl = "https://search.naver.com/search.naver?query=";
+					let searchKeyword = $("#cateDatecourseSearchInput").val();
+					
+					let lastQueryUrl = naverQueryUrl + searchKeyword;
+					
+					$("#naverSearch").attr("href", lastQueryUrl);
+				}
 		</script>
   </th:block>  
   
@@ -299,17 +346,16 @@
 <body>
 	<div layout:fragment="content">
 	  <div id="datecourse-detail-container">
-	    <h1 th:text="${datecourse.datecourseNm}" id="datecourseNm"></h1>
+	    <h1 th:text="${datecourse.datecourseNm}"></h1>
 	  </div>
 	
 	  <!-- 메인 이미지 영역 -->
 	  <div id="datecourse-img-container">
 	    <div id="main-img">
 	      <div th:each="datecourseImageDTOList : ${datecourseImageDTOList}">
-	        <a th:href="@{${datecourse.datecourseOfficialSite}}"><img th:if="${datecourseImageDTOListStat.index == 0}"
+	        <img th:if="${datecourseImageDTOListStat.index == 0}"
 	        				 th:src="@{'/upload/' + ${datecourseImageDTOList.imageNm}}"
 	        			     width="600" height="400" >
-	        </a>
 	      </div>
 	    </div>
 	  </div>
@@ -317,7 +363,7 @@
 	  <!-- 데이트코스 설명 부분 -->
 	  <div id="datecourse-main-info">
 	    <div id="main-info">
-	      <h2 th:text="${datecourse.datecourseDesc}"></h2><br>
+	      <p id="datecourseDesc-text" th:text="${datecourse.datecourseDesc}"></p>
 	    </div>
 	  </div>
 	
@@ -328,13 +374,13 @@
 	  <div id="datecourse-sub-info">
 	    <div class="datecourse-line">
 	      <div class="sub-img">
-	        <img th:src="@{/images/address.png}" width="30" height="30">
+	        <img th:src="@{/images/address.png}" width="25" height="25">
 	      </div>
 	      <div class="sub-title">
-	        <h5>주소</h5>
+	        <p class="p">주소</p>
 	      </div>
 	      <div class="sub-info" >
-	        <h5 th:text="${datecourse.datecourseAddr}" id="datecourseAddr"></h5>
+	        <p class="p" th:text="${datecourse.datecourseAddr}" id="datecourseAddr"></p>
 	      </div>
 	      <button type="button" class="btn1" id="datecourseAdd" th:datecourse-no="${datecourse.datecourseNo}">
 	        <span class="btn_inner" id="datecourseAdd-text">데이트 코스에 추가</span>
@@ -342,82 +388,82 @@
 	    </div>
 	    <div class="datecourse-line">
 	      <div class="sub-img">
-	        <img th:src="@{/images/tel.png}" width="30" height="30">
+	        <img th:src="@{/images/tel.png}" width="25" height="25">
 	      </div>
 	      <div class="sub-title">
-	        <h5>전화번호</h5>
+	        <p class="p">전화번호</p>
 	      </div>
 	      <div class="sub-info" id="InfoTel">
-	        <h5 th:text="${datecourse.datecourseTel}"></h5>
+	        <p class="p" th:text="${datecourse.datecourseTel}"></p>
 	      </div>
 	      <!-- 데이트코스 검색 -->
 	      <div id="searchDatecourse">
 	        <div>
-	          <button type="button" id="searchNaver">
-	            <span>검색</span>
-	          </button>
+		        <div id="searchImg">
+		          <img th:src="@{/images/search.png}" width="25" height="25">
+		        </div>
 	        </div>
 	        <div id="searchInputWrapper" >
-	        	<form action="" method="get" id="cateDatecourseForm" name="cateDatecourseSearchInput">
-	              <input id="cateDatecourseSearchInput" name="cateDatecourseSearchInput"
-	              		 placeholder="음식점 또는 지역을 입력해주세요" onfocus="this.placeholder=''" 
-						 onblur="placeholder='음식점 또는 지역을 입력해주세요'">
-				</form>
-	          <img th:src="@{/images/expand.PNG}" style="margin-left: 6px;">
+              <input id="cateDatecourseSearchInput" name="cateDatecourseSearchInput" th:value="${datecourse.datecourseNm}"
+              		 placeholder="검색어를 입력해주세요." onfocus="this.placeholder=''" 
+					 onblur="placeholder='검색어를 입력해주세요.'">
+	          <img th:src="@{/images/expand.PNG}" style="margin-left: 7px;">
 	        </div>
-	        <div id="searchImg">
-	          <img th:src="@{/images/search.png}" width="27" height="27">
-	        </div>
+	       	<a id="naverSearch" href="" target="_blank" onclick="fnSearchNaver();">
+	            <span>검색</span>
+	        </a>
 	      </div>
 	
 	    </div> 
 	    <div class="datecourse-line">
 	      <div class="sub-img">
-	        <img th:src="@{/images/site.png}" width="30" height="30">
+	        <img th:src="@{/images/site.png}" width="25" height="25">
 	      </div>
 	      <div class="sub-title">
-	        <h5>웹 사이트</h5>
+	        <p class="p">웹 사이트</p>
 	      </div>
 	      <div class="sub-info">
-	        <a id="datecourseOfficialSiteA" th:href="@{${datecourse.datecourseOfficialSite}}"><h5 id="datecourseOfficialSite" th:text="${datecourse.datecourseOfficialSite}"></h5></a>
+	        <a id="datecourseOfficialSiteA" th:href="@{${datecourse.datecourseOfficialSite}}" target="_blank">
+	        	<p id="datecourseOfficialSite" class="p" th:text="${datecourse.datecourseOfficialSite}"></p>
+	        </a>
 	      </div>
 	    </div>   
 	    <div class="datecourse-line">
 	      <div class="sub-img">
-	        <img th:src="@{/images/park.png}" width="30" height="30">
+	        <img th:src="@{/images/park.png}" width="25" height="25">
 	      </div>
 	      <div class="sub-title">
-	        <h5>주차</h5>
+	        <p class="p">주차</p>
 	      </div>
 	      <div class="sub-info">
-	        <h5 id="datecourseParkingYn" th:text="${datecourse.datecourseParkingYn}" ></h5>
+	        <p id="datecourseParkingYn" class="p" th:text="${datecourse.datecourseParkingYn}" ></p>
 	      </div>
 	    </div>   
 	    <div class="datecourse-line">
 	      <div class="sub-img">
-	        <img th:src="@{/images/time.png}" width="30" height="30">
+	        <img th:src="@{/images/time.png}" width="25" height="25">
 	      </div>
 	      <div class="sub-title">
-	        <h5>영업 정보</h5>
+	        <p class="p">영업 정보</p>
 	      </div>
 	      <div class="sub-info">
 	         <div style="width:300px; display: flex;" th:each="datecourseHours : ${datecourseHours}">
-	              <h5 th:text="${datecourseHours.datecourseHoursInfo}" style="margin-bottom:20px;"></h5><br>
+	              <p class="p" th:text="${datecourseHours.datecourseHoursInfo}" style="margin-bottom:20px;"></p><br>
 	         </div>
 	     </div>
 	    </div>   
 	    <div class="datecourse-line" style="display:inline-block;">
 	      <div class="sub-img">
-	        <img th:src="@{/images/menu.png}" width="30" height="30">
+	        <img th:src="@{/images/menu.png}" width="25" height="25">
 	      </div>
 	      <div class="sub-title">
-	        <h5>메뉴</h5>
+	        <p class="p">메뉴</p>
 	      </div>
 	      <div class="sub-info"  >
 	        <div style="display:flex; justify-content: left; align-items: center;" th:each="datecourseMenu : ${datecourseMenu}">
 	        	<div style="width:500px; display: flex;">
-			        <h5 style="width:200px; display: inline-block; margin:0 30px 20px 0" th:text="${datecourseMenu.datecourseMenuNm}"></h5> 
-			        <h5 class="datecourseMenuPrice" th:text="${datecourseMenu.datecourseMenuPrice}"></h5>원
+			        <p class="p" style="width:150px; display: inline-block; margin:0 10px 20px 0" th:text="${datecourseMenu.datecourseMenuNm}"></p> 
+			        <p class="datecourseMenuPrice p" th:text="${datecourseMenu.datecourseMenuPrice} + '원'"></p>
 		        </div>
 	        </div>
 	      </div>
@@ -425,21 +471,20 @@
 	    <!-- 메뉴 이미지 영역 -->
 	    <div id="menu-img-container">
 	      <div class="sub-img">
-	        <img th:src="@{/images/image.png}" width="30" height="30">
+	        <img th:src="@{/images/image.png}" width="25" height="25">
 	      </div>
 	      <div class="sub-title">
 	        <h5>이미지</h5>
 	      </div>
 	      <div id="menu-img" >
-	        <div th:each="datecourseImageDTOList : ${datecourseImageDTOList}">
+	        <div th:each="datecourseImageDTOList : ${datecourseImageDTOList}" th:if="${datecourseImageDTOListStat.index > 0}">
 	             <a href="#" id="getModalImage"
 	             			 class="getModalImageList" 
 	                         th:datecourse-no="${datecourse.datecourseNo}" 
 	                         data-bs-toggle="modal" 
 	                         data-bs-target="#exampleModal"
-	                         onclick="showModal()">
+	                         th:onclick="showModal([[${datecourseImageDTOListStat.index}]])">
 	             	<img th:src="@{'/upload/' + ${datecourseImageDTOList.imageNm}}"  
-		                 th:if="${datecourseImageDTOListStat.index > 0}"
 		          	     width="200" 
 		          	     height="100">
 	          	 </a>
@@ -454,7 +499,6 @@
 	  <!-- 구분선 -->
 	  <hr class="hrLine">
 	
-	  <!-- 댓글 영역 -->
 	  <div id="datecourse-comment-container">
 	  	<!-- 댓글 입력_장찬영 -->
 	    <div id="comment-wrapper">
@@ -467,13 +511,13 @@
 	  
 	  	<h4 style="margin-bottom: 20px;">댓글
 	  		<span>(</span>
-	  		<span style="color:#ee2d7a">??</span>
+	  		<span style="color:#ee2d7a; font-weight: bold;" id="comment-cnt"></span>
 	  		<span>)</span>
 	  	</h4>
 	    <div class="comment-container" th:each="review : ${review}" th:if="${reviewStat.index < 5}"}>
 	        <div class="comment-left-section">
 	          <div>
-	            <img th:src="@{/images/user.png}">
+	            <img th:src="@{/images/user02.png}">
 	          </div>
 	        </div>
 	        <div class="comment-right-section">
@@ -484,20 +528,21 @@
 	            <div class="comment-regdate">
 	              <a th:text="${#strings.substring(review.reviewModfDate, 0, 10)}"></a>
 	            </div>
-	            <div class="comment-update">
-	            	<a class="comment-update-click" th:datecourse-no="${review.datecourseNo}" th:review-no="${review.reviewNo}">수정</a>
+	            <div class="comment-update" th:if="${#authentication.principal.username} == ${review.reviewerId}">
+	            	<a class="comment-update-click">수정</a>
 	            </div>&ensp;
-	            <div class="comment-delete">
+	            <div class="comment-delete" th:if="${#authentication.principal.username} == ${review.reviewerId}">
 	            	<a class="comment-delete-click" th:datecourse-no="${review.datecourseNo}" th:review-no="${review.reviewNo}">삭제</a>
 	            </div>
 	          </div>
 	          <div class="comment-right-bottom">
 	            <div class="comment-comment">
-	              <p th:text="${review.reviewComment}"></p>
+	              <textarea class="comment-textarea" th:text="${review.reviewComment}" th:datecourse-no="${review.datecourseNo}" th:review-no="${review.reviewNo}" readonly></textarea>
 	            </div>
 	          </div>
 	        </div>
 	        <hr>
+	        <input class="review-cnt" type="hidden" th:if="${reviewStat.last}" th:value="${reviewStat.count}">
 	      </div>
 	    
 	   
@@ -506,7 +551,7 @@
 	  	  <div class="comment-container" th:each="review : ${review}" th:if="${reviewStat.index > 4}"}>
 	        <div class="comment-left-section">
 	          <div>
-	            <img th:src="@{/images/user.png}">
+	            <img th:src="@{/images/user02.png}">
 	          </div>
 	        </div>
 	        <div class="comment-right-section">
@@ -518,7 +563,7 @@
 	              <a th:text="${#strings.substring(review.reviewModfDate, 0, 10)}"></a>
 	            </div>
 	            <div class="comment-update">
-	            	<a class="comment-update-click" th:datecourse-no="${review.datecourseNo}" th:review-no="${review.reviewNo}">수정</a>
+	            	<a class="comment-update-click">수정</a>
 	            </div>&ensp;
 	            <div class="comment-delete">
 	            	<a class="comment-delete-click" th:datecourse-no="${review.datecourseNo}" th:review-no="${review.reviewNo}">삭제</a>
@@ -526,17 +571,20 @@
 	          </div>
 	          <div class="comment-right-bottom">
 	            <div class="comment-comment">
-	              <p th:text="${review.reviewComment}"></p>
+	              <textarea class="comment-textarea" th:text="${review.reviewComment}" th:datecourse-no="${review.datecourseNo}" th:review-no="${review.reviewNo}" readonly></textarea>
 	            </div>
 	          </div>
 	        </div>
 	        <hr>
+	        <input class="review-cnt" type="hidden" th:if="${reviewStat.last}" th:value="${reviewStat.count}">
 	      </div>
 	        
 	     </div>	    
 	    <div class="comment-hide">
-	      <a href=#none id="show" onclick="if(hide.style.display=='none') {hide.style.display='';show.innerText='----- 댓글 접기 -----'} 
-	      else {hide.style.display='none';show.innerText='----- 댓글 더보기 -----'}">----- 댓글 전체보기 -----</a>
+	      <img class="comment-img" th:src="@{/images/down.png}" style="width: 30px">&ensp;
+	      <a href=#none id="show" onclick="if(hide.style.display=='none') {hide.style.display='';show.innerText=' 댓글 접기 '} 
+	      else {hide.style.display='none';show.innerText=' 댓글 전체보기 '}"> 댓글 전체보기 </a>&ensp;
+	      <img class="comment-img" th:src="@{/images/down.png}" style="width: 30px">
 	    </div>
 	  </div>
 	  
@@ -547,9 +595,8 @@
 		      <div class="modal-body">
 		        <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
 				  <div class="carousel-inner">
-				    <div class="carousel-item active" th:each="datecourseImageDTOList : ${datecourseImageDTOList}">
+				    <div class="carousel-item" th:each="datecourseImageDTOList : ${datecourseImageDTOList}" th:if="${datecourseImageDTOListStat.index > 0}">
 				      <img th:src="@{'/upload/' + ${datecourseImageDTOList.imageNm}}" 
-			               th:if="${datecourseImageDTOListStat.index > 0}"
 			          	   class="d-block w-100 carouselImgList"
 			          	   height="400px">
 				    </div>

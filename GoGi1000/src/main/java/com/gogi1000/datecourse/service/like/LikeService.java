@@ -14,7 +14,7 @@ public interface LikeService {
 	Page<CamelHashMap> mypageLikeList(Review review, Pageable pageable);
 	
 	// 좋아요 삭제_장찬영
-	void deleteLike(LikeId likeId);
+	void deleteLike(Like likes);
 	
 	// 좋아요 등록_장찬영
 	void insertLike(Like like);

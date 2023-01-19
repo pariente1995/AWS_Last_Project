@@ -110,27 +110,46 @@ public class ReviewController {
     
     // 리뷰 수정_장찬영
     @PutMapping("/updateReview")
-    public /*ResponseEntity<?>*/ void updateReview(@RequestParam("updateReview") String updateReview, 
+    public ResponseEntity<?> updateReview(@RequestParam("updateReview") String updateReview, 
     		@AuthenticationPrincipal CustomUserDetails customUser) throws JsonMappingException, JsonProcessingException  {
     	Map<String, Object> update = new ObjectMapper().readValue(updateReview, 
 				new TypeReference<Map<String, Object>>() {});
     	ResponseDTO<Map<String, Object>> response = new ResponseDTO<>();
-    	
-    	/*
+    	System.out.println(update);
+  
     	try {
     		 Review review = Review.builder()
-    				 				.datecourseNo(update.get("datecourseNo"))
-    				 				.reviewNo(update.get("reviewNo"))
-    				 				.reviewComment(update.get("reviewComment"))
+    				 				.reviewerId(customUser.getUsername())
+    				 				.datecourseNo(Integer.valueOf((String)update.get("datecourseNo")))
+    				 				.reviewNo(Integer.valueOf((String)update.get("reviewNo")))
+    				 				.reviewComment(String.valueOf(update.get("reviewComment")))
+    				 				.reviewModfDate(LocalDateTime.now())
     		 						.build();
-
+    		 
+    		 Review reviewResult = reviewService.updateReview(review);
+    		 
+    		 ReviewDTO returnReview = ReviewDTO.builder()
+    				 							.datecourseNo(reviewResult.getDatecourseNo())
+    				 							.reviewNo(reviewResult.getReviewNo())
+    				 							.reviewComment(reviewResult.getReviewComment())
+    				 							.reviewModfDate(reviewResult.getReviewModfDate().toString())
+    				 							.build();
+    		 
+    		 Map<String, Object> returnMap = new HashMap<String, Object>();
+    		 
+    		 returnMap.put("updateReview", returnReview);
+     		
+     		 response.setItem(returnMap);
+ 			
+ 			 return ResponseEntity.ok().body(response);
+    		 
     	}
     	catch(Exception e) {
     		response.setErrorMessage(e.getMessage());
 			
 			return ResponseEntity.badRequest().body(response);
     	}
-    	*/
+    	
     	
     }
     

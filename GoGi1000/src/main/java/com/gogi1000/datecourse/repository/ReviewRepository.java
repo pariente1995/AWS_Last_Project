@@ -141,4 +141,14 @@ public interface ReviewRepository extends JpaRepository<Review, ReviewId> {
 			+ "    WHERE DATECOURSE_NO = :datecourseNo"
 			, nativeQuery = true)
 	void deleteByDatecourseNo(@Param("datecourseNo") int datecourseNo);
+	
+	// 상세 게시슬 댓글 출력_장찬영
+	@Modifying
+	@Query(value="UPDATE T_GGC_REVIEW A"
+			+ "		 SET A.REVIEW_COMMENT = :#{#review.reviewComment}"
+			+ "		   , A.REVIEW_MODF_DATE = :#{#review.reviewModfDate}"
+			+ "	   WHERE A.DATECOURSE_NO = :#{#review.datecourseNo}"
+			+ "		 AND A.REVIEW_NO = :#{#review.reviewNo}"	
+			, nativeQuery = true)
+	void updateReview(@Param("review") Review review);
 }

@@ -8,6 +8,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.gogi1000.datecourse.common.CamelHashMap;
+import com.gogi1000.datecourse.entity.CustomUserDetails;
 import com.gogi1000.datecourse.entity.Datecourse;
 import com.gogi1000.datecourse.entity.DatecourseImage;
 import com.gogi1000.datecourse.entity.Hotdeal;
@@ -34,15 +35,16 @@ public class MainServiceImpl implements MainService{
 	
 	// 검색창에서 지역명, 코스명, 내용으로 검색 후 조회
 	@Override
-	public Page<CamelHashMap> getSearchMapDatecourseList(Datecourse datecourse, Pageable pageable) {
+	public Page<CamelHashMap> getSearchMapDatecourseList(Datecourse datecourse, Pageable pageable,
+			CustomUserDetails customUser) {
 		if(datecourse.getSearchKeyword() != null && !datecourse.getSearchKeyword().equals("")) {
 			return datecourseRepository.getSearchDatecourseList(
 				datecourse.getSearchKeyword(), 
 				datecourse.getSearchKeyword(), 
 				datecourse.getSearchKeyword(), 
-				pageable);
+				pageable, customUser);
 		} else if (datecourse.getDatecourseArea() != null && !datecourse.getDatecourseArea().equals("")) {
-			return datecourseRepository.getMapDatecourseList(datecourse.getDatecourseArea(), pageable);
+			return datecourseRepository.getMapDatecourseList(datecourse.getDatecourseArea(), pageable, customUser);
 		} else {
 			return null;
 		}

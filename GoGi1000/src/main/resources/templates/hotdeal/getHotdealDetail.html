@@ -16,7 +16,7 @@
             $(document).ready(function () {
                 $('#main-img').bxSlider({
                     slideWidth: 800,        // 이미지의 너비
-                    slideHeight: 700,    // 이미지의 높이
+                    //slideHeight: 700,    // 이미지의 높이
                     maxSlides: 1,          // 이미지의 최대 노출 개수
                     minSlides: 1,          // 이미지의 최소 노출 개수
                     moveSlides: 1,         // 이미지의 이동 개수
@@ -46,7 +46,7 @@
                 <div id="main-img">
                     <div th:each="datecourseImage : ${getDatecourseImageList}">
                         <img th:if="${datecourseImage.imageNm} != 'null'"
-                        	 th:src="@{'/upload/' + ${datecourseImage.imageNm}}" style="width:100%; height:100%">
+                        	 th:src="@{'/upload/' + ${datecourseImage.imageNm}}" style="width:100%; height:900px">
                     </div>
                 </div>
             </div>
@@ -103,7 +103,7 @@
                             <span class="hotdeal-sub-text">구매페이지로 이동</span>
                         </div>
                         <div class="hotdeal-sub-text">
-                            <a th:href="@{${getHotdeal.hotdealOfficialSite}}"<h5 th:text="${getHotdeal.hotdealOfficialSite}" style="text-decoration:none;"></h5></a>
+                            <a th:href="@{${getHotdeal.hotdealOfficialSite}}"<h5 th:text="${getHotdeal.hotdealOfficialSite}" id="site-text"></h5></a>
                         </div>
                     </div>
                     <!-- 핫딜 상세 정보 -->

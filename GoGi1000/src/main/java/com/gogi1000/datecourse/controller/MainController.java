@@ -3,9 +3,7 @@ package com.gogi1000.datecourse.controller;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -13,48 +11,46 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
-import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gogi1000.datecourse.common.CamelHashMap;
 import com.gogi1000.datecourse.dto.DatecourseDTO;
 import com.gogi1000.datecourse.dto.DatecourseImageDTO;
 import com.gogi1000.datecourse.dto.HotdealDTO;
-import com.gogi1000.datecourse.dto.ResponseDTO;
 import com.gogi1000.datecourse.dto.ReviewDTO;
+import com.gogi1000.datecourse.entity.CustomUserDetails;
 import com.gogi1000.datecourse.entity.Datecourse;
 import com.gogi1000.datecourse.entity.DatecourseImage;
 import com.gogi1000.datecourse.entity.Hotdeal;
 import com.gogi1000.datecourse.entity.Review;
 import com.gogi1000.datecourse.service.main.MainService;
+import com.gogi1000.datecourse.service.review.ReviewService;
 
 @RestController
 @RequestMapping("/main")
 public class MainController {
 	@Autowired
 	private MainService mainService;
-	
+	@Autowired
+	private ReviewService reviewService;
 	
 	// 검색창에서 지역명, 코스명, 내용으로 검색 후 조회
 	@GetMapping("/getSearchMapDatecourseList")
 	public ModelAndView getSearchMapDatecourseList(
 			DatecourseDTO datecourseDTO,
-		@PageableDefault(page=0, size=12) Pageable pageable)  throws IOException  {
+		@PageableDefault(page=0, size=12) Pageable pageable,
+		@AuthenticationPrincipal CustomUserDetails customUser)  throws IOException  {
 		Datecourse datecourse = Datecourse.builder()
 									   .datecourseArea(datecourseDTO.getDatecourseArea())
 									   .searchKeyword(datecourseDTO.getSearchKeyword())
 									   .build();
 		
-		Page<CamelHashMap> searchMapDatecourseList = mainService.getSearchMapDatecourseList(datecourse, pageable);
+		Page<CamelHashMap> searchMapDatecourseList = mainService.getSearchMapDatecourseList(datecourse, pageable, customUser);
 		
 		
 		ModelAndView mv = new ModelAndView();
@@ -88,7 +84,7 @@ public class MainController {
 	
 	// 메인에서 인기 상세 페이지 조회 시, 조회수 증가_인겸
 	@GetMapping("/updateCateDatecourseCnt/{datecourseNo}")
-	public void updateBoardCnt(@PathVariable int datecourseNo, HttpServletResponse response) throws IOException {
+	public void updateCateDatecourseCnt(@PathVariable int datecourseNo, HttpServletResponse response) throws IOException {
 		mainService.updateCateDatecourseCnt(datecourseNo);
 		
 		response.sendRedirect("/main/getCateDatecourse/" + datecourseNo);
@@ -134,6 +130,23 @@ public class MainController {
 			datecourseImageDTOList.add(datecourseImageDTO);
 		}
 		
+		// 리뷰 출력_장찬영
+		List<Review> getCommentList = reviewService.getCommentList(datecourseNo); 
+						
+		List<ReviewDTO> returnComment = new ArrayList<ReviewDTO>();
+						
+		for(Review getComment : getCommentList) {
+			ReviewDTO returnCommentDTO = ReviewDTO.builder()
+												.datecourseNo(getComment.getDatecourseNo())
+												.reviewerId(getComment.getReviewerId())
+												.reviewNo(getComment.getReviewNo())
+												.reviewComment(getComment.getReviewComment())
+												.reviewModfDate(getComment.getReviewModfDate().toString())
+												.build();
+							
+			returnComment.add(returnCommentDTO);
+		}
+		
 		ModelAndView mv = new ModelAndView();
 		mv.setViewName("datecourse/getCateDatecourse.html");
 		
@@ -144,6 +157,8 @@ public class MainController {
 		mv.addObject("datecourseMenu", datecourseMenu);
 		
 		mv.addObject("datecourseHours", datecourseHours);
+		
+		mv.addObject("review", returnComment);
 		
 		return mv;
 				
@@ -158,6 +173,7 @@ public class MainController {
 		HotdealDTO hodealDTO = HotdealDTO.builder()
 							.hotdealNo(hotdeal.getHotdealNo())
 							.hotdealNm(hotdeal.getHotdealNm())
+							.hotdealSummary(hotdeal.getHotdealSummary())
 							.hotdealDesc(hotdeal.getHotdealDesc())
 							.hotdealPrice(hotdeal.getHotdealPrice())
 							.hotdealOfficialSite(hotdeal.getHotdealOfficialSite())

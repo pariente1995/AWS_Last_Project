@@ -267,11 +267,39 @@
 
         /* 좋아요 버튼 클릭 시 효과 설정 */
         // 동적으로 생성된 태그이기에 아래와 같이 작성해준다!
-        $(document).on("click", ".likeImg", function() {
+         $(document).on("click", ".likeImg", function() {
+		  const selectLikeImg = $(this);
+		  
           if($(this).attr("src") == "/images/emptystar.png") {
-            $(this).attr("src", "/images/yellowstar.png");
+			  	
+			$.ajax({
+				url: '/like/InsertLike',
+				type: 'post',
+				data: {datecourseNo : $(this).attr('datecourse-no')},
+				success: function(obj) {
+					alert("'좋아요' 하였습니다.");
+					selectLikeImg.attr("src", "/images/yellowstar.png");
+				},
+				error: function(e) {
+					console.log(e);
+				}
+			});
           } else {
-            $(this).attr("src", "/images/emptystar.png");
+
+            	            		
+	        $.ajax({
+				url: '/like/deleteLike',
+				type: 'delete',
+				data: {datecourseNo : $(this).attr('datecourse-no')},
+				success: function(obj) {
+					alert("삭제되었습니다.");
+					selectLikeImg.attr("src", "/images/emptystar.png");
+				},
+				error: function(e) {
+					console.log(e);
+				}
+			});   
+            
           }
         });
 
@@ -694,7 +722,8 @@
 	                <span class="datecourseLikeCount">좋아요&nbsp; <p th:text="${searchMapDatecourseList.likeCnt}"></p></span>
 	              </div>
 	              <div class="datecourese-list-like">
-	                <img src="/images/emptystar.png" class="likeImg">
+	                <img th:src="${searchMapDatecourseList.likeYn} eq 'Y' ? @{/images/yellowStar.png} : @{/images/emptystar.png}" 
+	                		class="likeImg" th:datecourse-no="${searchMapDatecourseList.datecourseNo}">
 	              </div>
 	            </div>
 	        </div>
