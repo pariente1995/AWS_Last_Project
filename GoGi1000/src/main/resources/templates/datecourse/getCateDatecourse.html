@@ -168,7 +168,7 @@
                         }
 
                     })
-					
+
 					// 엔터 시 네이버 검색 엔진_세혁인겸
 					$("#cateDatecourseSearchInput").on("keyup", function(e) {
 						
@@ -244,6 +244,7 @@
 								}
 						});
 					});
+          
 					let btnFlag = true;
 					
 					// 댓글 수정_장찬영
@@ -325,12 +326,35 @@
 							$(".comment-img").attr("src", "/images/upload.png")
 						}
 					});
+        });
                 
-
-                });
+        // 네이버 검색 엔진_세혁인겸
+        function fnSearchNaver() {
+					let naverQueryUrl = "https://search.naver.com/search.naver?query=";
+					let searchKeyword = $("#cateDatecourseSearchInput").val();
+					
+					let lastQueryUrl = naverQueryUrl + searchKeyword;
+					
+					
+					// 엔터 시 네이버 검색 엔진_세혁인겸
+					$("#cateDatecourseSearchInput").on("keyup", function(e) {
+						
+						if (e.keyCode == 13) {
+							console.log($("#cateDatecourseSearchInput").val());
+							let naverQueryUrl = "https://search.naver.com/search.naver?query=";
+							let searchKeyword = $(this).val();
+							
+							let lastQueryUrl = naverQueryUrl + searchKeyword;
+							
+							$("#naverSearch").attr("href", lastQueryUrl);
+							
+							$("#naverSearch").get(0).click();
+						}
+					})	
+        })
                 
-                // 네이버 검색 엔진_세혁인겸
-                function fnSearchNaver() {
+        // 네이버 검색 엔진_세혁인겸
+        function fnSearchNaver() {
 					let naverQueryUrl = "https://search.naver.com/search.naver?query=";
 					let searchKeyword = $("#cateDatecourseSearchInput").val();
 					
@@ -339,9 +363,7 @@
 					$("#naverSearch").attr("href", lastQueryUrl);
 				}
 		</script>
-  </th:block>  
-  
-    
+  </th:block>
 </head>
 <body>
 	<div layout:fragment="content">
@@ -515,6 +537,36 @@
 	  		<span>)</span>
 	  	</h4>
 	    <div class="comment-container" th:each="review : ${review}" th:if="${reviewStat.index < 5}"}>
+      
+	  <!-- 댓글 영역 -->
+	  <div id="datecourse-comment-container"><h2>댓글</h2>
+	    <div class="comment-container">
+	      <div class="comment-left-section">
+	        <div>
+	          <img th:src="@{/images/user.png}">
+	        </div>
+	      </div>
+	      <div class="comment-right-section">
+	        <div class="comment-right-top">
+	          <div class="comment-user">
+	            <a>user0001</a>
+	          </div>
+	          <div class="comment-regdate">
+	            <a>2022-12-23</a>
+	          </div>
+	        </div>
+	        <div class="comment-right-bottom">
+	          <div class="comment-comment">
+	            <p>『훈민정음』(訓民正音, 중세 한국어: 훈민정음)은 한글의 옛 이름(첫 이름)으로 세종대왕이 창제한 문자의 명칭이자 훈민정음의 창제 원리와 사용법 등을 해설해 놓은 책의 제목이기도 하다. 세종 25년(1443년)에 창제 된 후 1446년(세종 28년)에 반포된 훈민정음의 뜻은 '백성(民)을 가르치는(訓) 바른(正) 소리(音)'이며, 28개의 낱자로 구성되어 있다. 소리글자에 속하며, 배우기 쉽고 읽고 쓰기에 편리한 장점을 가지고 있다. 이 훈민정음이 우리가 지금 사용하고 있는 한글이며,</p>
+	          </div>
+	        </div>
+	      </div>
+	    </div>
+	    
+	   
+	    <div id="hide" style="display: none">
+	  
+	      <div class="comment-container">
 	        <div class="comment-left-section">
 	          <div>
 	            <img th:src="@{/images/user02.png}">
@@ -523,7 +575,7 @@
 	        <div class="comment-right-section">
 	          <div class="comment-right-top">
 	            <div class="comment-user">
-	              <a th:text="${review.reviewerId}"></a>
+	              <a>user0001</a>
 	            </div>
 	            <div class="comment-regdate">
 	              <a th:text="${#strings.substring(review.reviewModfDate, 0, 10)}"></a>
@@ -533,6 +585,7 @@
 	            </div>&ensp;
 	            <div class="comment-delete" th:if="${#authentication.principal.username} == ${review.reviewerId}">
 	            	<a class="comment-delete-click" th:datecourse-no="${review.datecourseNo}" th:review-no="${review.reviewNo}">삭제</a>
+	              <a>2022-12-23</a>
 	            </div>
 	          </div>
 	          <div class="comment-right-bottom">
@@ -543,12 +596,12 @@
 	        </div>
 	        <hr>
 	        <input class="review-cnt" type="hidden" th:if="${reviewStat.last}" th:value="${reviewStat.count}">
+	              <p>『훈민정음』(訓民正音, 중세 한국어: 훈민정음)은 한글의 옛 이름(첫 이름)으로 세종대왕이 창제한 문자의 명칭이자 훈민정음의 창제 원리와 사용법 등을 해설해 놓은 책의 제목이기도 하다. 세종 25년(1443년)에 창제 된 후 1446년(세종 28년)에 반포된 훈민정음의 뜻은 '백성(民)을 가르치는(訓) 바른(正) 소리(音)'이며, 28개의 낱자로 구성되어 있다. 소리글자에 속하며, 배우기 쉽고 읽고 쓰기에 편리한 장점을 가지고 있다. 이 훈민정음이 우리가 지금 사용하고 있는 한글이며,</p>
+	            </div>
+	          </div>
+	        </div>
 	      </div>
-	    
-	   
-	    <div id="hide" style="display: none">
-			
-	  	  <div class="comment-container" th:each="review : ${review}" th:if="${reviewStat.index > 4}"}>
+	      <div class="comment-container">
 	        <div class="comment-left-section">
 	          <div>
 	            <img th:src="@{/images/user02.png}">
@@ -557,7 +610,7 @@
 	        <div class="comment-right-section">
 	          <div class="comment-right-top">
 	            <div class="comment-user">
-	              <a th:text="${review.reviewerId}"></a>
+	              <a>user0001</a>
 	            </div>
 	            <div class="comment-regdate">
 	              <a th:text="${#strings.substring(review.reviewModfDate, 0, 10)}"></a>
@@ -567,6 +620,7 @@
 	            </div>&ensp;
 	            <div class="comment-delete">
 	            	<a class="comment-delete-click" th:datecourse-no="${review.datecourseNo}" th:review-no="${review.reviewNo}">삭제</a>
+	              <a>2022-12-23</a>
 	            </div>
 	          </div>
 	          <div class="comment-right-bottom">
@@ -577,14 +631,19 @@
 	        </div>
 	        <hr>
 	        <input class="review-cnt" type="hidden" th:if="${reviewStat.last}" th:value="${reviewStat.count}">
+	              <p>『훈민정음』(訓民正音, 중세 한국어: 훈민정음)은 한글의 옛 이름(첫 이름)으로 세종대왕이 창제한 문자의 명칭이자 훈민정음의 창제 원리와 사용법 등을 해설해 놓은 책의 제목이기도 하다. 세종 25년(1443년)에 창제 된 후 1446년(세종 28년)에 반포된 훈민정음의 뜻은 '백성(民)을 가르치는(訓) 바른(正) 소리(音)'이며, 28개의 낱자로 구성되어 있다. 소리글자에 속하며, 배우기 쉽고 읽고 쓰기에 편리한 장점을 가지고 있다. 이 훈민정음이 우리가 지금 사용하고 있는 한글이며,</p>
+	            </div>
+	          </div>
+	        </div>
 	      </div>
-	        
-	     </div>	    
+	    </div>
 	    <div class="comment-hide">
 	      <img class="comment-img" th:src="@{/images/down.png}" style="width: 30px">&ensp;
 	      <a href=#none id="show" onclick="if(hide.style.display=='none') {hide.style.display='';show.innerText=' 댓글 접기 '} 
 	      else {hide.style.display='none';show.innerText=' 댓글 전체보기 '}"> 댓글 전체보기 </a>&ensp;
 	      <img class="comment-img" th:src="@{/images/down.png}" style="width: 30px">
+	      <a href=#none id="show" onclick="if(hide.style.display=='none') {hide.style.display='';show.innerText='----- 댓글 접기 -----'} 
+	      else {hide.style.display='none';show.innerText='----- 댓글 더보기 -----'}">----- 댓글 더보기 -----</a>
 	    </div>
 	  </div>
 	  
@@ -615,6 +674,5 @@
 		  </div>
 		</div>
     </div>
-</body> 
-  
+</body>
 </html>

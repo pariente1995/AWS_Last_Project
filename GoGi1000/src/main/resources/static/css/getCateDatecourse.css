@@ -335,7 +335,7 @@
 		background-color: #ee2d7a; color: white;
 		float: right; margin-bottom: 5px;
 	}
-	
+
 	/* bxslider css 오버라이드 */
 	.bx-wrapper {
 		z-index: 0;
@@ -375,4 +375,3 @@
 	.comment-textarea {
 		height: 300px;
 	}
-	

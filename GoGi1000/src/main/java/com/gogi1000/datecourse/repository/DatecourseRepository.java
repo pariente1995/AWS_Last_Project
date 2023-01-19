@@ -122,7 +122,7 @@ public interface DatecourseRepository extends JpaRepository<Datecourse, Integer>
 	@Query(value = "SELECT A.*, "
 			+"			   C.IMAGE_NM"
 			+"		  FROM T_GGC_DATECOURSE A"
-			+"		  JOIN ( SELECT AA.DATECOURSE_NO, COUNT(AA.DATECOURSE_NO) AS 'DATECOURSE_CNT'"
+			+"	LEFT  JOIN ( SELECT AA.DATECOURSE_NO, COUNT(AA.DATECOURSE_NO) AS 'DATECOURSE_CNT'"
 			+"				   FROM	T_GGC_LIKE AA"
 			+"				  GROUP BY AA.DATECOURSE_NO ) B ON A.DATECOURSE_NO = B.DATECOURSE_NO"
 			+"		  JOIN T_GGC_IMAGE C ON A.DATECOURSE_NO = C.REFERENCE_NO"
