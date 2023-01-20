@@ -355,7 +355,7 @@
 		padding: 5px;
 	}
 	
-	#updateBtn {
+	.updateBtn {
 		border: 1px solid #ee2d7a; border-radius: 5px;
 		background-color: #ee2d7a; color: white;
 		float: right; margin-bottom: 5px;
@@ -399,4 +399,11 @@
 	
 	p {
 		margin-top: 15px;
+	}
+	
+	.updateCancel {
+		border: 1px solid #ee2d7a; border-radius: 5px;
+		background-color: #ee2d7a; color: white;
+		float: right; margin-bottom: 5px;
+		margin-left: 10px;
 	}

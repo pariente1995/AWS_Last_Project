@@ -307,19 +307,31 @@
 					$(".comment-update-click").on("click", function() {				
 						
 						const cmtContainer = $(this).parent("div").parent("div").parent("div");
-						
 						if(btnFlag == true) {
 							cmtContainer.children("div:last-child").children("div").children("textarea").attr('readonly', false);
 							cmtContainer.children("div:last-child").children("div").children("textarea").css('border', '1px solid black');						
-							cmtContainer.children("div:last-child").children("div").append('<button type="button" id="updateBtn">등록</button>');
+							cmtContainer.children("div:last-child").children("div").append('<button type="button" class="updateCancel">취소</button>');
+							cmtContainer.children("div:last-child").children("div").append('<button type="button" class="updateBtn">등록</button>');
 							btnFlag = false;	
-						}
-																	
+						}							
 						console.log(btnFlag);
-					});					
+					});
 					
-					// 생성된 버튼을 클릭 시 수정_장찬영
-					$(document).on("click", "#updateBtn", function() {
+					// 생성된 버튼(취소)을 클릭 시 수정 취소_장찬영
+					$(document).on("click", ".updateCancel", function() {
+						const cmtTextarea = $(this).parent("div").children("textarea");
+						console.log(cmtTextarea.data('temptext'));
+						cmtTextarea.attr('readonly', true);
+						cmtTextarea.css('border', 'none');
+						cmtTextarea.val(cmtTextarea.data('temptext'))
+						console.log(cmtTextarea.val());
+						$(this).parent("div").children("button").remove();
+						alert("댓글수정을 취소하였습니다.")
+						btnFlag = true;
+					})					
+					
+					// 생성된 버튼(등록)을 클릭 시 수정_장찬영
+					$(document).on("click", ".updateBtn", function() {
 						const cmtContainer = $(this).parent("div").parent("div").parent("div");
 						const cmtTextarea = $(this).parent("div").children("textarea");
 						const updateReview = {
@@ -682,8 +694,11 @@
 	          <div class="comment-right-bottom">
 	            <div class="comment-comment">
 	              <textarea class="comment-textarea" th:text="${review.reviewComment}" 
-	              			th:datecourse-no="${review.datecourseNo}" th:review-no="${review.reviewNo}" 
-	              			readonly></textarea>
+	              			th:datecourse-no="${review.datecourseNo}" th:review-no="${review.reviewNo}"
+	              			th:data-temptext="${review.reviewComment}"
+	              			readonly></textarea> 
+	              			<!--  attr로 갖고올 때                                  data-**으로 선언할고 .data로 가져올때 data는 생략
+								  $(".comment-textarea").attr("data-temptext") / $(".comment-textarea").data("temptext") -->
 	            </div>
 	          </div>
 	        </div>
@@ -721,8 +736,11 @@
 	          <div class="comment-right-bottom">
 	            <div class="comment-comment">
 	              <textarea class="comment-textarea" th:text="${review.reviewComment}" 
-	              			th:datecourse-no="${review.datecourseNo}" th:review-no="${review.reviewNo}" 
-	              			readonly></textarea>
+	              			th:datecourse-no="${review.datecourseNo}" th:review-no="${review.reviewNo}"
+	              			th:data-temptext="${review.reviewComment}"
+	              			readonly></textarea> 
+	              			<!--  attr로 갖고올 때                                  data-**으로 선언할고 .data로 가져올때 data는 생략
+								  $(".comment-textarea").attr("data-temptext") / $(".comment-textarea").data("temptext") -->
 	            </div>
 	          </div>
 	        </div>
