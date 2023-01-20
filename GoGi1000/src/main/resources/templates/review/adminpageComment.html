@@ -237,10 +237,10 @@
                 <td th:text="${review.datecourseNm}"></td>
                 <td th:text="${review.reviewerId}"></td>
                 <!-- 모달 출력하는 링크 -->
-                <td><a href="#" class="linkMain" data-bs-toggle="modal" data-bs-target="#exampleModal" 
-                      th:text="${review.reviewComment}" th:review-no="${review.reviewNo}" th:datecourse-no="${review.datecourseNo}"></a></td>
+                <td><a href="#" class="linkMain" data-bs-toggle="modal" data-bs-target="#exampleModal"
+                           th:text="${review.reviewComment}" th:review-no="${review.reviewNo}" th:datecourse-no="${review.datecourseNo}"></a></td>
                 <td th:text="${review.reviewModfDate eq null ? '' : #strings.substring(review.reviewModfDate, 0, 10)}"></td>
-              </tr>         
+                </tr>
             </table>
             <!-- 리뷰 갯수 -->
             <div style="width: 100%;">
