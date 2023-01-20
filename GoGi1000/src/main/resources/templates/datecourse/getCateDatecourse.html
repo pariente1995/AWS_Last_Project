@@ -44,8 +44,10 @@
 			      })     
 		      })
 		    
+		    const loginUserId = /*[[${#authentication.principal}]]*/;
+		    
 		    $(function(){
-				const loginUserId = /*[[${#authentication.principal}]]*/;
+				
 				
 	        	$("#datecourseAdd").on("click", function(e) {
 					if(loginUserId == 'anonymousUser') {
@@ -397,6 +399,13 @@
 					}).on('input', function () {
 						this.style.height = 'auto';
 						this.style.height = (this.scrollHeight) + 'px';
+					});
+					
+					$("#comment-text").on('click', function() {
+						if(loginUserId == 'anonymousUser') {
+							alert("로그인 후에 이용하실 수 있습니다.")
+							window.location.href="/user/login"
+						}
 					});
 					
         });
