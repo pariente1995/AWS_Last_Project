@@ -44,7 +44,10 @@
 	      <!-- /user/editMyinfo -->
 	        <a th:href="@{/user/editMyinfo/{userId} (userId=${#authentication.principal.username})}">회원정보 수정</a>
 	      </div>
-	      <div id="sideImgWrapper">
+	      <div id="sideImgWrapper" sec:authorize="hasRole('ROLE_USER')" style="height:calc(100% - 345px)">
+	        <img id="sideImg" th:src="@{/images/img5.png}">
+	      </div>
+	      <div id="sideImgWrapper" sec:authorize="hasRole('ROLE_ADMIN')" style="height:calc(100% - 575px)">
 	        <img id="sideImg" th:src="@{/images/img5.png}">
 	      </div>
 	    </div>
