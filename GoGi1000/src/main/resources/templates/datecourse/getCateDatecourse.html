@@ -341,7 +341,7 @@
 						}
 						console.log(updateReview);
 						console.log($(this));
-						const btn = $(this);
+						const btn = $(this).parent("div").children("button");
 						$.ajax({
 							url: '/review/updateReview',
 							type: 'put',
