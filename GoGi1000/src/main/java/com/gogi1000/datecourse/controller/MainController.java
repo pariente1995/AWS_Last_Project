@@ -27,8 +27,10 @@ import com.gogi1000.datecourse.entity.CustomUserDetails;
 import com.gogi1000.datecourse.entity.Datecourse;
 import com.gogi1000.datecourse.entity.DatecourseImage;
 import com.gogi1000.datecourse.entity.Hotdeal;
+import com.gogi1000.datecourse.entity.MyDatecourse;
 import com.gogi1000.datecourse.entity.Review;
 import com.gogi1000.datecourse.service.main.MainService;
+import com.gogi1000.datecourse.service.my.MyDatecourseService;
 import com.gogi1000.datecourse.service.review.ReviewService;
 
 @RestController
@@ -38,6 +40,8 @@ public class MainController {
 	private MainService mainService;
 	@Autowired
 	private ReviewService reviewService;
+	@Autowired
+	private MyDatecourseService myDatecourseService;
 	
 	// 검색창에서 지역명, 코스명, 내용으로 검색 후 조회
 	@GetMapping("/getSearchMapDatecourseList")
@@ -92,7 +96,7 @@ public class MainController {
 	
 	// 메인 페이지에서 인기 상세 페이지 조회_인겸
 	@GetMapping("/getCateDatecourse/{datecourseNo}")
-	public ModelAndView getCateDatecourse(@PathVariable int datecourseNo) {
+	public ModelAndView getCateDatecourse(@PathVariable int datecourseNo, @AuthenticationPrincipal CustomUserDetails customUser) throws IOException {
 		Datecourse datecourse = mainService.getCateDatecourse(datecourseNo);
 		
 		DatecourseDTO datecourseDTO = DatecourseDTO.builder()
@@ -111,6 +115,13 @@ public class MainController {
 		List<CamelHashMap> datecourseHours = mainService.getCateDatecourseHours(datecourseNo);
 		
 		List<CamelHashMap> datecourseMenu = mainService.getCateDatecourseMenu(datecourseNo); 
+		
+		MyDatecourse myDatecourse = MyDatecourse.builder()
+												.datecourseNo(datecourse.getDatecourseNo())
+												.build();
+
+		MyDatecourse returnMyDatecourse = myDatecourseService.getMyDatecourse(myDatecourse, customUser);
+		
 		
 		
 		
@@ -150,6 +161,8 @@ public class MainController {
 			returnComment.add(returnCommentDTO);
 		}
 		
+		System.out.println(returnMyDatecourse);
+		
 		ModelAndView mv = new ModelAndView();
 		mv.setViewName("datecourse/getCateDatecourse.html");
 		
@@ -162,6 +175,8 @@ public class MainController {
 		mv.addObject("datecourseHours", datecourseHours);
 		
 		mv.addObject("review", returnComment);
+		
+		mv.addObject("myDatecourse", returnMyDatecourse);
 		
 		return mv;
 				

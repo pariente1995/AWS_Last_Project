@@ -85,6 +85,14 @@
       }      
    
        $(function() {
+		   	 // 사이드 바 선택 시, 해당 리스트 항목 선택_인겸
+			$("#side").children().children().eq(4).attr('class','isSelect');
+			$("#side").children().children().eq(4).css("background-color", "white");
+			$("#side").children().children().eq(4).css("color", "#ee2d7a");
+			$("#side").children().children().eq(4).css("border-top-left-radius", "40%")
+			$("#side").children().children().eq(4).css("border-bottom-left-radius", "40%");
+		   
+		   
         // 전체 삭제 버튼 클릭 시 선택된 리뷰 삭제_장찬영
         $("#btnChkDelete").on("click", function() {
            let result= [];

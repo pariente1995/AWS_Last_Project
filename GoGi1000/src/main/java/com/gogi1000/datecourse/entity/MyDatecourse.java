@@ -8,6 +8,7 @@ import javax.persistence.Id;
 import javax.persistence.IdClass;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
@@ -34,4 +35,7 @@ public class MyDatecourse {
 	
 	@Column(nullable=false)
 	private LocalDateTime myDatecourseRgstDate = LocalDateTime.now();
+	
+	@ColumnDefault("Y")
+	private String myDatecourseYn;	
 }

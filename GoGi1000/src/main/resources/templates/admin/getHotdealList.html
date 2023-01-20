@@ -12,6 +12,14 @@
 
         <script th:inline="javascript">
                 $(function () {
+					// 사이드 바 선택 시, 해당 리스트 항목 선택_인겸
+				   $("#side").children().children().eq(3).attr('class','isSelect');
+				   $("#side").children().children().eq(3).css("background-color", "white");
+				   $("#side").children().children().eq(3).css("color", "#ee2d7a");
+				   $("#side").children().children().eq(3).css("border-top-left-radius", "40%")
+				   $("#side").children().children().eq(3).css("border-bottom-left-radius", "40%");
+					
+					
 				//검색 버튼
                 $("#btnSearch").click(function () {
                     $("input[name='page']").val(0);
@@ -197,16 +205,18 @@
                             <form id="searchForm" action="/hotdeal/hotdealList" method="get">
                                 <input type="hidden" name="page" value="">
                                	<div id="select-option-wrapper" style="margin:10px 10px; display:flex; justify-content:right; align-items:center;">
-	                            	<input type="radio" name="selectOption" id="selectOption-all" value="ALL" checked>
-	                            	<label for="selectOption-all">전체</label>
-	                              	<input type="radio" name="selectOption" id="selectOption-y" value="Y">
+                               		<input type="radio" name="selectOption" id="selectOption-all" value="ALL" th:if="${selectOption} == null" checked>
+	                            	<label for="selectOption-all" th:if="${selectOption} == null">전체</label>
+	                            	<input type="radio" name="selectOption" id="selectOption-all" value="ALL" th:if="${selectOption} != null"th:attr="checked=${selectOption == 'ALL'? 'true' : 'false'}">
+	                            	<label for="selectOption-all" th:if="${selectOption} != null">전체</label>
+	                              	<input type="radio" name="selectOption" id="selectOption-y" value="Y" th:attr="checked=${selectOption == 'Y' ? 'true' : 'false'}">
 	                            	<label for="selectOption-y">판매중</label>
-	                            	<input type="radio" name="selectOption" id="selectOption-n" value="N">
+	                            	<input type="radio" name="selectOption" id="selectOption-n" value="N" th:attr="checked=${selectOption == 'N' ? 'true' : 'false'}">
 	                            	<label for="selectOption-n">기간만료</label>
                             	</div>
                                 <select name="searchCondition" id="searchCondition">
                                     <option value="ALL" th:selected="${searchCondition == 'ALL'}">전체</option>
-                                    <option value="NAME" th:selected="${searchCondtion == 'NAME'}">핫딜명</option>
+                                    <option value="NAME" th:selected="${searchCondition == 'NAME'}">핫딜명</option>
                                     <option value="DESC" th:selected="${searchCondition =='DESC'}">내용</option>
                                 </select>
                                 <div id="input-wrap">
