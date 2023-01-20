@@ -36,7 +36,7 @@ public class LoginFailureHandler extends SimpleUrlAuthenticationFailureHandler{
 	
 	private String getExceptionMessage(AuthenticationException exception) {
 		if(exception instanceof BadCredentialsException) {
-			return "비밀번호불일치";
+			return "비밀번호가 일치하지 않습니다.";
 		} else if(exception instanceof UsernameNotFoundException) {
 			return "계정없음";
 		} else if(exception instanceof AccountExpiredException) {
@@ -48,7 +48,7 @@ public class LoginFailureHandler extends SimpleUrlAuthenticationFailureHandler{
 		} else if(exception instanceof LockedException) {
 			return "계정잠김";
 		} else if(exception.getMessage().contains("UserDetailsService returned null")) {
-			return "계정없음";
+			return "존재하지 않는 계정입니다.";
 		} else {
 			return "확인되지 않은 에러 발생";
 		}
