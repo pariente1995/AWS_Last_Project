@@ -23,28 +23,29 @@
             
             //유효성 검사
             $(function () {
-                $("#updateHotdealForm").on("submit", function (e) {
-                    if (!$("#hotdealNm").val()) {
+                $("#btnUpd").on("click", function (e) {
+                    if (!($("#hotdealNm").val())) {
                        e.preventDefault();
                        alert("핫딜 상품명을 입력해주세요.");
                        $("#hotdealNm").focus();
                        return;
                      }
                      
-                     if (!$("#hotdealEndDate").val()) {
+                     if (!($("#hotdealEndDate").val())) {
                          e.preventDefault();
                          alert("핫딜 종료일을 입력해주세요.");
-                         $("#hotdealEndDate").focuse();
+                         $("#hotdealEndDate").focus();
                          return;			
                      }
                      
-                     if (!$("#hotdealOfficialSite").val()) {
+                     if (!($("#hotdealOfficialSite").val())) {
                        e.preventDefault();
                        alert("핫딜 링크를 입력해주세요.");
                        $("#hotdealOfficialSite").focus();
                        return;
                      }
-         	
+                     console.log("test");
+                     console.log($("#hotdealPrice").val())
                      if (!$("#hotdealPrice").val()) {
                        e.preventDefault();
                        alert("기존가를 입력해주세요.");
@@ -52,26 +53,27 @@
                        return;
                      }
          	
-                     if (!$("#hotdealSalerate").val()) {
+                     if (!($("#hotdealSalerate").val())) {
                        e.preventDefault();
                        alert("할인율을 입력해주세요.");
                        $("#hotdealSalerate").focus();
                        return;
                      }
-                     if (!$("#hotdealSeller").val()) {
+                     if (!($("#hotdealSeller").val())) {
                          e.preventDefault();
                          alert("판매처를 입력해주세요");
                          $("#hotdealSeller").focus();
                          return;
                      }
-                     if (!$("#hotdealTel").val()) {
+                     if (!($("#hotdealTel").val())) {
                          e.preventDefault();
                          alert("문의 번호를 입력해주세요.");
                          $("#hotdealTel").focus();
                          return;
                      }
-                     $("#hotdealSummary").text("");
-                     $("#hotdealDesc").text("");   
+                     
+                     fnUpdateHotdeal();
+                     
                    })
 
                 $("#uploadFiles").on("change", function (e) {
@@ -106,6 +108,8 @@
 	                originFiles.push(originFileObj);
 	            	console.log(originFiles);   
 	            }
+	            
+
             });
 
        
@@ -333,7 +337,7 @@
                 <h1 style="margin:0;">핫딜 수정</h1>
                 <hr>
                 <div id="hu-form-wrapper">
-                    <form id="updateHotdealForm" action="/hotdeal/updateHotdeal" method="post"
+                    <form id="updateHotdealForm" method="post"
                         enctype="multipart/form-data">
                         <input type="hidden" name="hotdealNo" id="hotdealNo" th:value="${getHotdeal.hotdealNo}">
                         <input type="hidden" name="hotdealRgstDate" id="hotdealRgstDate" th:value="${getHotdeal.hotdealRgstDate}">
@@ -358,7 +362,7 @@
                                 placeholder="핫딜링크를 입력해주세요." th:value="${getHotdeal.hotdealOfficialSite}">
                         </div>
                         <div id="hotdealPrice-wrapper" class="input_wrapper">
-                            <div id="hotdealPrice" class="label_wrapper"><label for="hotdealPrice">기존가</label></div>
+                            <div class="label_wrapper"><label for="hotdealPrice">기존가</label></div>
                             <input type="text" id="hotdealPrice" name="hotdealPrice" autocomplete="off"
                                 placeholder="가격을 입력해주세요." th:value="${getHotdeal.hotdealPrice}">
                         </div>
@@ -436,7 +440,7 @@
                             </div>
                            </div>
                             <div id="button-wrapper">
-                                <button type="button" id="btnUpd" th:onclick="fnUpdateHotdeal(); return false;">수정</button>
+                                <button type="button" id="btnUpd">수정</button>
                                 <button type="button" id="btnList"
                                     th:onclick="'location.href=\''+ @{/hotdeal/hotdealList} + '\''">목록으로</button>
                             </div>
