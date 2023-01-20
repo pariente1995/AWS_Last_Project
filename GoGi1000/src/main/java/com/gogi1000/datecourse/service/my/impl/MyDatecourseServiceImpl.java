@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.gogi1000.datecourse.common.CamelHashMap;
+import com.gogi1000.datecourse.entity.CustomUserDetails;
 import com.gogi1000.datecourse.entity.MyDatecourse;
 import com.gogi1000.datecourse.entity.MyDatecourseId;
 import com.gogi1000.datecourse.repository.MyDatecourseRepository;
@@ -36,5 +37,14 @@ public class MyDatecourseServiceImpl implements MyDatecourseService {
 	@Override
 	public void deleteMyDatecourseList(List<MyDatecourse> myDatecourseList) {
 		myDatecourseRepository.deleteAll(myDatecourseList);
+	}
+	
+	@Override	
+	public MyDatecourse getMyDatecourse(MyDatecourse myDatecourse, CustomUserDetails customUser) {
+		if(customUser != null) {
+		return myDatecourseRepository.getMyDatecourse(myDatecourse, customUser);
+		} else {
+			return myDatecourseRepository.getMyDatecourse(myDatecourse);
+		}
 	}
 }

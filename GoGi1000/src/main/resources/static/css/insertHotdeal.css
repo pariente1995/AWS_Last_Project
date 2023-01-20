@@ -77,10 +77,9 @@
 
 #image-preview-zone {
     width: 600px;
-    height: 250px;
     border: 1px solid black;
     border-radius: 8px;
-    min-height: 150px;
+    min-height: 250px;
     margin-left: 180px;
 }
 

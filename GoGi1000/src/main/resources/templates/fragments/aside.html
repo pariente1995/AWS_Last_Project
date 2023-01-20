@@ -21,8 +21,16 @@
 	        <a href="/datecourse/insertDatecourse">데이트 코스 등록</a>
 	      </div>
 	      <div class="sideList" sec:authorize="hasRole('ROLE_ADMIN')">
-	      <!-- /datecourse/insertHotdeal -->
+	      <!-- /hotdeal/insertHotdeal -->
 	        <a href="/hotdeal/insertHotdeal">핫딜 등록</a>
+	      </div>
+	      <div class="sideList" sec:authorize="hasRole('ROLE_ADMIN')">
+	      <!-- /hotdeal/hotdealList -->
+	        <a href="/hotdeal/hotdealList">핫딜 리스트</a>
+	      </div>
+	      <div class="sideList" sec:authorize="hasRole('ROLE_ADMIN')">
+	      <!-- /review/adminpageComment -->
+	        <a href="/review/adminpageComment">리뷰 리스트</a>
 	      </div>
 	      <div class="sideList" sec:authorize="hasRole('ROLE_USER')">
 	      <!-- /datecourse/getMyDatecourseList -->

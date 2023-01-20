@@ -187,7 +187,7 @@
 
                     geocoder.addressSearch($("#datecourseAddr").text(), function (result, status) {
                         if (status != kakao.maps.services.Status.OK) {
-                            return alert('Something wrong!');
+                            return alert('요청하신 위치를 찾을 수 없습니다.');
                         }
                         if (status === kakao.maps.services.Status.OK) {
                             var coords = new kakao.maps.LatLng(
@@ -201,17 +201,23 @@
                             })
                             console.log(result)
                             console.log(status)
-                            var content = '<div style="width:100%; text-align:center;"><b>' + result[0].address_name + '</b><br> -카카오 지도- </div>'
+                            var content = '<div style="width:200px; text-align:center;"><b>' + result[0].address_name + '</b><br> -카카오 지도- </div>'
 
                             var infoWindow = new kakao.maps.InfoWindow({
                                 content: content,
                                 removable: true
 
                             })
+                            
 
                             infoWindow.open(map, marker)
 
                             map.setCenter(coords)
+                            
+                            kakao.maps.event.addListener(marker, "click", function() {
+									map.setCenter(marker.getPosition())
+									infoWindow.open(map,marker)
+							})
                         }
 
                     })
@@ -473,7 +479,8 @@
 	        <p class="p" th:text="${datecourse.datecourseAddr}" id="datecourseAddr"></p>
 	      </div>
 	      <button type="button" class="btn1" id="datecourseAdd" th:datecourse-no="${datecourse.datecourseNo}">
-	        <span class="btn_inner" id="datecourseAdd-text">데이트 코스에 추가</span>
+	        <span class="btn_inner" id="datecourseAdd-text" th:if="${myDatecourse} == null">데이트 코스에 추가</span>
+	        <span class="btn_inner" id="datecourseAdd-text" th:if="${myDatecourse} != null" th:text="${myDatecourse.myDatecourseYn} eq 'Y' ? '데이트 코스에 추가' : '데이트 코스에서 제외'"></span>
 	      </button>
 	    </div>
 	    <div class="datecourse-line">
